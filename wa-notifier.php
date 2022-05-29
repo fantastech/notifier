@@ -4,7 +4,7 @@
  * Plugin URI:        https://wanotifier.com
  * Description:       Send WhatsApp message notifications to your users for their Woocommerce transactions.
  * Version:           0.1
- * Author:            WPNotifier.com
+ * Author:            WANotifier.com
  * Author URI:        https://wanotifier.com
  * Text Domain:       wp-whatsapp-notifications
  * Requires at least: 5.7
@@ -14,6 +14,10 @@
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
+}
+
+if ( ! defined( 'WA_NOTIFIER_FILE' ) ) {
+   define( 'WA_NOTIFIER_FILE', __FILE__ );
 }
 
 if ( ! defined( 'WA_NOTIFIER_PATH' ) ) {

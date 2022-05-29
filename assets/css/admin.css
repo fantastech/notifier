@@ -1,0 +1,104 @@
+#wpcontent {
+	padding-left: 0;
+}
+
+#wa-notifier-admin-header {
+    background: #fff;
+    box-sizing: border-box;
+    padding: 0;
+    position: fixed;
+    width: calc(100% - 160px);
+    top: 32px;
+    z-index: 1001;
+    padding: 0px 20px;
+    height: 70px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#wa-notifier-admin-header.sticky {
+	box-shadow: 0 8px 8px 0 rgb(85 93 102 / 30%);
+}
+
+#wpbody {
+    display: inline-block;
+    width: 100%;
+    padding-top: 0;
+    margin-top: 70px;
+    padding: 0px 20px;
+}
+
+.wa-notifier input[type="text"],
+.wa-notifier input[type="password"],
+.wa-notifier textarea,
+.wa-notifier select{
+    width: 400px;
+    margin: 0;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+.wa-notifier-fields-table th {
+    vertical-align: top;
+    text-align: left;
+    padding: 20px 10px 20px 0;
+    width: 200px;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+.wa-notifier-fields-table th.section-title {
+    padding: 0px;
+}
+
+.wa-notifier-fields-table td {
+    margin-bottom: 9px;
+    padding: 15px 10px;
+    line-height: 1.3;
+    vertical-align: middle;
+}
+
+.onboarding {
+    max-width: 600px;
+    margin: 0px auto;
+    background: #fff;
+    box-shadow: 0 8px 8px 0 rgb(85 93 102 / 10%);
+}
+
+.onboarding-head {
+    padding: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.onboarding-head h3 {
+    margin-top: 0px;
+}
+.onboarding-head p {
+    margin-bottom: 0px;
+}
+
+.onboarding-disclaimer {
+    padding: 10px 20px;
+}
+
+.onboarding-body .step{
+    border-bottom: 1px solid #eeeeee;
+}
+
+.onboarding-body .step .step-head {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.onboarding-body .step .step-body {
+    padding: 15px 20px;
+}
+
+.onboarding-footer {
+    padding: 20px;
+    border-top: 1px solid #eeeeee;
+}
