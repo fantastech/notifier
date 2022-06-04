@@ -7,7 +7,22 @@
 class WA_Notifier_Settings {
 
 	/**
-	 * Init.
+	 * Init
+	 */
+	public static function init() {
+		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
+        add_action( 'admin_init', array( __CLASS__ , 'save_settings_fields' ) );
+	}
+
+	/**
+	 * Add settings page to men
+	 */
+	public static function setup_admin_page () {
+		add_submenu_page( WA_NOTIFIER_NAME, 'WA FIlter Settings', 'Settings', 'manage_options', WA_NOTIFIER_NAME . '-settings', array( __CLASS__, 'output' ) );
+	}
+
+	/**
+	 * Output
 	 */
 	public static function output() {
         include_once WA_NOTIFIER_PATH . '/views/admin-settings.php';

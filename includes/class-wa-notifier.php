@@ -30,8 +30,8 @@ class WA_Notifier {
 		$this->define( 'WA_NOTIFIER_NAME', 'wa-notifier' );
 		$this->define( 'WA_NOTIFIER_SETTINGS_PREFIX', 'wa_notifier_' );
 		$this->define( 'WA_NOTIFIER_URL', trailingslashit( plugins_url( '' , dirname(__FILE__) ) ) );
-		$this->define( 'WA_API_VERSION', 'v14.0' );
-		$this->define( 'WA_API_URL', 'https://graph.facebook.com/' . WA_API_VERSION . '/' );
+		$this->define( 'WA_NOTIFIER_WA_API_VERSION', 'v14.0' );
+		$this->define( 'WA_NOTIFIER_WA_API_URL', 'https://graph.facebook.com/' . WA_NOTIFIER_WA_API_VERSION . '/' );
 	}
 
 	/**
@@ -62,8 +62,13 @@ class WA_Notifier {
 	 * Include required core files used in admin and on the frontend.
 	 */
 	private function includes() {
+		require_once WA_NOTIFIER_PATH . 'includes/wa-notifier-helper-functions.php';
+		require_once WA_NOTIFIER_PATH . 'includes/wa-notifier-meta-box-functions.php';
+
+		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-admin-notices.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-dashboard.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-message-templates.php';
+		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-contacts.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-settings.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-woocommerce.php';
 	}
@@ -74,15 +79,16 @@ class WA_Notifier {
 	private function init_hooks() {
 		register_activation_hook ( WA_NOTIFIER_FILE , array( $this, 'install') );
 
-		add_action( 'admin_init', array( 'WA_Notifier_Dashboard', 'handle_dashboard_forms' ) );
-		add_action( 'admin_init', array( 'WA_Notifier_Settings', 'save_settings_fields' ) );
-		add_action( 'init', array( 'WA_Notifier_Woocommerce', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Dashboard', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Message_Templates', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Contacts', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Settings', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Woocommerce', 'init' ) );
+
 		add_filter( 'init', array( $this , 'test_stuff') );
 		add_filter( 'init', array( $this , 'handle_webhook_requests') );
-		add_filter( 'init', array( $this , 'register_message_templates_cpt') );
 
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
-		add_action( 'admin_menu', array( $this , 'setup_admin_pages') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 	}
 
@@ -99,48 +105,20 @@ class WA_Notifier {
 	}
 
 	/**
-	 * Register message templates custom post type
-	 */
-	public function register_message_templates_cpt () {
-		$labels = array(
-	        'name'                => 'Message Templates',
-	        'singular_name'       => 'Message Template',
-	        'menu_name'           => 'Message Templates',
-	        'all_items'           => 'All Message Templates',
-	        'view_item'           => 'View Message Template',
-	        'add_new_item'        => 'Add Message Template',
-	        'edit_item'           => 'Edit Message Template',
-	        'update_item'         => 'Update Message Template',
-	        'search_items'        => 'Search Message Template'
-	    );
-	    $args = array(
-	        'label'               => 'Message Template',
-	        'description'         => 'Whatsapp Message Templates',
-	        'labels'              => $labels,
-	        'supports'            => array( 'title'),
-	        'hierarchical'        => false,
-	        'public'              => false,
-	        'show_ui'             => true,
-	        'show_in_menu'        => false,
-	        'show_in_nav_menus'   => false,
-	        'show_in_admin_bar'   => false,
-	        'menu_position'       => 5,
-	        'can_export'          => true,
-	        'has_archive'         => false,
-	        'capability_type'     => 'post',
-	        'show_in_rest' 		  => true,
-	  
-	    );
-	    register_post_type( 'wa_message_template', $args );
-	}
-
-
-	/**
 	 * Check if plugin's page
 	 */
 	public function is_wa_notifier_page() {
-		$current_page = isset($_GET['page']) ? $_GET['page'] : '';
-		return strpos($current_page, WA_NOTIFIER_NAME) !== false;
+		$current_screen = get_current_screen();
+		if ( strpos($current_screen->id, WA_NOTIFIER_NAME) !== false) {
+			return true;
+		}
+
+		$plugin_ctps = array( 'wa_message_template', 'wa_contact' );
+		if ( '' !== $current_screen->post_type && in_array( $current_screen->post_type, $plugin_ctps ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -155,16 +133,6 @@ class WA_Notifier {
 	}
 
 	/**
-	 * Adds admin pages
-	 */
-	public function setup_admin_pages () {
-		add_menu_page( 'WA Notifier', 'WA Notifier', 'manage_options', WA_NOTIFIER_NAME, array($this, 'dashboard_page') , null, '58' );
-		add_submenu_page( WA_NOTIFIER_NAME, 'Whatsapp Message Templates', 'Message Templates', 'manage_options', 'edit.php?post_type=wa_message_template' );
-		add_submenu_page( WA_NOTIFIER_NAME, 'WA FIlter Settings', 'Settings', 'manage_options', WA_NOTIFIER_NAME . '-settings', array( $this, 'settings_page' ) );
-
-	}
-
-	/**
 	 * Set up a div for the header embed to render into.
 	 * The initial contents here are meant as a place loader for when the PHP page initialy loads.
 	 */
@@ -175,25 +143,12 @@ class WA_Notifier {
 		?>
 		<div id="wa-notifier-admin-header">
 			<h2><?php echo get_admin_page_title(); ?></h2>
-			<div class="">
-				<a href="">Help</a>
+			<div class="header-action-links">
+				<a href="mailto:ram@fantastech.co?subject=Regarding%20WA%20Notifier%20on%20<?php echo get_site_url(); ?>">Help</a>
+				<a href="admin.php?page=wa-notifier&show=disclaimer">Disclaimer</a>
 			</div>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Show dashboard page
-	 */
-	public function dashboard_page () {
-		WA_Notifier_Dashboard::output();
-	}
-
-	/**
-	 * Show settings page
-	 */
-	public function settings_page () {
-		WA_Notifier_Settings::output();
 	}
 
 	/**
@@ -236,46 +191,42 @@ class WA_Notifier {
 	}
 
 	/**
-	 * For sending requests to Whatsapp
+	 * For sending requests to Cloud API
 	 */
-	private function wa_api_request ( $endpoint ) {
-		$token = 'EAAPSXxc2UzgBAAx0k6VC7ZAI2rJPjWg4gslbgGLvsRJ6B4VWec2sazc7IaeEESTUYwWqFqpOAlbsJCkF1tWOg8xpmsv7YIZAie28AiK2LAnwANG9N00d8jXeQXUiZCplFHTkeKhAQCKjIlEalekjYvZCHbZCDehezAUJ8ZBWfnGndpZAbweXuO0H2xFdHRZBOlLNU3bUWWGtTwZDZD';
-
-		$request_url = $this->build_wa_request_url($endpoint);
-
-		$default_request_body = array (
-			'messaging_product' => 'whatsapp',
-			'to' => '+911234567890',
-			'type' => 'template',
-			'template' => array (
-				'name' => 'order_confirm',
-				'language' => array (
-					'code' => 'en'
-				)
-			)
-		);
-
-		$args = array(
-		    'method' => 'POST',
-		    'headers'     => array(
-		        'Authorization' => 'Bearer ' . $token,
-		    ),
-		    'body' => $default_request_body
-	    );
-
-		$response = wp_remote_post( $request_url, $args);
-
-		return $response['body'];
-
+	public function wa_cloud_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
+		$phone_number_id = get_option('wa_notifier_phone_number_id');
+		$request_url = WA_NOTIFIER_WA_API_URL . $phone_number_id . '/' . untrailingslashit($endpoint);
+		return self::send_api_request($request_url, $args, $method);
 	}
 
-	private function build_wa_request_url ($endpoint) {
-		$phone_number_id = '114292714620122';
-		$wa_business_account_id = '104305922298625';
+	/**
+	 * For sending requests to WA Business API
+	 */
+	public function wa_business_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
+		$business_account_id = get_option('wa_notifier_business_account_id');
+		$request_url = WA_NOTIFIER_WA_API_URL . $business_account_id . '/' . untrailingslashit($endpoint);
+		return self::send_api_request($request_url, $args, $method);
+	}
 
-		$request_url = WA_API_URL . $phone_number_id . '/' . untrailingslashit($endpoint);
-
-		return $request_url;
+	/**
+	 * For sending API requests
+	 */
+	private function send_api_request ( $request_url, $args, $method ) {
+		$permanent_access_token = get_option('wa_notifier_permanent_access_token');
+		$request_args = array(
+		    'method' => $method,
+		    'headers'     => array(
+		        'Authorization' => 'Bearer ' . $permanent_access_token ,
+		    ),
+		    'body' => $args
+	    );
+		$response = wp_remote_request( $request_url, $request_args);
+		if ( is_wp_error( $response ) ) {
+			echo $response->get_error_message();
+		} else {
+			$response_body = wp_remote_retrieve_body( $response );
+			return json_decode($response_body);
+		}
 	}
 
 }
