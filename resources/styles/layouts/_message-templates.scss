@@ -1,209 +1,202 @@
-#wa-notifier-message-template-preview .inside {
-    margin-top: 0;
-    padding: 0;
+.post-type-wa_message_template {
+	#minor-publishing-actions #save-action,
+	#misc-publishing-actions {
+		display: none;
+	}
+
+	#minor-publishing-actions {
+		padding: 15px 10px;
+		text-align: left;
+	}
+
+	&.mt-status-approved #publishing-action,
+	&.mt-status-pending #publishing-action {
+		display: none;
+	}
+
+	#minor-publishing .refresh-status {
+		background: 0;
+		outline: none;
+		border: 0;
+		padding: 0;
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 10px;
+		cursor: pointer;
+
+		img {
+			width: 16px;
+			margin-top: 2px;
+		}
+	}
 }
 
-.wa-template-preview {
-    padding: 20px;
-    min-height: 200px;
-    max-height: 400px;
-    overflow: auto;
-    background-color: #e5ddd5;
-    position: relative;
-}
-
-.wa-template-preview::before {
-    background: url('../images/whatsapp-bg.png');
-    background-size: 366.5px 666px;
-    content: '';
-    height: 100%;
-    left: 0;
-    opacity: .06;
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
-
-.wa-template-preview .message-container {
-    background-color: #fff;
-    border-radius: 7.5px;
-    border-top-left-radius: 0;
-    box-shadow: 0 1px 0.5px rgb(0 0 0 / 15%);
-    min-height: 20px;
-    word-wrap: break-word;
-    position: relative;
-}
-
-.wa-template-preview .message-container:before {
-    content: '';
-    display: block;
-    left: -16px;
-    top: 0;
-    z-index: 100;
-    border-left: 8px solid transparent;
-    border-right: 8px solid white;
-    border-bottom: 8px solid transparent;
-    height: 0;
-    width: 0;
-    position: absolute;
-    right: 0px;
-    z-index: 2;
-}
-
-.wa-template-preview .message-content {
-    position: relative;
-}
-
-.wa-template-preview .message-container .message-head {
-    color: rgba(0, 0, 0, .76);
-    font-size: 15px;
-    font-weight: bold;
-    line-height: 19px;
-    padding: 6px 7px 0 9px;
-}
-
-.wa-template-preview .message-container .message-body {
-    color: #262626;
-    font-size: 13.6px;
-    line-height: 19px;
-    padding: 7px 7px 6px 9px;
-}
-
-.wa-template-preview .message-container .message-footer {
-    color: rgba(0, 0, 0, .45);
-    font-size: 13px;
-    line-height: 17px;
-    padding: 0 7px 8px 9px;
-}
-
-.wa-template-preview .message-container .message-buttons {
-    border-top: 1px solid #dadde1;
-    margin: 0 7px 0 9px;
-}
-
-.wa-template-preview .message-container .message-buttons .message-button-1,
-.wa-template-preview .message-container .message-buttons .message-button-2 {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.wa-template-preview .message-container .message-button-text {
-    color: #00a5f4;
-    font-size: 14px;
-    height: 34px;
-    line-height: 34px;
-    padding: 0 16px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.wa-template-preview .message-container .message-button-img {
-    background-repeat: no-repeat;
-    background-size: contain;
-    flex-shrink: 0;
-    height: 16px;
-    opacity: .8;
-    width: 16px;
-}
-
-.wa-template-preview .message-container .message-button-img.call {
-    background-image: url(../images/call.png);
-}
-
-.wa-template-preview .message-container .message-button-img.visit {
-    background-image: url(../images/external-link.png);
-}
-
-.wa-template-preview .message-container .message-date {
-    bottom: 3px;
-    color: rgba(0, 0, 0, .4);
-    font-size: 11px;
-    height: 15px;
-    line-height: 15px;
-    position: absolute;
-    right: 7px;
-}
-
-#wa-notifier-message-template-preview.sticky {
-    position: fixed;
-    top: 120px;
-    width: 100%;
-}
-
-.post-type-wa_message_template #minor-publishing-actions #save-action,
-.post-type-wa_message_template #misc-publishing-actions,
-.post-type-wa_contact #minor-publishing-actions,
-.post-type-wa_contact #misc-publishing-actions,
-.post-type-wa_broadcast #minor-publishing-actions,
-.post-type-wa_broadcast #misc-publishing-actions {
-    display:none;
-}
-
-.post-type-wa_message_template #minor-publishing-actions {
-    padding: 15px 10px;
-    text-align: left;
+a.refresh-status.page-title-action::before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	width: 11px;
+	height: 13px;
+	background-image: url(../images/refresh.svg);
+	background-size: contain;
+	background-repeat: no-repeat;
+	margin-right: 5px;
 }
 
 .status {
-    display: inline-block;
-    padding: 3px 6px;
-    border: 1px solid;
-    line-height: normal;
-    font-size: 10px;
-    color: #BEC3C9;
+	display: inline-block;
+	padding: 3px 6px;
+	border: 1px solid;
+	line-height: normal;
+	font-size: 10px;
+	color: #bec3c9;
+
+	&.status-approved {
+		color: #01a401;
+	}
+
+	&.status-pending {
+		color: #ffba00;
+	}
+
+	&.status-rejected {
+		color: #fa383e;
+	}
 }
 
-.status.status-approved {
-    color: #01A401;
-}
+#wa-notifier-message-template-preview {
+	.inside {
+		margin-top: 0;
+		padding: 0;
 
-.status.status-pending {
-    color: #FFBA00;
-}
+		.wa-template-preview {
+			padding: 20px;
+			min-height: 200px;
+			max-height: 400px;
+			overflow: auto;
+			background-color: #e5ddd5;
+			position: relative;
 
-.status.status-rejected {
-    color: #FA383E;
-}
+			&::before {
+				background: url('../images/whatsapp-bg.png');
+				background-size: 366.5px 666px;
+				content: '';
+				height: 100%;
+				left: 0;
+				opacity: 0.06;
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
 
-.truncate-string {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+			.message-container {
+				background-color: #fff;
+				border-radius: 7.5px;
+				border-top-left-radius: 0;
+				box-shadow: 0 1px 0.5px rgb(0 0 0 / 15%);
+				min-height: 20px;
+				word-wrap: break-word;
+				position: relative;
 
-.mt-status-approved #publishing-action,
-.mt-status-pending #publishing-action {
-    display: none;
-}
+				&::before {
+					content: '';
+					display: block;
+					left: -16px;
+					top: 0;
+					z-index: 100;
+					border-left: 8px solid transparent;
+					border-right: 8px solid white;
+					border-bottom: 8px solid transparent;
+					height: 0;
+					width: 0;
+					position: absolute;
+					right: 0;
+					z-index: 2;
+				}
 
-a.refresh-status.page-title-action:before {
-    content: "";
-    display: inline-block;
-    vertical-align: middle;
-    width: 11px;
-    height: 13px;
-    background-image: url(../images/refresh.svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    margin-right: 5px;
-}
+				.message-content {
+					position: relative;
 
-#minor-publishing .refresh-status {
-    background: 0px;
-    outline: none;
-    border: 0px;
-    padding: 0px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 10px;
-    cursor: pointer;
-}
+					.message-head {
+						color: rgba(0, 0, 0, 0.76);
+						font-size: 15px;
+						font-weight: bold;
+						line-height: 19px;
+						padding: 6px 7px 0 9px;
+					}
 
-#minor-publishing .refresh-status img {
-    width: 16px;
-    margin-top: 2px;
+					.message-body {
+						color: #262626;
+						font-size: 13.6px;
+						line-height: 19px;
+						padding: 7px 7px 6px 9px;
+					}
+
+					.message-footer {
+						color: rgba(0, 0, 0, 0.45);
+						font-size: 13px;
+						line-height: 17px;
+						padding: 0 7px 8px 9px;
+					}
+
+					.message-date {
+					        bottom: 3px;
+					        color: rgba(0, 0, 0, .4);
+					        font-size: 11px;
+					        height: 15px;
+					        line-height: 15px;
+					        position: absolute;
+					        right: 7px;
+					}
+				}
+
+				.message-buttons {
+					border-top: 1px solid #dadde1;
+					margin: 0 7px 0 9px;
+
+					.message-button-1,
+					.message-button-2 {
+						display: flex;
+						flex-direction: row;
+						justify-content: center;
+						align-items: center;
+
+						.message-button-text {
+							color: #00a5f4;
+							font-size: 14px;
+							height: 34px;
+							line-height: 34px;
+							padding: 0 16px;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
+
+						.message-button-img {
+							background-repeat: no-repeat;
+							background-size: contain;
+							flex-shrink: 0;
+							height: 16px;
+							opacity: 0.8;
+							width: 16px;
+
+							&.call {
+								background-image: url(../images/call.png);
+							}
+
+							&.visit {
+								background-image: url(../images/external-link.png);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&.sticky {
+		position: fixed;
+		top: 120px;
+		width: 100%;
+	}
 }

@@ -141,7 +141,7 @@
 
     /** Highlight menu items **/
     const wan_menu_elem = $('#toplevel_page_wa-notifier');
-    const wa_notifier_cpts = [ 'wa_message_template', 'wa_contact', 'wa_broadcast' ];
+    const wa_notifier_cpts = [ 'wa_message_template', 'wa_contact', 'wa_notification' ];
     const current_cpt = $('#wa-notifier-admin-header').data('post-type') || '';
     if( wa_notifier_cpts.includes(current_cpt) ) {
       wan_menu_elem

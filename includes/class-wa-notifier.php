@@ -69,7 +69,7 @@ class WA_Notifier {
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-dashboard.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-message-templates.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-contacts.php';
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-broadcasts.php';
+		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-notifications.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-settings.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-woocommerce.php';
 	}
@@ -83,7 +83,7 @@ class WA_Notifier {
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Dashboard', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Message_Templates', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Contacts', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Broadcasts', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Notifications', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Settings', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Woocommerce', 'init' ) );
 
@@ -115,7 +115,7 @@ class WA_Notifier {
 			return true;
 		}
 
-		$plugin_ctps = array( 'wa_message_template', 'wa_contact', 'wa_broadcast' );
+		$plugin_ctps = array( 'wa_message_template', 'wa_contact', 'wa_notification' );
 		if ( '' !== $current_screen->post_type && in_array( $current_screen->post_type, $plugin_ctps ) ) {
 			return true;
 		}

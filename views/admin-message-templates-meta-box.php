@@ -246,7 +246,7 @@ else {
         </div>
 
         <div class="d-flex">
-            <div class="col button-1-wrap">
+            <div class="col w-50 button-1-wrap">
                 <h4>Button 1</h4>
                 <?php
                 wa_notifier_wp_select(
@@ -307,7 +307,7 @@ else {
                     </div>
                 </div>
             </div>
-            <div class="col button-2-wrap">
+            <div class="col w-50 button-2-wrap">
                 <h4>Button 2</h4>
                 <?php
                 wa_notifier_wp_select(

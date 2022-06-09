@@ -1,10 +1,10 @@
 <?php
 /**
- * Broadcasts CPT class
+ * Notifications CPT class
  *
  * @package    Wa_Notifier
  */
-class WA_Notifier_Broadcasts {
+class WA_Notifier_Notifications {
 
 	/**
 	 * Init.
@@ -13,7 +13,7 @@ class WA_Notifier_Broadcasts {
 		add_filter( 'init', array( __CLASS__ , 'register_cpt') );
         add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'add_meta_boxes', array( __CLASS__, 'create_meta_box' ) );
-		add_filter( 'bulk_actions-wa_broadcast', array( __CLASS__, 'remove_bulk_actions' ) );
+		add_filter( 'bulk_actions-wa_notification', array( __CLASS__, 'remove_bulk_actions' ) );
 		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit') , 10, 2);
 		add_filter( 'gettext', array(__CLASS__, 'change_texts') , 10, 2 );
 	}
@@ -22,7 +22,7 @@ class WA_Notifier_Broadcasts {
 	 * Register custom post type
 	 */
 	public function register_cpt () {
-		wa_notifier_register_post_type ('wa_broadcast', 'Broadcast', 'Broadcasts');
+		wa_notifier_register_post_type ('wa_notification', 'Notification', 'Notifications');
 	}
 	
 	/**
@@ -34,7 +34,7 @@ class WA_Notifier_Broadcasts {
 			return;
 		}
 
-		add_submenu_page( WA_NOTIFIER_NAME, 'Broadcast', 'Broadcast', 'manage_options', 'edit.php?post_type=wa_broadcast' );
+		add_submenu_page( WA_NOTIFIER_NAME, 'Notification', 'Notifications', 'manage_options', 'edit.php?post_type=wa_notification' );
 	}
 
 	/**
@@ -42,21 +42,21 @@ class WA_Notifier_Broadcasts {
 	 */
 	public static function create_meta_box () {
 		add_meta_box(
-	        WA_NOTIFIER_NAME . '-broadcast-data',
-	        'Broadcast Data',
-	        'WA_Notifier_Broadcasts::output',
-	        'wa_broadcast'
+	        WA_NOTIFIER_NAME . '-notification-data',
+	        'Notification Data',
+	        'WA_Notifier_Notifications::output',
+	        'wa_notification'
 	    );
 
-	    remove_meta_box( 'submitdiv', 'wa_broadcast', 'side' );
-    	add_meta_box( 'submitdiv', 'Save Broadcast', 'post_submit_meta_box', 'wa_broadcast', 'side', 'high' );
+	    remove_meta_box( 'submitdiv', 'wa_notification', 'side' );
+    	add_meta_box( 'submitdiv', 'Save Notification', 'post_submit_meta_box', 'wa_notification', 'side', 'high' );
 	}
 
 	/**
 	 * Output meta box
 	 */
 	public static function output () {
-		include_once WA_NOTIFIER_PATH . 'views/admin-broadcasts-meta-box.php';
+		include_once WA_NOTIFIER_PATH . 'views/admin-notifications-meta-box.php';
 	}
 	
 
@@ -80,12 +80,12 @@ class WA_Notifier_Broadcasts {
 	 * Change text of buttons and links
 	 */
 	public static function change_texts( $translation, $text ) {
-		if ( 'wa_broadcast' == get_post_type() ) {
+		if ( 'wa_notification' == get_post_type() ) {
 			if ( $text == 'Update' ) {
-				return 'Update Broadcast'; 
+				return 'Update Notification';
 			}
 			elseif ($text == 'Publish') {
-				return 'Save Broadcast'; 
+				return 'Save Notification';
 			}
 		}
 		return $translation;

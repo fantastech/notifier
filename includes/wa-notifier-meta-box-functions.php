@@ -256,7 +256,7 @@ function wa_notifier_wp_radio( $field ) {
 
 	echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '"><legend>' . wp_kses_post( $field['label'] ) . '</legend>';
 
-	echo '<ul class="wa-notifier-radios">';
+	echo '<ul class="radio-buttons">';
 
 	foreach ( $field['options'] as $key => $value ) {
 

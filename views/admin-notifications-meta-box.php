@@ -17,9 +17,9 @@ global $post_id;
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_PREFIX . 'broadcast_message_template',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'seleted_message_template', true),
-                        'label'             => 'First Name',
+                        'id'                => WA_NOTIFIER_PREFIX . 'notification_message_template',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_message_template', true),
+                        'label'             => 'Message Template',
                         'description'       => ''
                     )
                 );
@@ -29,9 +29,9 @@ global $post_id;
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_PREFIX . 'broadcast_action',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'broadcast_action', true),
-                        'label'             => 'Last Name',
+                        'id'                => WA_NOTIFIER_PREFIX . 'notification_action',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_action', true),
+                        'label'             => 'Action',
                         'description'       => ''
                     )
                 );

@@ -11,7 +11,7 @@
     "test": "npm run -s lint"
   },
   "engines": {
-    "node": "^12.0.0"
+    "node": "^16.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
