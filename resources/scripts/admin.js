@@ -1,7 +1,8 @@
+/* global waNotifierTemplates */
 (function( $ ) {
 
   function runConditionalFieldsLogic () {
-    var header_type   = $('#wa_notifier_header_type').val();
+    //var header_type   = $('#wa_notifier_header_type').val();
     var header_text   = $('#wa_notifier_header_text').val() || 'Header text here';
     var body_text     = $('#wa_notifier_body_text').val() || 'Body text here';
     var footer_text   = $('#wa_notifier_footer_text').val() || '';
@@ -11,15 +12,10 @@
 
     var button_1_type   = $('#wa_notifier_button_1_type :selected').val();
     var button_1_text   = $('#wa_notifier_button_1_text').val() || '';
-    var button_1_url  = $('#wa_notifier_button_1_url').val() || '';
-    var button_1_phone_num  = $('#wa_notifier_button_1_phone_num').val() || '';
-
     var button_2_text   = $('#wa_notifier_button_2_text').val() || '';
-    var button_2_url  = $('#wa_notifier_button_2_url').val() || '';
-    var button_2_phone_num  = $('#wa_notifier_button_2_phone_num').val() || '';
 
     // Header
-    $('.wa-template-preview .message-head').show().text(header_text)
+    $('.wa-template-preview .message-head').show().text(header_text);
 
     // switch(header_type) {
     //  case 'none' :   $('.wa_notifier_media_type_field').hide();
@@ -136,8 +132,8 @@
     // Toggle steps on dashboard page
     $('.toggle-step').on('click', function () {
       $(this).closest('.step').toggleClass('active');
-      $(this).closest('.step').siblings().removeClass('active')
-    })
+      $(this).closest('.step').siblings().removeClass('active');
+    });
 
     /** Highlight menu items **/
     const wan_menu_elem = $('#toplevel_page_wa-notifier');
@@ -166,7 +162,7 @@
         } else {
           wa_preview.removeClass('sticky');
         }
-      }
+      };
     }
 
 
@@ -226,10 +222,10 @@
     });
 
     // Add Refresh Status button to the message template lisitng page
-        $(".edit-php.post-type-wa_message_template .wrap .page-title-action")
+        $('.edit-php.post-type-wa_message_template .wrap .page-title-action')
           .after(waNotifierTemplates.refresh_mt_status);
 
-      $(".edit-php.post-type-wa_contact .wrap .page-title-action")
+      $('.edit-php.post-type-wa_contact .wrap .page-title-action')
           .after(waNotifierTemplates.import_contact);
 
   });

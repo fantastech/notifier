@@ -5,11 +5,8 @@
  * @package    WA_Notifier
  */
 class WA_Notifier {
-
 	/**
 	 * The single instance of the class.
-	 *
-	 * @since 	 0.1
 	 */
 	protected static $_instance = null;
 

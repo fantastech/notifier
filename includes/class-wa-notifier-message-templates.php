@@ -29,7 +29,6 @@ class WA_Notifier_Message_Templates {
 		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 	}
 
-
 	/**
 	 * Register custom post type
 	 */
@@ -47,7 +46,6 @@ class WA_Notifier_Message_Templates {
 		}
 
 		add_submenu_page( WA_NOTIFIER_NAME, 'Whatsapp Message Templates', 'Message Templates', 'manage_options', 'edit.php?post_type=wa_message_template' );
-
 	}
 
 	/**
@@ -216,9 +214,11 @@ class WA_Notifier_Message_Templates {
 			return $bulk_messages;
 		}
 		
-		$bulk_messages['post']['trashed'] = _n( '%s message template moved to the Trash. To delete it from the website and from WhatsApp server, permanently delete it from Trash.', '%s message templates moved to the Trash. To delete them from the website and from WhatsApp server, permanently delete it from Trash.', (int) $count );
+		// translators: %s: number of templates
+		$bulk_messages['post']['trashed'] = _n( '%s message template moved to the Trash. To delete it from the website and from WhatsApp server, permanently delete it from Trash.', '%s message templates moved to the Trash. To delete them from the website and from WhatsApp server, permanently delete it from Trash.', (int) $count, 'wa-notifier' );
 
-		$bulk_messages['post']['deleted'] = _n( '%s message template deleted permanently from the website and from WhatsApp server.', '%s message template deleted permanently from the website and from WhatsApp server.', (int) $count );
+		// translators: %s: number of templates
+		$bulk_messages['post']['deleted'] = _n( '%s message template deleted permanently from the website and from WhatsApp server.', '%s message template deleted permanently from the website and from WhatsApp server.', (int) $count, 'wa-notifier' );
 
 		return $bulk_messages;
 	}

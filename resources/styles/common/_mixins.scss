@@ -1,24 +1,24 @@
 @mixin media-down($name, $type: screen) {
-    $value: map-get($breakpoints, $name);
+	$value: map-get($breakpoints, $name);
 
-    @media #{$type} and (max-width: $value) {
-        @content;
-    }
+	@media #{$type} and (max-width: $value) {
+		@content;
+	}
 }
 
 @mixin media-up($name, $type: screen) {
-    $value: map-get($breakpoints, $name);
+	$value: map-get($breakpoints, $name);
 
-    @media #{$type} and (min-width: $value + 1) {
-        @content;
-    }
+	@media #{$type} and (min-width: $value + 1) {
+		@content;
+	}
 }
 
 @mixin media-between($name-min, $name-max, $type: screen) {
-    $value-min: map-get($breakpoints, $name-min);
-    $value-max: map-get($breakpoints, $name-max);
+	$value-min: map-get($breakpoints, $name-min);
+	$value-max: map-get($breakpoints, $name-max);
 
-    @media #{$type} and (min-width: $value-min) and (max-width: $value-max) {
-        @content;
-    }
+	@media #{$type} and (min-width: $value-min) and (max-width: $value-max) {
+		@content;
+	}
 }

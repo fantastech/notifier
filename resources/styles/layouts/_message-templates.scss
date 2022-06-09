@@ -103,7 +103,6 @@ a.refresh-status.page-title-action::before {
 					display: block;
 					left: -16px;
 					top: 0;
-					z-index: 100;
 					border-left: 8px solid transparent;
 					border-right: 8px solid white;
 					border-bottom: 8px solid transparent;
@@ -140,13 +139,13 @@ a.refresh-status.page-title-action::before {
 					}
 
 					.message-date {
-					        bottom: 3px;
-					        color: rgba(0, 0, 0, .4);
-					        font-size: 11px;
-					        height: 15px;
-					        line-height: 15px;
-					        position: absolute;
-					        right: 7px;
+						bottom: 3px;
+						color: rgba(0, 0, 0, 0.4);
+						font-size: 11px;
+						height: 15px;
+						line-height: 15px;
+						position: absolute;
+						right: 7px;
 					}
 				}
 
