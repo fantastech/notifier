@@ -1,8 +1,12 @@
-#wpcontent {
-	padding-left: 0;
-}
+/*************
+ * Global
+ *************/
 
-#wa-notifier-admin-header {
+/*#wpcontent {
+	padding-left: 0;
+}*/
+
+/*#wa-notifier-admin-header {
     background: #fff;
     box-sizing: border-box;
     padding: 0;
@@ -22,51 +26,86 @@
 	box-shadow: 0 8px 8px 0 rgb(85 93 102 / 30%);
 }
 
-#wa-notifier-admin-header .header-action-links a{
+#wa-notifier-admin-header .header-action-links > *{
     text-decoration: none;
     padding: 0px 10px;
     display: inline-block;
 }
 
-#screen-meta {
+#wa-notifier-admin-header .header-action-links .header-version {
+    color: #777;
+}*/
+
+/*#screen-meta {
     margin: 0 -20px;
 }
 
 #wpbody {
     padding: 70px 20px 0px 20px;
+}*/
+
+/*.d-flex {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.wa-notifier input[type="text"],
-.wa-notifier input[type="password"],
-.wa-notifier textarea,
-.wa-notifier select{
-    width: 400px;
-    margin: 0;
-    box-sizing: border-box;
-    vertical-align: top;
+.col {
+    flex: 1 0 0%;
 }
 
-.wa-notifier-fields-table th {
-    vertical-align: top;
-    text-align: left;
-    padding: 20px 10px 20px 0;
-    width: 200px;
-    line-height: 1.3;
-    font-weight: 600;
+.w-25 {
+    flex: 0 0 25%;
 }
 
-.wa-notifier-fields-table th.section-title {
-    padding: 0px;
+.w-30 {
+    flex: 0 0 30%;
 }
 
-.wa-notifier-fields-table td {
-    margin-bottom: 9px;
-    padding: 15px 10px;
-    line-height: 1.3;
-    vertical-align: middle;
+.w-40 {
+    flex: 0 0 40%;
 }
 
-.onboarding {
+.w-50 {
+    flex: 0 0 50%;
+}
+
+.w-60 {
+    flex: 0 0 60%;
+}
+
+.w-70 {
+    flex: 0 0 70%;
+}
+
+.w-75 {
+    flex: 0 0 75%;
+}
+
+.w-80 {
+    flex: 0 0 80%;
+}
+
+.w-100 {
+    flex: 0 0 100%;
+}
+
+.rounded {
+    border-radius: 8px;
+}
+
+.bg-white {
+    background-color: #fff;
+}
+
+.p-20 {
+    padding: 20px;
+}*/
+
+/*************
+ * Dashboard
+ *************/
+
+/*.onboarding {
     max-width: 600px;
     margin: 0px auto;
     background: #fff;
@@ -78,6 +117,8 @@
     border-bottom: 1px solid #eeeeee;
 }
 
+.onboarding-head h1,
+.onboarding-head h2,
 .onboarding-head h3 {
     margin-top: 0px;
 }
@@ -87,6 +128,16 @@
 
 .onboarding-disclaimer {
     padding: 10px 20px;
+}
+
+.dashboard-ready {
+    max-width: 300px;
+    margin: 0 auto;
+    font-size: 16px;
+}
+
+.dashboard-ready p {
+
 }
 
 .onboarding-body .step{
@@ -155,200 +206,65 @@
     border-top: 1px solid #eeeeee;
 }
 
-/* Meta Fields */
-
-.meta-fields .form-field label,
-.meta-fields .form-field legend {
-    display: block;
-    margin-bottom: 5px;
-    width: calc(100% - 20px);
-}
-
-.meta-fields .form-field label .limit-text {
-    float: right;
-    color: #999999;
-}
-
-.meta-fields .form-field input[type="text"],
-.meta-fields .form-field input[type="password"],
-.meta-fields .form-field textarea,
-.meta-fields .form-field select {
-    width: calc(100% - 20px);
-    max-width: 100%;
-}
-
-.meta-fields .form-field input[disabled="disabled"],
-.meta-fields .form-field textarea[disabled="disabled"],
-.meta-fields .form-field select[disabled="disabled"] {
-    background-color: #f6f7f7;
-    cursor: not-allowed;
-}
-
-.meta-fields .d-flex {
+.dashboard-boxes {
     display: flex;
     flex-wrap: wrap;
 }
 
-.meta-fields .col {
-    flex: 1 0 0%;
-}
-
-.meta-fields .w-25 {
-    flex: 0 0 25%;
-}
-
-.meta-fields .w-30 {
-    flex: 0 0 30%;
-}
-
-.meta-fields .w-40 {
-    flex: 0 0 40%;
-}
-
-.meta-fields .w-50 {
-    flex: 0 0 50%;
-}
-
-.meta-fields .w-60 {
-    flex: 0 0 60%;
-}
-
-.meta-fields .w-70 {
-    flex: 0 0 70%;
-}
-
-.meta-fields .w-75 {
-    flex: 0 0 75%;
-}
-
-.meta-fields .w-80 {
-    flex: 0 0 80%;
-}
-
-.meta-fields .w-100 {
-    flex: 0 0 100%;
-}
-
-.meta-fields h3 {
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.meta-fields h4 {
-    margin-bottom: 0px;
-}
-
-.meta-fields .optional-text {
-    color: #999999;
-    font-weight: normal;
-}
-
-.meta-fields hr {
-    margin: 20px auto;
-}
-
-.meta-fields fieldset.form-field {
-    font-size: 13px;
-    line-height: 1.5;
-    margin: 1em 0;
-}
-
-.meta-fields .wa-notifier-radios {
-    margin: 0;
-}
-
-.meta-fields .wa-notifier-radios li {
-    display: inline-block;
-    margin-right: 20px;
-}
-
-.meta-fields .wa-notifier-radios li label {
-    display: inline-block;
-    width: auto;
-}
-
-.meta-fields .button-1-wrap {
-    max-width: 50%;
-}
-
-/* Message Templates Page */
-
-#wa-notifier-message-template-preview .inside {
-    margin-top: 0;
-    padding: 0;
-}
-
-.wa-template-preview {
-    padding: 20px;
-    min-height: 200px;
-    background-color: #e5ddd5;
-    position: relative;
-}
-
-.wa-template-preview::before {
-    background: url('../images/whatsapp-bg.png');
-    background-size: 366.5px 666px;
-    content: '';
-    height: 100%;
-    left: 0;
-    opacity: .06;
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
-
-.wa-template-preview .message-container {
+.dashboard-box {
+    border-radius: 8px;
     background-color: #fff;
-    border-radius: 7.5px;
-    border-top-left-radius: 0;
-    box-shadow: 0 1px 0.5px rgb(0 0 0 / 15%);
-    min-height: 20px;
-    position: relative;
-    word-wrap: break-word;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
-.wa-template-preview .message-container .message-head {
-    color: rgba(0, 0, 0, .76);
-    font-size: 15px;
-    font-weight: bold;
-    line-height: 19px;
-    padding: 6px 7px 0 9px;
+.dashboard-box-head {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eeeeee;
 }
 
-.wa-template-preview .message-container .message-body {
-    color: #262626;
-    font-size: 13.6px;
-    line-height: 19px;
-    padding: 7px 7px 6px 9px;
+.dashboard-box-head h2 ,
+.dashboard-box-head h3 {
+    margin: 0px;
 }
 
-.wa-template-preview .message-container .message-footer {
-    color: rgba(0, 0, 0, .45);
-    font-size: 13px;
-    line-height: 17px;
-    padding: 0 7px 8px 9px;
-}
-.wa-template-preview .message-container .message-date {
-    bottom: 3px;
-    color: rgba(0, 0, 0, .4);
-    font-size: 11px;
-    height: 15px;
-    line-height: 15px;
-    position: absolute;
-    right: 7px;
+.dashboard-box-body {
+    padding: 20px;
 }
 
-#wa-notifier-message-template-preview.sticky {
-    position: fixed;
-    top: 120px;
-    width: 100%;
+.dashboard-box-body p:first-child {
+    margin-top: 0px;
 }
 
-.post-type-wa_contact #misc-publishing-actions,
-.post-type-wa_contact #minor-publishing-actions,
-.post-type-wa_contact .subsubsub,
-.post-type-wa_message_template #misc-publishing-actions,
-.post-type-wa_message_template #minor-publishing-actions,
-.post-type-wa_message_template .subsubsub {
-    display:none;
+.quantity-rating {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-left: 10px;
 }
+
+.quantity-rating-red {
+    background: red;
+}
+
+.quantity-rating-green {
+    background: green;
+}
+
+.quantity-rating-yellow {
+    background: #f8f13a;
+}*/
+
+/*****************
+ * Message Templates
+ * Page
+ *****************/
+
+
+
+/**************
+ * Contacts
+ **************/
+

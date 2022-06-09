@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 global $post_id;
 
-$mt_status = get_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'status' , true);
+$mt_status = get_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'status' , true);
 $disable_states = array ('APPROVED', 'IN_APPEAL', 'PENDING', 'PENDING_DELETION', 'DELETED', 'DISABLED', 'LOCKED');
 
 if(in_array($mt_status, $disable_states)) {
@@ -31,10 +31,11 @@ else {
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'template_name',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'template_name', true),
-                        'label'             => 'Unique template name',
-                        'description'       => '',
+                        'id'                => WA_NOTIFIER_PREFIX . 'template_name',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'template_name', true),
+                        'label'             => 'Template name',
+                        'description'       => 'Spaces or special characters are not allowed.',
+                        'placeholder'       => 'template_name',
                         'custom_attributes' => $disabled
                     )
                 );
@@ -44,22 +45,11 @@ else {
                 <?php
                 wa_notifier_wp_select(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'category',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'category', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'category',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'category', true),
                         'label'             => 'Category',
                         'description'       => '',
                         'options'           => array (
-                            'ACCOUNT_UPDATE' => 'Account Update',
-                            'PAYMENT_UPDATE' => 'Payment Update',
-                            'PERSONAL_FINANCE_UPDATE' => 'Personal Finance Update',
-                            'SHIPPING_UPDATE' => 'Shipping Update',
-                            'RESERVATION_UPDATE' => 'Reservation Update',
-                            'ISSUE_RESOLUTION' => 'Issue Resolution',
-                            'APPOINTMENT_UPDATE' => 'Appointment Update',
-                            'TRANSPORTATION_UPDATE' => 'Transportation Update',
-                            'TICKET_UPDATE' => 'Ticket Update',
-                            'ALERT_UPDATE' => 'Alert Update',
-                            'AUTO_REPLY' => 'Auto Reply',
                             'TRANSACTIONAL' => 'Transactional',
                             'MARKETING' => 'Marketing',
                             'OTP' => 'One Time Password (OTP)'
@@ -73,8 +63,8 @@ else {
                 <?php
                 wa_notifier_wp_select(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'language',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'language', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'language',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'language', true),
                         'label'             => 'Language',
                         'description'       => '',
                         'options'           => array (
@@ -92,20 +82,19 @@ else {
 
     <div class="header-fields">
         <h3>Header <span class="optional-text">(Optional)</span></h3>
-        <p class="description">Add a title or choose media type that you want to show in message header.</p>
-        <div class="d-flex">
+        <p class="description">Add a title that you want to show in message header.</p>
+        <div class="d-flex hide">
             <div class="col">
                 <?php
                 wa_notifier_wp_select(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'header_type',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'header_type', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'header_type',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'header_type', true),
                         'label'             => 'Type',
                         'description'       => '',
                         'options'           => array (
                             'none' => 'None',
                             'text' => 'Text',
-                            'media' => 'Media'
                         ),
                         'custom_attributes' => $disabled
                     )
@@ -116,14 +105,14 @@ else {
                 <?php
                 wa_notifier_wp_select(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'media_type',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'media_type', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'media_type',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'media_type', true),
                         'label'             => 'Media Type',
                         'description'       => '',
                         'options'           => array (
-                            'image' => 'Image',
-                            'video' => 'Video',
-                            'document' => 'Document'
+                            'IMAGE' => 'Image',
+                            'VIDEO' => 'Video',
+                            'DOCUMENT' => 'Document'
                         ),
                         'custom_attributes' => $disabled
                     )
@@ -131,13 +120,13 @@ else {
                 ?>
             </div>
         </div>
-        <div class="d-flex">
+        <div class="d-flex hide">
             <div class="col">
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'media_url',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'media_url', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'media_url',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'media_url', true),
                         'label'             => 'Media URL',
                         'description'       => '',
                         'data_type'         => 'url',
@@ -152,8 +141,8 @@ else {
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'header_text',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'header_text', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'header_text',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'header_text', true),
                         'label'             => 'Header Text',
                         'description'       => '',
                         'limit'             => 60,
@@ -175,8 +164,8 @@ else {
                 <?php
                 wa_notifier_wp_textarea_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'body_text',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'body_text', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'body_text',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'body_text', true),
                         'label'             => 'Body content',
                         'description'       => '',
                         'rows'              => 4,
@@ -199,8 +188,8 @@ else {
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'footer_text',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'footer_text', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'footer_text',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'footer_text', true),
                         'label'             => 'Footer text',
                         'description'       => '',
                         'limit'             => 60,
@@ -222,13 +211,13 @@ else {
                 <?php
                 wa_notifier_wp_select(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_type',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'media_type', true),
-                        'label'             => 'Media Type',
+                        'id'                => WA_NOTIFIER_PREFIX . 'button_type',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_type', true),
+                        'label'             => 'Button Type',
                         'description'       => '',
                         'options'           => array (
                             'none' => 'None',
-                            'cta' => 'Call to action',
+                            'cta' => 'Call to action'
                         ),
                         'custom_attributes' => $disabled
                     )
@@ -237,10 +226,12 @@ else {
             </div>
             <div class="col">
                 <?php
+                $button_num = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_num', true);
+                $button_num = ($button_num) ? $button_num : '1';
                 wa_notifier_wp_radio(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_num',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_num', true) || '1',
+                        'id'                => WA_NOTIFIER_PREFIX . 'button_num',
+                        'value'             => $button_num,
                         'label'             => 'Number of buttons',
                         'description'       => '',
                         'options'           => array (
@@ -260,13 +251,13 @@ else {
                 <?php
                 wa_notifier_wp_select(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_type',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_type', true) || 'visit',
+                        'id'                => WA_NOTIFIER_PREFIX . 'button_1_type',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_type', true),
                         'label'             => 'Type',
                         'description'       => '',
                         'options'           => array (
-                            'visit' => 'Visit Website',
-                            'call' => 'Call Phone Number',
+                            'URL' => 'Visit Website',
+                            'PHONE_NUMBER' => 'Call Phone Number'
                         ),
                         'custom_attributes' => $disabled
                     )
@@ -277,10 +268,11 @@ else {
                     <?php
                         wa_notifier_wp_text_input(
                             array(
-                                'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_text',
-                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_text', true),
+                                'id'                => WA_NOTIFIER_PREFIX . 'button_1_text',
+                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_text', true),
                                 'label'             => 'Button Text',
                                 'description'       => '',
+                                'limit'             => 25,
                                 'custom_attributes' => $disabled
                             )
                         );
@@ -290,21 +282,23 @@ else {
                     <?php
                         wa_notifier_wp_text_input(
                             array(
-                                'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_url',
-                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_url', true),
+                                'id'                => WA_NOTIFIER_PREFIX . 'button_1_url',
+                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_url', true),
                                 'label'             => 'Website URL',
                                 'description'       => '',
                                 'placeholder'       => 'http://',
+                                'limit'             => 2000,
                                 'custom_attributes' => $disabled
                             )
                         );
                         wa_notifier_wp_text_input(
                             array(
-                                'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_phone_num',
-                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_1_phone_num', true),
+                                'id'                => WA_NOTIFIER_PREFIX . 'button_1_phone_num',
+                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_phone_num', true),
                                 'label'             => 'Phone Number',
                                 'description'       => '',
                                 'placeholder'       => 'Phone Number with Country Code',
+                                'limit'             => 20,
                                 'custom_attributes' => $disabled
                             )
                         );
@@ -318,13 +312,13 @@ else {
                 <?php
                 wa_notifier_wp_select(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_type',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_type', true) || 'visit',
+                        'id'                => WA_NOTIFIER_PREFIX . 'button_2_type',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_type', true),
                         'label'             => 'Type',
                         'description'       => '',
                         'options'           => array (
-                            'visit' => 'Visit Website',
-                            'call' => 'Call Phone Number',
+                            'URL' => 'Visit Website',
+                            'PHONE_NUMBER' => 'Call Phone Number',
                         ),
                         'custom_attributes' => $disabled
                     )
@@ -335,10 +329,11 @@ else {
                     <?php
                         wa_notifier_wp_text_input(
                             array(
-                                'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_text',
-                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_text', true),
+                                'id'                => WA_NOTIFIER_PREFIX . 'button_2_text',
+                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_text', true),
                                 'label'             => 'Button Text',
                                 'description'       => '',
+                                'limit'             => 25,
                                 'custom_attributes' => $disabled
                             )
                         );
@@ -348,21 +343,23 @@ else {
                     <?php
                         wa_notifier_wp_text_input(
                             array(
-                                'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_url',
-                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_url', true),
+                                'id'                => WA_NOTIFIER_PREFIX . 'button_2_url',
+                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_url', true),
                                 'label'             => 'Website URL',
                                 'description'       => '',
                                 'placeholder'       => 'http://',
+                                'limit'             => 2000,
                                 'custom_attributes' => $disabled
                             )
                         );
                         wa_notifier_wp_text_input(
                             array(
-                                'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_phone_num',
-                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'button_2_phone_num', true),
-                                'label'             => 'Phone Number with Country Code',
+                                'id'                => WA_NOTIFIER_PREFIX . 'button_2_phone_num',
+                                'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_phone_num', true),
+                                'label'             => 'Phone Number',
                                 'description'       => '',
                                 'placeholder'       => 'Phone Number with Country Code',
+                                'limit'             => 20,
                                 'custom_attributes' => $disabled
                             )
                         );

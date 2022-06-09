@@ -48,3 +48,36 @@ function wa_notifier_register_post_type($cpt_slug, $cpt_name, $cpt_name_plural, 
     ));
     register_post_type($cpt_slug, $args);
 }
+
+/**
+* Create new taxonomy for a post type
+*
+* @return null
+*/
+function wa_notifier_register_taxonomy($taxonomy_slug, $taxonomy_name, $taxonomy_name_plural, $cpt_slug, $args = array()) {
+    $labels = array (
+        'name' => $taxonomy_name_plural,
+        'singular_name' => $taxonomy_name,
+        'search_items' =>  "Search {$taxonomy_name_plural}",
+        'all_items' => "All {$taxonomy_name_plural}",
+        'parent_item' => "Parent {$taxonomy_name}",
+        'parent_item_colon' => "Parent {$taxonomy_name}:",
+        'edit_item' => "Edit {$taxonomy_name}",
+        'update_item' => "Update {$taxonomy_name}",
+        'add_new_item' => "Add New {$taxonomy_name}",
+        'new_item_name' => "New {$taxonomy_name} Name",
+        'menu_name' => $taxonomy_name_plural,
+    );
+
+    $args =  wp_parse_args( $args, array (
+        'hierarchical' => false,
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'show_in_rest' => true,
+        'rewrite' => array( 'slug' => $taxonomy_slug )
+    ));
+
+    register_taxonomy($taxonomy_slug, [ $cpt_slug ], $args);
+}

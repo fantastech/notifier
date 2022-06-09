@@ -1,0 +1,56 @@
+.d-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col {
+    flex: 1 0 0%;
+}
+
+.w-25 {
+    flex: 0 0 25%;
+}
+
+.w-30 {
+    flex: 0 0 30%;
+}
+
+.w-40 {
+    flex: 0 0 40%;
+}
+
+.w-50 {
+    flex: 0 0 50%;
+}
+
+.w-60 {
+    flex: 0 0 60%;
+}
+
+.w-70 {
+    flex: 0 0 70%;
+}
+
+.w-75 {
+    flex: 0 0 75%;
+}
+
+.w-80 {
+    flex: 0 0 80%;
+}
+
+.w-100 {
+    flex: 0 0 100%;
+}
+
+.rounded {
+    border-radius: 8px;
+}
+
+.bg-white {
+    background-color: #fff;
+}
+
+.p-20 {
+    padding: 20px;
+}

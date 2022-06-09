@@ -8,6 +8,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+global $post_id;
 ?>
 <div class="meta-fields">
     <div class="general-fields">
@@ -16,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'first_name',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'first_name', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'first_name',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', true),
                         'label'             => 'First Name',
                         'description'       => ''
                     )
@@ -28,8 +29,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'last_name',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'last_name', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'last_name',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', true),
                         'label'             => 'Last Name',
                         'description'       => ''
                     )
@@ -40,10 +41,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php
                 wa_notifier_wp_text_input(
                     array(
-                        'id'                => WA_NOTIFIER_SETTINGS_PREFIX . 'wa_number',
-                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'wa_number', true),
+                        'id'                => WA_NOTIFIER_PREFIX . 'wa_number',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', true),
                         'label'             => 'Whatsapp Number',
-                        'description'       => ''
+                        'description'       => '',
+                        'placeholder'       => 'WhatsApp number with country code'
                     )
                 );
                 ?>

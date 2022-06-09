@@ -43,7 +43,7 @@ class WA_Notifier_Dashboard {
 			return;	
 		}
 
-		update_option(WA_NOTIFIER_SETTINGS_PREFIX . 'disclaimer', 'accepted');
+		update_option(WA_NOTIFIER_PREFIX . 'disclaimer', 'accepted');
 	}
 
 	/**
@@ -60,10 +60,10 @@ class WA_Notifier_Dashboard {
 			return;	
 		}
 		
-		// update_option(WA_NOTIFIER_SETTINGS_PREFIX . 'disclaimer', 'accepted');
-		$phone_number_id = get_option( WA_NOTIFIER_SETTINGS_PREFIX . 'phone_number_id' );
-		$business_account_id = get_option( WA_NOTIFIER_SETTINGS_PREFIX . 'business_account_id' );
-		$permanent_access_token = get_option( WA_NOTIFIER_SETTINGS_PREFIX . 'permanent_access_token' );
+		// update_option(WA_NOTIFIER_PREFIX . 'disclaimer', 'accepted');
+		$phone_number_id = get_option( WA_NOTIFIER_PREFIX . 'phone_number_id' );
+		$business_account_id = get_option( WA_NOTIFIER_PREFIX . 'business_account_id' );
+		$permanent_access_token = get_option( WA_NOTIFIER_PREFIX . 'permanent_access_token' );
 
 		if('' == $permanent_access_token || '' == $business_account_id || '' == $permanent_access_token){
 			$notices[] = array(
@@ -74,8 +74,30 @@ class WA_Notifier_Dashboard {
 			return;
 		}
 
+		// Fetch phone number details
+		$response = WA_Notifier::wa_cloud_api_request('', array(), 'GET');
+		if($response->error) {
+			$notices[] = array(
+				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
+				'type' => 'error'
+			);
+			new WA_Notifier_Admin_Notices($notices);
+			return;
+		}
+		else {
+			$phone_number_details[$phone_number_id] = array (
+				'display_num'		=> $response->display_phone_number,
+				'display_name'		=> $response->verified_name,
+				'phone_num_status'	=> $response->code_verification_status,
+				'quality_rating'	=> $response->quality_rating
+			);
+			update_option( WA_NOTIFIER_PREFIX . 'phone_number_details', $phone_number_details );
+		}
+
+		$response = ''; // reset
+
+		// Fetch message templates
 		$response = WA_Notifier::wa_business_api_request('message_templates', array(), 'GET');
-		
 		if($response->error) {
 			$notices[] = array(
 				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
@@ -97,29 +119,29 @@ class WA_Notifier_Dashboard {
 					'post_type' 	=> 'wa_message_template'
 				) );
 
-				update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'template_name', $template->name);
-				update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'category', $template->category);
-				update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'status', $template->status);
-				update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'template_id', $template->id);
-				update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'language', $template->language);
+				update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'template_name', $template->name);
+				update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'category', $template->category);
+				update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'status', $template->status);
+				update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'template_id', $template->id);
+				update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'language', $template->language);
 
 				foreach ($template->components as $component) {
 					switch ($component->type) {
 						case 'HEADER':	
-							update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'header_type', 'text');
-							update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'header_text', $component->text);
+							update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'header_type', 'text');
+							update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'header_text', $component->text);
 							break;
 
 						case 'BODY':
-							update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'body_text', $component->text);
+							update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'body_text', $component->text);
 							break;
 
 						case 'FOOTER':
-							update_post_meta ( $post_id, WA_NOTIFIER_SETTINGS_PREFIX . 'footer_text', $component->text);
+							update_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'footer_text', $component->text);
 					}
 				}
 			}
-			update_option( WA_NOTIFIER_SETTINGS_PREFIX . 'api_credentials_validated', 'yes');
+			update_option( WA_NOTIFIER_PREFIX . 'api_credentials_validated', 'yes');
 			wp_redirect( admin_url( '/admin.php?page=' . WA_NOTIFIER_NAME ) );
         	exit;
 		}

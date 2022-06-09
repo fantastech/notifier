@@ -1,0 +1,23 @@
+/**
+ * Breakpoints
+ */
+$breakpoints: (
+  mobile-sm: 576px,
+  mobile: 767px,
+  tablet: 992px,
+  tablet-lg: 1024px,
+  desktop: 1280px,
+  desktop-lg: 1440px,
+  dekstop-xl: 1920px,
+);
+
+/**
+ * Colours
+ */
+$white: #fff;
+$black: #000;
+$grey-light: #eee;
+$grey-dark: #3a3a3a;
+$blue: #0170b9;
+$primary: $blue;
+$secondary: $grey-dark;

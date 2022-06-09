@@ -26,7 +26,7 @@ function wa_notifier_wp_text_input( $field ) {
 	$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
 	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
 	$field['type']          = isset( $field['type'] ) ? $field['type'] : 'text';
-	$field['limit']          = isset( $field['limit'] ) ? $field['limit'] : 0;
+	$field['limit']         = isset( $field['limit'] ) ? $field['limit'] : 0;
 	$data_type              = empty( $field['data_type'] ) ? '' : $field['data_type'];
 
 	switch ( $data_type ) {
@@ -54,6 +54,10 @@ function wa_notifier_wp_text_input( $field ) {
 		foreach ( $field['custom_attributes'] as $attribute => $value ) {
 			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
 		}
+	}
+
+	if( $field['required'] ) {
+		$custom_attributes[] = 'required="required"';
 	}
 
 	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
@@ -121,6 +125,10 @@ function wa_notifier_wp_textarea_input( $field ) {
 		foreach ( $field['custom_attributes'] as $attribute => $value ) {
 			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
 		}
+	}
+
+	if( $field['required'] ) {
+		$custom_attributes[] = 'required="required"';
 	}
 
 	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">

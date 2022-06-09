@@ -73,7 +73,7 @@ class WA_Notifier_Settings {
 
 		$html = '';
 
-		$option_name = WA_NOTIFIER_SETTINGS_PREFIX . $field['id'];
+		$option_name = WA_NOTIFIER_PREFIX . $field['id'];
 		$option = get_option( $option_name );
 
 		$data = '';
@@ -228,7 +228,7 @@ class WA_Notifier_Settings {
 				continue;
 			}
 			
-			$option_name  = WA_NOTIFIER_SETTINGS_PREFIX . $option['id'];
+			$option_name  = WA_NOTIFIER_PREFIX . $option['id'];
 			$setting_name = '';
 			$raw_value    = isset( $data[ $option_name ] ) ? wp_unslash( $data[ $option_name ] ) : null;
 			

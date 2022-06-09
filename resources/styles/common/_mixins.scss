@@ -1,0 +1,46 @@
+/**
+ * Generates styles for a button variant.
+ */
+@mixin button-variant($color, $background, $border, $hover-color, $hover-background: darken($background, 7.5%), $hover-border: darken($border, 10%), $active-color, $active-background: darken($background, 10%), $active-border: darken($border, 12.5%)) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+
+  &:hover {
+    color: $hover-color;
+    background-color: $hover-background;
+    border-color: $hover-border;
+  }
+
+  &:active,
+  &:focus {
+    color: $active-color;
+    background-color: $active-background;
+    border-color: $active-border;
+  }
+}
+
+@mixin media-down($name, $type: screen) {
+  $value: map-get($breakpoints, $name);
+
+  @media #{$type} and (max-width: $value) {
+    @content;
+  }
+}
+
+@mixin media-up($name, $type: screen) {
+  $value: map-get($breakpoints, $name);
+
+  @media #{$type} and (min-width: $value + 1) {
+    @content;
+  }
+}
+
+@mixin media-between($name-min, $name-max, $type: screen) {
+  $value-min: map-get($breakpoints, $name-min);
+  $value-max: map-get($breakpoints, $name-max);
+
+  @media #{$type} and (min-width: $value-min) and (max-width: $value-max) {
+    @content;
+  }
+}

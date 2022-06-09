@@ -8,12 +8,12 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-$disclaimer = get_option(WA_NOTIFIER_SETTINGS_PREFIX . 'disclaimer');
-$verify_token = get_option(WA_NOTIFIER_SETTINGS_PREFIX . 'verify_token');
-$api_credentials_validated = get_option(WA_NOTIFIER_SETTINGS_PREFIX . 'api_credentials_validated');
+$disclaimer = get_option(WA_NOTIFIER_PREFIX . 'disclaimer');
+$verify_token = get_option(WA_NOTIFIER_PREFIX . 'verify_token');
+$api_credentials_validated = get_option(WA_NOTIFIER_PREFIX . 'api_credentials_validated');
 $show_disclaimer = ( isset($_GET['show']) && $_GET['show'] == 'disclaimer' ) ? true : false;
-
+$phone_number_id = get_option( WA_NOTIFIER_PREFIX . 'phone_number_id' );
+$phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details');
 ?>
 <div class="wrap wa-notifier">
 	<h1>Dashboard</h1>
@@ -141,8 +141,41 @@ $show_disclaimer = ( isset($_GET['show']) && $_GET['show'] == 'disclaimer' ) ? t
 			</div>
 
 		<?php else: ?>		
-
-			<h1>You're all set</h1>
+			<div class="dashboard-boxes">
+				<div class="dashboard-box w-100">
+					<div class="dashboard-box-body d-flex w-100">
+						<div class="w-25">
+							<b>Phone Number:</b>
+							<?php echo $phone_number_details[$phone_number_id]['display_num']; ?>
+						</div>
+						<div class="w-25">
+							<b>Display Name:</b>
+							<?php echo $phone_number_details[$phone_number_id]['display_name']; ?>
+						</div>
+						<div class="w-25">
+							<b>Status:</b>
+							<?php echo $phone_number_details[$phone_number_id]['phone_num_status']; ?>
+						</div>
+						<div class="w-25">
+							<b>Qaulity Rating:</b>
+							<span class="quantity-rating quantity-rating-<?php echo strtolower($phone_number_details[$phone_number_id]['quality_rating']); ?>"></span>
+						</div>
+					</div>
+				</div>
+				<div class="dashboard-box w-30">
+					<div class="dashboard-box-head">
+						<h2>You're all set!</h2>
+					</div>
+					<div class="dashboard-box-body">
+						<p>Next steps:</p>
+						<ol>
+							<li>Create a new <a href="<?php echo admin_url( 'edit.php?post_type=wa_message_template' ); ?>">Message Template</a>.</li>
+							<li>Upload / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>">Contacts</a>.</li>
+							<li>Create and send a <a href="<?php echo admin_url( 'edit.php?post_type=wa_broadcast' ); ?>">Broadcast</a>.</li>
+						</ol>
+					</div>
+				</div>
+			</div>
 
 		<?php endif; ?>
 

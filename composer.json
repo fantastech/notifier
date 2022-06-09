@@ -1,0 +1,29 @@
+{
+  "name": "fantastech/wa-notifier",
+  "type": "wordpress-plugin",
+  "license": "UNLICENSED",
+  "authors": [
+    {
+      "name": "Ram Shengale",
+      "email": "ram@fantastech.co",
+      "homepage": "https://github.com/ramshengale"
+    }
+  ],
+  "require": {
+    "php": "7.4.x"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "style:check": "phpcs",
+    "style:fix": "phpcbf"
+  },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^2.3"
+  }
+}

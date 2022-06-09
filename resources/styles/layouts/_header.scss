@@ -1,0 +1,29 @@
+#wa-notifier-admin-header {
+    background: #fff;
+    box-sizing: border-box;
+    padding: 0;
+    position: fixed;
+    width: calc(100% - 160px);
+    top: 32px;
+    z-index: 1001;
+    padding: 0px 20px;
+    height: 70px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+
+    &.sticky {
+        box-shadow: 0 8px 8px 0 rgb(85 93 102 / 30%);
+    }
+
+    .header-action-links > *{
+        text-decoration: none;
+        padding: 0px 10px;
+        display: inline-block;
+
+        &.header-version {
+            color: #777;
+        }
+    }
+}

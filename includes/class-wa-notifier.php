@@ -28,7 +28,7 @@ class WA_Notifier {
 	private function define_constants() {		
 		$this->define( 'WA_NOTIFIER_VERSION', '0.1' );
 		$this->define( 'WA_NOTIFIER_NAME', 'wa-notifier' );
-		$this->define( 'WA_NOTIFIER_SETTINGS_PREFIX', 'wa_notifier_' );
+		$this->define( 'WA_NOTIFIER_PREFIX', 'wa_notifier_' );
 		$this->define( 'WA_NOTIFIER_URL', trailingslashit( plugins_url( '' , dirname(__FILE__) ) ) );
 		$this->define( 'WA_NOTIFIER_WA_API_VERSION', 'v14.0' );
 		$this->define( 'WA_NOTIFIER_WA_API_URL', 'https://graph.facebook.com/' . WA_NOTIFIER_WA_API_VERSION . '/' );
@@ -69,6 +69,7 @@ class WA_Notifier {
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-dashboard.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-message-templates.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-contacts.php';
+		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-broadcasts.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-settings.php';
 		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-woocommerce.php';
 	}
@@ -82,6 +83,7 @@ class WA_Notifier {
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Dashboard', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Message_Templates', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Contacts', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Broadcasts', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Settings', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Woocommerce', 'init' ) );
 
@@ -96,11 +98,11 @@ class WA_Notifier {
 	 * Setup during plugin activation
 	 */
 	public function install() {
-		$verify_token = get_option(WA_NOTIFIER_SETTINGS_PREFIX . 'verify_token');
+		$verify_token = get_option(WA_NOTIFIER_PREFIX . 'verify_token');
 		if(!$verify_token) {
 			$bytes = random_bytes(20);
 			$verify_token = WA_NOTIFIER_NAME . '-' . substr(bin2hex($bytes), 0, 10);
-			update_option(WA_NOTIFIER_SETTINGS_PREFIX . 'verify_token', $verify_token);
+			update_option(WA_NOTIFIER_PREFIX . 'verify_token', $verify_token);
 		}
 	}
 
@@ -113,7 +115,7 @@ class WA_Notifier {
 			return true;
 		}
 
-		$plugin_ctps = array( 'wa_message_template', 'wa_contact' );
+		$plugin_ctps = array( 'wa_message_template', 'wa_contact', 'wa_broadcast' );
 		if ( '' !== $current_screen->post_type && in_array( $current_screen->post_type, $plugin_ctps ) ) {
 			return true;
 		}
@@ -130,6 +132,7 @@ class WA_Notifier {
 		}
 		wp_enqueue_style( WA_NOTIFIER_NAME . '-admin-css', WA_NOTIFIER_URL . 'assets/css/admin.css' );
     	wp_enqueue_script( WA_NOTIFIER_NAME . '-admin-js', WA_NOTIFIER_URL . 'assets/js/admin.js' );
+    	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifierTemplates', apply_filters( 'wa_notifier_admin_html_templates', array() ) );
 	}
 
 	/**
@@ -140,10 +143,13 @@ class WA_Notifier {
 		if(!self::is_wa_notifier_page()){
 			return;
 		}
+		$current_screen = get_current_screen();
+		$cpt = ( '' !== $current_screen->post_type) ? $current_screen->post_type : '';
 		?>
-		<div id="wa-notifier-admin-header">
+		<div id="wa-notifier-admin-header" data-post-type="<?php echo $cpt; ?>">
 			<h2><?php echo get_admin_page_title(); ?></h2>
 			<div class="header-action-links">
+				<span class="header-version">Version: 0.1 (beta)</span>
 				<a href="mailto:ram@fantastech.co?subject=Regarding%20WA%20Notifier%20on%20<?php echo get_site_url(); ?>">Help</a>
 				<a href="admin.php?page=wa-notifier&show=disclaimer">Disclaimer</a>
 			</div>
@@ -165,7 +171,7 @@ class WA_Notifier {
 
 		/* Validate WhastApp API webbook */
 		if(isset($_GET['hub_mode']) && $_GET['hub_mode'] == 'subscribe') {
-			$verify_token = get_option(WA_NOTIFIER_SETTINGS_PREFIX . 'verify_token');
+			$verify_token = get_option(WA_NOTIFIER_PREFIX . 'verify_token');
 			if(isset($_GET['hub_verify_token']) && $_GET['hub_verify_token'] == $verify_token) {
 				echo isset($_GET['hub_challenge']) ? $_GET['hub_challenge'] : '';	
 			}
@@ -183,7 +189,20 @@ class WA_Notifier {
 			return;
 		}
 
-		$response = $this->wa_api_request('messages');
+		$args = array (
+			'messaging_product' => 'whatsapp',
+			'recipient_type' => 'individual',
+			'to' => '+917828699878',
+			'type' => 'template',
+			'template' => array (
+				'name' => 'received_request',
+				'language' => array (
+					'code' => 'en_US'
+				)
+			)
+		);
+
+		$response = self::wa_cloud_api_request('messages', $args);
 
 		print_r($response);
 		
