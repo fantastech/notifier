@@ -89,6 +89,8 @@ class WA_Notifier {
 
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
+
+		add_action( 'removable_query_args', array( $this , 'remove_admin_query_args') );
 	}
 
 	/**
@@ -243,6 +245,14 @@ class WA_Notifier {
 			$response_body = wp_remote_retrieve_body( $response );
 			return json_decode($response_body);
 		}
+	}
+
+	/**
+	 * Remove query args from WP backend
+	 */
+	public static function remove_admin_query_args ($args) {
+		$remove_args = array('wa_import_count', 'wa_csv_import', 'import_contacts_from_users', 'refresh_status');
+		return array_merge($args, $remove_args);
 	}
 
 }

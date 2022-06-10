@@ -170,8 +170,8 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 						<p>Next steps:</p>
 						<ol>
 							<li>Create a new <a href="<?php echo admin_url( 'edit.php?post_type=wa_message_template' ); ?>">Message Template</a>.</li>
-							<li>Upload / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>">Contacts</a>.</li>
-							<li>Create and send a <a href="<?php echo admin_url( 'edit.php?post_type=wa_broadcast' ); ?>">Broadcast</a>.</li>
+							<li>Add / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>">Contacts</a>.</li>
+							<li>Create and send your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_notification' ); ?>">Notification</a>.</li>
 						</ol>
 					</div>
 				</div>

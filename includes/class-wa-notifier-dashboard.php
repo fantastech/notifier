@@ -146,6 +146,7 @@ class WA_Notifier_Dashboard {
         	exit;
 		}
 	}
+
 	/**
 	 * Check if on dashboard page
 	 */

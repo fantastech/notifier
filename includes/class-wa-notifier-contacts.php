@@ -20,6 +20,8 @@ class WA_Notifier_Contacts {
 		add_action( 'manage_wa_contact_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
 		add_action( 'save_post_wa_contact', array(__CLASS__, 'save_meta'), 10, 2 );
 		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
+		add_filter( 'admin_post_wa_notifier_import_contacts_csv', array( __CLASS__ , 'import_contacts_csv') );
+		add_action( 'admin_notices', array( __CLASS__, 'show_admin_notices') );
 	}
 
 	/**
@@ -161,8 +163,160 @@ class WA_Notifier_Contacts {
 	 * Admin HTML templates
 	 */
 	public static function admin_html_templates($templates) {
-		$templates['import_contact'] = '<a href="#" class="import-contacts page-title-action">Import Contacts</a>';
+		$import_from_users_url = '?' . http_build_query(array_merge($_GET, array("import_contacts_from_users"=>"1")));
+		ob_start();
+		?>
+		<a href="#" class="page-title-action" id="import-contacts">Import Contacts</a>
+		<div class="contact-import-options hide">
+			<div class="p-20">
+				<h3>Select an import method:</h3>
+				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="csv" checked="checked"> Import from CSV file</label>
+				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="users"> Import from Users</label>
+				<div class="col-import col-import-csv">
+					<p><a href="'.WA_NOTIFIER_URL.'/contacts-import-sample.csv">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. In the WhatsApp number column, add phone numbers with country codes (but without the + sign).</p>
+					<form id="import-contacts-csv" action="'. esc_url( admin_url( 'admin-post.php' ) ) .'" method="POST" enctype="multipart/form-data">
+						<input type="file" name="wa_notifier_contacts_csv" id="wa-notifier-contacts-csv" />
+						<input type="submit" name="upload_csv" value="Import CSV" class="button-primary">
+						<?php wp_nonce_field('wa_notifier_contacts_csv'); ?>
+						<input type="hidden" name="action" value="wa_notifier_import_contacts_csv" />
+					</form>
+				</div>
+				<div class="col-import col-import-users hide">
+					<p>Import contact data from exisiting website <a href="users.php">users</a>. Map the suitable user meta key with the respective <b>Contact</b> field and click the button below to import.</p>
+					<form id="import-contacts-users" action="'. esc_url( admin_url( 'admin-post.php' ) ) .'" method="POST" enctype="multipart/form-data">
+						<div><label>First Name: <?php self::show_user_meta_keys_dropdown('first_name'); ?></label></div>
+						<div><label>Last Name: <?php self::show_user_meta_keys_dropdown('last_name'); ?></label></div>
+						<div><label>WhatsApp Number (with ext code): <?php self::show_user_meta_keys_dropdown('wa_numebr'); ?></label></div>
+						<div><label>List: <?php self::show_user_meta_keys_dropdown('wa_notifier_list'); ?></label></div>
+						<div><label>Tags: <?php self::show_user_meta_keys_dropdown('wa_notifier_tag'); ?></label></div>
+						<div><input type="submit" name="upload_csv" value="Import from Users" class="button-primary">
+						<?php wp_nonce_field('wa_notifier_contacts_users'); ?></div>
+						<input type="hidden" name="action" value="wa_notifier_import_contacts_users" />
+					</form>
+				</div>
+			</div>
+		</div>
+		<?php
+		$templates['import_contact'] = ob_get_clean();
 		return $templates;
+	}
+
+	/**
+	 * Show user meta keys dropdown
+	 */
+	public static function show_user_meta_keys_dropdown ($id = '') {
+		$meta_keys = array_keys( get_user_meta( get_current_user_id() ) );
+		$meta_keys = apply_filters('wa_notifier_user_meta_keys', $meta_keys);
+		echo '<select id="'.$id.'" name="'.$id.'">';
+		foreach($meta_keys as $key) {
+			echo '<option value="'.$key.'">'.$key.'</option>';
+		}
+		echo '</select>';
+	}
+
+	/**
+	 * Handle CSV import
+	 */
+	public static function import_contacts_csv() {
+		if(!isset($_FILES['wa_notifier_contacts_csv'])) {
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
+		}
+
+		if(!check_admin_referer('wa_notifier_contacts_csv')) {
+			return;
+		}
+
+		$tmpName = $_FILES['wa_notifier_contacts_csv']['tmp_name'];
+		$contact_data = array_map('str_getcsv', file($tmpName));
+		$first_row = $contact_data[0];
+		if($first_row[0] != 'First Name' || $first_row[1] != 'Last Name') {
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_csv_import=2'));
+		}
+		unset($contact_data[0]);
+		$count = 0;
+		foreach($contact_data as $contact) {
+			$first_name = isset($contact[0]) ? sanitize_text_field( wp_unslash ($contact[0]) ) : '';
+			$last_name = isset($contact[1]) ? sanitize_text_field( wp_unslash ($contact[1]) ) : '';
+			$phone_number = isset($contact[2]) ? '+'. (int) $contact[2] : '';
+			$list = isset($contact[3]) ? sanitize_text_field( wp_unslash ($contact[3]) ) : '';
+			$tags = isset($contact[4]) ? explode( ',', sanitize_text_field( wp_unslash ($contact[4]) ) ) : '';
+
+			if('' == $phone_number){
+				continue;
+			}
+
+			$count++;
+
+			$existing_contact = get_posts( array(
+				'post_type'		=> 'wa_contact',
+				'fields'		=> 'ids',
+				'numberposts'	=> 1,
+				'meta_query'	=> array(
+				    array(
+						'key'   => WA_NOTIFIER_PREFIX . 'wa_number',
+						'value' => $phone_number,
+				    ),
+				)
+			) );
+
+			if(empty($existing_contact)) {
+				$post_id = wp_insert_post ( array(
+					'post_title' => '',
+					'post_type' => 'wa_contact',
+					'post_status' => 'publish'
+				) );
+			}
+			else {
+				$post_id = $existing_contact[0];
+				unset($existing_contact);
+			}
+
+			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', $first_name);
+			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', $last_name);
+			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', $phone_number);
+			wp_set_post_terms( $post_id, $list, 'wa_contact_list');
+			wp_set_post_terms( $post_id, $tags, 'wa_contact_tag');
+
+			unset($post_id);
+
+		}
+
+		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_csv_import=1&wa_import_count='.$count));
+	}
+
+	/**
+	 * Show admin notices
+	 */
+	public static function show_admin_notices () {
+		if ( 'wa_contact' !== get_post_type() ) {
+ 			return;
+ 		}
+
+ 		if ( ! isset($_GET['wa_csv_import']) ) {
+ 			return;
+ 		}
+
+ 		if('1' == $_GET['wa_csv_import']) {
+ 			$count = isset($_GET['wa_import_count']) ? $_GET['wa_import_count'] : 0;
+ 			if($count != 0){
+ 				$message = $count . ' contacts imported / updated.';
+ 			}
+ 			else {
+ 				$message = 'No new contacts were imported / updated.';
+ 			}
+ 			?>
+			<div class="notice notice-success is-dismissible">
+			    <p><?php echo $message; ?></p>
+			</div>
+			<?php
+ 		}
+ 		elseif('2' == $_GET['wa_csv_import']) {
+ 			?>
+			<div class="notice notice-error is-dismissible">
+			    <p>There was an error during the import. Please make sure your CSV format matches the <a href="<?php echo WA_NOTIFIER_URL.'/contacts-import-sample.csv'; ?>">sample document</a> format before uploading.</p>
+			</div>
+			<?php
+ 		}
 	}
 
 }

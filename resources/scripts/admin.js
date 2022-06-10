@@ -222,11 +222,52 @@
     });
 
     // Add Refresh Status button to the message template lisitng page
-        $('.edit-php.post-type-wa_message_template .wrap .page-title-action')
-          .after(waNotifierTemplates.refresh_mt_status);
+    $('.edit-php.post-type-wa_message_template .wrap .page-title-action').after(waNotifierTemplates.refresh_mt_status);
 
-      $('.edit-php.post-type-wa_contact .wrap .page-title-action')
-          .after(waNotifierTemplates.import_contact);
+
+    /***************
+     * Contact page
+     **************/
+
+    // Add Import button and HTML to the Contacts lisitng page
+	$('.edit-php.post-type-wa_contact .wrap .page-title-action').after(waNotifierTemplates.import_contact);
+
+	// Show import options
+	$(document).on('click', '#import-contacts', function(e){
+		e.preventDefault();
+		$('.contact-import-options').toggleClass('hide');
+	});
+
+	// Select import method
+	$(document).on('change', '.csv-import-method', function(){
+		var value = $(this).val();
+		$('.col-import').addClass('hide');
+		$('.col-import-' + value).removeClass('hide');
+	});
+
+	// On submission of CSV form
+	$(document).on('submit', '#import-contacts-csv', function(e){
+		var file = $('#wa-notifier-contacts-csv').val();
+		if (file == "") {
+			alert("Please select a file to upload.");
+			return false;
+		}
+		else {
+			var file_size = $('#wa-notifier-contacts-csv')[0].files[0].size / 1024 / 1024;
+			if(file_size > 24) {
+				alert("Please select CSV file smaller than 24MB.");
+				return false;
+			}
+			var allowedExtension = /(\.csv)$/i;
+            if (!allowedExtension.exec(file)) {
+                alert('Please select a CSV file.');
+                $('#wa-notifier-contacts-csv').val('');
+                return false;
+            }
+		}
+	});
+
+
 
   });
 

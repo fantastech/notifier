@@ -1,6 +1,6 @@
 <?php
 /**
- * Broadcasts CPT Meta Box
+ * Notifications CPT Meta Box
  *
  * @package WA_Notifier
  */
