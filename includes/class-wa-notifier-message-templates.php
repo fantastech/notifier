@@ -155,13 +155,17 @@ class WA_Notifier_Message_Templates {
 	public static function add_submitbox_meta () {
 		global $post_id;
 		$mt_status = get_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'status' , true);
+
+		$refresh_url = '?' . http_build_query(array_merge($_GET, array("refresh_status"=>"1")));
+		$refresh_button = '<a href="'.$refresh_url.'" class="refresh-status" title="Click here to refresh status"><img src="'.WA_NOTIFIER_URL . '/assets/images/refresh.svg"></a>';
+
 		if(!$mt_status) {
 			$mt_status = 'DRAFT';
+			$refresh_button = '';
 		}
-		$refresh_url = '?' . http_build_query(array_merge($_GET, array("refresh_status"=>"1")));
 		echo '<div class="mt-status">';
 		echo '<b>Status:</b> <span class="status status-' . strtolower($mt_status) . '">' . $mt_status . '</span>';
-		echo '<a href="'.$refresh_url.'" class="refresh-status" title="Click here to refresh status"><img src="'.WA_NOTIFIER_URL . '/assets/images/refresh.svg"></a>';
+		echo $refresh_button;
 		echo '</div>';
 
 		if('REJECTED' == $mt_status) {
@@ -509,6 +513,39 @@ class WA_Notifier_Message_Templates {
 	public static function admin_html_templates($templates) {
 		$refresh_url = '?' . http_build_query(array_merge($_GET, array("refresh_status"=>"1")));
 		$templates['refresh_mt_status'] = '<a href="'.$refresh_url.'" class="refresh-status page-title-action">Refresh Status</a>';
+		return $templates;
+	}
+
+	/**
+	 * Get approved message templates
+	 */
+	public static function get_approved_message_templates ($show_select = false)	 {
+		$message_templates = get_posts(
+			array (
+				'post_type' => 'wa_message_template',
+				'post_status' => 'publish',
+				'numberposts' => -1,
+				'fields' => 'ids',
+				'meta_query'	=> array(
+				    array(
+						'key'   => WA_NOTIFIER_PREFIX . 'status',
+						'value' => 'APPROVED',
+				    ),
+				)
+			)
+		);
+
+		$templates = array();
+
+		if ($show_select) {
+			$templates[''] = 'Select message template';
+		}
+
+		foreach ($message_templates as $template_id) {
+			$template_name = get_post_meta ( $template_id, WA_NOTIFIER_PREFIX . 'template_name', true);
+			$templates[$template_name] = get_the_title ($template_id);
+		}
+
 		return $templates;
 	}
 

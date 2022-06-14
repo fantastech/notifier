@@ -50,6 +50,19 @@ global $post_id;
                 );
                 ?>
             </div>
+            <div class="col w-50">
+         		<?php
+                wa_notifier_wp_select(
+                    array(
+                        'id'                => WA_NOTIFIER_PREFIX . 'association_user',
+                        'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'association_user', true),
+                        'label'             => 'Associated User',
+                        'description'       => 'Attach a user with this contact. Associated contacts are useful for fetching additonal fields during transactional notifications.',
+                        'options'           => WA_Notifier_Contacts::get_website_users_list(true)
+                    )
+                );
+                ?>
+            </div>
         </div>
     </div>
 </div>

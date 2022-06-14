@@ -173,8 +173,8 @@ class WA_Notifier_Contacts {
 				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="csv" checked="checked"> Import from CSV file</label>
 				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="users"> Import from Users</label>
 				<div class="col-import col-import-csv">
-					<p><a href="'.WA_NOTIFIER_URL.'/contacts-import-sample.csv">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. In the WhatsApp number column, add phone numbers with country codes (but without the + sign).</p>
-					<form id="import-contacts-csv" action="'. esc_url( admin_url( 'admin-post.php' ) ) .'" method="POST" enctype="multipart/form-data">
+					<p><a href="<?php echo WA_NOTIFIER_URL.'contacts-import-sample.csv'; ?>">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. In the WhatsApp number column, add phone numbers with country codes (but without the + sign).</p>
+					<form id="import-contacts-csv" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
 						<input type="file" name="wa_notifier_contacts_csv" id="wa-notifier-contacts-csv" />
 						<input type="submit" name="upload_csv" value="Import CSV" class="button-primary">
 						<?php wp_nonce_field('wa_notifier_contacts_csv'); ?>
@@ -182,15 +182,37 @@ class WA_Notifier_Contacts {
 					</form>
 				</div>
 				<div class="col-import col-import-users hide">
+					<p>Coming soon!</p>
 					<p>Import contact data from exisiting website <a href="users.php">users</a>. Map the suitable user meta key with the respective <b>Contact</b> field and click the button below to import.</p>
-					<form id="import-contacts-users" action="'. esc_url( admin_url( 'admin-post.php' ) ) .'" method="POST" enctype="multipart/form-data">
-						<div><label>First Name: <?php self::show_user_meta_keys_dropdown('first_name'); ?></label></div>
-						<div><label>Last Name: <?php self::show_user_meta_keys_dropdown('last_name'); ?></label></div>
-						<div><label>WhatsApp Number (with ext code): <?php self::show_user_meta_keys_dropdown('wa_numebr'); ?></label></div>
-						<div><label>List: <?php self::show_user_meta_keys_dropdown('wa_notifier_list'); ?></label></div>
-						<div><label>Tags: <?php self::show_user_meta_keys_dropdown('wa_notifier_tag'); ?></label></div>
-						<div><input type="submit" name="upload_csv" value="Import from Users" class="button-primary">
-						<?php wp_nonce_field('wa_notifier_contacts_users'); ?></div>
+					<form id="import-contacts-users" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
+						<table>
+							<tr>
+								<td><label for="wa_contact_first_name_key">First Name:</label></td>
+								<td><input type="text" id="wa_contact_first_name" name="wa_contact_first_name" placeholder="Enter user meta key for first name"></td>
+							</tr>
+							<tr>
+								<td><label for="wa_contact_last_name_key">Last Name:</label></td>
+								<td><input type="text" id="wa_contact_last_name" name="wa_contact_last_name" placeholder="Enter user meta key for last name"></td>
+							</tr>
+							<tr>
+								<td><label for="wa_contact_wa_number_key">WhatsApp Number (with ext code):</label></td>
+								<td><input type="text" id="wa_contact_wa_number_key" name="wa_contact_wa_number_key" placeholder="Enter user meta key for WhatsApp number"></td>
+							</tr>
+							<tr>
+								<td><label for="wa_contact_list_key">Select List:</label></td>
+								<td>
+									<select>
+
+									</select>
+									<input type="text" id="wa_contact_list_key" name="wa_contact_list_key" placeholder="Enter a list name"></td>
+							</tr>
+							<tr>
+								<td><label for="wa_contact_tags">Tags:</label></td>
+								<td><input type="text" id="wa_contact_tags" name="wa_contact_tags" placeholder="Enter comma separated list of tags"></td>
+							</tr>
+						</table>
+						<input type="submit" name="upload_csv" value="Import from Users" class="button-primary">
+						<?php wp_nonce_field('wa_notifier_contacts_users'); ?>
 						<input type="hidden" name="action" value="wa_notifier_import_contacts_users" />
 					</form>
 				</div>
@@ -204,15 +226,15 @@ class WA_Notifier_Contacts {
 	/**
 	 * Show user meta keys dropdown
 	 */
-	public static function show_user_meta_keys_dropdown ($id = '') {
-		$meta_keys = array_keys( get_user_meta( get_current_user_id() ) );
-		$meta_keys = apply_filters('wa_notifier_user_meta_keys', $meta_keys);
-		echo '<select id="'.$id.'" name="'.$id.'">';
-		foreach($meta_keys as $key) {
-			echo '<option value="'.$key.'">'.$key.'</option>';
-		}
-		echo '</select>';
-	}
+	// public static function show_user_meta_keys_dropdown ($id = '') {
+	// 	$meta_keys = array_keys( get_user_meta( get_current_user_id() ) );
+	// 	$meta_keys = apply_filters('wa_notifier_user_meta_keys', $meta_keys);
+	// 	echo '<select id="'.$id.'" name="'.$id.'">';
+	// 	foreach($meta_keys as $key) {
+	// 		echo '<option value="'.$key.'">'.$key.'</option>';
+	// 	}
+	// 	echo '</select>';
+	// }
 
 	/**
 	 * Handle CSV import
@@ -317,6 +339,50 @@ class WA_Notifier_Contacts {
 			</div>
 			<?php
  		}
+	}
+
+	/**
+	 * Get contact lists
+	 */
+	public static function get_contact_lists ($show_select = false, $show_count = false)	 {
+		$contact_list_terms = get_terms( array(
+		    'taxonomy' => 'wa_contact_list',
+		    'hide_empty' => false,
+		) );
+
+		$contact_lists = array();
+
+		if ($show_select) {
+			$contact_lists[''] = 'Select list';
+		}
+
+		foreach ($contact_list_terms as $term) {
+			$contact_lists[$term->term_id] = $term->name;
+			if($show_count) {
+				$contact_lists[$term->term_id] .= ' ('.$term->count.' contacts)';
+			}
+		}
+
+		return $contact_lists;
+	}
+
+	/**
+	 * Get website users list
+	 */
+	public static function get_website_users_list ($show_select = false )	 {
+		$users = get_users();
+
+		$users_list = array();
+
+		if ($show_select) {
+			$users_list[''] = 'Select user';
+		}
+
+		foreach ($users as $user) {
+			$users_list[$user->id] = $user->display_name;
+		}
+
+		return $users_list;
 	}
 
 }

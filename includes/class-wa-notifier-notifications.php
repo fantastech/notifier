@@ -16,6 +16,8 @@ class WA_Notifier_Notifications {
 		add_filter( 'bulk_actions-wa_notification', array( __CLASS__, 'remove_bulk_actions' ) );
 		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit') , 10, 2);
 		add_filter( 'gettext', array(__CLASS__, 'change_texts') , 10, 2 );
+		add_action( 'wp_ajax_fetch_message_template_data', array(__CLASS__, 'fetch_message_template_data') );
+		add_filter( 'wa_notifier_js_variables', array(__CLASS__, 'notifications_js_variables'));
 	}
 
 	/**
@@ -43,9 +45,17 @@ class WA_Notifier_Notifications {
 	public static function create_meta_box () {
 		add_meta_box(
 	        WA_NOTIFIER_NAME . '-notification-data',
-	        'Notification Data',
+	        'Notification Settings',
 	        'WA_Notifier_Notifications::output',
 	        'wa_notification'
+	    );
+
+	    add_meta_box(
+	        WA_NOTIFIER_NAME . '-message-template-preview',
+	        'Preview Template',
+	        'WA_Notifier_Message_Templates::output_preview',
+	        'wa_notification',
+	        'side'
 	    );
 
 	    remove_meta_box( 'submitdiv', 'wa_notification', 'side' );
@@ -89,6 +99,56 @@ class WA_Notifier_Notifications {
 			}
 		}
 		return $translation;
+	}
+
+	/**
+	 * Notifications JS variables
+	 */
+	public static function notifications_js_variables ($variables) {
+		return $variables;
+	}
+
+	/**
+	 * Fetch and return message template data
+	 */
+	public static function fetch_message_template_data() {
+		if(!isset($_POST['template_name'])) {
+			wp_die();
+		}
+
+		$template_name =  $_POST['template_name'];
+
+		$message_template = get_posts(
+			array (
+				'post_type' => 'wa_message_template',
+				'post_status' => 'publish',
+				'numberposts' => 1,
+				'fields' => 'ids',
+				'meta_query'	=> array(
+				    array(
+						'key'   => WA_NOTIFIER_PREFIX . 'template_name',
+						'value' => $template_name,
+				    ),
+				)
+			)
+		);
+
+		$post_id = $message_template[0];
+
+		$template_meta = array('header_text', 'body_text', 'footer_text', 'button_type', 'button_num', 'button_1_type', 'button_1_text', 'button_2_type', 'button_2_text');
+
+		$template_data = array ();
+		foreach ($template_meta as $meta) {
+			$template_data[$meta] = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . $meta, true);
+		}
+
+		$response = array (
+			'status' => 'success',
+			'data' => $template_data
+		);
+
+		echo wp_json_encode($response);
+		wp_die();
 	}
 
 }

@@ -89,13 +89,24 @@
   color: #999;
   font-weight: normal;
 }
+.meta-fields .description {
+  font-size: 12px;
+  margin-top: 5px;
+  display: inline-block;
+  color: #555;
+  font-style: italic;
+}
 
 .hide {
   display: none !important;
 }
 
+.d-block {
+  display: block !important;
+}
+
 .d-flex {
-  display: flex;
+  display: flex !important;
   flex-wrap: wrap;
 }
 

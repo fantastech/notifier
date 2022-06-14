@@ -24,7 +24,6 @@ else {
 
 ?>
 <div class="meta-fields">
-
     <div class="general-fields">
          <div class="d-flex">
             <div class="col">

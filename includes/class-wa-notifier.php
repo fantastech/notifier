@@ -131,6 +131,9 @@ class WA_Notifier {
 		}
 		wp_enqueue_style( WA_NOTIFIER_NAME . '-admin-css', WA_NOTIFIER_URL . 'assets/css/admin.css' );
     	wp_enqueue_script( WA_NOTIFIER_NAME . '-admin-js', WA_NOTIFIER_URL . 'assets/js/admin.js' );
+    	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifier',
+    		apply_filters( 'wa_notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
+    	);
     	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifierTemplates', apply_filters( 'wa_notifier_admin_html_templates', array() ) );
 	}
 

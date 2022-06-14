@@ -2,8 +2,12 @@
 	display: none !important;
 }
 
+.d-block {
+	display: block !important;
+}
+
 .d-flex {
-	display: flex;
+	display: flex !important;
 	flex-wrap: wrap;
 }
 

@@ -32,34 +32,32 @@ class WA_Notifier_Settings {
 	 * Settings fields
 	 */
 	private function settings_fields() {
-
-		$settings = 
+		$settings = array(
 			array(
-				array(
-					'id' 			=> 'phone_number_id',
-					'title'			=> 'WhastApp Phone Number ID',
-					'description'	=> '',
-					'type'			=> 'text',
-					'default'		=> '',
-					'placeholder'	=> ''
-				),
-				array(
-					'id' 			=> 'business_account_id',
-					'title'			=> 'WhatsApp Business Account ID',
-					'description'	=> '',
-					'type'			=> 'text',
-					'default'		=> '',
-					'placeholder'	=> ''
-				),
-				array(
-					'id' 			=> 'permanent_access_token',
-					'title'			=> 'Permanent Access Token',
-					'description'	=> '',
-					'type'			=> 'textarea',
-					'default'		=> '',
-					'placeholder'	=> ''
-				),
-			);
+				'id' 			=> 'phone_number_id',
+				'title'			=> 'WhastApp Phone Number ID',
+				'description'	=> '',
+				'type'			=> 'text',
+				'default'		=> '',
+				'placeholder'	=> ''
+			),
+			array(
+				'id' 			=> 'business_account_id',
+				'title'			=> 'WhatsApp Business Account ID',
+				'description'	=> '',
+				'type'			=> 'text',
+				'default'		=> '',
+				'placeholder'	=> ''
+			),
+			array(
+				'id' 			=> 'permanent_access_token',
+				'title'			=> 'Permanent Access Token',
+				'description'	=> '',
+				'type'			=> 'textarea',
+				'default'		=> '',
+				'placeholder'	=> ''
+			)
+		);
 
 		$settings = apply_filters( 'wa_notifier_settings_fields', $settings );
 
