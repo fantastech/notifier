@@ -296,7 +296,8 @@ class WA_Notifier_Contacts {
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', $first_name);
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', $last_name);
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', $phone_number);
-			wp_set_post_terms( $post_id, $list, 'wa_contact_list');
+			$term_id = wp_create_term($list, 'wa_contact_list');
+			wp_set_post_terms( $post_id, $term_id, 'wa_contact_list');
 			wp_set_post_terms( $post_id, $tags, 'wa_contact_tag');
 
 			unset($post_id);

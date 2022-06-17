@@ -147,9 +147,29 @@ class WA_Notifier {
 		}
 		$current_screen = get_current_screen();
 		$cpt = ( '' !== $current_screen->post_type) ? $current_screen->post_type : '';
+		$tax = ( '' !== $current_screen->taxonomy) ? $current_screen->taxonomy : '';
 		?>
 		<div id="wa-notifier-admin-header" data-post-type="<?php echo $cpt; ?>">
 			<h2><?php echo get_admin_page_title(); ?></h2>
+			<div class="header-menu-items">
+				<?php
+					if ( 'wa_contact' == $cpt ) {
+				?>
+						<ul>
+							<li>
+								<a class="<?php echo ('wa_contact_list' !== $tax && 'wa_contact_tag' !== $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit.php?post_type=wa_contact') ?>" class="">Contacts</a>
+							</li>
+							<li>
+								<a class="<?php echo ('wa_contact_list' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact') ?>">Lists</a>
+							</li>
+							<li>
+								<a class="<?php echo ('wa_contact_tag' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_tag&post_type=wa_contact') ?>">Tags</a>
+							</li>
+						</ul>
+				<?php
+					}
+				?>
+			</div>
 			<div class="header-action-links">
 				<span class="header-version">Version: 0.1 (beta)</span>
 				<a href="mailto:ram@fantastech.co?subject=Regarding%20WA%20Notifier%20on%20<?php echo get_site_url(); ?>">Help</a>

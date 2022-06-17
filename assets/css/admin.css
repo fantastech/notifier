@@ -186,6 +186,25 @@
 #wa-notifier-admin-header.sticky {
   box-shadow: 0 8px 8px 0 rgba(85, 93, 102, 0.3);
 }
+#wa-notifier-admin-header .header-menu-items ul {
+  margin: 0;
+}
+#wa-notifier-admin-header .header-menu-items ul li {
+  display: inline-block;
+  margin-bottom: 0;
+}
+#wa-notifier-admin-header .header-menu-items ul li:last-child {
+  border-right: 0;
+}
+#wa-notifier-admin-header .header-menu-items ul li a {
+  text-decoration: none;
+  padding: 0 20px;
+  line-height: 70px;
+  display: block;
+}
+#wa-notifier-admin-header .header-menu-items ul li a.active {
+  color: #555;
+}
 #wa-notifier-admin-header .header-action-links > * {
   text-decoration: none;
   padding: 0 10px;
