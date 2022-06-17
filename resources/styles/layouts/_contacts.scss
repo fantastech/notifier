@@ -21,4 +21,18 @@
 	label {
 		margin-right: 20px;
 	}
+
+	.users-import-table {
+		width: 100%;
+		margin-bottom: 10px;
+
+		td input {
+			width: 100%;
+			max-width: 400px;
+		}
+
+		td:first-child {
+			width: 30%;
+		}
+	}
 }

@@ -150,8 +150,10 @@ class WA_Notifier {
 		$tax = ( '' !== $current_screen->taxonomy) ? $current_screen->taxonomy : '';
 		?>
 		<div id="wa-notifier-admin-header" data-post-type="<?php echo $cpt; ?>">
-			<h2><?php echo get_admin_page_title(); ?></h2>
-			<div class="header-menu-items">
+			<div class="w-30">
+				<h2><?php echo get_admin_page_title(); ?></h2>
+			</div>
+			<div class="header-menu-items w-40 d-flex justify-content-center">
 				<?php
 					if ( 'wa_contact' == $cpt ) {
 				?>
@@ -170,7 +172,7 @@ class WA_Notifier {
 					}
 				?>
 			</div>
-			<div class="header-action-links">
+			<div class="header-action-links w-30 d-flex justify-content-end">
 				<span class="header-version">Version: 0.1 (beta)</span>
 				<a href="mailto:ram@fantastech.co?subject=Regarding%20WA%20Notifier%20on%20<?php echo get_site_url(); ?>">Help</a>
 				<a href="admin.php?page=wa-notifier&show=disclaimer">Disclaimer</a>
@@ -274,7 +276,7 @@ class WA_Notifier {
 	 * Remove query args from WP backend
 	 */
 	public static function remove_admin_query_args ($args) {
-		$remove_args = array('wa_import_count', 'wa_csv_import', 'import_contacts_from_users', 'refresh_status');
+		$remove_args = array('wa_import_count', 'wa_import_skipped', 'wa_contacts_import', 'import_contacts_from_users', 'refresh_status');
 		return array_merge($args, $remove_args);
 	}
 

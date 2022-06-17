@@ -21,6 +21,7 @@ class WA_Notifier_Contacts {
 		add_action( 'save_post_wa_contact', array(__CLASS__, 'save_meta'), 10, 2 );
 		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 		add_filter( 'admin_post_wa_notifier_import_contacts_csv', array( __CLASS__ , 'import_contacts_csv') );
+		add_filter( 'admin_post_wa_notifier_import_contacts_users', array( __CLASS__ , 'import_contacts_users') );
 		add_action( 'admin_notices', array( __CLASS__, 'show_admin_notices') );
 	}
 
@@ -71,10 +72,11 @@ class WA_Notifier_Contacts {
 	 */
 	public static function add_columns ($columns) {
 		$new_columns = array (
-			'cb'						=> $columns['cb'],
-			'wa_contact_first_name' 	=> 'First Name',
-			'wa_contact_last_name' 		=> 'Last Name',
-			'wa_contact_phone_number' 	=> 'Phone Number'
+			'cb'							=> $columns['cb'],
+			'wa_contact_first_name' 		=> 'First Name',
+			'wa_contact_last_name' 			=> 'Last Name',
+			'wa_contact_phone_number' 		=> 'Phone Number',
+			'wa_contact_associated_user' 	=> 'Associated User'
 		);
 
 		unset($columns['cb']);
@@ -103,6 +105,17 @@ class WA_Notifier_Contacts {
 		if ( 'wa_contact_phone_number' === $column ) {
 		    $wa_number = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', true);
 		    echo $wa_number;
+		}
+
+		if ( 'wa_contact_associated_user' === $column ) {
+		    $user_id = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'associated_user', true);
+		    if($user_id) {
+		    	$user = get_user_by('id', $user_id);
+		    	echo '<a href="'.get_edit_user_link($user_id).'">'.$user->display_name.'</a>';
+		    }
+		    else {
+		    	echo '—';
+		    }
 		}
 	}
 
@@ -182,29 +195,25 @@ class WA_Notifier_Contacts {
 					</form>
 				</div>
 				<div class="col-import col-import-users hide">
-					<p>Coming soon!</p>
-					<p>Import contact data from exisiting website <a href="users.php">users</a>. Map the suitable user meta key with the respective <b>Contact</b> field and click the button below to import.</p>
+					<p>Import contact data from exisiting website <a href="users.php">Users</a>. Map the suitable <a href="https://developer.wordpress.org/plugins/users/working-with-user-metadata/" target="_blank">user meta key</a> with the respective <b>Contact</b> field and click the button below to import.</p>
 					<form id="import-contacts-users" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
-						<table>
+						<table class="users-import-table">
 							<tr>
 								<td><label for="wa_contact_first_name_key">First Name:</label></td>
-								<td><input type="text" id="wa_contact_first_name" name="wa_contact_first_name" placeholder="Enter user meta key for first name"></td>
+								<td><input type="text" id="wa_contact_first_name_key" name="wa_contact_first_name_key" placeholder="Enter user meta key for first name. E.g. first_name"></td>
 							</tr>
 							<tr>
 								<td><label for="wa_contact_last_name_key">Last Name:</label></td>
-								<td><input type="text" id="wa_contact_last_name" name="wa_contact_last_name" placeholder="Enter user meta key for last name"></td>
+								<td><input type="text" id="wa_contact_last_name_key" name="wa_contact_last_name_key" placeholder="Enter user meta key for last name. E.g. last_name"></td>
 							</tr>
 							<tr>
 								<td><label for="wa_contact_wa_number_key">WhatsApp Number (with ext code):</label></td>
-								<td><input type="text" id="wa_contact_wa_number_key" name="wa_contact_wa_number_key" placeholder="Enter user meta key for WhatsApp number"></td>
+								<td><input type="text" id="wa_contact_wa_number_key" name="wa_contact_wa_number_key" placeholder="Enter user meta key for WhatsApp number. E.g. phone_number"></td>
 							</tr>
 							<tr>
-								<td><label for="wa_contact_list_key">Select List:</label></td>
+								<td><label for="wa_contact_list_name">List Name:</label></td>
 								<td>
-									<select>
-
-									</select>
-									<input type="text" id="wa_contact_list_key" name="wa_contact_list_key" placeholder="Enter a list name"></td>
+									<input type="text" id="wa_contact_list_name" name="wa_contact_list_name" placeholder="Enter a list name. E.g. Website Leads"></td>
 							</tr>
 							<tr>
 								<td><label for="wa_contact_tags">Tags:</label></td>
@@ -242,20 +251,23 @@ class WA_Notifier_Contacts {
 	public static function import_contacts_csv() {
 		if(!isset($_FILES['wa_notifier_contacts_csv'])) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
+			die;
 		}
 
 		if(!check_admin_referer('wa_notifier_contacts_csv')) {
-			return;
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
+			die;
 		}
 
 		$tmpName = $_FILES['wa_notifier_contacts_csv']['tmp_name'];
 		$contact_data = array_map('str_getcsv', file($tmpName));
 		$first_row = $contact_data[0];
 		if($first_row[0] != 'First Name' || $first_row[1] != 'Last Name') {
-			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_csv_import=2'));
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=2'));
 		}
 		unset($contact_data[0]);
 		$count = 0;
+		$skipped = 0;
 		foreach($contact_data as $contact) {
 			$first_name = isset($contact[0]) ? sanitize_text_field( wp_unslash ($contact[0]) ) : '';
 			$last_name = isset($contact[1]) ? sanitize_text_field( wp_unslash ($contact[1]) ) : '';
@@ -264,6 +276,7 @@ class WA_Notifier_Contacts {
 			$tags = isset($contact[4]) ? explode( ',', sanitize_text_field( wp_unslash ($contact[4]) ) ) : '';
 
 			if('' == $phone_number){
+				$skipped++;
 				continue;
 			}
 
@@ -304,25 +317,113 @@ class WA_Notifier_Contacts {
 
 		}
 
-		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_csv_import=1&wa_import_count='.$count));
+		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=1&wa_import_count='.$count.'&wa_import_skipped='.$skipped));
+	}
+
+	/**
+	 * Handle users import
+	 */
+	public static function import_contacts_users() {
+		if(!check_admin_referer('wa_notifier_contacts_users')) {
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
+			die;
+		}
+
+		$data = $_POST;
+
+		$first_name_key = isset($_POST['wa_contact_first_name_key']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_first_name_key']) ) : '';
+		$last_name_key = isset($_POST['wa_contact_last_name_key']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_last_name_key']) ) : '';
+		$phone_number_key = isset($_POST['wa_contact_wa_number_key']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_wa_number_key']) ) : '';
+		$list = isset($_POST['wa_contact_list_name']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_list_name']) ) : '';
+		$tags = isset($_POST['wa_contact_tags']) ? explode( ',', sanitize_text_field( wp_unslash ($_POST['wa_contact_tags']) ) ) : '';
+
+		if('' == $first_name_key || '' == $last_name_key || '' == $phone_number_key) {
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=3'));
+			die;
+		}
+
+		global $wp_roles;
+     	$all_roles = array_keys($wp_roles->get_names());
+		$user_ids = get_users( array(
+			'number' => -1,
+			'fields'	=> 'ids',
+			'role__in'	=> $all_roles
+		));
+
+		$count = 0;
+		$skipped = 0;
+		foreach($user_ids as $uid) {
+			$first_name = get_user_meta($uid, $first_name_key, true);
+			$last_name = get_user_meta($uid, $last_name_key, true);
+			$phone_number = get_user_meta($uid, $phone_number_key, true);
+
+			if('' == $phone_number){
+				$skipped++;
+				continue;
+			}
+			$count++;
+
+			$existing_contact = get_posts( array(
+				'post_type'		=> 'wa_contact',
+				'fields'		=> 'ids',
+				'numberposts'	=> 1,
+				'meta_query'	=> array(
+				    array(
+						'key'   => WA_NOTIFIER_PREFIX . 'wa_number',
+						'value' => $phone_number,
+				    ),
+				)
+			) );
+
+			if(empty($existing_contact)) {
+				$post_id = wp_insert_post ( array(
+					'post_title' => '',
+					'post_type' => 'wa_contact',
+					'post_status' => 'publish'
+				) );
+			}
+			else {
+				$post_id = $existing_contact[0];
+				unset($existing_contact);
+			}
+
+			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', $first_name);
+			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', $last_name);
+			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', $phone_number);
+			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'associated_user', $uid);
+			$term_id = wp_create_term($list, 'wa_contact_list');
+			wp_set_post_terms( $post_id, $term_id, 'wa_contact_list');
+			wp_set_post_terms( $post_id, $tags, 'wa_contact_tag');
+
+			unset($post_id);
+			unset($uid);
+		}
+
+		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=1&wa_import_count='.$count.'&wa_import_skipped='.$skipped));
 	}
 
 	/**
 	 * Show admin notices
 	 */
 	public static function show_admin_notices () {
-		if ( 'wa_contact' !== get_post_type() ) {
+		$current_screen = get_current_screen();
+		$cpt = ( '' !== $current_screen->post_type) ? $current_screen->post_type : '';
+		if ( 'wa_contact' !== $cpt ) {
  			return;
  		}
 
- 		if ( ! isset($_GET['wa_csv_import']) ) {
+ 		if ( ! isset($_GET['wa_contacts_import']) ) {
  			return;
  		}
 
- 		if('1' == $_GET['wa_csv_import']) {
+ 		if('1' == $_GET['wa_contacts_import']) {
  			$count = isset($_GET['wa_import_count']) ? $_GET['wa_import_count'] : 0;
+ 			$skipped = isset($_GET['wa_import_skipped']) ? $_GET['wa_import_skipped'] : 0;
  			if($count != 0){
- 				$message = $count . ' contacts imported / updated.';
+ 				$message = $count . ' contacts imported / updated. ';
+ 				if($skipped) {
+ 					$message .= $skipped . ' contacts skipped.';
+ 				}
  			}
  			else {
  				$message = 'No new contacts were imported / updated.';
@@ -333,10 +434,17 @@ class WA_Notifier_Contacts {
 			</div>
 			<?php
  		}
- 		elseif('2' == $_GET['wa_csv_import']) {
+ 		elseif('2' == $_GET['wa_contacts_import']) {
  			?>
 			<div class="notice notice-error is-dismissible">
 			    <p>There was an error during the import. Please make sure your CSV format matches the <a href="<?php echo WA_NOTIFIER_URL.'/contacts-import-sample.csv'; ?>">sample document</a> format before uploading.</p>
+			</div>
+			<?php
+ 		}
+ 		elseif('3' == $_GET['wa_contacts_import']) {
+ 			?>
+			<div class="notice notice-error is-dismissible">
+			    <p>There was an error during the import. Please enter all user meta keys before you start the import.</p>
 			</div>
 			<?php
  		}

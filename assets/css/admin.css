@@ -110,6 +110,14 @@
   flex-wrap: wrap;
 }
 
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
 .col {
   flex: 1 0 0%;
 }
@@ -531,6 +539,17 @@ a.refresh-status.page-title-action::before {
 }
 .contact-import-options label {
   margin-right: 20px;
+}
+.contact-import-options .users-import-table {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.contact-import-options .users-import-table td input {
+  width: 100%;
+  max-width: 400px;
+}
+.contact-import-options .users-import-table td:first-child {
+  width: 30%;
 }
 
 .post-type-wa_notification #minor-publishing-actions,

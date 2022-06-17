@@ -11,6 +11,14 @@
 	flex-wrap: wrap;
 }
 
+.justify-content-center {
+	justify-content: center;
+}
+
+.justify-content-end {
+	justify-content: flex-end;
+}
+
 .col {
 	flex: 1 0 0%;
 }
