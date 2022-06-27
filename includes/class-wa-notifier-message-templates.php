@@ -357,8 +357,6 @@ class WA_Notifier_Message_Templates {
 
 			$args['components'][] = $button_component;
 		}
-		// echo "<pre>";
-		// print_r($args); die;
 
 		$response = WA_Notifier::wa_business_api_request( 'message_templates', $args );
 		
@@ -383,10 +381,7 @@ class WA_Notifier_Message_Templates {
 				'type' => 'success'
 			);
 			set_transient( "mt_notice_$post_id", $notice, 60 );
-			//WA_Notifier::wa_business_api_request( 'message_templates', $args );
 		}
-		
-		//echo "<pre>"; print_r($response); die;
 	}
 
 	/**

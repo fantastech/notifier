@@ -44,7 +44,7 @@ global $post_id;
 						'id'                => WA_NOTIFIER_PREFIX . 'wa_number',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', true),
 						'label'             => 'Whatsapp Number',
-						'description'       => '',
+						'description'       => 'WhatsApp number with country code and + sign. E.g. +919876543210',
 						'placeholder'       => 'WhatsApp number with country code'
 					)
 				);
@@ -56,7 +56,7 @@ global $post_id;
 					array(
 						'id'                => WA_NOTIFIER_PREFIX . 'associated_user',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'associated_user', true),
-						'label'             => 'Associated User',
+						'label'             => 'Associated User (Optional)',
 						'description'       => 'Attach a user with this contact. Associated contacts are useful for fetching additonal fields during transactional notifications.',
 						'options'           => WA_Notifier_Contacts::get_website_users_list(true)
 					)

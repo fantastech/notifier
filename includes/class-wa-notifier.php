@@ -135,6 +135,11 @@ class WA_Notifier {
     		apply_filters( 'wa_notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
     	);
     	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifierTemplates', apply_filters( 'wa_notifier_admin_html_templates', array() ) );
+
+    	// Date / time picker
+    	wp_enqueue_style( WA_NOTIFIER_NAME . '-datetimepicker-css', WA_NOTIFIER_URL . 'assets/css/jquery.datetimepicker.min.css' );
+    	wp_enqueue_script( WA_NOTIFIER_NAME . '-datetimepicker-js', WA_NOTIFIER_URL . 'assets/js/jquery.datetimepicker.min.js' );
+
 	}
 
 	/**
@@ -162,10 +167,10 @@ class WA_Notifier {
 								<a class="<?php echo ('wa_contact_list' !== $tax && 'wa_contact_tag' !== $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit.php?post_type=wa_contact') ?>" class="">Contacts</a>
 							</li>
 							<li>
-								<a class="<?php echo ('wa_contact_list' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact') ?>">Lists</a>
+								<a class="<?php echo ('wa_contact_list' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact'); ?>">Lists</a>
 							</li>
 							<li>
-								<a class="<?php echo ('wa_contact_tag' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_tag&post_type=wa_contact') ?>">Tags</a>
+								<a class="<?php echo ('wa_contact_tag' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_tag&post_type=wa_contact'); ?>">Tags</a>
 							</li>
 						</ul>
 				<?php

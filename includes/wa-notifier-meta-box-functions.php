@@ -27,6 +27,7 @@ function wa_notifier_wp_text_input( $field ) {
 	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
 	$field['type']          = isset( $field['type'] ) ? $field['type'] : 'text';
 	$field['limit']         = isset( $field['limit'] ) ? $field['limit'] : 0;
+	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
 	$data_type              = empty( $field['data_type'] ) ? '' : $field['data_type'];
 
 	switch ( $data_type ) {
@@ -43,7 +44,7 @@ function wa_notifier_wp_text_input( $field ) {
 	if($field['limit'] != 0) {
 		$show_limit_text = '<span class="limit-text"><span class="limit-used">0</span> / <span>'.$field['limit'].'</span></span>';
 		$field['custom_attributes']['data-limit'] = $field['limit'];
-		$field['class'] = $field['class'] . ' force_limit';
+		$field['class'] = $field['class'] . ' force-text-limit';
 	}
 
 	// Custom attribute handling
@@ -60,7 +61,7 @@ function wa_notifier_wp_text_input( $field ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
+	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
 		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
 
 	echo '<input type="' . esc_attr( $field['type'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' /> ';
@@ -109,12 +110,13 @@ function wa_notifier_wp_textarea_input( $field ) {
 	$field['rows']          = isset( $field['rows'] ) ? $field['rows'] : 2;
 	$field['cols']          = isset( $field['cols'] ) ? $field['cols'] : 20;
 	$field['limit']         = isset( $field['limit'] ) ? $field['limit'] : 0;
+	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
 
 	$show_limit_text = '';
 	if($field['limit'] != 0) {
 		$show_limit_text = '<span class="limit-text"><span class="limit-used">0</span> / <span>'.$field['limit'].'</span></span>';
 		$field['custom_attributes']['data-limit'] = $field['limit'];
-		$field['class'] = $field['class'] . ' force_limit';
+		$field['class'] = $field['class'] . ' force-text-limit';
 	}
 
 	// Custom attribute handling
@@ -131,7 +133,7 @@ function wa_notifier_wp_textarea_input( $field ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
+	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
 		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
 
 	echo '<textarea class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '"  name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" rows="' . esc_attr( $field['rows'] ) . '" cols="' . esc_attr( $field['cols'] ) . '" ' . implode( ' ', $custom_attributes ) . ' >' . esc_textarea( $field['value'] ) . '</textarea> ';
@@ -160,6 +162,7 @@ function wa_notifier_wp_checkbox( $field ) {
 	$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
 	$field['cbvalue']       = isset( $field['cbvalue'] ) ? $field['cbvalue'] : 'yes';
 	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
+	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
 
 	// Custom attribute handling
 	$custom_attributes = array();
@@ -171,7 +174,7 @@ function wa_notifier_wp_checkbox( $field ) {
 		}
 	}
 
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
+	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
 		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
 
 	echo '<input type="checkbox" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['cbvalue'] ) . '" ' . checked( $field['value'], $field['cbvalue'], false ) . '  ' . implode( ' ', $custom_attributes ) . '/> ';
@@ -201,9 +204,11 @@ function wa_notifier_wp_select( $field ) {
 			'wrapper_class'     => '',
 			'value'             => get_post_meta( $thepostid, $field['id'], true ),
 			'name'              => $field['id'],
-			'custom_attributes' => array(),
+			'custom_attributes' => array()
 		)
 	);
+
+	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
 
 	// Custom attribute handling
 	$custom_attributes = array();
@@ -217,7 +222,7 @@ function wa_notifier_wp_select( $field ) {
 
 	$description = ! empty( $field['description'] ) ? $field['description'] : '';
 	
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
+	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
 		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
 
 
@@ -253,8 +258,9 @@ function wa_notifier_wp_radio( $field ) {
 	$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
 	$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
 	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
+	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
 
-	echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '"><legend>' . wp_kses_post( $field['label'] ) . '</legend>';
+	echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr($field['conditional_logic']).'"><legend>' . wp_kses_post( $field['label'] ) . '</legend>';
 
 	echo '<ul class="radio-buttons">';
 

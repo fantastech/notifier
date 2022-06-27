@@ -18,6 +18,7 @@ class WA_Notifier_Notifications {
 		add_filter( 'gettext', array(__CLASS__, 'change_texts') , 10, 2 );
 		add_action( 'wp_ajax_fetch_message_template_data', array(__CLASS__, 'fetch_message_template_data') );
 		add_filter( 'wa_notifier_js_variables', array(__CLASS__, 'notifications_js_variables'));
+		add_action( 'save_post_wa_notification', array(__CLASS__, 'save_meta'), 10, 2 );
 	}
 
 	/**
@@ -69,6 +70,27 @@ class WA_Notifier_Notifications {
 		include_once WA_NOTIFIER_PATH . 'views/admin-notifications-meta-box.php';
 	}
 	
+	/**
+	 * Save meta
+	 */
+	public static function save_meta( $post_id, $post ) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		$notification_data = array();
+
+		foreach ($_POST as $key => $data) {
+			if (strpos($key, WA_NOTIFIER_PREFIX) !== false) {
+				$notification_data[$key] = sanitize_text_field( wp_unslash ($data) );
+			    update_post_meta( $post_id, $key, $notification_data[$key]);
+			}
+		}
+	}
 
 	/**
 	 * Remove inline edit from Bulk Edit
@@ -92,10 +114,10 @@ class WA_Notifier_Notifications {
 	public static function change_texts( $translation, $text ) {
 		if ( 'wa_notification' == get_post_type() ) {
 			if ( $text == 'Update' ) {
-				return 'Update Notification';
+				return 'Update';
 			}
 			elseif ($text == 'Publish') {
-				return 'Save Notification';
+				return 'Save';
 			}
 		}
 		return $translation;

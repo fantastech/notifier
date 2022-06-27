@@ -207,7 +207,6 @@
 #wa-notifier-admin-header .header-menu-items ul li a {
   text-decoration: none;
   padding: 0 20px;
-  line-height: 70px;
   display: block;
 }
 #wa-notifier-admin-header .header-menu-items ul li a.active {

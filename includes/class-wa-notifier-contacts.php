@@ -235,15 +235,15 @@ class WA_Notifier_Contacts {
 	/**
 	 * Show user meta keys dropdown
 	 */
-	// public static function show_user_meta_keys_dropdown ($id = '') {
-	// 	$meta_keys = array_keys( get_user_meta( get_current_user_id() ) );
-	// 	$meta_keys = apply_filters('wa_notifier_user_meta_keys', $meta_keys);
-	// 	echo '<select id="'.$id.'" name="'.$id.'">';
-	// 	foreach($meta_keys as $key) {
-	// 		echo '<option value="'.$key.'">'.$key.'</option>';
-	// 	}
-	// 	echo '</select>';
-	// }
+	public static function show_user_meta_keys_dropdown ($id = '') {
+		$meta_keys = array_keys( get_user_meta( get_current_user_id() ) );
+		$meta_keys = apply_filters('wa_notifier_user_meta_keys', $meta_keys);
+		echo '<select id="'.$id.'" name="'.$id.'">';
+		foreach($meta_keys as $key) {
+			echo '<option value="'.$key.'">'.$key.'</option>';
+		}
+		echo '</select>';
+	}
 
 	/**
 	 * Handle CSV import
@@ -296,13 +296,17 @@ class WA_Notifier_Contacts {
 
 			if(empty($existing_contact)) {
 				$post_id = wp_insert_post ( array(
-					'post_title' => '',
+					'post_title' => $first_name . ' ' . $last_name,
 					'post_type' => 'wa_contact',
 					'post_status' => 'publish'
 				) );
 			}
 			else {
 				$post_id = $existing_contact[0];
+				wp_update_post ( array(
+					'ID'         => $post_id,
+					'post_title' => $first_name . ' ' . $last_name
+				) );
 				unset($existing_contact);
 			}
 
@@ -377,13 +381,17 @@ class WA_Notifier_Contacts {
 
 			if(empty($existing_contact)) {
 				$post_id = wp_insert_post ( array(
-					'post_title' => '',
+					'post_title' => $first_name . ' ' . $last_name,
 					'post_type' => 'wa_contact',
 					'post_status' => 'publish'
 				) );
 			}
 			else {
 				$post_id = $existing_contact[0];
+				wp_update_post ( array(
+					'ID'         => $post_id,
+					'post_title' => $first_name . ' ' . $last_name
+				) );
 				unset($existing_contact);
 			}
 
@@ -456,7 +464,7 @@ class WA_Notifier_Contacts {
 	public static function get_contact_lists ($show_select = false, $show_count = false)	 {
 		$contact_list_terms = get_terms( array(
 		    'taxonomy' => 'wa_contact_list',
-		    'hide_empty' => false,
+		    'hide_empty' => true,
 		) );
 
 		$contact_lists = array();
@@ -484,7 +492,7 @@ class WA_Notifier_Contacts {
 		$users_list = array();
 
 		if ($show_select) {
-			$users_list[''] = 'Select user';
+			$users_list[''] = 'None';
 		}
 
 		foreach ($users as $user) {

@@ -1,137 +1,170 @@
 /* global waNotifierTemplates */
-(function( $ ) {
+(function($) {
 
 	// Show / hide fields as per conditional logic
-	function showMTFieldsConditionally () {
-		//var header_type   = $('#wa_notifier_header_type').val();
-		let previewData = {};
-		previewData.header_text   = $('#wa_notifier_header_text').val() || 'Header text here';
-		previewData.body_text     = $('#wa_notifier_body_text').val() || 'Body text here';
-		previewData.footer_text   = $('#wa_notifier_footer_text').val() || '';
-		previewData.button_type   = $('#wa_notifier_button_type').val();
+	function conditionallyShowFields() {
+		$('.form-field').each(function() {
+			var thisField = $(this).find(':input');
 
-		previewData.button_num     = $('input[name="wa_notifier_button_num"]:checked').val();
+			// Conditionally show/hide fields
+			var conditions = $(this).attr('data-conditions') || '';
+			if (conditions !== '') {
+				var showField = false;
+				var fieldElem = $(this);
+				var conditionsArray = JSON.parse(conditions);
 
-		previewData.button_1_type   = $('#wa_notifier_button_1_type :selected').val();
-		previewData.button_1_text   = $('#wa_notifier_button_1_text').val() || '';
-		previewData.button_2_text   = $('#wa_notifier_button_2_text').val() || '';
+				conditionsArray.forEach(function(condition, index) {
+					var fieldClass = '.' + condition.field + '_field';
+					var fieldInput = $(fieldClass + ' :input');
+					var fieldInputType = fieldInput.prop('type');
 
-		// switch(header_type) {
-		//  case 'none' :   $('.wa_notifier_media_type_field').hide();
-		//          $('.wa_notifier_media_url_field').hide();
-		//          $('.wa_notifier_header_text_field').hide();
-		//          $('.wa-template-preview .message-head').hide();
-		//          break;
-		//  case 'text' :   $('.wa_notifier_media_type_field').hide();
-		//          $('.wa_notifier_media_url_field').hide();
-		//          $('.wa_notifier_header_text_field').show();
-		//          $('.wa-template-preview .message-head').show().text(header_text);
-		//          break;
-		//  case 'media' :  $('.wa_notifier_media_type_field').show();
-		//          $('.wa_notifier_media_url_field').show();
-		//          $('.wa_notifier_header_text_field').hide();
-		//          $('.wa-template-preview .message-head').hide();
-		//          break;
-		// }
+					// Do not fetch value of hidden fields.
+					if(!$(fieldClass).is(':visible')){
+						return;
+					}
 
-		// Button
-		if(previewData.button_type == 'none') {
-			$('.wa_notifier_button_num_field').hide();
-			$('.button-1-wrap').hide();
-			$('.button-2-wrap').hide();
-		}
-		else {
-			$('.wa_notifier_button_num_field').show();
+					// Get field value
+					var fieldVal = fieldInput.val();
 
-			if(previewData.button_1_type == 'URL') {
-				$('.wa_notifier_button_1_url_field').show();
-				$('.wa_notifier_button_1_phone_num_field').hide();
-				if(previewData.button_1_text == ''){
-					previewData.button_1_text = 'Visit Website';
+					// Get field value if it's radio or checkbox
+					if($.inArray(fieldInputType, ['radio', 'checkbox']) !== -1) {
+						fieldVal = $(fieldClass + ' :input:checked').val();
+					}
+
+					var showThis = false;
+					if(condition.operator == '==') {
+						showThis = (fieldVal == condition.value) ? true : false;
+					}
+					else if(condition.operator == '!=') {
+						showThis = (fieldVal != condition.value) ? true : false;
+					}
+					showField = showField || showThis;
+				});
+
+				if(showField){
+					fieldElem.show();
+				}
+				else{
+					fieldElem.hide();
 				}
 			}
-			else if (previewData.button_1_type == 'PHONE_NUMBER') {
-				$('.wa_notifier_button_1_url_field').hide();
-				$('.wa_notifier_button_1_phone_num_field').show();
-				if(previewData.button_1_text == ''){
+
+			// Apply data limit on fields
+			if (thisField.hasClass('force-text-limit')) {
+				var content = thisField.val();
+				var contentLength = content.length;
+				var limit = thisField.attr('data-limit');
+				if (contentLength >= limit) {
+					thisField.siblings('label').find('.limit-used').text(limit);
+					thisField.val(content.substr(0, limit));
+				} else {
+					thisField.siblings('label').find('.limit-used').text(contentLength);
+				}
+			}
+		});
+	}
+
+	// Fetch message template data and generate preview
+	function fetcDataAndPreviewTemplate() {
+		let previewData = {};
+		previewData.header_type = $('#wa_notifier_header_type').val();
+		previewData.header_text = $('#wa_notifier_header_text').val() || 'Header text here';
+		previewData.body_text = $('#wa_notifier_body_text').val() || 'Body text here';
+		previewData.footer_text = $('#wa_notifier_footer_text').val() || '';
+		previewData.button_type = $('#wa_notifier_button_type').val();
+
+		previewData.button_num = $('input[name="wa_notifier_button_num"]:checked').val();
+
+		previewData.button_1_type = $('#wa_notifier_button_1_type :selected').val();
+		previewData.button_1_text = $('#wa_notifier_button_1_text').val() || '';
+		previewData.button_2_text = $('#wa_notifier_button_2_text').val() || '';
+
+		// Button
+		if (previewData.button_type != 'none') {
+			if (previewData.button_1_type == 'URL') {
+				if (previewData.button_1_text == '') {
+					previewData.button_1_text = 'Visit Website';
+				}
+			} else if (previewData.button_1_type == 'PHONE_NUMBER') {
+				if (previewData.button_1_text == '') {
 					previewData.button_1_text = 'Call';
 				}
 			}
 
-			if(previewData.button_num == '1') {
-				$('.button-1-wrap').show();
-				$('.button-2-wrap').hide();
+			if (previewData.button_num == '1') {
 				$('#wa_notifier_button_1_type option').prop('disabled', false);
 				$('#wa_notifier_button_2_type option').prop('disabled', false);
-			}
-			else {
-				$('.button-1-wrap').show();
-				$('.button-2-wrap').show();
-				$('#wa_notifier_button_1_type option').not('option[value="'+ previewData.button_1_type +'"]').prop('disabled', true);
-				$('#wa_notifier_button_2_type option').not('option[value="'+ previewData.button_1_type +'"]').prop('selected', true);
-				$('#wa_notifier_button_2_type option[value="'+ previewData.button_1_type +'"]').prop('disabled', true);
-				previewData.button_2_type   = $('#wa_notifier_button_2_type :selected').val();
-				if(previewData.button_2_type == 'URL') {
-					$('.wa_notifier_button_2_url_field').show();
-					$('.wa_notifier_button_2_phone_num_field').hide();
-					if(previewData.button_2_text == ''){
+			} else {
+				$('#wa_notifier_button_1_type option').not('option[value="' + previewData.button_1_type + '"]').prop('disabled', true);
+				$('#wa_notifier_button_2_type option').not('option[value="' + previewData.button_1_type + '"]').prop('selected', true);
+				$('#wa_notifier_button_2_type option[value="' + previewData.button_1_type + '"]').prop('disabled', true);
+				previewData.button_2_type = $('#wa_notifier_button_2_type :selected').val();
+				if (previewData.button_2_type == 'URL') {
+					if (previewData.button_2_text == '') {
 						previewData.button_2_text = 'Visit Website';
 					}
-				}
-				else if (previewData.button_2_type == 'PHONE_NUMBER') {
-					$('.wa_notifier_button_2_url_field').hide();
-					$('.wa_notifier_button_2_phone_num_field').show();
-					if(previewData.button_2_text == ''){
+				} else if (previewData.button_2_type == 'PHONE_NUMBER') {
+					if (previewData.button_2_text == '') {
 						previewData.button_2_text = 'Call';
 					}
 				}
 			}
 		}
+
+		// Render message preview from the data
 		renderMessagePreview(previewData);
 	}
 
 	// Render message preview
-	function renderMessagePreview (previewData) {
-		console.log(previewData);
+	function renderMessagePreview(previewData) {
 		// Header
-		$('.wa-template-preview .message-head').show().text(previewData.header_text);
+		switch (previewData.header_type) {
+			case 'text':
+				$('.wa-template-preview .message-head').show().text(previewData.header_text);
+				break;
+			default:
+				$('.wa-template-preview .message-head').hide();
+				break;
+		}
 
 		// Body
-		$('.wa-template-preview .message-body').text(previewData.body_text);
+		previewData.body_text = previewData.body_text.replace(/(<([^>]+)>)/gi, "")
+			.replace(/(?:\*)(?:(?!\s))((?:(?!\*|\n).)+)(?:\*)/g,'<b>$1</b>')
+	   	.replace(/(?:_)(?:(?!\s))((?:(?!\n|_).)+)(?:_)/g,'<i>$1</i>')
+	   	.replace(/(?:~)(?:(?!\s))((?:(?!\n|~).)+)(?:~)/g,'<s>$1</s>')
+	   	.replace(/(?:--)(?:(?!\s))((?:(?!\n|--).)+)(?:--)/g,'<u>$1</u>')
+	   	.replace(/(?:```)(?:(?!\s))((?:(?!\n|```).)+)(?:```)/g,'<tt>$1</tt>');
+
+		$('.wa-template-preview .message-body').html(previewData.body_text);
 
 		// Footer
-		if(previewData.footer_text !== '') {
+		if (previewData.footer_text !== '') {
 			$('.wa-template-preview .message-footer').show().text(previewData.footer_text);
-		}
-		else {
+		} else {
 			$('.wa-template-preview .message-footer').hide();
 		}
 
 		// Buttons
-		if(previewData.button_type == 'none') {
+		if (previewData.button_type == 'none') {
 			$('.wa-template-preview .message-buttons').hide();
-		}
-		else {
+		} else {
 			$('.wa-template-preview .message-buttons').show();
-			if(previewData.button_1_type == 'URL') {
+			if (previewData.button_1_type == 'URL') {
 				$('.wa-template-preview .message-button-1 .message-button-img').removeClass('call').addClass('visit');
 				$('.wa-template-preview .message-button-1 .message-button-text').text(previewData.button_1_text);
-			}
-			else if (previewData.button_1_type == 'PHONE_NUMBER') {
+			} else if (previewData.button_1_type == 'PHONE_NUMBER') {
 				$('.wa-template-preview .message-button-1 .message-button-img').removeClass('visit').addClass('call');
 				$('.wa-template-preview .message-button-1 .message-button-text').text(previewData.button_1_text);
 			}
 
-			if(previewData.button_num == '1') {
+			if (previewData.button_num == '1') {
 				$('.wa-template-preview .message-button-2').hide();
-			}
-			else {
+			} else {
 				$('.wa-template-preview .message-button-2').show();
-				if(previewData.button_2_type == 'URL') {
+				if (previewData.button_2_type == 'URL') {
 					$('.wa-template-preview .message-button-2 .message-button-img').removeClass('call').addClass('visit');
 					$('.wa-template-preview .message-button-2 .message-button-text').text(previewData.button_2_text);
-				}
-				else if (previewData.button_2_type == 'PHONE_NUMBER') {
+				} else if (previewData.button_2_type == 'PHONE_NUMBER') {
 					$('.wa-template-preview .message-button-2 .message-button-img').removeClass('visit').addClass('call');
 					$('.wa-template-preview .message-button-2 .message-button-text').text(previewData.button_2_text);
 				}
@@ -140,60 +173,32 @@
 	}
 
 	// Fetch and display message template
-	function fetchAndDisplayMessageTemplate (template_name = '') {
-		if(template_name == '') {
+	function fetchAndDisplayMessageTemplate(template_name = '') {
+		if (template_name == '') {
 			template_name = $('#wa_notifier_notification_message_template :selected').val();
-			if(template_name == '') {
+			if (template_name == '') {
 				$('#wa-notifier-message-template-preview').addClass('hide');
 				return false;
 			}
 		}
 		$.ajax({
-		type : "post",
-		dataType : "json",
-		url : waNotifier.ajaxurl,
-		data : { action: 'fetch_message_template_data', template_name: template_name },
-		success: function(response) {
-			if(response.status == "success") {
-				$('#wa-notifier-message-template-preview').addClass('d-block')
-				renderMessagePreview(response.data);
-			}
-		}
-	});
+			type: 'post',
+			dataType: 'json',
+			url: waNotifier.ajaxurl,
+			data: {
+				action: 'fetch_message_template_data',
+				template_name: template_name
+			},
+			success: function(response) {
+				if (response.status == 'success') {
+					$('#wa-notifier-message-template-preview').addClass('d-block');
+					renderMessagePreview(response.data);
+				}
+			},
+		});
 	}
 
-	// Show notification fields conditionally
-	function showNotificationFieldsConditionally() {
-		let notificationData = {};
-		notificationData.notification_type = $('#wa_notifier_notification_type').val();
-		console.log(notificationData.notification_type);
-		if(notificationData.notification_type == 'transactional') {
-			$('.form-fields-transactional').removeClass('hide');
-			$('.form-fields-marketing').addClass('hide');
-			notificationData.notification_trigger = $('#wa_notifier_notification_trigger :selected').val();
-			if(notificationData.notification_trigger != '') {
-				$('.form-fields-message-template').removeClass('hide');
-			}
-			else {
-				$('.form-fields-message-template').addClass('hide');
-			}
-			$('#publish').val('Save Notification');
-		}
-		else if(notificationData.notification_type == 'marketing') {
-			$('.form-fields-transactional').addClass('hide');
-			$('.form-fields-marketing').removeClass('hide');
-			notificationData.notification_list = $('#wa_notifier_notification_list :selected').val();
-			if(notificationData.notification_list != '') {
-				$('.form-fields-message-template').removeClass('hide');
-			}
-			else {
-				$('.form-fields-message-template').addClass('hide');
-			}
-			$('#publish').val('Send Notification');
-		}
-	}
-
-	$(document).on('ready', function () {
+	$(document).on('ready', function() {
 
 		/*****************
 		 * Global
@@ -209,32 +214,44 @@
 			}
 		};
 
+		// Show feilds conditionally
+		if ($('.meta-fields').length > 0) {
+			conditionallyShowFields();
+			$('.meta-fields :input').on('change keyup', function() {
+				conditionallyShowFields();
+			});
+		}
+
 		/*****************
 		 * Dashboard page
 		 ****************/
 
 		// Toggle steps on dashboard page
-		$('.toggle-step').on('click', function () {
+		$('.toggle-step').on('click', function() {
 			$(this).closest('.step').toggleClass('active');
 			$(this).closest('.step').siblings().removeClass('active');
 		});
 
 		// Highlight menu items
 		const wan_menu_elem = $('#toplevel_page_wa-notifier');
-		const wa_notifier_cpts = [ 'wa_message_template', 'wa_contact', 'wa_notification' ];
+		const wa_notifier_cpts = ['wa_message_template', 'wa_contact', 'wa_notification'];
 		const current_cpt = $('#wa-notifier-admin-header').data('post-type') || '';
-		if( wa_notifier_cpts.includes(current_cpt) ) {
+		if (wa_notifier_cpts.includes(current_cpt)) {
 			wan_menu_elem
 				.removeClass('wp-not-current-submenu')
 				.addClass('wp-has-current-submenu')
 				.children('a')
 				.removeClass('wp-not-current-submenu')
 				.addClass('wp-has-current-submenu');
-			wan_menu_elem.find('a[href*="'+current_cpt+'"]').addClass('current').closest('li').addClass('current');
+			wan_menu_elem.find('a[href*="' + current_cpt + '"]').addClass('current').closest('li').addClass('current');
 		}
 
+		/*************************
+		 * Message Template page
+		 *************************/
+
 		// Make the WhatsApp preview sidebar sticky
-		if( $('#wa-notifier-message-template-preview').length > 0 ) {
+		if ($('#wa-notifier-message-template-preview').length > 0) {
 			var wa_preview = $('#wa-notifier-message-template-preview');
 			var wa_preview_top = wa_preview.offset().top - 120;
 			var wa_preview_width = wa_preview.width();
@@ -255,43 +272,26 @@
 		});
 
 		// Trigger conditional logic and WhatsApp message template preview
-		if($('#wa-notifier-message-template-data').length > 0) {
-			showMTFieldsConditionally();
-			$('#wa-notifier-message-template-data input, #wa-notifier-message-template-data textarea').on('keyup', function(){
-				showMTFieldsConditionally();
-				if($(this).attr('data-limit').length > 0) {
-					const text = $(this).val();
-					const textlength = $(this).val().length;
-					const limit = $(this).attr('data-limit');
-					if(textlength >= limit) {
-						$(this).siblings('label').find('.limit-used').text(limit);
-							$(this).val(text.substr(0,limit));
-							return false;
-					}
-					else {
-						$(this).siblings('label').find('.limit-used').text(textlength);
-							return true;
-					}
-				}
-			});
-			$('#wa-notifier-message-template-data select, #wa-notifier-message-template-data input[type="radio"], #wa-notifier-message-template-data input[type="checkbox"]').on('change', function(){
-				showMTFieldsConditionally();
+		if ($('#wa-notifier-message-template-data').length > 0) {
+			fetcDataAndPreviewTemplate();
+			$('#wa-notifier-message-template-data :input').on('change keyup', function() {
+				fetcDataAndPreviewTemplate();
 			});
 		}
 
 		// Message template publish confirmation
-		$('.post-type-wa_message_template #publish').on('click', function () {
+		$('.post-type-wa_message_template #publish').on('click', function() {
 			const template_name = $('#wa_notifier_template_name').val() || '';
 			const body_text = $('#wa_notifier_body_text').val() || '';
-			if('' === template_name && '' === body_text) {
+			if ('' === template_name && '' === body_text) {
 				alert('Template name and Body text are required fields.');
 				return false;
 			}
-			if('' === template_name) {
+			if ('' === template_name) {
 				alert('Template name is a required field.');
 				return false;
 			}
-			if('' === body_text) {
+			if ('' === body_text) {
 				alert('Body text is a required field.');
 				return false;
 			}
@@ -299,7 +299,7 @@
 		});
 
 		// Message template delete confirmation
-		$('.post-type-wa_message_template .row-actions .delete').on('click', function () {
+		$('.post-type-wa_message_template .row-actions .delete').on('click', function() {
 			return confirm('Deleting from here will also delete this template from WhatsApp server.');
 		});
 
@@ -311,98 +311,99 @@
 		 **************/
 
 		// Add Import button and HTML to the Contacts lisitng page
-	$('.edit-php.post-type-wa_contact .wrap .page-title-action').after(waNotifierTemplates.import_contact);
+		$('.edit-php.post-type-wa_contact .wrap .page-title-action').after(waNotifierTemplates.import_contact);
 
-	// Show import options
-	$(document).on('click', '#import-contacts', function(e){
-		e.preventDefault();
-		$('.contact-import-options').toggleClass('hide');
-	});
+		// Show import options
+		$(document).on('click', '#import-contacts', function(e) {
+			e.preventDefault();
+			$('.contact-import-options').toggleClass('hide');
+		});
 
-	// Select import method
-	$(document).on('change', '.csv-import-method', function(){
-		var value = $(this).val();
-		$('.col-import').addClass('hide');
-		$('.col-import-' + value).removeClass('hide');
-	});
+		// Select import method
+		$(document).on('change', '.csv-import-method', function() {
+			var value = $(this).val();
+			$('.col-import').addClass('hide');
+			$('.col-import-' + value).removeClass('hide');
+		});
 
-	// On submission of CSV import form
-	$(document).on('submit', '#import-contacts-csv', function(e){
-		var file = $('#wa-notifier-contacts-csv').val();
-		if (file == "") {
-			alert("Please select a file to upload.");
-			return false;
-		}
-		else {
-			var file_size = $('#wa-notifier-contacts-csv')[0].files[0].size / 1024 / 1024;
-			if(file_size > 24) {
-				alert("Please select CSV file smaller than 24MB.");
+		// On submission of CSV import form
+		$(document).on('submit', '#import-contacts-csv', function(e) {
+			var file = $('#wa-notifier-contacts-csv').val();
+			if (file == '') {
+				alert('Please select a file to upload.');
 				return false;
-			}
-			var allowedExtension = /(\.csv)$/i;
-			if (!allowedExtension.exec(file)) {
+			} else {
+				var file_size = $('#wa-notifier-contacts-csv')[0].files[0].size / 1024 / 1024;
+				if (file_size > 24) {
+					alert('Please select CSV file smaller than 24MB.');
+					return false;
+				}
+				var allowedExtension = /(\.csv)$/i;
+				if (!allowedExtension.exec(file)) {
 					alert('Please select a CSV file.');
 					$('#wa-notifier-contacts-csv').val('');
 					return false;
+				}
 			}
-		}
-	});
+		});
 
-	// On submission of users import form
-	$(document).on('submit', '#import-contacts-users', function(e){
-		const wa_contact_first_name_key = $('#wa_contact_first_name_key').val() || '';
-		const wa_contact_last_name_key = $('#wa_contact_last_name_key').val() || '';
-		const wa_contact_wa_number_key = $('#wa_contact_wa_number_key').val() || '';
-		const wa_contact_list_name = $('#wa_contact_list_name').val() || '';
-		const wa_contact_tags = $('#wa_contact_tags').val() || '';
+		// On submission of users import form
+		$(document).on('submit', '#import-contacts-users', function(e) {
+			const wa_contact_first_name_key = $('#wa_contact_first_name_key').val() || '';
+			const wa_contact_last_name_key = $('#wa_contact_last_name_key').val() || '';
+			const wa_contact_wa_number_key = $('#wa_contact_wa_number_key').val() || '';
+			// const wa_contact_list_name = $('#wa_contact_list_name').val() || '';
+			// const wa_contact_tags = $('#wa_contact_tags').val() || '';
 
-		if(wa_contact_wa_number_key == '') {
-			alert("Please select a file to upload.");
-			return false;
-		}
-
-		if (file == "") {
-			alert("Please select a file to upload.");
-			return false;
-		}
-		else {
-			var file_size = $('#wa-notifier-contacts-csv')[0].files[0].size / 1024 / 1024;
-			if(file_size > 24) {
-				alert("Please select CSV file smaller than 24MB.");
+			if (wa_contact_first_name_key == '' || wa_contact_last_name_key == '' || wa_contact_wa_number_key == '') {
+				alert('Please enter all user meta keys.');
 				return false;
 			}
-			var allowedExtension = /(\.csv)$/i;
-			if (!allowedExtension.exec(file)) {
-					alert('Please select a CSV file.');
-					$('#wa-notifier-contacts-csv').val('');
-					return false;
-			}
-		}
-	});
+		});
 
-	/********************
+		// Contact publish confirmation
+		$('.post-type-wa_contact #publish').on('click', function() {
+			const first_name = $('#wa_notifier_first_name').val() || '';
+			const last_name = $('#wa_notifier_last_name').val() || '';
+			const wa_number = $('#wa_notifier_wa_number').val() || '';
+
+			if (first_name == '' || last_name == '' || wa_number == '') {
+				alert('First Name, Last Name and Phone Number are required fields.');
+				return false;
+			}
+		});
+
+		/********************
 		 * Notification page
 		 ********************/
 
-		 if($('#wa-notifier-notification-data').length > 0) {
-			showNotificationFieldsConditionally();
+		if ($('#wa-notifier-notification-data').length > 0) {
+
+			// Fetch and display message template preview.
 			fetchAndDisplayMessageTemplate();
-
-			$('#wa-notifier-notification-data input, #wa-notifier-notification-data textarea').on('keyup', function(){
-					showNotificationFieldsConditionally();
-			});
-
-			$('#wa-notifier-notification-data select, #wa-notifier-notification-data input[type="radio"], #wa-notifier-notification-data input[type="checkbox"]').on('change', function(){
-					showNotificationFieldsConditionally();
-			});
-
-			$('#wa_notifier_notification_message_template').on('change', function(){
-				const template_name = $(this).find(":selected").val();
+			$('#wa_notifier_notification_message_template').on('change', function() {
+				const template_name = $(this).find(':selected').val();
 				fetchAndDisplayMessageTemplate(template_name);
 			});
 
-		 }
+			// Update button text as per user selection
+			$('#wa-notifier-notification-data :input').on('change keyup', function(){
+				var type = $('#wa_notifier_notification_type :checked').val();
+				var when = $('#wa_notifier_notification_when :checked').val();
+				var btnText = '';
+				if(type == 'transactional'){
+					btnText = 'Save';
+				}
+				else {
+					btnText = 'Save and Send';
+				}
+				$('#publish').val(btnText);
+			});
+
+
+
+		}
 
 	});
 
-})( jQuery );
+})(jQuery);
