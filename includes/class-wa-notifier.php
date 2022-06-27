@@ -59,6 +59,7 @@ class WA_Notifier {
 	 * Include required core files used in admin and on the frontend.
 	 */
 	private function includes() {
+		require_once WA_NOTIFIER_PATH . 'libraries/action-scheduler/action-scheduler.php';
 		require_once WA_NOTIFIER_PATH . 'includes/wa-notifier-helper-functions.php';
 		require_once WA_NOTIFIER_PATH . 'includes/wa-notifier-meta-box-functions.php';
 
