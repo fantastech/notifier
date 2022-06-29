@@ -1,0 +1,27 @@
+.wa-notifier-fields-table {
+	width: 100%;
+
+	tr {
+		th {
+			@include media-down(mobile){
+				display: block;
+				width: 100%;
+				padding: 10px 0 5px 0;
+			}
+		}
+
+		td {
+			@include media-down(mobile){
+				display: block;
+				width: 100%;
+			}
+		}
+	}
+
+	input,
+	textarea,
+	select {
+		width: 100%;
+		max-width: 25em;
+	}
+}

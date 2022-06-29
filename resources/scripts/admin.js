@@ -270,7 +270,7 @@
 			var wa_preview_width = wa_preview.width();
 			wa_preview.width(wa_preview_width);
 			window.onscroll = function() {
-				if (window.pageYOffset > wa_preview_top) {
+				if (window.pageYOffset > wa_preview_top && window.innerWidth > 850) {
 					wa_preview.addClass('sticky');
 				} else {
 					wa_preview.removeClass('sticky');

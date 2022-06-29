@@ -1,51 +1,87 @@
 #wa-notifier-admin-header {
-	background: #fff;
-	box-sizing: border-box;
-	position: fixed;
-	width: calc(100% - 160px);
-	top: 32px;
-	z-index: 1001;
-	padding: 0 20px;
-	height: 70px;
-	display: flex;
-	align-content: center;
-	align-items: center;
-	justify-content: space-between;
-
-	&.sticky {
-		box-shadow: 0 8px 8px 0 rgb(85 93 102 / 30%);
+	@include media-down(mobile) {
+		padding-top: 46px;
 	}
 
-	.header-menu-items ul {
-		margin: 0;
+	.wa-notifier-admin-header-content {
+		background: #fff;
+		box-sizing: border-box;
+		width: 100%;
+		top: 32px;
+		z-index: 1001;
+		padding: 0 20px;
+		height: 70px;
+		display: flex;
+		align-content: center;
+		align-items: center;
+		justify-content: space-between;
 
-		li {
-			display: inline-block;
-			margin-bottom: 0;
+		@include media-down(mobile) {
+			padding: 0 12px;
+		}
 
-			&:last-child {
-				border-right: 0;
+		&.sticky {
+			box-shadow: 0 8px 8px 0 rgb(85 93 102 / 30%);
+		}
+
+		.header-page-title {
+			@include media-down(mobile) {
+				flex: 1;
+			}
+		}
+
+		.header-menu-items {
+			@include media-down(mobile) {
+				flex: 1;
+				justify-content: flex-end;
 			}
 
-			a {
-				text-decoration: none;
-				padding: 0 20px;
-				display: block;
+			ul {
+				margin: 0;
 
-				&.active {
-					color: #555;
+				li {
+					display: inline-block;
+					margin-bottom: 0;
+
+					&:last-child {
+						border-right: 0;
+					}
+
+					a {
+						text-decoration: none;
+						padding: 0 20px;
+						display: block;
+
+						@include media-down(mobile) {
+							padding: 0 10px;
+						}
+
+						&.active {
+							color: #555;
+						}
+					}
+				}
+			}
+		}
+
+		.header-action-links {
+			@include media-down(mobile) {
+				display: none !important;
+			}
+
+			& > * {
+				text-decoration: none;
+				padding: 0 10px;
+				display: inline-block;
+
+				&.header-version {
+					color: #777;
 				}
 			}
 		}
 	}
+}
 
-	.header-action-links > * {
-		text-decoration: none;
-		padding: 0 10px;
-		display: inline-block;
+#wp-responsive-open #wa-notifier-admin-header {
 
-		&.header-version {
-			color: #777;
-		}
-	}
 }

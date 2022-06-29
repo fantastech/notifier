@@ -1,14 +1,24 @@
 /* Global */
 #wpcontent {
-	padding-left: 0;
+	padding-left: 0 !important;
 }
 
 #screen-meta {
 	margin: 0 -20px;
+	@include media-down(mobile) {
+		margin: 0 0 0 -12px;
+		border-left: 0;
+		border-right: 0;
+	}
 }
 
 #wpbody {
-	padding: 70px 20px 0 20px;
+	padding-left: 20px;
+
+	@include media-down(mobile) {
+		padding-top: 0px;
+		padding-left: 12px;
+	}
 }
 
 /* Meta Fields */
@@ -52,6 +62,10 @@
 		select {
 			width: calc(100% - 20px);
 			max-width: 100%;
+
+			@include media-down(mobile) {
+				width: 100%;
+			}
 		}
 
 		input[disabled="disabled"],
@@ -106,5 +120,11 @@
 		display: inline-block;
 		color: #555;
 		font-style: italic;
+	}
+
+	.col {
+		@include media-down(mobile) {
+			flex: 0 0 100%;
+		}
 	}
 }

@@ -142,37 +142,61 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 
 		<?php else: ?>		
 			<div class="dashboard-boxes">
-				<div class="dashboard-box w-100">
-					<div class="dashboard-box-body d-flex w-100">
-						<div class="w-25">
-							<b>Phone Number:</b>
-							<?php echo $phone_number_details[$phone_number_id]['display_num']; ?>
-						</div>
-						<div class="w-25">
-							<b>Display Name:</b>
-							<?php echo $phone_number_details[$phone_number_id]['display_name']; ?>
-						</div>
-						<div class="w-25">
-							<b>Status:</b>
-							<?php echo $phone_number_details[$phone_number_id]['phone_num_status']; ?>
-						</div>
-						<div class="w-25">
-							<b>Qaulity Rating:</b>
-							<span class="quantity-rating quantity-rating-<?php echo strtolower($phone_number_details[$phone_number_id]['quality_rating']); ?>"></span>
+				<div class="col w-100">
+					<div class="dashboard-box dashboard-box-top">
+						<div class="dashboard-box-body d-flex w-100">
+							<div class="w-25">
+								<b>Phone Number:</b>
+								<?php echo $phone_number_details[$phone_number_id]['display_num']; ?>
+							</div>
+							<div class="w-25">
+								<b>Display Name:</b>
+								<?php echo $phone_number_details[$phone_number_id]['display_name']; ?>
+							</div>
+							<div class="w-25">
+								<b>Status:</b>
+								<?php echo $phone_number_details[$phone_number_id]['phone_num_status']; ?>
+							</div>
+							<div class="w-25">
+								<b>Qaulity Rating:</b>
+								<span class="quantity-rating quantity-rating-<?php echo strtolower($phone_number_details[$phone_number_id]['quality_rating']); ?>"></span>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="dashboard-box w-30">
-					<div class="dashboard-box-head">
-						<h2>You're all set!</h2>
+				<div class="col w-30">
+					<div class="dashboard-box">
+						<div class="dashboard-box-head">
+							<h2>You're all set!</h2>
+						</div>
+						<div class="dashboard-box-body">
+							<p>Next steps:</p>
+							<ol>
+								<li>Create a new <a href="<?php echo admin_url( 'edit.php?post_type=wa_message_template' ); ?>">Message Template</a>.</li>
+								<li>Add / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>">Contacts</a>.</li>
+								<li>Create and send your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_notification' ); ?>">Notification</a>.</li>
+							</ol>
+						</div>
 					</div>
-					<div class="dashboard-box-body">
-						<p>Next steps:</p>
-						<ol>
-							<li>Create a new <a href="<?php echo admin_url( 'edit.php?post_type=wa_message_template' ); ?>">Message Template</a>.</li>
-							<li>Add / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>">Contacts</a>.</li>
-							<li>Create and send your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_notification' ); ?>">Notification</a>.</li>
-						</ol>
+				</div>
+				<div class="col w-30">
+					<div class="dashboard-box">
+						<div class="dashboard-box-head">
+							<h2>Message Templates</h2>
+						</div>
+						<div class="dashboard-box-body">
+
+						</div>
+					</div>
+				</div>
+				<div class="col w-40">
+					<div class="dashboard-box">
+						<div class="dashboard-box-head">
+							<h2>Contacts</h2>
+						</div>
+						<div class="dashboard-box-body">
+
+						</div>
 					</div>
 				</div>
 			</div>

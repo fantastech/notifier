@@ -96,25 +96,53 @@
 .dashboard-boxes {
 	display: flex;
 	flex-wrap: wrap;
+	margin-left: -10px;
+	margin-right: -10px;
+
+	& > .col:not(.w-100) {
+		@include media-down(tablet){
+			flex: 0 0 50% !important;
+		}
+		@include media-down(mobile){
+			flex: 0 0 100% !important;
+		}
+	}
 
 	.dashboard-box {
 		border-radius: 8px;
 		background-color: #fff;
-		margin-top: 15px;
-		margin-bottom: 15px;
+		margin: 10px;
+
+		&.dashboard-box-top .w-25{
+			@include media-down (mobile) {
+				flex: 0 0 100%;
+			}
+		}
 
 		.dashboard-box-head {
 			padding: 15px 20px;
 			border-bottom: 1px solid #eee;
 
+			@include media-down (mobile) {
+				padding: 12px;
+			}
+
 			h2,
 			h3 {
 				margin: 0;
+
+				@include media-down (mobile) {
+					font-size: 16px;
+				}
 			}
 		}
 
 		.dashboard-box-body {
 			padding: 20px;
+
+			@include media-down (mobile) {
+				padding: 12px;
+			}
 
 			p:first-child {
 				margin-top: 0;
