@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 global $post_id;
 
-$notification_sent = get_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'notification_sent' , true);
+$notification_status = get_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'notification_status' , true);
 
-if('yes' == $notification_sent) {
+if(in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
 	$disabled = array (
 		'disabled' => 'disabled'
 	);
@@ -83,6 +83,42 @@ else {
 								'field'		=> WA_NOTIFIER_PREFIX . 'notification_type',
 								'operator'	=> '==',
 								'value'		=> 'marketing'
+							)
+						),
+						'custom_attributes' => $disabled
+					)
+				);
+				wa_notifier_wp_select(
+					array(
+						'id'                => WA_NOTIFIER_PREFIX . 'notification_when',
+						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_when', true),
+						'label'             => 'Send this when?',
+						'description'       => 'Select when you want to send this notification.',
+						'options'			=> array(
+							'now'	=> 'Send it now',
+							'later'	=> 'Schedule for later',
+						),
+						'conditional_logic'		=> array (
+							array (
+								'field'		=> WA_NOTIFIER_PREFIX . 'notification_list',
+								'operator'	=> '!=',
+								'value'		=> ''
+							)
+						),
+						'custom_attributes' => $disabled
+					)
+				);
+				wa_notifier_wp_text_input(
+					array(
+						'id'                => WA_NOTIFIER_PREFIX . 'notification_datetime',
+						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_datetime', true),
+						'label'             => 'Date and time',
+						'description'       => 'Select the date and time when you want to send the notification. Notification will be sent as per your system\'s date and time. You can check / update your system date and time settings <a href="options-general.php" target="_blank">here</a>.',
+						'conditional_logic'		=> array (
+							array (
+								'field'		=> WA_NOTIFIER_PREFIX . 'notification_when',
+								'operator'	=> '==',
+								'value'		=> 'later'
 							)
 						),
 						'custom_attributes' => $disabled

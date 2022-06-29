@@ -87,6 +87,7 @@ class WA_Notifier {
 
 		add_filter( 'init', array( $this , 'test_stuff') );
 		add_filter( 'init', array( $this , 'handle_webhook_requests') );
+		add_filter( 'init', array( $this , 'schedule_actions') );
 
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
@@ -138,9 +139,8 @@ class WA_Notifier {
     	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifierTemplates', apply_filters( 'wa_notifier_admin_html_templates', array() ) );
 
     	// Date / time picker
-    	wp_enqueue_style( WA_NOTIFIER_NAME . '-datetimepicker-css', WA_NOTIFIER_URL . 'assets/css/jquery.datetimepicker.min.css' );
-    	wp_enqueue_script( WA_NOTIFIER_NAME . '-datetimepicker-js', WA_NOTIFIER_URL . 'assets/js/jquery.datetimepicker.min.js' );
-
+    	wp_enqueue_script('jquery-ui-datepicker');
+	    wp_enqueue_style( WA_NOTIFIER_NAME . '-datepicker-style', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
 	}
 
 	/**
@@ -284,6 +284,13 @@ class WA_Notifier {
 	public static function remove_admin_query_args ($args) {
 		$remove_args = array('wa_import_count', 'wa_import_skipped', 'wa_contacts_import', 'import_contacts_from_users', 'refresh_status');
 		return array_merge($args, $remove_args);
+	}
+
+	/**
+	 * Schedule one time and recurring actions
+	 */
+	public static function schedule_actions () {
+
 	}
 
 }

@@ -3,4 +3,12 @@
 	#misc-publishing-actions {
 		display: none;
 	}
+
+	&.disable-publishing #publishing-action {
+		display: none;
+	}
+}
+
+.ui-datepicker-current {
+	display: none;
 }

@@ -474,9 +474,9 @@ class WA_Notifier_Contacts {
 		}
 
 		foreach ($contact_list_terms as $term) {
-			$contact_lists[$term->term_id] = $term->name;
+			$contact_lists[$term->slug] = $term->name;
 			if($show_count) {
-				$contact_lists[$term->term_id] .= ' ('.$term->count.' contacts)';
+				$contact_lists[$term->slug] .= ' ('.$term->count.' contacts)';
 			}
 		}
 

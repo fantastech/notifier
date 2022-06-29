@@ -49,8 +49,8 @@ else {
 						'label'             => 'Category',
 						'description'       => '',
 						'options'           => array (
-							'TRANSACTIONAL' => 'Transactional',
 							'MARKETING' => 'Marketing',
+							'TRANSACTIONAL' => 'Transactional',
 							//'OTP' => 'One Time Password (OTP)'
 						),
 						'custom_attributes' => $disabled

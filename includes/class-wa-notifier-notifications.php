@@ -19,6 +19,11 @@ class WA_Notifier_Notifications {
 		add_action( 'wp_ajax_fetch_message_template_data', array(__CLASS__, 'fetch_message_template_data') );
 		add_filter( 'wa_notifier_js_variables', array(__CLASS__, 'notifications_js_variables'));
 		add_action( 'save_post_wa_notification', array(__CLASS__, 'save_meta'), 10, 2 );
+		add_filter( 'manage_wa_notification_posts_columns', array( __CLASS__ , 'add_columns' ) );
+		add_action( 'manage_wa_notification_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
+
+		add_action( 'wa_notifier_marketing_notification', array(__CLASS__, 'send_scheduled_notification') );
+		add_filter( 'admin_body_class', array(__CLASS__, 'admin_body_class'));
 	}
 
 	/**
@@ -90,6 +95,8 @@ class WA_Notifier_Notifications {
 			    update_post_meta( $post_id, $key, $notification_data[$key]);
 			}
 		}
+
+		self::setup_notifcation($notification_data, $post_id);
 	}
 
 	/**
@@ -134,34 +141,21 @@ class WA_Notifier_Notifications {
 	 * Fetch and return message template data
 	 */
 	public static function fetch_message_template_data() {
-		if(!isset($_POST['template_name'])) {
+		if(!isset($_POST['template_id'])) {
 			wp_die();
 		}
 
-		$template_name =  $_POST['template_name'];
+		if('wa_message_template' != get_post_type($_POST['template_id'])){
+			wp_die();
+		}
 
-		$message_template = get_posts(
-			array (
-				'post_type' => 'wa_message_template',
-				'post_status' => 'publish',
-				'numberposts' => 1,
-				'fields' => 'ids',
-				'meta_query'	=> array(
-				    array(
-						'key'   => WA_NOTIFIER_PREFIX . 'template_name',
-						'value' => $template_name,
-				    ),
-				)
-			)
-		);
-
-		$post_id = $message_template[0];
+		$template_id =  $_POST['template_id'];
 
 		$template_meta = array('header_text', 'body_text', 'footer_text', 'button_type', 'button_num', 'button_1_type', 'button_1_text', 'button_2_type', 'button_2_text');
 
 		$template_data = array ();
 		foreach ($template_meta as $meta) {
-			$template_data[$meta] = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . $meta, true);
+			$template_data[$meta] = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . $meta, true);
 		}
 
 		$response = array (
@@ -171,6 +165,156 @@ class WA_Notifier_Notifications {
 
 		echo wp_json_encode($response);
 		wp_die();
+	}
+
+	/**
+	 * Setup notification
+	 */
+	public static function setup_notifcation($data, $id) {
+		// print_r($notification_data); die;
+		$type = $data['wa_notifier_notification_type'];
+		switch($type){
+			case 'marketing':
+				self::schedule_notification_to_list($data, $id);
+				break;
+			case 'translational':
+				self::setup_transactional_notification($id);
+				break;
+		}
+	}
+
+	/**
+	 * Schedule marketing notification to list
+	 */
+	public static function schedule_notification_to_list ($notification_data, $notification_id) {
+		if ( as_has_scheduled_action( 'wa_notifier_marketing_notification', array($notification_id), 'wa-notifier' ) ) {
+		 	as_unschedule_action('wa_notifier_marketing_notification', array($notification_id), 'wa-notifier');
+		}
+
+		update_post_meta ( $notification_id, WA_NOTIFIER_PREFIX . 'notification_status' , 'Scheduled');
+
+		$when = $notification_data['wa_notifier_notification_when'];
+		if('now' == $when) {
+			as_enqueue_async_action( 'wa_notifier_marketing_notification', array($notification_id), 'wa-notifier' );
+		}
+		else {
+			$timestamp = strtotime($notification_data['wa_notifier_notification_datetime']);
+			as_schedule_single_action( $timestamp, 'wa_notifier_marketing_notification', array($notification_id), 'wa-notifier' );
+		}
+	}
+
+	/**
+	 * Setup transactional notification
+	 */
+	public static function setup_transactional_notification ($notification_id) {
+
+	}
+
+	/**
+	 * Setup scheduled notification
+	 */
+	public static function send_scheduled_notification ($notification_id) {
+		update_post_meta ( $notification_id, WA_NOTIFIER_PREFIX . 'notification_status' , 'Sending');
+
+		$list_slug = get_post_meta($notification_id, 'wa_notifier_notification_list', true);
+		$template_id = get_post_meta($notification_id, 'wa_notifier_notification_message_template', true);
+		$list_offset = get_post_meta($notification_id, 'wa_notifier_notification_list_offset', true);
+		$sent_contact_ids = get_post_meta($notification_id, 'wa_notifier_notification_sent_contact_ids', true);
+		$unsent_contact_ids = get_post_meta($notification_id, 'wa_notifier_notification_unsent_contact_ids', true);
+
+		$offset = (!$list_offset) ? 0 : (int)$list_offset;
+		$sent_contact_ids = (!$sent_contact_ids) ? array() : $sent_contact_ids;
+		$unsent_contact_ids = (!$unsent_contact_ids) ? array() : $unsent_contact_ids;
+
+		$count = 0;
+		$limit = 5; // Send to only 50 contacts at a time
+
+		$contact_ids = get_posts( array(
+			'post_type'			=> 'wa_contact',
+			'post_status'		=> 'publish',
+			'wa_contact_list'	=> $list_slug,
+			'fields'			=> 'ids',
+			'offset'			=> $offset,
+			'posts_per_page'	=> $limit
+		) );
+
+		foreach($contact_ids as $contact_id) {
+			$count++;
+
+			$phone_number = get_post_meta( $contact_id, WA_NOTIFIER_PREFIX . 'wa_number', true);
+			if('' == $phone_number) {
+				continue;
+			}
+
+			//$message_sent = WA_Notifier_Message_Templates::send_message_template_to_number($template_id, $phone_number);
+			if($message_sent) {
+				$sent_contact_ids[] = $contact_id;
+			}
+			else {
+				$unsent_contact_ids[] = $contact_id;
+			}
+		}
+
+		$new_offset = $offset + $limit;
+		update_post_meta($notification_id, 'wa_notifier_notification_list_offset', $new_offset);
+		update_post_meta($notification_id, 'wa_notifier_notification_sent_contact_ids', $sent_contact_ids);
+		update_post_meta($notification_id, 'wa_notifier_notification_unsent_contact_ids', $unsent_contact_ids);
+		if($count == $limit){
+			as_enqueue_async_action( 'wa_notifier_marketing_notification', array($notification_id), 'wa-notifier' );
+		}
+		else {
+			update_post_meta ( $notification_id, WA_NOTIFIER_PREFIX . 'notification_status' , 'Sent');
+		}
+	}
+
+	/**
+	 * Mark notification as sent
+	 */
+	public static function mark_notification_as_sent ($notification_id) {
+
+	}
+
+	/**
+	 * Add body class
+	 */
+	public static function admin_body_class ($classes) {
+		global $post_id, $current_screen;
+		if ( 'wa_notification' == $current_screen->id ) {
+			$sent = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_sent', true);
+			if('yes' == $sent) {
+	 			$classes = $classes . ' disable-publishing';
+	 		}
+ 		}
+ 		return $classes;
+	}
+
+	/**
+	 * Add columns to list page
+	 */
+	public static function add_columns ($columns) {
+		$columns['notification_status'] = 'Status';
+		$columns['notification_stats'] = 'Stats';
+		unset($columns['date']);
+		return $columns;
+	}
+
+	/**
+	 * Add column content
+	 */
+	public static function add_column_content ( $column, $post_id ) {
+		if ( 'notification_status' === $column ) {
+		    $notification_status = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_status', true);
+		    echo ($notification_status) ? '<code>' . $notification_status . '</code>' : '-';
+		}
+
+		if ( 'notification_stats' === $column ) {
+		    $sent_contact_ids = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_sent_contact_ids', true);
+		    echo '<b>Sent: </b>';
+		    echo ($sent_contact_ids && is_array($sent_contact_ids)) ? count($sent_contact_ids) : '0';
+		    $unsent_contact_ids = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_unsent_contact_ids', true);
+		    echo '<br /><b>Failed: </b>';
+		    echo ($unsent_contact_ids && is_array($unsent_contact_ids)) ? count($unsent_contact_ids) : '0';
+		}
 	}
 
 }

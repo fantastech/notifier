@@ -25,8 +25,9 @@ class WA_Notifier_Message_Templates {
 		add_action( 'admin_notices', array(__CLASS__, 'show_admin_notices'), 10, 2 );
 		add_action( 'before_delete_post', array(__CLASS__, 'delete_template'), 10, 2 );
 		add_filter( 'admin_body_class', array(__CLASS__, 'admin_body_class'));
-		add_action( 'admin_head', array(__CLASS__, 'handle_refresh_status') );
+		add_action( 'admin_head', array(__CLASS__, 'handle_refresh_status_request') );
 		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
+		add_action( 'wa_notifier_refresh_mt_status', array(__CLASS__, 'refresh_mt_status') );
 	}
 
 	/**
@@ -191,27 +192,27 @@ class WA_Notifier_Message_Templates {
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'mt_name' === $column ) {
 		    $template_name = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'template_name', true);
-		    echo '<code>'.$template_name.'</code>';
+		    echo ($template_name) ? '<code>'.$template_name.'</code>' : '-';
 		}
 
 		if ( 'mt_status' === $column ) {
 		    $status = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'status', true);
-		    echo '<span class="status status-'.strtolower($status).'">'.$status.'</span>';
+		    echo ($status) ? '<span class="status status-'.strtolower($status).'">'.$status.'</span>' : '-';
 		}
 
 		if ( 'mt_category' === $column ) {
 		    $category = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'category', true);
-		    echo $category;
+		    echo ($category) ? $category : '-';
 		}
 
 		if ( 'mt_preview' === $column ) {
 		    $preview = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'body_text', true);
-		    echo '<span class="truncate-string">' . strip_tags( $preview ) . '</span>'; 
+		    echo ($preview) ? '<span class="truncate-string">' . strip_tags( $preview ) . '</span>' : '-';
 		}
 	}
 
 	/**
-	 * Add column content
+	 * Change deletion message
 	 */
 	public static function change_deletion_message ( $bulk_messages, $count ) {
 		if( 'wa_message_template' !== get_post_type() ) {
@@ -228,7 +229,7 @@ class WA_Notifier_Message_Templates {
 	}
 
 	/**
-	 * Add column content
+	 * Update save action messages
 	 */
 	public static function update_template_save_messages ($messages) {
 		if ( 'wa_message_template' !== get_post_type() ) {
@@ -368,7 +369,7 @@ class WA_Notifier_Message_Templates {
 				$notice['message'] = '<b>' . $response->error->error_user_title . '</b> - ' . $response->error->error_user_msg;
 			}
 			elseif (isset($response->error->message)) {
-				$notice['message'] = $response->error->message . 'Yaha';
+				$notice['message'] = $response->error->message;
 			}
 			set_transient( "mt_notice_$post_id", $notice, 60 );
 		}
@@ -377,10 +378,13 @@ class WA_Notifier_Message_Templates {
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'template_id', $response->id);
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'status', 'PENDING');
 			$notice = array(
-				'message' => 'Template submitted to WhatsApp for approval. Check your email for updates from WhatsApp about it.',
+				'message' => 'Template submitted to WhatsApp for approval. You\'ll get an email from WhatsApp about approval status.',
 				'type' => 'success'
 			);
 			set_transient( "mt_notice_$post_id", $notice, 60 );
+			if ( false === as_has_scheduled_action( 'wa_notifier_refresh_mt_status', array($post_id), 'wa-notifier' ) ) {
+			 	as_enqueue_async_action( 'wa_notifier_refresh_mt_status', array($post_id), 'wa-notifier' );
+			}
 		}
 	}
 
@@ -429,7 +433,7 @@ class WA_Notifier_Message_Templates {
 	}
 
 	/**
-	 * Delete template from Cloud API
+	 * Add class to body tag
 	 */
 	public static function admin_body_class ($classes) {
 		global $post_id, $current_screen;
@@ -451,9 +455,9 @@ class WA_Notifier_Message_Templates {
 	}
 
 	/**
-	 * Refresh statuses of all message templates
+	 * Handle message tempalte status refresh request
 	 */
-	public static function handle_refresh_status () {
+	public static function handle_refresh_status_request () {
 		global $current_screen;
 		if ( 'wa_message_template' !== $current_screen->post_type ) {
  			return;
@@ -464,14 +468,14 @@ class WA_Notifier_Message_Templates {
  		}
 
  		$response = WA_Notifier::wa_business_api_request('message_templates', array(), 'GET');
-		
+
 		if($response->error) {
 			$notices[] = array(
 				'message' => 'Status not refreshed. Error Code ' . $response->error->code . ': ' . $response->error->message ,
 				'type' => 'error'
 			);
+
 			new WA_Notifier_Admin_Notices($notices);
-			return;
 		}
 		else {
 			$wa_message_templates = $response->data;
@@ -498,7 +502,29 @@ class WA_Notifier_Message_Templates {
 				'message' => 'Status updated successfully.' ,
 				'type' => 'success'
 			);
+
 			new WA_Notifier_Admin_Notices($notices);
+		}
+	}
+
+	/**
+	 * Refresh status of specific message template
+	 */
+	public static function refresh_mt_status ($mt_id) {
+		$response = WA_Notifier::wa_business_api_request('message_templates', array(), 'GET');
+		if(!isset($response->error)){
+			$wa_message_templates = $response->data;
+			$template_name = get_post_meta ( $mt_id, WA_NOTIFIER_PREFIX . 'template_name', true);
+			foreach($wa_message_templates as $template) {
+				if($template_name == $template->name && 'en_US' == $template->language) {
+					update_post_meta ( $mt_id, WA_NOTIFIER_PREFIX . 'status', $template->status);
+					break;
+				}
+			}
+		}
+
+		if ( 'APPROVED' != $template->status ) {
+		 	as_schedule_single_action( time() + 60, 'wa_notifier_refresh_mt_status', array($mt_id), 'wa-notifier' );
 		}
 	}
 
@@ -537,11 +563,41 @@ class WA_Notifier_Message_Templates {
 		}
 
 		foreach ($message_templates as $template_id) {
-			$template_name = get_post_meta ( $template_id, WA_NOTIFIER_PREFIX . 'template_name', true);
-			$templates[$template_name] = get_the_title ($template_id);
+			$templates[$template_id] = get_the_title ($template_id);
 		}
 
 		return $templates;
+	}
+
+	/**
+	 * Send message template to phone number
+	 */
+	public static function send_message_template_to_number ($template_id, $phone_number) {
+		$template_name = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . 'template_name', true);
+		$language = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . 'language', true);
+
+		$args = array (
+			'messaging_product' => 'whatsapp',
+			'recipient_type' => 'individual',
+			'to' => $phone_number,
+			'type' => 'template',
+			'template' => array (
+				'name' => $template_name,
+				'language' => array (
+					'code' => $language
+				)
+			)
+		);
+
+		$response = WA_Notifier::wa_cloud_api_request('messages', $args);
+
+		if($response->error) {
+			error_log('[WhatsApp Send Error] ' . json_encode($response->error));
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 }

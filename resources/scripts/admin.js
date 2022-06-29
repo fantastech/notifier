@@ -173,10 +173,10 @@
 	}
 
 	// Fetch and display message template
-	function fetchAndDisplayMessageTemplate(template_name = '') {
-		if (template_name == '') {
-			template_name = $('#wa_notifier_notification_message_template :selected').val();
-			if (template_name == '') {
+	function fetchAndDisplayMessageTemplate(template_id = '') {
+		if (template_id == '') {
+			template_id = $('#wa_notifier_notification_message_template :selected').val();
+			if (template_id == '') {
 				$('#wa-notifier-message-template-preview').addClass('hide');
 				return false;
 			}
@@ -187,7 +187,7 @@
 			url: waNotifier.ajaxurl,
 			data: {
 				action: 'fetch_message_template_data',
-				template_name: template_name
+				template_id: template_id
 			},
 			success: function(response) {
 				if (response.status == 'success') {
@@ -196,6 +196,19 @@
 				}
 			},
 		});
+	}
+
+	function updateNotificationSaveButtonText() {
+		var type = $('#wa_notifier_notification_type :checked').val();
+		var when = $('#wa_notifier_notification_when :checked').val();
+		var btnText = '';
+		if(type == 'transactional'){
+			btnText = 'Save';
+		}
+		else {
+			btnText = (when == 'now') ? 'Save & Send' : 'Save & Schedule';
+		}
+		$('#publish').val(btnText);
 	}
 
 	$(document).on('ready', function() {
@@ -378,31 +391,57 @@
 		 ********************/
 
 		if ($('#wa-notifier-notification-data').length > 0) {
-
 			// Fetch and display message template preview.
 			fetchAndDisplayMessageTemplate();
 			$('#wa_notifier_notification_message_template').on('change', function() {
-				const template_name = $(this).find(':selected').val();
-				fetchAndDisplayMessageTemplate(template_name);
+				const template_id = $(this).find(':selected').val();
+				fetchAndDisplayMessageTemplate(template_id);
 			});
 
 			// Update button text as per user selection
+			updateNotificationSaveButtonText();
 			$('#wa-notifier-notification-data :input').on('change keyup', function(){
-				var type = $('#wa_notifier_notification_type :checked').val();
-				var when = $('#wa_notifier_notification_when :checked').val();
-				var btnText = '';
-				if(type == 'transactional'){
-					btnText = 'Save';
-				}
-				else {
-					btnText = 'Save and Send';
-				}
-				$('#publish').val(btnText);
+				updateNotificationSaveButtonText();
 			});
 
-
-
+			var dateToday = new Date();
+			$('#wa_notifier_notification_datetime').datetimepicker({
+				minDate: dateToday,
+				defaultDate: 1
+			});
 		}
+
+		// Notification publish confirmation
+		$('.post-type-wa_notification #publish').on('click', function() {
+			const type = $('#wa_notifier_notification_type').val() || '';
+			const template_name = $('#wa_notifier_notification_message_template').val() || '';
+
+			if ('' === type) {
+				alert('Please select a notification type.');
+				return false;
+			}
+			else if ('transactional' == type) {
+				const trigger = $('#wa_notifier_notification_trigger').val() || '';
+				if ('' === trigger) {
+					alert('Please select a Trigger.');
+					return false;
+				}
+			}
+			else if ('marketing' == type) {
+				const list = $('#wa_notifier_notification_list').val() || '';
+				if ('' === list) {
+					alert('Please select a Contact List.');
+					return false;
+				}
+			}
+
+			if ('' === template_name) {
+				alert('Please select a Message Template.');
+				return false;
+			}
+
+
+		});
 
 	});
 

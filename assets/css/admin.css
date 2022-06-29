@@ -555,3 +555,10 @@ a.refresh-status.page-title-action::before {
 .post-type-wa_notification #misc-publishing-actions {
   display: none;
 }
+.post-type-wa_notification.disable-publishing #publishing-action {
+  display: none;
+}
+
+.ui-datepicker-current {
+  display: none;
+}
