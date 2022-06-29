@@ -60,16 +60,16 @@ class WA_Notifier {
 	 */
 	private function includes() {
 		require_once WA_NOTIFIER_PATH . 'libraries/action-scheduler/action-scheduler.php';
-		require_once WA_NOTIFIER_PATH . 'includes/wa-notifier-helper-functions.php';
-		require_once WA_NOTIFIER_PATH . 'includes/wa-notifier-meta-box-functions.php';
+		require_once WA_NOTIFIER_PATH . 'includes/functions/functions-wa-notifier-helpers.php';
+		require_once WA_NOTIFIER_PATH . 'includes/functions/functions-wa-notifier-meta-box-fields.php';
 
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-admin-notices.php';
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-dashboard.php';
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-message-templates.php';
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-contacts.php';
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-notifications.php';
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-settings.php';
-		require_once WA_NOTIFIER_PATH . 'includes/class-wa-notifier-woocommerce.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-admin-notices.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-dashboard.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-message-templates.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-contacts.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notifications.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-settings.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-woocommerce.php';
 	}
 
 	/**
