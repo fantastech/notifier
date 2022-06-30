@@ -246,7 +246,7 @@ class WA_Notifier_Notifications {
 				continue;
 			}
 
-			//$message_sent = WA_Notifier_Message_Templates::send_message_template_to_number($template_id, $phone_number);
+			$message_sent = WA_Notifier_Message_Templates::send_message_template_to_number($template_id, $phone_number);
 			if($message_sent) {
 				$sent_contact_ids[] = $contact_id;
 			}
@@ -280,8 +280,9 @@ class WA_Notifier_Notifications {
 	public static function admin_body_class ($classes) {
 		global $post_id, $current_screen;
 		if ( 'wa_notification' == $current_screen->id ) {
-			$sent = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_sent', true);
-			if('yes' == $sent) {
+			$sent = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_status', true);
+			$statuses = self::get_notification_statuses();
+			if(in_array($sent, $statuses)) {
 	 			$classes = $classes . ' disable-publishing';
 	 		}
  		}
@@ -315,6 +316,13 @@ class WA_Notifier_Notifications {
 		    echo '<br /><b>Failed: </b>';
 		    echo ($unsent_contact_ids && is_array($unsent_contact_ids)) ? count($unsent_contact_ids) : '0';
 		}
+	}
+
+	/**
+	 * Get notification statuses
+	 */
+	public static function get_notification_statuses () {
+		return array('Sending', 'Sent', 'Scheduled');
 	}
 
 }

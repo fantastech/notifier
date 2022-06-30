@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $post_id;
 
 $notification_status = get_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'notification_status' , true);
-
-if(in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
+$statuses = WA_Notifier_Notifications::get_notification_statuses();
+if(in_array($notification_status, $statuses)) {
 	$disabled = array (
 		'disabled' => 'disabled'
 	);

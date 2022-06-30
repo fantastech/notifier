@@ -112,10 +112,16 @@
 		border-radius: 8px;
 		background-color: #fff;
 		margin: 10px;
+		display: flex;
+		flex-direction: column;
 
-		&.dashboard-box-top .w-25{
-			@include media-down (mobile) {
-				flex: 0 0 100%;
+		&.dashboard-box-top {
+    		height: auto;
+
+			.w-25{
+				@include media-down (mobile) {
+					flex: 0 0 100%;
+				}
 			}
 		}
 
@@ -138,7 +144,7 @@
 		}
 
 		.dashboard-box-body {
-			padding: 20px;
+			padding: 15px 20px;
 
 			@include media-down (mobile) {
 				padding: 12px;
@@ -146,6 +152,39 @@
 
 			p:first-child {
 				margin-top: 0;
+			}
+
+			table {
+				width: 100%;
+
+				th {
+					padding-bottom: 10px;
+					text-align: left;
+
+					&:last-child {
+						text-align: right;
+					}
+				}
+
+				td {
+					&:last-child {
+						text-align: right;
+					}
+				}
+			}
+		}
+
+		.dashboard-box-footer {
+			margin-top: auto;
+			padding: 15px 20px;
+			border-top: 1px solid #eee;
+
+			.dashboard-box-buttons-wrap {
+				text-align: right;
+
+				.button {
+					margin-left: 10px;
+				}
 			}
 		}
 	}

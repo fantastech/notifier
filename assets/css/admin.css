@@ -149,39 +149,52 @@
 }
 
 .w-25 {
-  flex: 0 0 25%;
+  flex: 0 0 auto;
+  width: 25%;
 }
 
 .w-30 {
-  flex: 0 0 30%;
+  flex: 0 0 auto;
+  width: 30%;
+}
+
+.w-33 {
+  flex: 0 0 auto;
+  width: 33.33333333%;
 }
 
 .w-40 {
-  flex: 0 0 40%;
+  flex: 0 0 auto;
+  width: 40%;
 }
 
 .w-50 {
-  flex: 0 0 50%;
+  flex: 0 0 auto;
+  width: 50%;
 }
 
 .w-60 {
-  flex: 0 0 60%;
+  flex: 0 0 auto;
+  width: 60%;
 }
 
 .w-70 {
-  flex: 0 0 70%;
+  flex: 0 0 auto;
+  width: 70%;
 }
 
 .w-75 {
-  flex: 0 0 75%;
+  flex: 0 0 auto;
+  width: 75%;
 }
 
 .w-80 {
-  flex: 0 0 80%;
+  flex: 0 0 auto;
+  width: 80%;
 }
 
 .w-100 {
-  flex: 0 0 100%;
+  flex: 1 0 100%;
 }
 
 .rounded {
@@ -201,6 +214,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
 }
 
 @media screen and (max-width: 767px) {
@@ -374,6 +395,11 @@
   border-radius: 8px;
   background-color: #fff;
   margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.dashboard-boxes .dashboard-box.dashboard-box-top {
+  height: auto;
 }
 @media screen and (max-width: 767px) {
   .dashboard-boxes .dashboard-box.dashboard-box-top .w-25 {
@@ -400,7 +426,7 @@
   }
 }
 .dashboard-boxes .dashboard-box .dashboard-box-body {
-  padding: 20px;
+  padding: 15px 20px;
 }
 @media screen and (max-width: 767px) {
   .dashboard-boxes .dashboard-box .dashboard-box-body {
@@ -409,6 +435,30 @@
 }
 .dashboard-boxes .dashboard-box .dashboard-box-body p:first-child {
   margin-top: 0;
+}
+.dashboard-boxes .dashboard-box .dashboard-box-body table {
+  width: 100%;
+}
+.dashboard-boxes .dashboard-box .dashboard-box-body table th {
+  padding-bottom: 10px;
+  text-align: left;
+}
+.dashboard-boxes .dashboard-box .dashboard-box-body table th:last-child {
+  text-align: right;
+}
+.dashboard-boxes .dashboard-box .dashboard-box-body table td:last-child {
+  text-align: right;
+}
+.dashboard-boxes .dashboard-box .dashboard-box-footer {
+  margin-top: auto;
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+}
+.dashboard-boxes .dashboard-box .dashboard-box-footer .dashboard-box-buttons-wrap {
+  text-align: right;
+}
+.dashboard-boxes .dashboard-box .dashboard-box-footer .dashboard-box-buttons-wrap .button {
+  margin-left: 10px;
 }
 
 .quantity-rating {

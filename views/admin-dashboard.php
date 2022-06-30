@@ -164,7 +164,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 						</div>
 					</div>
 				</div>
-				<div class="col w-30">
+				<div class="col w-33">
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
 							<h2>You're all set!</h2>
@@ -179,24 +179,126 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 						</div>
 					</div>
 				</div>
-				<div class="col w-30">
+				<div class="col w-33">
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
 							<h2>Message Templates</h2>
 						</div>
 						<div class="dashboard-box-body">
-
+						<?php
+							$message_templates = get_posts(
+								array (
+									'post_type' => 'wa_message_template',
+									'post_status' => 'publish',
+									'numberposts' => 5,
+								)
+							);
+							if(count($message_templates) > 0) {
+								echo '<table>';
+								echo '<tr><th>Name</th><th>Status</th></tr>';
+								foreach($message_templates as $template) {
+									$status = get_post_meta( $template->ID, WA_NOTIFIER_PREFIX . 'status', true);
+		    						$status_text = ($status) ? '<span class="status status-'.strtolower($status).'">'.$status.'</span>' : '-';
+									echo '<tr><td><a href="'.get_edit_post_link($template->ID).'">'.$template->post_title.'</a></td><td>'.$status_text.'</td></tr>';
+								}
+								echo '</table>';
+							}
+							else {
+								echo 'No messages templates found. <a href="'.admin_url('post-new.php?post_type=wa_message_template').'">Add New</a>';
+							}
+						?>
 						</div>
+						<?php if(count($message_templates) > 0) : ?>
+						<div class="dashboard-box-footer">
+							<div class="dashboard-box-buttons-wrap">
+								<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_message_template'); ?>">View All</a>
+							</div>
+						</div>
+						<?php endif; ?>
 					</div>
 				</div>
-				<div class="col w-40">
+				<div class="col w-33">
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
 							<h2>Contacts</h2>
 						</div>
 						<div class="dashboard-box-body">
-
+							<?php
+							$contacts = get_posts(
+								array (
+									'post_type' => 'wa_contact',
+									'post_status' => 'publish',
+									'numberposts' => 5,
+								)
+							);
+							if(count($contacts) > 0) {
+								echo '<table>';
+								echo '<tr><th>First Name</th><th>Last Name</th><th>Number</th></tr>';
+								foreach($contacts as $contact) {
+									$first_name = get_post_meta( $contact->ID, WA_NOTIFIER_PREFIX . 'first_name', true);
+									$last_name = get_post_meta( $contact->ID, WA_NOTIFIER_PREFIX . 'last_name', true);
+									$wa_number = get_post_meta( $contact->ID, WA_NOTIFIER_PREFIX . 'wa_number', true);
+									echo '<tr><td><a href="'.get_edit_post_link($contact->ID).'">'.$first_name . '</a></td><td>'.$last_name.'</td><td>'.$wa_number.'</td></tr>';
+								}
+								echo '</table>';
+							}
+							else {
+								echo 'No contacts found. <a href="'.admin_url('post-new.php?post_type=wa_contact').'">Add New</a>';
+							}
+						?>
 						</div>
+						<?php if(count($contacts) > 0) : ?>
+						<div class="dashboard-box-footer">
+							<div class="dashboard-box-buttons-wrap">
+								<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_contact'); ?>">View All</a>
+							</div>
+						</div>
+						<?php endif; ?>
+					</div>
+				</div>
+				<div class="col w-33">
+					<div class="dashboard-box">
+						<div class="dashboard-box-head">
+							<h2>Notifications</h2>
+						</div>
+						<div class="dashboard-box-body">
+							<?php
+							$notifications = get_posts(
+								array (
+									'post_type' => 'wa_notification',
+									'post_status' => 'publish',
+									'numberposts' => 5,
+								)
+							);
+							if(count($notifications) > 0) {
+								echo '<table>';
+								echo '<tr><th>Name</th><th>Status</th><th>Stats</th></tr>';
+								foreach($notifications as $notification) {
+									$status = get_post_meta( $notification->ID, WA_NOTIFIER_PREFIX . 'notification_status', true);
+									$sent = get_post_meta( $notification->ID, WA_NOTIFIER_PREFIX . 'notification_sent_contact_ids', true);
+									$sent_count = ($sent && is_array($sent)) ? count($sent) : '0';
+									$unsent = get_post_meta( $notification->ID, WA_NOTIFIER_PREFIX . 'notification_unsent_contact_ids', true);
+									$unsent_count = ($unsent && is_array($unsent)) ? count($unsent) : '0';
+									echo '<tr>';
+									echo '<td><a href="'.get_edit_post_link($notification->ID).'">'.$notification->post_title . '</a></td>';
+									echo '<td>'.$status.'</td>';
+									echo '<td>Sent: '.$sent_count.' / Failed: '.$unsent_count.'</td>';
+									echo '</tr>';
+								}
+								echo '</table>';
+							}
+							else {
+								echo 'No notifications found. <a href="'.admin_url('post-new.php?post_type=wa_notification').'">Add New</a>';
+							}
+						?>
+						</div>
+						<?php if(count($notifications) > 0) : ?>
+						<div class="dashboard-box-footer">
+							<div class="dashboard-box-buttons-wrap">
+								<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_notification'); ?>">View All</a>
+							</div>
+						</div>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
