@@ -90,7 +90,7 @@ else {
 						'id'                => WA_NOTIFIER_PREFIX . 'header_type',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'header_type', true),
 						'label'             => 'Header Type',
-						'description'       => 'Select the header type (Header Type: Media to add photo, video or document to header will be added in future plugin updates).',
+						'description'       => 'Select the header type.',
 						'options'           => array (
 							'none' => 'None',
 							'text' => 'Text',
@@ -107,7 +107,7 @@ else {
 						'id'                => WA_NOTIFIER_PREFIX . 'header_text',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'header_text', true),
 						'label'             => 'Header Text',
-						'description'       => '',
+						'description'       => 'Enter header text.',
 						'limit'             => 60,
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (

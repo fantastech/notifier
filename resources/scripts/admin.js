@@ -266,7 +266,7 @@
 		// Make the WhatsApp preview sidebar sticky
 		if ($('#wa-notifier-message-template-preview').length > 0) {
 			var wa_preview = $('#wa-notifier-message-template-preview');
-			var wa_preview_top = wa_preview.offset().top - 120;
+			var wa_preview_top = wa_preview.offset().top - 50;
 			var wa_preview_width = wa_preview.width();
 			wa_preview.width(wa_preview_width);
 			window.onscroll = function() {
@@ -318,6 +318,41 @@
 
 		// Add Refresh Status button to the message template lisitng page
 		$('.edit-php.post-type-wa_message_template .wrap .page-title-action').after(waNotifierTemplates.refresh_mt_status);
+
+		// Add variable
+		let bodyVar = 0;
+		$('.add-variable').on('click', function(e){
+			e.preventDefault();
+			var type = $(this).data('type');
+			if('header' == type) {
+				var header_text = $('#wa_notifier_header_text').val();
+				var res = header_text.match(/{{.*?}}/g);
+				if(res === null) {
+					header_text = header_text + ' {{1}}';
+				}
+				else {
+					header_text = header_text.replace(/{{.*?}}/g, '{{1}}');
+				}
+				$('#wa_notifier_header_text').val(header_text).focus();
+			}
+			if('body' == type) {
+				var body_text = $('#wa_notifier_body_text').val();
+			    var res = body_text.match(/{{.*?}}/g);
+			    if(res === null) {
+			    	bodyVar = 1;
+			    }
+			    else {
+			    	bodyVar = res.length + 1;
+			    	var x = 1;
+			    	res.forEach(function(item) {
+			    		body_text = body_text.replace( item, '{{'+x+'}}');
+			    		x++;
+			    	});
+			    }
+				$('#wa_notifier_body_text').val(body_text + ' {{'+bodyVar+'}}').focus();
+
+			}
+		});
 
 		/***************
 		 * Contact page

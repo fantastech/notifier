@@ -99,6 +99,11 @@
 	margin-left: -10px;
 	margin-right: -10px;
 
+	.col {
+		padding: 0 10px;
+		margin-bottom: 20px;
+	}
+
 	& > .col:not(.w-100) {
 		@include media-down(tablet){
 			flex: 0 0 50% !important;
@@ -111,9 +116,9 @@
 	.dashboard-box {
 		border-radius: 8px;
 		background-color: #fff;
-		margin: 10px;
 		display: flex;
 		flex-direction: column;
+		height: 100%;
 
 		&.dashboard-box-top {
     		height: auto;

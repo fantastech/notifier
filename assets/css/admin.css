@@ -49,6 +49,9 @@
   vertical-align: middle;
 }
 
+.meta-fields .form-field {
+  position: relative;
+}
 .meta-fields .form-field label,
 .meta-fields .form-field legend {
   display: block;
@@ -146,6 +149,7 @@
 
 .col {
   flex: 1 0 0%;
+  box-sizing: border-box;
 }
 
 .w-25 {
@@ -381,6 +385,10 @@
   margin-left: -10px;
   margin-right: -10px;
 }
+.dashboard-boxes .col {
+  padding: 0 10px;
+  margin-bottom: 20px;
+}
 @media screen and (max-width: 992px) {
   .dashboard-boxes > .col:not(.w-100) {
     flex: 0 0 50% !important;
@@ -394,9 +402,9 @@
 .dashboard-boxes .dashboard-box {
   border-radius: 8px;
   background-color: #fff;
-  margin: 10px;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 .dashboard-boxes .dashboard-box.dashboard-box-top {
   height: auto;
@@ -503,6 +511,36 @@
 .post-type-wa_message_template #minor-publishing .refresh-status img {
   width: 16px;
   margin-top: 2px;
+}
+.post-type-wa_message_template .add-variable {
+  background: transparent;
+  border: 1px solid #8c8f94;
+  font-size: 11px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 4px;
+  height: 23px;
+  border-radius: 20px;
+  color: #555;
+  float: right;
+  position: absolute;
+  top: 28px;
+  right: 22px;
+  z-index: 5;
+  cursor: pointer;
+}
+@media screen and (max-width: 767px) {
+  .post-type-wa_message_template .add-variable {
+    right: 0px;
+  }
+}
+.post-type-wa_message_template .add-variable > .dashicons {
+  font-size: 13px;
+  height: auto;
+  width: auto;
+}
+.post-type-wa_message_template .add-variable:hover .hide {
+  display: inline !important;
 }
 
 a.refresh-status.page-title-action::before {
@@ -653,7 +691,7 @@ a.refresh-status.page-title-action::before {
 }
 #wa-notifier-message-template-preview.sticky {
   position: fixed;
-  top: 120px;
+  top: 50px;
   width: 100%;
 }
 

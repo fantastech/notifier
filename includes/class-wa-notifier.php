@@ -264,6 +264,7 @@ class WA_Notifier {
 	 */
 	private function send_api_request ( $request_url, $args, $method ) {
 		$permanent_access_token = get_option('wa_notifier_permanent_access_token');
+		$args['status'] = 'REJECTED';
 		$request_args = array(
 		    'method' => $method,
 		    'headers'     => array(
@@ -271,6 +272,9 @@ class WA_Notifier {
 		    ),
 		    'body' => $args
 	    );
+
+		// echo "<pre>"; print_r($args); die;
+
 		$response = wp_remote_request( $request_url, $request_args);
 		if ( is_wp_error( $response ) ) {
 			echo $response->get_error_message();

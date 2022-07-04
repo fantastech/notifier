@@ -28,6 +28,7 @@ class WA_Notifier_Message_Templates {
 		add_action( 'admin_head', array(__CLASS__, 'handle_refresh_status_request') );
 		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 		add_action( 'wa_notifier_refresh_mt_status', array(__CLASS__, 'refresh_mt_status') );
+		add_action( 'wa_notifier_after_meta_field', array(__CLASS__, 'add_variable_button'), 10, 2 );
 	}
 
 	/**
@@ -170,7 +171,7 @@ class WA_Notifier_Message_Templates {
 		echo '</div>';
 
 		if('REJECTED' == $mt_status) {
-			echo '<p>Your template was rejected by WhatsApp. Please check your email for details on why it was rejected. You can edit the template and submit it for review again.</p>';
+			echo '<p><b>Note:</b> Your template was rejected by WhatsApp. Please make sure you\'re following their <a href="https://developers.facebook.com/docs/whatsapp/message-templates/guidelines" target="_blank">Message Template Guidelines</a> when creating the template. You can edit this template and re-submit it for review.</p>';
 		}
 	}
 
@@ -265,9 +266,7 @@ class WA_Notifier_Message_Templates {
 			    update_post_meta( $post_id, $key, $template_data[$key]);
 			}
 		}
-
 		self::submit_template_data_to_cloud_api($template_data);
-
 	}
 
 	/**
@@ -598,6 +597,19 @@ class WA_Notifier_Message_Templates {
 		else {
 			return true;
 		}
+	}
+
+	/**
+	 * Add variable button to heading and body text fields.
+	 */
+	public static function add_variable_button ($field, $post) {
+		if(WA_NOTIFIER_PREFIX . 'header_text' == $field['id']) {
+			echo '<button class="add-variable" data-type="header" title="Add Variable"><span class="dashicons dashicons-plus-alt2"></span><span class="hide">Add Variable</span></button>';
+		}
+		if(WA_NOTIFIER_PREFIX . 'body_text' == $field['id']) {
+			echo '<button class="add-variable" data-type="body" title="Add Variable"><span class="dashicons dashicons-plus-alt2"></span><span class="hide">Add Variable</span></button>';
+		}
+		return;
 	}
 
 }

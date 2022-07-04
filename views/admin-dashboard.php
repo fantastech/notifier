@@ -193,7 +193,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 									'numberposts' => 5,
 								)
 							);
-							if(count($message_templates) > 0) {
+							if(count($message_templates) < 0) {
 								echo '<table>';
 								echo '<tr><th>Name</th><th>Status</th></tr>';
 								foreach($message_templates as $template) {
@@ -204,11 +204,11 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 								echo '</table>';
 							}
 							else {
-								echo 'No messages templates found. <a href="'.admin_url('post-new.php?post_type=wa_message_template').'">Add New</a>';
+								echo '<div class="posts-not-found">No messages templates found. <a href="'.admin_url('post-new.php?post_type=wa_message_template').'">Add New</a></div>';
 							}
 						?>
 						</div>
-						<?php if(count($message_templates) > 0) : ?>
+						<?php if(count($message_templates) < 0) : ?>
 						<div class="dashboard-box-footer">
 							<div class="dashboard-box-buttons-wrap">
 								<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_message_template'); ?>">View All</a>
@@ -231,7 +231,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 									'numberposts' => 5,
 								)
 							);
-							if(count($contacts) > 0) {
+							if(count($contacts) < 0) {
 								echo '<table>';
 								echo '<tr><th>First Name</th><th>Last Name</th><th>Number</th></tr>';
 								foreach($contacts as $contact) {
@@ -243,11 +243,11 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 								echo '</table>';
 							}
 							else {
-								echo 'No contacts found. <a href="'.admin_url('post-new.php?post_type=wa_contact').'">Add New</a>';
+								echo '<div class="posts-not-found">No contacts found. <a href="'.admin_url('post-new.php?post_type=wa_contact').'">Add New</a></div>';
 							}
 						?>
 						</div>
-						<?php if(count($contacts) > 0) : ?>
+						<?php if(count($contacts) < 0) : ?>
 						<div class="dashboard-box-footer">
 							<div class="dashboard-box-buttons-wrap">
 								<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_contact'); ?>">View All</a>
@@ -270,7 +270,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 									'numberposts' => 5,
 								)
 							);
-							if(count($notifications) > 0) {
+							if(count($notifications) < 0) {
 								echo '<table>';
 								echo '<tr><th>Name</th><th>Status</th><th>Stats</th></tr>';
 								foreach($notifications as $notification) {
@@ -288,11 +288,11 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 								echo '</table>';
 							}
 							else {
-								echo 'No notifications found. <a href="'.admin_url('post-new.php?post_type=wa_notification').'">Add New</a>';
+								echo '<div class="posts-not-found">No notifications found. <a href="'.admin_url('post-new.php?post_type=wa_notification').'">Add New</a></div>';
 							}
 						?>
 						</div>
-						<?php if(count($notifications) > 0) : ?>
+						<?php if(count($notifications) < 0) : ?>
 						<div class="dashboard-box-footer">
 							<div class="dashboard-box-buttons-wrap">
 								<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_notification'); ?>">View All</a>
