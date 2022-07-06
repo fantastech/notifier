@@ -206,9 +206,18 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 								<h2>You're all set! Here are the next steps...</h2>
 							</div>
 							<div class="dashboard-box-body">
-								<p><b>STEP 1</b> - Create your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_message_template' ); ?>" target="_blank">Message Template</a>.</p>
-								<p><b>STEP 2</b> - Add / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>" target="_blank">Contacts</a>.</p>
-								<p><b>STEP 3</b> - Create and send your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_notification' ); ?>" target="_blank">Notification</a>.</p>
+								<p>
+									<span class="dashicons <?php echo ($message_templates_count == 0) ? 'dashicons-marker' : 'dashicons-yes-alt'; ?>"> </span>
+									<b>STEP 1</b> - Create your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_message_template' ); ?>" target="_blank">Message Template</a>.
+								</p>
+								<p>
+									<span class="dashicons <?php echo ($contacts_count == 0) ? 'dashicons-marker' : 'dashicons-yes-alt'; ?>"> </span>
+									<b>STEP 2</b> - Add / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>" target="_blank">Contacts</a>.
+								</p>
+								<p>
+									<span class="dashicons <?php echo ($notifications_count == 0) ? 'dashicons-marker' : 'dashicons-yes-alt'; ?>"> </span>
+									<b>STEP 3</b> - Create and send your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_notification' ); ?>" target="_blank">Notification</a>.
+								</p>
 							</div>
 						</div>
 					</div>

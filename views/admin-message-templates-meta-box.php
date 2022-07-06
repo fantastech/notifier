@@ -169,7 +169,7 @@ else {
 						'id'                => WA_NOTIFIER_PREFIX . 'body_text',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'body_text', true),
 						'label'             => 'Body content',
-						'description'       => 'Enter body content. You can format the text using <a href="https://faq.whatsapp.com/general/chats/how-to-format-your-messages/?lang=en" target="_blank">WhatsApp\'s formatting options</a>. HTML not allowed.',
+						'description'       => 'Enter body content. HTML not allowed. You can format the text using following shorthands:<br><br>Bold: *text* will become <b>text</b><br>Italics: _text_ will become <em>text</em><br>Strikethrough: ~text~ will become <s>text</s><br>Monospace or code: ```text``` will become <code style="background-color: transparent;">text</code>',
 						'rows'              => 4,
 						'limit'             => 1024,
 						'custom_attributes' => $disabled

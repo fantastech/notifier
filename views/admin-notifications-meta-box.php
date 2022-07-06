@@ -35,8 +35,8 @@ else {
 						'description'       => '',
 						'options'           => array (
 							''				=> 'Select type ',
-							'transactional' => 'when a certain action is performed',
-							'marketing' 	=> 'to a list (broadcast)',
+							'transactional' => 'when a certain action is triggered',
+							'marketing' 	=> 'to a list (marketing broadcast)',
 						),
 						'custom_attributes' => $disabled
 					)
@@ -49,12 +49,14 @@ else {
 					array(
 						'id'                => WA_NOTIFIER_PREFIX . 'notification_trigger',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_trigger', true),
-						'label'             => 'Trigger',
-						'description'       => 'Select a trigger when you want to send notification.',
+						'label'             => 'Send it when...',
+						'description'       => 'Select a trigger when you want to send notification. You can request more triggers by <a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20New%20Trigger%20Request" target="_blank">mailing us</a>.',
 						'options'           => array (
 							'' => 'Select a trigger',
-							'new_post' => 'New post is published',
-							'woocommerce_new_order' => 'New Woocommerce order is placed',
+							'WordPress' => array (
+								'new_post' => 'A new post is published',
+								'new_user_registration' => 'A new user is registered',
+							)
 						),
 						'conditional_logic'		=> array (
 							array (
@@ -66,6 +68,64 @@ else {
 						'custom_attributes' => $disabled
 					)
 				);
+				?>
+				<?php
+					$send_to_conditions = array (
+						array (
+							'field'		=> WA_NOTIFIER_PREFIX . 'notification_trigger',
+							'operator'	=> '!=',
+							'value'		=> ''
+						)
+					);
+				?>
+				<div class="form-field send-to-fields" data-conditions="<?php echo esc_attr ( json_encode( $send_to_conditions ) ); ?>">
+					<?php
+						$send_to = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_send_to', true);
+					?>
+					<label>Send to...</label>
+					<table class="fields-repeater">
+						<tbody>
+							<tr>
+								<th>Type</th>
+								<th>Recipient</th>
+								<th></th>
+							</tr>
+							<?php
+								if($send_to && is_array($send_to)) {
+									foreach ($send_to as $recipient) {
+										echo WA_Notifier_Notifications::get_notification_send_to_fields_row($row, $recipient);
+									}
+								}
+								else {
+									echo WA_Notifier_Notifications::get_notification_send_to_fields_row();
+								}
+							?>
+							<tr class="row">
+								<td>
+									<select class="wa_notifier_notification_sent_to[0][type]" id="wa_notifier_notification_sent_to_0_type">
+										<option value="contact">Contact</option>
+										<option value="list">List</option>
+										<option value="user">User / Customer</option>
+									</select>
+									<span class="description">Select the type of recipient.</span>
+								</td>
+								<td>
+									<div class="wa_notifier_notification_sent_to_0_recipient_field">
+										<input type="text" name="wa_notifier_notification_sent_to[0][recipient]" id="wa_notifier_notification_sent_to_0_recipient">
+										<span class="description">Enter comma separated recipient numbers with country code. E.g. +919876543210,+918765432109</span>
+									</div>
+								</td>
+								<td class="delete-repeater-field">
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="d-flex justify-content-end">
+						<a href="" class="button add-recipient">Add recipient</a>
+					</div>
+				</div>
+				<?php
 				do_action('wa_notifier_transactional_fields');
 				?>
 			</div>

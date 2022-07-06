@@ -59,17 +59,20 @@ class WA_Notifier {
 	 * Include required core files used in admin and on the frontend.
 	 */
 	private function includes() {
+		// Libraries
 		require_once WA_NOTIFIER_PATH . 'libraries/action-scheduler/action-scheduler.php';
+
+		// Functions
 		require_once WA_NOTIFIER_PATH . 'includes/functions/functions-wa-notifier-helpers.php';
 		require_once WA_NOTIFIER_PATH . 'includes/functions/functions-wa-notifier-meta-box-fields.php';
 
+		// Classes
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-admin-notices.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-dashboard.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-message-templates.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-contacts.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notifications.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-settings.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-woocommerce.php';
 	}
 
 	/**
@@ -83,11 +86,10 @@ class WA_Notifier {
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Contacts', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Notifications', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Settings', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Woocommerce', 'init' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_include_woocoomerce_code' ) );
 
 		add_filter( 'init', array( $this , 'test_stuff') );
 		add_filter( 'init', array( $this , 'handle_webhook_requests') );
-		add_filter( 'init', array( $this , 'schedule_actions') );
 
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
@@ -181,7 +183,7 @@ class WA_Notifier {
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">
 					<span class="header-version">Version: 0.1 (beta)</span>
-					<a href="mailto:ram@fantastech.co?subject=Regarding%20WA%20Notifier%20on%20<?php echo get_site_url(); ?>">Help</a>
+					<a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20Help%20Needed%20on<?php echo get_site_url(); ?>">Help</a>
 					<a href="admin.php?page=wa-notifier&show=disclaimer">Disclaimer</a>
 				</div>
 			</div>
@@ -264,7 +266,6 @@ class WA_Notifier {
 	 */
 	private function send_api_request ( $request_url, $args, $method ) {
 		$permanent_access_token = get_option('wa_notifier_permanent_access_token');
-		$args['status'] = 'REJECTED';
 		$request_args = array(
 		    'method' => $method,
 		    'headers'     => array(
@@ -293,10 +294,13 @@ class WA_Notifier {
 	}
 
 	/**
-	 * Schedule one time and recurring actions
+	 * Load Woocommerce related code if it's present is activated
 	 */
-	public static function schedule_actions () {
-
+	public static function maybe_include_woocoomerce_code () {
+		if( class_exists( 'WooCommerce' ) ){
+			require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-woocommerce.php';
+			WA_Notifier_Woocommerce::init();
+		}
 	}
 
 }

@@ -7,6 +7,14 @@
 	&.disable-publishing #publishing-action {
 		display: none;
 	}
+
+	.send-to-fields {
+		width: calc(100% - 20px);
+
+		@include media-down(mobile) {
+			width: 100%;
+		}
+	}
 }
 
 .ui-datepicker-current {

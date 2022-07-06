@@ -90,6 +90,42 @@
 				width: auto;
 			}
 		}
+
+		.fields-repeater {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 10px;
+
+			th {
+				text-align: left;
+				font-size: 13px;
+				font-weight: normal;
+			    border: 1px solid #a8a6a6;
+    			padding: 10px;
+    			background-color: #f7f7f7;
+			}
+
+			td {
+				width: 50%;
+				border: 1px solid #a8a6a6;
+    			padding: 10px;
+    			vertical-align: top;
+
+    			input, select, textarea {
+    				width: 100%;
+    			}
+
+				&.delete-repeater-field {
+					min-width: 20px;
+					text-align: center;
+
+					span {
+						margin-top: 5px;
+						cursor: pointer;
+					}
+				}
+			}
+		}
 	}
 
 	fieldset.form-field {
@@ -121,7 +157,6 @@
 		margin-top: 5px;
 		display: inline-block;
 		color: #555;
-		font-style: italic;
 	}
 
 	.col {

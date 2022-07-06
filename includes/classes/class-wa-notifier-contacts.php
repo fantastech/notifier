@@ -30,7 +30,7 @@ class WA_Notifier_Contacts {
 	 */
 	public function register_cpt () {
 		wa_notifier_register_post_type ( 'wa_contact', 'Contact', 'Contacts' );
-		wa_notifier_register_taxonomy ( 'wa_contact_list', 'Contact List', 'Contact Lists', 'wa_contact' , array( 'hierarchical' => true ) );
+		wa_notifier_register_taxonomy ( 'wa_contact_list', 'Contact List', 'Contact Lists', 'wa_contact' , array( 'hierarchical' => true, 'default_term' => array('name' => 'Default List', 'slug' => 'default_list') ) );
 		wa_notifier_register_taxonomy ( 'wa_contact_tag', 'Contact Tag', 'Contact Tags', 'wa_contact' );
 	}
 	

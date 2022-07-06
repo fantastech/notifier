@@ -262,7 +262,12 @@ class WA_Notifier_Message_Templates {
 
 		foreach ($_POST as $key => $data) {
 			if (strpos($key, WA_NOTIFIER_PREFIX) !== false) {
-				$template_data[$key] = sanitize_text_field( wp_unslash ($data) );
+				if(WA_NOTIFIER_PREFIX . 'body_text' == $key) {
+					$template_data[$key] = sanitize_textarea_field( wp_unslash ($data) );
+				}
+				else {
+					$template_data[$key] = sanitize_text_field( wp_unslash ($data) );
+				}
 			    update_post_meta( $post_id, $key, $template_data[$key]);
 			}
 		}
@@ -281,24 +286,13 @@ class WA_Notifier_Message_Templates {
 		);
 
 		// Header
-		// if( 'text' == $template_data[WA_NOTIFIER_PREFIX . 'header_type']) {
-		// 	$args['components'][] = array (
-		// 		'type' => 'HEADER',
-		// 		'format' => 'TEXT',
-		// 		'text' => $template_data[WA_NOTIFIER_PREFIX . 'header_text']
-		// 	);
-		// }
-		// elseif( 'media' == $template_data[WA_NOTIFIER_PREFIX . 'header_type']) {
-		// 	$args['components'][] = array (
-		// 		'type' => 'HEADER',
-		// 		'format' => $template_data[WA_NOTIFIER_PREFIX . 'media_type']
-		// 	);
-		// }
-		$args['components'][] = array (
-			'type' => 'HEADER',
-			'format' => 'TEXT',
-			'text' => $template_data[WA_NOTIFIER_PREFIX . 'header_text']
-		);
+		if( 'text' == $template_data[WA_NOTIFIER_PREFIX . 'header_type']) {
+			$args['components'][] = array (
+				'type' => 'HEADER',
+				'format' => 'TEXT',
+				'text' => $template_data[WA_NOTIFIER_PREFIX . 'header_text']
+			);
+		}
 
 		// Body
 		$args['components'][] = array (
@@ -521,8 +515,11 @@ class WA_Notifier_Message_Templates {
 				}
 			}
 		}
+		else {
+			error_log('[WA Notifer] Message template status update error: ' . json_encode($response));
+		}
 
-		if ( 'APPROVED' != $template->status ) {
+		if ( 'PENDING' == $template->status ) {
 		 	as_schedule_single_action( time() + 60, 'wa_notifier_refresh_mt_status', array($mt_id), 'wa-notifier' );
 		}
 	}
@@ -603,10 +600,10 @@ class WA_Notifier_Message_Templates {
 	 * Add variable button to heading and body text fields.
 	 */
 	public static function add_variable_button ($field, $post) {
-		if(WA_NOTIFIER_PREFIX . 'header_text' == $field['id']) {
+		if(WA_NOTIFIER_PREFIX . 'header_text' == $field['id'] && 'disabled' != $field['custom_attributes']['disabled']) {
 			echo '<button class="add-variable" data-type="header" title="Add Variable"><span class="dashicons dashicons-plus-alt2"></span><span class="hide">Add Variable</span></button>';
 		}
-		if(WA_NOTIFIER_PREFIX . 'body_text' == $field['id']) {
+		if(WA_NOTIFIER_PREFIX . 'body_text' == $field['id'] && 'disabled' != $field['custom_attributes']['disabled']) {
 			echo '<button class="add-variable" data-type="body" title="Add Variable"><span class="dashicons dashicons-plus-alt2"></span><span class="hide">Add Variable</span></button>';
 		}
 		return;

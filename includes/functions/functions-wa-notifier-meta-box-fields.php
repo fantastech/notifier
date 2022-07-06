@@ -266,7 +266,17 @@ function wa_notifier_wp_select( $field ) {
 	echo '<select class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '"' . implode( ' ', $custom_attributes ) . '/> ';
 
 	foreach ( $field['options'] as $key => $value ) {
-		echo '<option value="' . esc_attr( $key ) . '"' . selected( $key, $field['value'], false) . '>' . esc_html( $value ) . '</option>';
+		if(is_array($value)){
+			$opt_group_options = $value;
+			echo '<optgroup label="'.$key.'">';
+			foreach($opt_group_options as $opt_key => $opt_val) {
+				echo '<option value="' . esc_attr( $opt_key ) . '"' . selected( $opt_key, $field['value'], false) . '>' . esc_html( $opt_val ) . '</option>';
+			}
+			echo '</optgroup>';
+		}
+		else {
+			echo '<option value="' . esc_attr( $key ) . '"' . selected( $key, $field['value'], false) . '>' . esc_html( $value ) . '</option>';
+		}
 	}
 
 	echo '</select>';

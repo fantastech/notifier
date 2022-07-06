@@ -129,11 +129,12 @@
 
 		// Body
 		previewData.body_text = previewData.body_text.replace(/(<([^>]+)>)/gi, "")
+			.replace(/(?:\r\n|\r|\n)/g, '<br>')
 			.replace(/(?:\*)(?:(?!\s))((?:(?!\*|\n).)+)(?:\*)/g,'<b>$1</b>')
-	   	.replace(/(?:_)(?:(?!\s))((?:(?!\n|_).)+)(?:_)/g,'<i>$1</i>')
-	   	.replace(/(?:~)(?:(?!\s))((?:(?!\n|~).)+)(?:~)/g,'<s>$1</s>')
-	   	.replace(/(?:--)(?:(?!\s))((?:(?!\n|--).)+)(?:--)/g,'<u>$1</u>')
-	   	.replace(/(?:```)(?:(?!\s))((?:(?!\n|```).)+)(?:```)/g,'<tt>$1</tt>');
+		   	.replace(/(?:_)(?:(?!\s))((?:(?!\n|_).)+)(?:_)/g,'<i>$1</i>')
+		   	.replace(/(?:~)(?:(?!\s))((?:(?!\n|~).)+)(?:~)/g,'<s>$1</s>')
+		   	.replace(/(?:--)(?:(?!\s))((?:(?!\n|--).)+)(?:--)/g,'<u>$1</u>')
+		   	.replace(/(?:```)(?:(?!\s))((?:(?!\n|```).)+)(?:```)/g,'<tt>$1</tt>');
 
 		$('.wa-template-preview .message-body').html(previewData.body_text);
 
@@ -350,8 +351,8 @@
 			    	});
 			    }
 				$('#wa_notifier_body_text').val(body_text + ' {{'+bodyVar+'}}').focus();
-
 			}
+			fetcDataAndPreviewTemplate();
 		});
 
 		/***************
@@ -474,9 +475,12 @@
 				alert('Please select a Message Template.');
 				return false;
 			}
-
-
 		});
+
+		$('.add-recipient').on('click', function(e){
+			e.preventDefault();
+			$('.send-to-fields .fields-repeater tbody').append(waNotifierTemplates.notification_receiver_row);
+		})
 
 	});
 

@@ -24,6 +24,7 @@ class WA_Notifier_Notifications {
 
 		add_action( 'wa_notifier_marketing_notification', array(__CLASS__, 'send_scheduled_notification') );
 		add_filter( 'admin_body_class', array(__CLASS__, 'admin_body_class'));
+		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 	}
 
 	/**
@@ -227,7 +228,7 @@ class WA_Notifier_Notifications {
 		$unsent_contact_ids = (!$unsent_contact_ids) ? array() : $unsent_contact_ids;
 
 		$count = 0;
-		$limit = 5; // Send to only 50 contacts at a time
+		$limit = 50; // Send to only 50 contacts at a time
 
 		$contact_ids = get_posts( array(
 			'post_type'			=> 'wa_contact',
@@ -247,6 +248,7 @@ class WA_Notifier_Notifications {
 			}
 
 			$message_sent = WA_Notifier_Message_Templates::send_message_template_to_number($template_id, $phone_number);
+
 			if($message_sent) {
 				$sent_contact_ids[] = $contact_id;
 			}
@@ -265,13 +267,6 @@ class WA_Notifier_Notifications {
 		else {
 			update_post_meta ( $notification_id, WA_NOTIFIER_PREFIX . 'notification_status' , 'Sent');
 		}
-	}
-
-	/**
-	 * Mark notification as sent
-	 */
-	public static function mark_notification_as_sent ($notification_id) {
-
 	}
 
 	/**
@@ -323,6 +318,44 @@ class WA_Notifier_Notifications {
 	 */
 	public static function get_notification_statuses () {
 		return array('Sending', 'Sent', 'Scheduled');
+	}
+
+	public static function get_notification_send_to_fields_row ($num = 0, $data = array()) {
+		$types = array (
+			'contact'	=> 'Contact',
+			'list'		=> 'List',
+			'user'		=> 'User'
+		);
+		$html = '<tr class="row">
+			<td>
+				<select class="wa_notifier_notification_sent_to['.$num.'][type]" id="wa_notifier_notification_sent_to_'.$num.'_type">
+					<option value="contact">Contact</option>
+					<option value="list">List</option>
+					<option value="user">User / Customer</option>
+				</select>
+				<span class="description">Select the type of recipient.</span>
+			</td>
+			<td>
+				<div class="wa_notifier_notification_sent_to_'.$num.'_recipient_field">
+					<input type="text" name="wa_notifier_notification_sent_to['.$num.'][recipient]" id="wa_notifier_notification_sent_to_'.$num.'_recipient">
+					<span class="description">Enter comma separated recipient numbers with country code. E.g. +919876543210,+918765432109</span>
+				</div>
+			</td>
+			<td class="delete-repeater-field">
+				<span class="dashicons dashicons-trash"></span>
+			</td>
+		</tr>';
+		return $html;
+	}
+
+	/**
+	 * Admin HTML templates
+	 */
+	public static function admin_html_templates($templates) {
+
+		// Template for adding new receiver row
+		$templates['notification_receiver_row'] = self::get_notification_send_to_fields_row('row_num');
+		return $templates;
 	}
 
 }
