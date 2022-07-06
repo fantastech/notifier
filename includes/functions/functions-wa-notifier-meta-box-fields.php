@@ -14,23 +14,33 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array $field
  */
 function wa_notifier_wp_text_input( $field ) {
-	global $thepostid, $post;
+	global $post;
 
 	$field = apply_filters ('wa_notifier_wp_text_input_args', $field, $post);
 
-	$thepostid              = empty( $thepostid ) ? $post->ID : $thepostid;
-	$field['placeholder']   = isset( $field['placeholder'] ) ? $field['placeholder'] : '';
-	$field['class']         = isset( $field['class'] ) ? $field['class'] : '';
-	$field['style']         = isset( $field['style'] ) ? $field['style'] : '';
-	$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
-	$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
-	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-	$field['type']          = isset( $field['type'] ) ? $field['type'] : 'text';
-	$field['limit']         = isset( $field['limit'] ) ? $field['limit'] : 0;
-	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
-	$data_type              = empty( $field['data_type'] ) ? '' : $field['data_type'];
+	$field = wp_parse_args(
+		$field , array(
+			'label'				=> '',
+			'placeholder'		=> '',
+			'class'             => '',
+			'style'             => '',
+			'wrapper_class'     => '',
+			'value'             => '',
+			'name'              => $field['id'],
+			'description'		=> '',
+			'type'				=> 'text',
+			'limit'				=> 0,
+			'conditional_logic'	=> '',
+			'show_wrapper'		=> true,
+			'custom_attributes' => array(),
+			'data_type'			=> '',
+			'required'			=> ''
+		)
+	);
 
-	switch ( $data_type ) {
+	$field['conditional_logic'] = json_encode($field['conditional_logic']);
+
+	switch ( $field['data_type'] ) {
 		case 'url':
 			$field['class'] .= ' wa_notifier_input_url';
 			$field['value']  = esc_url( $field['value'] );
@@ -51,20 +61,23 @@ function wa_notifier_wp_text_input( $field ) {
 	$custom_attributes = array();
 
 	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
-
 		foreach ( $field['custom_attributes'] as $attribute => $value ) {
 			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
 		}
 	}
 
-	if( $field['required'] ) {
+	if( '' != $field['required'] ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
-	do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+	if($field['show_wrapper']){
+		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+	}
 
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
-		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
+	if ( '' != $field['label'] ) {
+		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
+	}
 
 	do_action('wa_notifier_before_meta_field', $field, $post);
 
@@ -72,15 +85,16 @@ function wa_notifier_wp_text_input( $field ) {
 
 	do_action('wa_notifier_after_meta_field', $field, $post);
 
-	if ( ! empty( $field['description'] ) ) {
+	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
 	do_action('wa_notifier_after_meta_field_description', $field, $post);
 
-	echo '</p>';
-
-	do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	if($field['show_wrapper']){
+		echo '</p>';
+		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	}
 }
 
 /**
@@ -89,13 +103,16 @@ function wa_notifier_wp_text_input( $field ) {
  * @param array $field
  */
 function wa_notifier_wp_hidden_input( $field ) {
-	global $thepostid, $post;
+	global $post;
 
 	$field = apply_filters ('wa_notifier_wp_hidden_input', $field, $post);
 
-	$thepostid      = empty( $thepostid ) ? $post->ID : $thepostid;
-	$field['value'] = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
-	$field['class'] = isset( $field['class'] ) ? $field['class'] : '';
+	$field = wp_parse_args(
+		$field , array(
+			'class'             => '',
+			'value'             => ''
+		)
+	);
 
 	do_action('wa_notifier_before_meta_field', $field, $post);
 
@@ -110,21 +127,31 @@ function wa_notifier_wp_hidden_input( $field ) {
  * @param array $field
  */
 function wa_notifier_wp_textarea_input( $field ) {
-	global $thepostid, $post;
+	global $post;
 
 	$field = apply_filters ('wa_notifier_wp_textarea_input', $field, $post);
 
-	$thepostid              = empty( $thepostid ) ? $post->ID : $thepostid;
-	$field['placeholder']   = isset( $field['placeholder'] ) ? $field['placeholder'] : '';
-	$field['class']         = isset( $field['class'] ) ? $field['class'] : '';
-	$field['style']         = isset( $field['style'] ) ? $field['style'] : '';
-	$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
-	$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
-	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-	$field['rows']          = isset( $field['rows'] ) ? $field['rows'] : 2;
-	$field['cols']          = isset( $field['cols'] ) ? $field['cols'] : 20;
-	$field['limit']         = isset( $field['limit'] ) ? $field['limit'] : 0;
-	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
+	$field = wp_parse_args(
+		$field , array(
+			'label'				=> '',
+			'placeholder'		=> '',
+			'class'             => '',
+			'style'             => '',
+			'wrapper_class'     => '',
+			'value'             => '',
+			'name'              => $field['id'],
+			'description'		=> '',
+			'limit'				=> 0,
+			'conditional_logic'	=> '',
+			'show_wrapper'		=> true,
+			'custom_attributes' => array(),
+			'rows'				=> 2,
+			'cols'				=> 20,
+			'required'			=> ''
+		)
+	);
+
+	$field['conditional_logic'] = json_encode($field['conditional_logic']);
 
 	$show_limit_text = '';
 	if($field['limit'] != 0) {
@@ -137,20 +164,23 @@ function wa_notifier_wp_textarea_input( $field ) {
 	$custom_attributes = array();
 
 	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
-
 		foreach ( $field['custom_attributes'] as $attribute => $value ) {
 			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
 		}
 	}
 
-	if( $field['required'] ) {
+	if( '' != $field['required'] ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
-	do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+	if($field['show_wrapper']){
+		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+	}
 
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
-		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
+	if ( '' != $field['label'] ) {
+		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
+	}
 
 	do_action('wa_notifier_before_meta_field', $field, $post);
 
@@ -158,15 +188,16 @@ function wa_notifier_wp_textarea_input( $field ) {
 
 	do_action('wa_notifier_after_meta_field', $field, $post);
 
-	if ( ! empty( $field['description'] ) ) {
+	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
 	do_action('wa_notifier_after_meta_field_description', $field, $post);
 
-	echo '</p>';
-
-	do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	if($field['show_wrapper']){
+		echo '</p>';
+		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	}
 }
 
 /**
@@ -175,33 +206,46 @@ function wa_notifier_wp_textarea_input( $field ) {
  * @param array $field
  */
 function wa_notifier_wp_checkbox( $field ) {
-	global $thepostid, $post;
+	global $post;
 
 	$field = apply_filters ('wa_notifier_wp_checkbox', $field, $post);
 
-	$thepostid              = empty( $thepostid ) ? $post->ID : $thepostid;
-	$field['class']         = isset( $field['class'] ) ? $field['class'] : 'checkbox';
-	$field['style']         = isset( $field['style'] ) ? $field['style'] : '';
-	$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
-	$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
-	$field['cbvalue']       = isset( $field['cbvalue'] ) ? $field['cbvalue'] : 'yes';
-	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
+	$field = wp_parse_args(
+		$field , array(
+			'label'				=> '',
+			'class'             => '',
+			'style'             => '',
+			'wrapper_class'     => '',
+			'value'             => '',
+			'cbvalue'			=> 'yes',
+			'name'              => $field['id'],
+			'description'		=> '',
+			'conditional_logic'	=> '',
+			'show_wrapper'		=> true,
+			'custom_attributes' => array(),
+			'required'			=> ''
+		)
+	);
+
+	$field['conditional_logic'] = json_encode($field['conditional_logic']);
 
 	// Custom attribute handling
 	$custom_attributes = array();
 
 	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
-
 		foreach ( $field['custom_attributes'] as $attribute => $value ) {
 			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
 		}
 	}
 
-	do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+	if($field['show_wrapper']){
+		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+	}
 
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
-		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
+	if ( '' != $field['label'] ) {
+		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
+	}
 
 	do_action('wa_notifier_before_meta_field', $field, $post);
 
@@ -209,15 +253,16 @@ function wa_notifier_wp_checkbox( $field ) {
 
 	do_action('wa_notifier_after_meta_field', $field, $post);
 
-	if ( ! empty( $field['description'] ) ) {
+	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
 	do_action('wa_notifier_after_meta_field_description', $field, $post);
 
-	echo '</p>';
-
-	do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	if($field['show_wrapper']){
+		echo '</p>';
+		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	}
 }
 
 /**
@@ -226,29 +271,31 @@ function wa_notifier_wp_checkbox( $field ) {
  * @param array $field Data about the field to render.
  */
 function wa_notifier_wp_select( $field ) {
-	global $thepostid, $post;
+	global $post;
 
 	$field = apply_filters ('wa_notifier_wp_select', $field, $post);
 
-	$thepostid = empty( $thepostid ) ? $post->ID : $thepostid;
-	$field     = wp_parse_args(
-		$field, array(
+	$field = wp_parse_args(
+		$field , array(
+			'label'				=> '',
 			'class'             => '',
 			'style'             => '',
 			'wrapper_class'     => '',
-			'value'             => get_post_meta( $thepostid, $field['id'], true ),
+			'value'             => '',
 			'name'              => $field['id'],
+			'description'		=> '',
+			'conditional_logic'	=> '',
+			'show_wrapper'		=> true,
 			'custom_attributes' => array()
 		)
 	);
 
-	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
+	$field['conditional_logic'] = json_encode($field['conditional_logic']);
 
 	// Custom attribute handling
 	$custom_attributes = array();
 
 	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
-
 		foreach ( $field['custom_attributes'] as $attribute => $value ) {
 			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
 		}
@@ -256,10 +303,14 @@ function wa_notifier_wp_select( $field ) {
 
 	$description = ! empty( $field['description'] ) ? $field['description'] : '';
 	
-	do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+	if($field['show_wrapper']){
+		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+	}
 
-	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">
-		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
+	if ( '' != $field['label'] ) {
+		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
+	}
 
 	do_action('wa_notifier_before_meta_field', $field, $post);
 
@@ -283,16 +334,16 @@ function wa_notifier_wp_select( $field ) {
 
 	do_action('wa_notifier_after_meta_field', $field, $post);
 
-	if ( ! empty( $field['description'] ) ) {
+	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
 	do_action('wa_notifier_after_meta_field_description', $field, $post);
 
-	echo '</p>';
-
-	do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
-
+	if($field['show_wrapper']){
+		echo '</p>';
+		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	}
 }
 
 /**
@@ -301,28 +352,50 @@ function wa_notifier_wp_select( $field ) {
  * @param array $field
  */
 function wa_notifier_wp_radio( $field ) {
-	global $thepostid, $post;
+	global $post;
 
 	$field = apply_filters ('wa_notifier_wp_radio', $field, $post);
 
-	$thepostid              = empty( $thepostid ) ? $post->ID : $thepostid;
-	$field['class']         = isset( $field['class'] ) ? $field['class'] : '';
-	$field['style']         = isset( $field['style'] ) ? $field['style'] : '';
-	$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
-	$field['value']         = isset( $field['value'] ) ? $field['value'] : get_post_meta( $thepostid, $field['id'], true );
-	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-	$field['conditional_logic']	= isset( $field['conditional_logic'] ) ? json_encode( $field['conditional_logic'] ) : '';
+	$field = wp_parse_args(
+		$field , array(
+			'label'				=> '',
+			'class'             => '',
+			'style'             => '',
+			'wrapper_class'     => '',
+			'value'             => '',
+			'name'              => $field['id'],
+			'description'		=> '',
+			'conditional_logic'	=> '',
+			'show_wrapper'		=> true,
+			'custom_attributes' => array()
+		)
+	);
 
-	do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+	$field['conditional_logic'] = json_encode($field['conditional_logic']);
 
-	echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr($field['conditional_logic']).'"><legend>' . wp_kses_post( $field['label'] ) . '</legend>';
+	// Custom attribute handling
+	$custom_attributes = array();
+
+	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
+		foreach ( $field['custom_attributes'] as $attribute => $value ) {
+			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
+		}
+	}
+
+	if($field['show_wrapper']){
+		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr($field['conditional_logic']).'">';
+	}
+
+	if ( '' != $field['label'] ) {
+		echo '<legend>' . wp_kses_post( $field['label'] ) . '</legend>';
+	}
 
 	do_action('wa_notifier_before_meta_field', $field, $post);
 
 	echo '<ul class="radio-buttons">';
 
 	foreach ( $field['options'] as $key => $value ) {
-
 		echo '<li><label><input
 				name="' . esc_attr( $field['name'] ) . '"
 				value="' . esc_attr( $key ) . '"
@@ -330,6 +403,7 @@ function wa_notifier_wp_radio( $field ) {
 				class="' . esc_attr( $field['class'] ) . '"
 				style="' . esc_attr( $field['style'] ) . '"
 				' . checked( esc_attr( $field['value'] ), esc_attr( $key ), false ) . '
+				' . implode( ' ', $custom_attributes ) . '
 				/> ' . esc_html( $value ) . '</label>
 		</li>';
 	}
@@ -337,13 +411,15 @@ function wa_notifier_wp_radio( $field ) {
 
 	do_action('wa_notifier_after_meta_field', $field, $post);
 
-	if ( ! empty( $field['description'] ) ) {
+	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
 	do_action('wa_notifier_after_meta_field_description', $field, $post);
 
-	echo '</fieldset>';
+	if($field['show_wrapper']){
+		echo '</fieldset>';
+		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+	}
 
-	do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
 }
