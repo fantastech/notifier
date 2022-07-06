@@ -38,7 +38,7 @@ function wa_notifier_wp_text_input( $field ) {
 		)
 	);
 
-	$field['conditional_logic'] = json_encode($field['conditional_logic']);
+	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
 
 	switch ( $field['data_type'] ) {
 		case 'url':
@@ -151,7 +151,7 @@ function wa_notifier_wp_textarea_input( $field ) {
 		)
 	);
 
-	$field['conditional_logic'] = json_encode($field['conditional_logic']);
+	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
 
 	$show_limit_text = '';
 	if($field['limit'] != 0) {
@@ -227,7 +227,7 @@ function wa_notifier_wp_checkbox( $field ) {
 		)
 	);
 
-	$field['conditional_logic'] = json_encode($field['conditional_logic']);
+	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
 
 	// Custom attribute handling
 	$custom_attributes = array();
@@ -290,7 +290,7 @@ function wa_notifier_wp_select( $field ) {
 		)
 	);
 
-	$field['conditional_logic'] = json_encode($field['conditional_logic']);
+	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
 
 	// Custom attribute handling
 	$custom_attributes = array();
@@ -371,7 +371,7 @@ function wa_notifier_wp_radio( $field ) {
 		)
 	);
 
-	$field['conditional_logic'] = json_encode($field['conditional_logic']);
+	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
 
 	// Custom attribute handling
 	$custom_attributes = array();
