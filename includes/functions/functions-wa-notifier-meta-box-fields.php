@@ -72,7 +72,7 @@ function wa_notifier_wp_text_input( $field ) {
 
 	if($field['show_wrapper']){
 		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -175,7 +175,7 @@ function wa_notifier_wp_textarea_input( $field ) {
 
 	if($field['show_wrapper']){
 		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -240,7 +240,7 @@ function wa_notifier_wp_checkbox( $field ) {
 
 	if($field['show_wrapper']){
 		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -305,7 +305,7 @@ function wa_notifier_wp_select( $field ) {
 	
 	if($field['show_wrapper']){
 		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -384,7 +384,7 @@ function wa_notifier_wp_radio( $field ) {
 
 	if($field['show_wrapper']){
 		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
-		echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_attr($field['conditional_logic']).'">';
+		echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js($field['conditional_logic']).'">';
 	}
 
 	if ( '' != $field['label'] ) {

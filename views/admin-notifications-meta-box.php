@@ -100,29 +100,15 @@ else {
 									echo WA_Notifier_Notifications::get_notification_send_to_fields_row();
 								}
 							?>
-							<tr class="row">
-								<td>
-									<select class="wa_notifier_notification_sent_to[0][type]" id="wa_notifier_notification_sent_to_0_type">
-										<option value="contact">Contact</option>
-										<option value="list">List</option>
-										<option value="user">User / Customer</option>
-									</select>
-									<span class="description">Select the type of recipient.</span>
-								</td>
-								<td>
-									<div class="wa_notifier_notification_sent_to_0_recipient_field">
-										<input type="text" name="wa_notifier_notification_sent_to[0][recipient]" id="wa_notifier_notification_sent_to_0_recipient">
-										<span class="description">Enter comma separated recipient numbers with country code. E.g. +919876543210,+918765432109</span>
-									</div>
-								</td>
-								<td class="delete-repeater-field">
-
-								</td>
-							</tr>
 						</tbody>
 					</table>
 					<div class="d-flex justify-content-end">
-						<a href="" class="button add-recipient">Add recipient</a>
+						<table class="send-to-fields-row-template hide">
+							<tbody>
+								<?php echo WA_Notifier_Notifications::get_notification_send_to_fields_row('row_num'); ?>
+							</tbody>
+						</table>
+						<a href="" class="button add-recipient" data-next="1">Add recipient</a>
 					</div>
 				</div>
 				<?php

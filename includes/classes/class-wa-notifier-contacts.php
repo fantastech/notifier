@@ -458,6 +458,49 @@ class WA_Notifier_Contacts {
  		}
 	}
 
+
+	/**
+	 * Get contacts
+	 */
+	public static function get_contacts ($show_select = false)	 {
+		$search_keyword = isset($_POST['s']) ? $_POST['s'] : '';
+		// $contacts = get_posts( array(
+		//     'post_type'		=> 'wa_contact',
+		//     'post_status'	=> 'publish',
+		//     'orderby'		=> 'title',
+		//     'order'			=> 'ASC',
+		//     'numberposts' 	=> 20,
+		//     's'				=> $search_keyword
+		// ) );
+
+		$querystr = "
+			SELECT $wpdb->posts.ID
+	    	FROM $wpdb->posts, $wpdb->postmeta
+            WHERE ($wpdb->posts.post_content LIKE '%$search_keyword%'
+            	OR $wpdb->posts.post_title LIKE '%$search_keyword%'
+            	OR $wpdb->postmeta.option_value LIKE '%$search_keyword%')
+	        AND $wpdb->posts.ID = $wpdb->postmeta.post_id
+	        ORDER BY $wpdb->posts.post_title DESC
+		";
+
+		$contacts = $wpdb->get_results($querystr, OBJECT_K);
+
+		$contacts_data = array();
+
+		if ($show_select) {
+			$contacts_data[''] = 'Select contact';
+		}
+
+		foreach ($contacts as $contact_id) {
+			$first_name = get_post_meta( $contact_id, WA_NOTIFIER_PREFIX . 'first_name', true);
+			$last_name = get_post_meta( $contact_id, WA_NOTIFIER_PREFIX . 'last_name', true);
+			$wa_number = get_post_meta( $contact_id, WA_NOTIFIER_PREFIX . 'wa_number', true);
+			$contacts_data[$contact_id] = $first_name . ' ' . $last_name . ' (' . $wa_number . ')';
+		}
+
+		return $contacts_data;
+	}
+
 	/**
 	 * Get contact lists
 	 */

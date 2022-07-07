@@ -1,4 +1,5 @@
 /* global waNotifierTemplates */
+require('select2');
 (function($) {
 
 	// Show / hide fields as per conditional logic
@@ -61,6 +62,81 @@
 					thisField.siblings('label').find('.limit-used').text(contentLength);
 				}
 			}
+
+			// Enable select2 for notification receiver contact dropdown
+			if($('.wa-notifier-recipient-contact').length > 0){
+				$('.wa-notifier-recipient-contact').each(function (i, obj) {
+					if($(obj).closest('.send-to-fields-row-template').length > 0){
+						return;
+					}
+				    if (!$(obj).data('select2')){
+				        $(obj).select2({
+				       		selectOnClose: true,
+				        	width: '100%',
+				        	ajax: {
+				    			url: waNotifier.ajaxurl,
+				    			dataType: 'json',
+				    			delay: 250,
+				    			method: 'post',
+				    			data: function (params) {
+				      				return {
+				      					s: params.term,
+				        				action: 'get_wa_contacts_data'
+				      				};
+				    			},
+				    			processResults: function( data ) {
+				    				console.log(data);
+									var options = [];
+									if ( data ) {
+										$.each( data, function( index, text ) {
+											console.log(index, text);
+											options.push( { id: index, text: text  } );
+										});
+									}
+									return {
+										results: options
+									};
+								},
+								cache: true
+							},
+							minimumInputLength: 2
+				     	});
+				    }
+				});
+			}
+
+			// Enable select2 for notification receiver list dropdown
+			// if($('.wa-notifier-recipient-list').length > 0){
+			// 	$('.wa-notifier-recipient-list').each(function (i, obj) {
+			// 		if($(obj).closest('.send-to-fields-row-template').length > 0){
+			// 			return;
+			// 		}
+			// 	    if (!$(obj).data('select2')){
+			// 	        $(obj).select2({
+			// 	       		selectOnClose: true,
+			// 	        	minimumResultsForSearch: -1,
+			// 	        	width: '100%'
+			// 	     	});
+			// 	    }
+			// 	});
+			// }
+
+			// Enable select2 for notification receiver user dropdown
+			if($('.wa-notifier-recipient-user').length > 0){
+				$('.wa-notifier-recipient-user').each(function (i, obj) {
+					if($(obj).closest('.send-to-fields-row-template').length > 0){
+						return;
+					}
+				    if (!$(obj).data('select2')){
+				        $(obj).select2({
+				       		selectOnClose: true,
+				        	minimumResultsForSearch: -1,
+				        	width: '100%'
+				     	});
+				    }
+				});
+			}
+
 		});
 	}
 
@@ -231,7 +307,7 @@
 		// Show feilds conditionally
 		if ($('.meta-fields').length > 0) {
 			conditionallyShowFields();
-			$('.meta-fields :input').on('change keyup', function() {
+			$(document).on('change keyup', '.meta-fields :input', function() {
 				conditionallyShowFields();
 			});
 		}
@@ -477,10 +553,22 @@
 			}
 		});
 
+		// Add new Notification Send To receiver fields row
 		$('.add-recipient').on('click', function(e){
 			e.preventDefault();
-			$('.send-to-fields .fields-repeater tbody').append(waNotifierTemplates.notification_receiver_row);
-		})
+			var next = parseInt($(this).data('next'));
+			var nextRowHtml = $('.send-to-fields-row-template tbody').html().replaceAll('row_num', next);
+			$('.send-to-fields .fields-repeater tbody').append(nextRowHtml);
+			conditionallyShowFields()
+			$(this).data('next', next + 1);
+		});
+
+		$(document).on('click', '.delete-repeater-field span', function(e){
+			e.preventDefault();
+			$(this).closest('tr.row').remove();
+			var next = parseInt($(this).attr('data-next'));
+			$(this).data('next', next - 1);
+		});
 
 	});
 

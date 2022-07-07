@@ -24,7 +24,7 @@ class WA_Notifier_Notifications {
 
 		add_action( 'wa_notifier_marketing_notification', array(__CLASS__, 'send_scheduled_notification') );
 		add_filter( 'admin_body_class', array(__CLASS__, 'admin_body_class'));
-		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
+		add_action( 'wp_ajax_get_wa_contacts_data', array(__CLASS__, 'get_wa_contacts_data') );
 	}
 
 	/**
@@ -321,41 +321,105 @@ class WA_Notifier_Notifications {
 	}
 
 	public static function get_notification_send_to_fields_row ($num = 0, $data = array()) {
-		$types = array (
-			'contact'	=> 'Contact',
-			'list'		=> 'List',
-			'user'		=> 'User'
-		);
-		$html = '<tr class="row">
+		ob_start();
+		?>
+		<tr class="row">
 			<td>
-				<select class="wa_notifier_notification_sent_to['.$num.'][type]" id="wa_notifier_notification_sent_to_'.$num.'_type">
-					<option value="contact">Contact</option>
-					<option value="list">List</option>
-					<option value="user">User / Customer</option>
-				</select>
-				<span class="description">Select the type of recipient.</span>
+				<?php
+					wa_notifier_wp_select(
+						array(
+							'id'                => WA_NOTIFIER_PREFIX . 'notification_sent_to_'.$num.'_type',
+							'name'              => WA_NOTIFIER_PREFIX . 'notification_sent_to['.$num.'][type]',
+							'value'             => '',
+							'label'             => '',
+							'description'       => 'Select the type of recipient',
+							'options'           => array (
+								'contact'	=> 'Contact',
+								'list'		=> 'List',
+								'user'		=> 'User'
+							),
+						)
+					);
+				?>
 			</td>
 			<td>
-				<div class="wa_notifier_notification_sent_to_'.$num.'_recipient_field">
-					<input type="text" name="wa_notifier_notification_sent_to['.$num.'][recipient]" id="wa_notifier_notification_sent_to_'.$num.'_recipient">
-					<span class="description">Enter comma separated recipient numbers with country code. E.g. +919876543210,+918765432109</span>
-				</div>
+				<?php
+					wa_notifier_wp_select(
+						array(
+							'id'                => WA_NOTIFIER_PREFIX . 'notification_sent_to_'.$num.'_recipient_contact',
+							'name'                => WA_NOTIFIER_PREFIX . 'notification_sent_to['.$num.'][recipient][contact]',
+							'class'				=> 'wa-notifier-recipient-contact',
+							'value'             => '',
+							'label'             => '',
+							'description'       => 'Select one of your saved <a href="'.admin_url('edit.php?post_type=wa_contact').'">Contacts</a>',
+							'options'           => array (),
+							'conditional_logic'	=> array (
+								array (
+									'field'		=> WA_NOTIFIER_PREFIX . 'notification_sent_to_'.$num.'_type',
+									'operator'	=> '==',
+									'value'		=> 'contact'
+								)
+							)
+						)
+					);
+				?>
+				<?php
+					wa_notifier_wp_select(
+						array(
+							'id'                => WA_NOTIFIER_PREFIX . 'notification_sent_to_'.$num.'_recipient_list',
+							'name'              => WA_NOTIFIER_PREFIX . 'notification_sent_to['.$num.'][recipient][list]',
+							'class'				=> 'wa-notifier-recipient-list',
+							'value'             => '',
+							'label'             => '',
+							'description'       => 'Select one of your contact <a href="'.admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact').'">Lists</a>',
+							'options'           => WA_Notifier_Contacts::get_contact_lists(true, true),
+							'conditional_logic'	=> array (
+								array (
+									'field'		=> WA_NOTIFIER_PREFIX . 'notification_sent_to_'.$num.'_type',
+									'operator'	=> '==',
+									'value'		=> 'list'
+								)
+							)
+						)
+					);
+				?>
+				<?php
+					wa_notifier_wp_select(
+						array(
+							'id'                => WA_NOTIFIER_PREFIX . 'notification_sent_to_'.$num.'_recipient_user',
+							'name'                => WA_NOTIFIER_PREFIX . 'notification_sent_to['.$num.'][recipient][user]',
+							'class'				=> 'wa-notifier-recipient-user',
+							'value'             => '',
+							'label'             => '',
+							'description'       => 'Select the user',
+							'options'           => array (),
+							'conditional_logic'	=> array (
+								array (
+									'field'		=> WA_NOTIFIER_PREFIX . 'notification_sent_to_'.$num.'_type',
+									'operator'	=> '==',
+									'value'		=> 'user'
+								)
+							)
+						)
+					);
+				?>
 			</td>
 			<td class="delete-repeater-field">
 				<span class="dashicons dashicons-trash"></span>
 			</td>
-		</tr>';
+		</tr>
+		<?php
+		$html = ob_get_clean();
 		return $html;
 	}
 
 	/**
-	 * Admin HTML templates
+	 * Handle AJAX call to get contacts / lists
 	 */
-	public static function admin_html_templates($templates) {
-
-		// Template for adding new receiver row
-		$templates['notification_receiver_row'] = self::get_notification_send_to_fields_row('row_num');
-		return $templates;
+	public static function get_wa_contacts_data(){
+		$contacts = WA_Notifier_Contacts::get_contacts();
+		echo json_encode( $contacts );
+		die;
 	}
 
 }
