@@ -1,3 +1,4 @@
+/* global waNotifier */
 require('select2');
 (function($) {
 
@@ -17,7 +18,7 @@ require('select2');
 				var fieldElem = $(this);
 				var conditionsArray = JSON.parse(conditions);
 
-				conditionsArray.forEach(function(condition, index) {
+				conditionsArray.forEach(function(condition) {
 					var fieldClass = '.' + condition.field + '_field';
 					var fieldInput = $(fieldClass + ' :input');
 					var fieldInputType = fieldInput.prop('type');
@@ -72,23 +73,23 @@ require('select2');
 					if($(obj).closest('.send-to-fields-row-template').length > 0){
 						return;
 					}
-				    if (!$(obj).data('select2')){
-				        $(obj).select2({
-				       		selectOnClose: true,
-				        	width: '100%',
-				        	placeholder: "Search contact...",
-				        	ajax: {
-				    			url: waNotifier.ajaxurl,
-				    			dataType: 'json',
-				    			delay: 250,
-				    			method: 'post',
-				    			data: function (params) {
-				      				return {
-				      					s: params.term,
-				        				action: 'get_wa_contacts_data'
-				      				};
-				    			},
-				    			processResults: function( data ) {
+					if (!$(obj).data('select2')){
+						$(obj).select2({
+							selectOnClose: true,
+							width: '100%',
+							placeholder: 'Search contact...',
+							ajax: {
+								url: waNotifier.ajaxurl,
+								dataType: 'json',
+								delay: 250,
+								method: 'post',
+								data: function (params) {
+									return {
+										s: params.term,
+										action: 'get_wa_contacts_data',
+									};
+								},
+								processResults: function( data ) {
 									var options = [];
 									if ( data ) {
 										$.each( data, function( index, text ) {
@@ -96,48 +97,16 @@ require('select2');
 										});
 									}
 									return {
-										results: options
+										results: options,
 									};
 								},
-								cache: true
+								cache: true,
 							},
-							minimumInputLength: 2
-				     	});
-				    }
+							minimumInputLength: 2,
+						});
+					}
 				});
 			}
-
-			// Enable select2 for notification receiver list dropdown
-			// if($('.wa-notifier-recipient-list').length > 0){
-			// 	$('.wa-notifier-recipient-list').each(function (i, obj) {
-			// 		if($(obj).closest('.send-to-fields-row-template').length > 0){
-			// 			return;
-			// 		}
-			// 	    if (!$(obj).data('select2')){
-			// 	        $(obj).select2({
-			// 	       		selectOnClose: true,
-			// 	        	minimumResultsForSearch: -1,
-			// 	        	width: '100%'
-			// 	     	});
-			// 	    }
-			// 	});
-			// }
-
-			// Enable select2 for notification receiver user dropdown
-			// if($('.wa-notifier-recipient-user').length > 0){
-			// 	$('.wa-notifier-recipient-user').each(function (i, obj) {
-			// 		if($(obj).closest('.send-to-fields-row-template').length > 0){
-			// 			return;
-			// 		}
-			// 	    if (!$(obj).data('select2')){
-			// 	        $(obj).select2({
-			// 	       		selectOnClose: true,
-			// 	        	minimumResultsForSearch: -1,
-			// 	        	width: '100%'
-			// 	     	});
-			// 	    }
-			// 	});
-			// }
 
 		});
 	}
@@ -206,13 +175,13 @@ require('select2');
 		}
 
 		// Body
-		previewData.body_text = previewData.body_text.replace(/(<([^>]+)>)/gi, "")
+		previewData.body_text = previewData.body_text.replace(/(<([^>]+)>)/gi, '')
 			.replace(/(?:\r\n|\r|\n)/g, '<br>')
 			.replace(/(?:\*)(?:(?!\s))((?:(?!\*|\n).)+)(?:\*)/g,'<b>$1</b>')
-		   	.replace(/(?:_)(?:(?!\s))((?:(?!\n|_).)+)(?:_)/g,'<i>$1</i>')
-		   	.replace(/(?:~)(?:(?!\s))((?:(?!\n|~).)+)(?:~)/g,'<s>$1</s>')
-		   	.replace(/(?:--)(?:(?!\s))((?:(?!\n|--).)+)(?:--)/g,'<u>$1</u>')
-		   	.replace(/(?:```)(?:(?!\s))((?:(?!\n|```).)+)(?:```)/g,'<tt>$1</tt>');
+			.replace(/(?:_)(?:(?!\s))((?:(?!\n|_).)+)(?:_)/g,'<i>$1</i>')
+			.replace(/(?:~)(?:(?!\s))((?:(?!\n|~).)+)(?:~)/g,'<s>$1</s>')
+			.replace(/(?:--)(?:(?!\s))((?:(?!\n|--).)+)(?:--)/g,'<u>$1</u>')
+			.replace(/(?:```)(?:(?!\s))((?:(?!\n|```).)+)(?:```)/g,'<tt>$1</tt>');
 
 		$('.wa-template-preview .message-body').html(previewData.body_text);
 
@@ -270,7 +239,7 @@ require('select2');
 			data: {
 				action: 			'fetch_send_to_fields',
 				trigger: 			trigger,
-				post_id: 			post_id
+				post_id: 			post_id,
 			},
 			success: function(response) {
 				if (response.status == 'success') {
@@ -301,7 +270,7 @@ require('select2');
 				notification_type: 	notification_type,
 				template_id: 		template_id,
 				post_id: 			post_id,
-				trigger: 			trigger
+				trigger: 			trigger,
 			},
 			success: function(response) {
 				if (response.status == 'success') {
@@ -422,8 +391,8 @@ require('select2');
 			var type = $(this).data('type');
 			if('header' == type) {
 				var header_text = $('#wa_notifier_header_text').val();
-				var res = header_text.match(/{{.*?}}/g);
-				if(res === null) {
+				var res_header = header_text.match(/{{.*?}}/g);
+				if(res_header === null) {
 					header_text = header_text + ' {{1}}';
 				}
 				else {
@@ -433,18 +402,18 @@ require('select2');
 			}
 			if('body' == type) {
 				var body_text = $('#wa_notifier_body_text').val();
-			    var res = body_text.match(/{{.*?}}/g);
-			    if(res === null) {
-			    	bodyVar = 1;
-			    }
-			    else {
-			    	bodyVar = res.length + 1;
-			    	var x = 1;
-			    	res.forEach(function(item) {
-			    		body_text = body_text.replace( item, '{{'+x+'}}');
-			    		x++;
-			    	});
-			    }
+				var res = body_text.match(/{{.*?}}/g);
+				if(res === null) {
+					bodyVar = 1;
+				}
+				else {
+					bodyVar = res.length + 1;
+					var x = 1;
+					res.forEach(function(item) {
+						body_text = body_text.replace( item, '{{'+x+'}}');
+						x++;
+					});
+				}
 				$('#wa_notifier_body_text').val(body_text + ' {{'+bodyVar+'}}').focus();
 			}
 			fetcDataAndPreviewTemplate();
@@ -472,7 +441,7 @@ require('select2');
 		});
 
 		// On submission of CSV import form
-		$(document).on('submit', '#import-contacts-csv', function(e) {
+		$(document).on('submit', '#import-contacts-csv', function() {
 			var file = $('#wa-notifier-contacts-csv').val();
 			if (file == '') {
 				alert('Please select a file to upload.');
@@ -493,13 +462,8 @@ require('select2');
 		});
 
 		// On submission of users import form
-		$(document).on('submit', '#import-contacts-users', function(e) {
-			const wa_contact_first_name_key = $('#wa_contact_first_name_key').val() || '';
-			const wa_contact_last_name_key = $('#wa_contact_last_name_key').val() || '';
-			const wa_contact_wa_number_key = $('#wa_contact_wa_number_key').val() || '';
+		$(document).on('submit', '#import-contacts-users', function() {
 			const wa_contact_list_name = $('#wa_contact_list_name').val() || '';
-			//const wa_contact_tags = $('#wa_contact_tags').val() || '';
-
 			if (wa_contact_list_name == '') {
 				alert('Please enter a Contact List name.');
 				return false;
@@ -522,7 +486,7 @@ require('select2');
 		 * Notification page
 		 ********************/
 
-		 // Do stuff if on the notification edit page
+		// Do stuff if on the notification edit page
 		if ($('#wa-notifier-notification-data').length > 0) {
 			updateNotificationSaveButtonText(); // Update button text as per user selection
 			fetchAndDisplaySendToFields(); // Fetch and display send to fields
@@ -543,7 +507,7 @@ require('select2');
 			var dateToday = new Date();
 			$('#wa_notifier_notification_datetime').datetimepicker({
 				minDate: dateToday,
-				defaultDate: 1
+				defaultDate: 1,
 			});
 		}
 

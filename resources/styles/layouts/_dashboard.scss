@@ -110,10 +110,10 @@
 	}
 
 	& > .col:not(.w-100) {
-		@include media-down(tablet){
+		@include media-down(tablet) {
 			flex: 0 0 50% !important;
 		}
-		@include media-down(mobile){
+		@include media-down(mobile) {
 			flex: 0 0 100% !important;
 		}
 	}
@@ -126,9 +126,9 @@
 		height: 100%;
 
 		&.dashboard-box-top {
-    		height: auto;
+			height: auto;
 
-			.w-25{
+			.w-25 {
 				@include media-down (mobile) {
 					flex: 0 0 100%;
 				}

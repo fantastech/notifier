@@ -16,7 +16,7 @@
 	padding-left: 20px;
 
 	@include media-down(mobile) {
-		padding-top: 0px;
+		padding-top: 0;
 		padding-left: 12px;
 	}
 }
@@ -99,20 +99,22 @@
 				text-align: left;
 				font-size: 13px;
 				font-weight: normal;
-			    border: 1px solid #a8a6a6;
-    			padding: 10px;
-    			background-color: #f7f7f7;
+				border: 1px solid #a8a6a6;
+				padding: 10px;
+				background-color: #f7f7f7;
 			}
 
 			td {
 				width: 50%;
 				border: 1px solid #a8a6a6;
-    			padding: 10px;
-    			vertical-align: top;
+				padding: 10px;
+				vertical-align: top;
 
-    			input, select, textarea {
-    				width: 100%;
-    			}
+				input,
+				select,
+				textarea {
+					width: 100%;
+				}
 
 				&.delete-repeater-field {
 					min-width: 20px;

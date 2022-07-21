@@ -26,47 +26,47 @@
 
 .w-25 {
 	flex: 0 0 auto;
-    width: 25%;
+	width: 25%;
 }
 
 .w-30 {
 	flex: 0 0 auto;
-    width: 30%;
+	width: 30%;
 }
 
 .w-33 {
 	flex: 0 0 auto;
-    width: 33.33333333%;
+	width: 33.33333333%;
 }
 
 .w-40 {
 	flex: 0 0 auto;
-    width: 40%;
+	width: 40%;
 }
 
 .w-50 {
 	flex: 0 0 auto;
-    width: 50%;
+	width: 50%;
 }
 
 .w-60 {
 	flex: 0 0 auto;
-    width: 60%;
+	width: 60%;
 }
 
 .w-70 {
 	flex: 0 0 auto;
-    width: 70%;
+	width: 70%;
 }
 
 .w-75 {
 	flex: 0 0 auto;
-    width: 75%;
+	width: 75%;
 }
 
 .w-80 {
 	flex: 0 0 auto;
-    width: 80%;
+	width: 80%;
 }
 
 .w-100 {
@@ -106,9 +106,9 @@
 
 .loader {
 	height: 100px;
-    background-size: 50px 50px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: #f7f7f7;
+	background-size: 50px 50px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: #f7f7f7;
 	background-image: url("data:image/svg+xml,%3Csvg version='1.1' id='L9' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 100 100' enable-background='new 0 0 0 0' xml:space='preserve'%3E%3Cpath fill='%23000' d='M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='rotate' dur='1s' from='0 50 50' to='360 50 50' repeatCount='indefinite' /%3E%3C/path%3E%3C/svg%3E");
 }

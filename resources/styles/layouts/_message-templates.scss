@@ -48,13 +48,13 @@
 		cursor: pointer;
 
 		@include media-down (mobile) {
-			right: 0px;
+			right: 0;
 		}
 
 		& > .dashicons {
 			font-size: 13px;
-		    height: auto;
-    		width: auto;
+			height: auto;
+			width: auto;
 		}
 
 		&:hover .hide {
