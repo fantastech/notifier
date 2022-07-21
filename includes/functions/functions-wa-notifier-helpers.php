@@ -2,7 +2,7 @@
 /**
  * WA Notifier Helper Functions
  *
- * @package     WA_Notifier
+ * @package    Wa_Notifier
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly

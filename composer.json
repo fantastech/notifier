@@ -20,7 +20,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
-    "style:check": "phpcs",
+    "style:check": "phpcs --ignore=libraries/*",
     "style:fix": "phpcbf"
   },
   "require-dev": {
