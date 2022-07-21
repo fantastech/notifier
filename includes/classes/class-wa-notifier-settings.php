@@ -31,7 +31,7 @@ class WA_Notifier_Settings {
 	/**
 	 * Settings fields
 	 */
-	private function settings_fields() {
+	private static function settings_fields() {
 		$settings = array(
 			array(
 				'id' 			=> 'phone_number_id',
@@ -67,7 +67,7 @@ class WA_Notifier_Settings {
 	/**
 	 * Generate HTML for displaying individual fields
 	 */
-	public function display_field( $field ) {
+	public static function display_field( $field ) {
 
 		$html = '';
 
@@ -189,7 +189,7 @@ class WA_Notifier_Settings {
 	/**
 	 * Show the setting fields
 	 */
-	public function show_settings_fields () {
+	public static function show_settings_fields () {
 		$setting_fields = self::settings_fields();
 		echo "<table class='wa-notifier-fields-table'>";
 		foreach ($setting_fields as $field) {
@@ -203,7 +203,7 @@ class WA_Notifier_Settings {
 	 * 
 	 * TODO - check fields other than text and textarea 
 	 */
-	public function save_settings_fields() {
+	public static function save_settings_fields() {
 		if ( ! self::is_settings_page() ) {
 			return;
 		}
@@ -266,9 +266,47 @@ class WA_Notifier_Settings {
 			}
 		}
 
+		$phone_number_id = $update_options[ WA_NOTIFIER_PREFIX . 'phone_number_id' ];
+		$business_account_id = $update_options[ WA_NOTIFIER_PREFIX . 'business_account_id' ];
+		$permanent_access_token = $update_options[ WA_NOTIFIER_PREFIX . 'permanent_access_token' ];
+
+		if('' == $phone_number_id || '' == $business_account_id || '' == $permanent_access_token){
+			$notices[] = array(
+				'message' => 'Phone number ID, Business Account ID and Permanent Access Token are mandatory fields.',
+				'type' => 'error'
+			);
+			new WA_Notifier_Admin_Notices($notices);
+			return;
+		}
+
 		// Save all options in our array.
 		foreach ( $update_options as $name => $value ) {
 			update_option( $name, $value, 'yes' );
+		}
+
+		// Fetch phone number details
+		$response = WA_Notifier::wa_cloud_api_request('', array(), 'GET');
+
+		if($response->error) {
+			$notices[] = array(
+				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
+				'type' => 'error'
+			);
+			new WA_Notifier_Admin_Notices($notices);
+		}
+		else {
+			$phone_number_details[$phone_number_id] = array (
+				'display_num'		=> $response->display_phone_number,
+				'display_name'		=> $response->verified_name,
+				'phone_num_status'	=> $response->code_verification_status,
+				'quality_rating'	=> $response->quality_rating
+			);
+			update_option( WA_NOTIFIER_PREFIX . 'phone_number_details', $phone_number_details );
+			$notices[] = array(
+				'message' => 'Settings saved.',
+				'type' => 'success'
+			);
+			new WA_Notifier_Admin_Notices($notices);
 		}
 
 	}
@@ -276,7 +314,7 @@ class WA_Notifier_Settings {
 	/**
 	 * Check if on settings page
 	 */
-	public function is_settings_page() {
+	public static function is_settings_page() {
 		$current_page = isset($_GET['page']) ? $_GET['page'] : '';
 		return strpos($current_page, WA_NOTIFIER_NAME . '-settings') !== false;
 	}

@@ -11,8 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $post_id;
 
 $notification_status = get_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'notification_status' , true);
-$statuses = WA_Notifier_Notifications::get_notification_statuses();
-if(in_array($notification_status, $statuses)) {
+if(in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
 	$disabled = array (
 		'disabled' => 'disabled'
 	);
@@ -20,7 +19,6 @@ if(in_array($notification_status, $statuses)) {
 else {
 	$disabled = array ();
 }
-
 ?>
 <div class="meta-fields">
 	<div class="general-fields">
@@ -31,12 +29,12 @@ else {
 					array(
 						'id'                => WA_NOTIFIER_PREFIX . 'notification_type',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_type', true),
-						'label'             => 'Send notification...',
-						'description'       => '',
+						'label'             => 'Notification type',
+						'description'       => 'Select the type of notification you want to send.',
 						'options'           => array (
-							''				=> 'Select type ',
-							'transactional' => 'when a certain action is triggered',
-							'marketing' 	=> 'to a list (marketing broadcast)',
+							''				=> 'Select notification type ',
+							'marketing' 	=> 'Marketing (send bulk broadcast messages to a contact list)',
+							'transactional' => 'Transactional (send notification when a certain action is triggered)',
 						),
 						'custom_attributes' => $disabled
 					)
@@ -45,31 +43,26 @@ else {
 			</div>
 			<div class="form-fields-transactional">
 				<?php
-				wa_notifier_wp_select(
-					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'notification_trigger',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_trigger', true),
-						'label'             => 'Send it when...',
-						'description'       => 'Select a trigger when you want to send notification. You can request more triggers by <a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20New%20Trigger%20Request" target="_blank">mailing us</a>.',
-						'options'           => array (
-							'' => 'Select a trigger',
-							'WordPress' => array (
-								'new_post' => 'A new post is published',
-								'new_user_registration' => 'A new user is registered',
-							)
-						),
-						'conditional_logic'		=> array (
-							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'notification_type',
-								'operator'	=> '==',
-								'value'		=> 'transactional'
-							)
-						),
-						'custom_attributes' => $disabled
-					)
-				);
-				?>
-				<?php
+					wa_notifier_wp_select(
+						array(
+							'id'                => WA_NOTIFIER_PREFIX . 'notification_trigger',
+							'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_trigger', true),
+							'label'             => 'Trigger',
+							'description'       => 'Select a trigger when you want to send notification. You can request more triggers by <a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20New%20Trigger%20Request" target="_blank">mailing us</a>.',
+							'options'           => WA_Notifier_Notification_Triggers::get_notification_triggers_dropdown(),
+							'conditional_logic'		=> array (
+								array (
+									'field'		=> WA_NOTIFIER_PREFIX . 'notification_type',
+									'operator'	=> '==',
+									'value'		=> 'transactional'
+								)
+							),
+							'custom_attributes' => $disabled
+						)
+					);
+
+					do_action('wa_notifier_transactional_fields');
+
 					$send_to_conditions = array (
 						array (
 							'field'		=> WA_NOTIFIER_PREFIX . 'notification_trigger',
@@ -79,41 +72,8 @@ else {
 					);
 				?>
 				<div class="form-field send-to-fields" data-conditions="<?php echo esc_attr ( json_encode( $send_to_conditions ) ); ?>">
-					<?php
-						$send_to = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_send_to', true);
-					?>
-					<label>Send to...</label>
-					<table class="fields-repeater">
-						<tbody>
-							<tr>
-								<th>Type</th>
-								<th>Recipient</th>
-								<th></th>
-							</tr>
-							<?php
-								if($send_to && is_array($send_to)) {
-									foreach ($send_to as $recipient) {
-										echo WA_Notifier_Notifications::get_notification_send_to_fields_row($row, $recipient);
-									}
-								}
-								else {
-									echo WA_Notifier_Notifications::get_notification_send_to_fields_row();
-								}
-							?>
-						</tbody>
-					</table>
-					<div class="d-flex justify-content-end">
-						<table class="send-to-fields-row-template hide">
-							<tbody>
-								<?php echo WA_Notifier_Notifications::get_notification_send_to_fields_row('row_num'); ?>
-							</tbody>
-						</table>
-						<a href="" class="button add-recipient" data-next="1">Add recipient</a>
-					</div>
+
 				</div>
-				<?php
-				do_action('wa_notifier_transactional_fields');
-				?>
 			</div>
 			<div class="form-fields-marketing">
 				<?php
@@ -175,10 +135,11 @@ else {
 			</div>
 			<div class="form-fields-message-template">
 				<?php
+				$message_template_id = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_message_template', true);
 				wa_notifier_wp_select(
 					array(
 						'id'                => WA_NOTIFIER_PREFIX . 'notification_message_template',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_message_template', true),
+						'value'             => $message_template_id,
 						'label'             => 'Message Template',
 						'description'       => 'Select message template that you want to send.',
 						'options'			=> WA_Notifier_Message_Templates::get_approved_message_templates(true),
@@ -197,7 +158,17 @@ else {
 						'custom_attributes' => $disabled
 					)
 				);
+				$variables_mapping_field_conditions = array (
+					array (
+						'field'		=> WA_NOTIFIER_PREFIX . 'notification_message_template',
+						'operator'	=> '!=',
+						'value'		=> ''
+					)
+				);
 				?>
+				<div class="form-field variables-mapping-fields" data-conditions="<?php echo esc_attr ( json_encode( $variables_mapping_field_conditions ) ); ?>">
+
+				</div>
 			</div>
 		</div>
 	</div>

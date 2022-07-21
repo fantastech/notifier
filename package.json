@@ -8,7 +8,8 @@
     "lint": "npm run -s lint:scripts && npm run -s lint:styles",
     "lint:scripts": "eslint resources/scripts",
     "lint:styles": "stylelint \"resources/**/*.{css,scss}\"",
-    "test": "npm run -s lint"
+    "test": "npm run -s lint",
+    "zip": "zip -r wa-notifier.zip . -x '*.git*' -x 'node_modules/*' -x 'vendor/*' -x 'resources/*' -x '.*' -x 'composer.*' -x 'package*' -x 'yarn*' -x 'webpack*' -x 'phpcs.xml' -x '*.DS_Store'"
   },
   "engines": {
     "node": "^16.0.0"

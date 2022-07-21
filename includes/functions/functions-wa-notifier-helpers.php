@@ -81,3 +81,20 @@ function wa_notifier_register_taxonomy($taxonomy_slug, $taxonomy_name, $taxonomy
 
     register_taxonomy($taxonomy_slug, [ $cpt_slug ], $args);
 }
+
+/**
+* Sanitize array
+*
+* @return Array
+*/
+function wa_notifier_sanitize_array ( $array ) {
+	foreach ( $array as $key => &$value ) {
+        if ( is_array( $value ) ) {
+            $value = wa_notifier_sanitize_array($value);
+        }
+        else {
+            $value = sanitize_text_field( $value );
+        }
+    }
+    return $array;
+}

@@ -21,7 +21,6 @@ if(in_array($mt_status, $disable_states)) {
 else {
 	$disabled = array ();
 }
-
 ?>
 <div class="meta-fields">
 	<div class="general-fields">

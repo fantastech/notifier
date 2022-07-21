@@ -19,16 +19,17 @@ class WA_Notifier_Contacts {
 		add_filter( 'manage_wa_contact_posts_columns', array( __CLASS__ , 'add_columns' ) );
 		add_action( 'manage_wa_contact_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
 		add_action( 'save_post_wa_contact', array(__CLASS__, 'save_meta'), 10, 2 );
+		add_filter( 'post_updated_messages', array(__CLASS__, 'update_save_messages') );
 		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 		add_filter( 'admin_post_wa_notifier_import_contacts_csv', array( __CLASS__ , 'import_contacts_csv') );
-		add_filter( 'admin_post_wa_notifier_import_contacts_users', array( __CLASS__ , 'import_contacts_users') );
+		add_filter( 'admin_post_wa_notifier_import_contacts_woocommerce', array( __CLASS__ , 'import_contacts_woocommerce') );
 		add_action( 'admin_notices', array( __CLASS__, 'show_admin_notices') );
 	}
 
 	/**
 	 * Register custom post type
 	 */
-	public function register_cpt () {
+	public static function register_cpt () {
 		wa_notifier_register_post_type ( 'wa_contact', 'Contact', 'Contacts' );
 		wa_notifier_register_taxonomy ( 'wa_contact_list', 'Contact List', 'Contact Lists', 'wa_contact' , array( 'hierarchical' => true, 'default_term' => array('name' => 'Default List', 'slug' => 'default_list') ) );
 		wa_notifier_register_taxonomy ( 'wa_contact_tag', 'Contact Tag', 'Contact Tags', 'wa_contact' );
@@ -131,7 +132,9 @@ class WA_Notifier_Contacts {
 	 * Remove inline Quick Edit
 	 */
     public static function remove_quick_edit( $actions, $post ) { 
-    	unset($actions['inline hide-if-no-js']);
+    	if ('wa_contact' == $post->post_type){
+        	unset($actions['inline hide-if-no-js']);
+        }
     	return $actions;
 	}
 
@@ -173,6 +176,15 @@ class WA_Notifier_Contacts {
 	}
 
 	/**
+	 * Update save action messages
+	 */
+	public static function update_save_messages ($messages) {
+		$messages['wa_contact'][1] = 'Contact updated.';
+	    $messages['wa_contact'][6] = 'Contact saved.';
+		return $messages;
+	}
+
+	/**
 	 * Admin HTML templates
 	 */
 	public static function admin_html_templates($templates) {
@@ -184,45 +196,66 @@ class WA_Notifier_Contacts {
 			<div class="p-20">
 				<h3>Select an import method:</h3>
 				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="csv" checked="checked"> Import from CSV file</label>
-				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="users"> Import from Users</label>
+				<?php
+					$disable_woo = '';
+					if( ! class_exists( 'WooCommerce' ) ){
+						$disable_woo = 'disabled="disabled" title="Woocommerce not installed."';
+					}
+				?>
+				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="users" <?php echo $disable_woo; ?>> Import from WooCommerce</label>
 				<div class="col-import col-import-csv">
-					<p><a href="<?php echo WA_NOTIFIER_URL.'contacts-import-sample.csv'; ?>">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. In the WhatsApp number column, add phone numbers with country codes (but without the + sign).</p>
-					<form id="import-contacts-csv" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
-						<input type="file" name="wa_notifier_contacts_csv" id="wa-notifier-contacts-csv" />
-						<input type="submit" name="upload_csv" value="Import CSV" class="button-primary">
+					<form id="import-contacts-csv" class="contacts-import-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
+						<p><a href="<?php echo WA_NOTIFIER_URL.'contacts-import-sample.csv'; ?>">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. <b>IMPORTANT:</b> In the WhatsApp number column, add phone numbers WITH country codes (but WITHOUT the plus + sign).</p>
+						<p><input type="file" name="wa_notifier_contacts_csv" id="wa-notifier-contacts-csv" /></p>
+						<p><input type="submit" name="upload_csv" value="Import CSV" class="button-primary"></p>
 						<?php wp_nonce_field('wa_notifier_contacts_csv'); ?>
 						<input type="hidden" name="action" value="wa_notifier_import_contacts_csv" />
 					</form>
 				</div>
 				<div class="col-import col-import-users hide">
-					<p>Import contact data from exisiting website <a href="users.php">Users</a>. Map the suitable <a href="https://developer.wordpress.org/plugins/users/working-with-user-metadata/" target="_blank">user meta key</a> with the respective <b>Contact</b> field and click the button below to import.</p>
-					<form id="import-contacts-users" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
-						<table class="users-import-table">
-							<tr>
-								<td><label for="wa_contact_first_name_key">First Name:</label></td>
-								<td><input type="text" id="wa_contact_first_name_key" name="wa_contact_first_name_key" placeholder="Enter user meta key for first name. E.g. first_name"></td>
-							</tr>
-							<tr>
-								<td><label for="wa_contact_last_name_key">Last Name:</label></td>
-								<td><input type="text" id="wa_contact_last_name_key" name="wa_contact_last_name_key" placeholder="Enter user meta key for last name. E.g. last_name"></td>
-							</tr>
-							<tr>
-								<td><label for="wa_contact_wa_number_key">WhatsApp Number (with ext code):</label></td>
-								<td><input type="text" id="wa_contact_wa_number_key" name="wa_contact_wa_number_key" placeholder="Enter user meta key for WhatsApp number. E.g. phone_number"></td>
-							</tr>
-							<tr>
-								<td><label for="wa_contact_list_name">List Name:</label></td>
-								<td>
-									<input type="text" id="wa_contact_list_name" name="wa_contact_list_name" placeholder="Enter a list name. E.g. Website Leads"></td>
-							</tr>
-							<tr>
-								<td><label for="wa_contact_tags">Tags:</label></td>
-								<td><input type="text" id="wa_contact_tags" name="wa_contact_tags" placeholder="Enter comma separated list of tags"></td>
-							</tr>
-						</table>
-						<input type="submit" name="upload_csv" value="Import from Users" class="button-primary">
+					<form id="import-contacts-users" class="meta-fields contacts-import-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
+						<p>Import contact data (billing name and phone number) from your Woocommerce <a href="admin.php?page=wc-admin&path=%2Fcustomers" target="_blank">customers</a>. Note that the customers with empty or incorrectly filled phone number fields will not be imported.</p>
+						<?php
+							$contact_lists = WA_Notifier_Contacts::get_contact_lists(true, true);
+							$contact_lists = array_slice($contact_lists, 0, 1, TRUE) + array('_add_new' => 'Add new list') + array_slice($contact_lists, 1, NULL, TRUE);
+							wa_notifier_wp_select(
+								array(
+									'id'                => 'wa_contact_list_name',
+									'value'             => '',
+									'label'             => 'Contact list:',
+									'description'       => 'Select the contact list where you want to import the contacts. Select <b>Add new list</b> if you want to add a new list.',
+									'options'           => $contact_lists
+								)
+							);
+							wa_notifier_wp_text_input(
+								array(
+									'id'                => 'wa_contact_list_name_input',
+									'value'             => '',
+									'label'             => 'Enter list name:',
+									'description'       => 'Enter the Contact List name that you want to create.',
+									'placeholder'		=> 'E.g. Woocommerce Customers',
+									'conditional_logic'		=> array (
+										array (
+											'field'		=> 'wa_contact_list_name',
+											'operator'	=> '==',
+											'value'		=> '_add_new'
+										)
+									),
+								)
+							);
+							wa_notifier_wp_text_input(
+								array(
+									'id'                => 'wa_contact_tags',
+									'value'             => '',
+									'label'             => 'Tags:',
+									'description'       => 'Enter comma separated list of tags.',
+									'placeholder'		=> 'E.g. tag1, tag2, tag3'
+								)
+							);
+						?>
+						<input type="submit" value="Import" class="button-primary">
 						<?php wp_nonce_field('wa_notifier_contacts_users'); ?>
-						<input type="hidden" name="action" value="wa_notifier_import_contacts_users" />
+						<input type="hidden" name="action" value="wa_notifier_import_contacts_woocommerce" />
 					</form>
 				</div>
 			</div>
@@ -325,9 +358,10 @@ class WA_Notifier_Contacts {
 	}
 
 	/**
-	 * Handle users import
+	 * Handle Woocommerce customers import
 	 */
-	public static function import_contacts_users() {
+	public static function import_contacts_woocommerce() {
+		global $wpdb;
 		if(!check_admin_referer('wa_notifier_contacts_users')) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
@@ -335,42 +369,71 @@ class WA_Notifier_Contacts {
 
 		$data = $_POST;
 
-		$first_name_key = isset($_POST['wa_contact_first_name_key']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_first_name_key']) ) : '';
-		$last_name_key = isset($_POST['wa_contact_last_name_key']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_last_name_key']) ) : '';
-		$phone_number_key = isset($_POST['wa_contact_wa_number_key']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_wa_number_key']) ) : '';
 		$list = isset($_POST['wa_contact_list_name']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_list_name']) ) : '';
+		$list_name = isset($_POST['wa_contact_list_name_input']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_list_name_input']) ) : '';
 		$tags = isset($_POST['wa_contact_tags']) ? explode( ',', sanitize_text_field( wp_unslash ($_POST['wa_contact_tags']) ) ) : '';
 
-		if('' == $first_name_key || '' == $last_name_key || '' == $phone_number_key) {
+		if('' == $list) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=3'));
 			die;
 		}
 
-		global $wp_roles;
-     	$all_roles = array_keys($wp_roles->get_names());
-		$user_ids = get_users( array(
-			'number' => -1,
-			'fields'	=> 'ids',
-			'role__in'	=> $all_roles
-		));
+		$query_str = "
+			SELECT
+				post_id,
+				max(case when meta_key = '_billing_first_name' then meta_value end) first_name,
+				max(case when meta_key = '_billing_last_name' then meta_value end) last_name,
+				max(case when meta_key = '_billing_country' then meta_value end) country_code,
+				max(case when meta_key = '_billing_phone' then meta_value end) phone_number,
+				max(case when meta_key = '_customer_user' then meta_value end) user_id
+			FROM
+				$wpdb->postmeta
+			WHERE
+				post_id IN
+					(SELECT MAX($wpdb->posts.ID) FROM $wpdb->posts, $wpdb->postmeta
+						WHERE $wpdb->posts.post_type = 'shop_order'
+						AND ($wpdb->postmeta.meta_key = '_billing_phone' AND $wpdb->postmeta.meta_value IS NOT null )
+						AND $wpdb->posts.ID = $wpdb->postmeta.post_id
+						GROUP BY $wpdb->postmeta.meta_value)
+			    AND ( meta_key = '_billing_first_name'
+			       	OR meta_key = '_billing_last_name'
+			        OR meta_key = '_billing_country'
+			        OR meta_key = '_billing_phone'
+			        OR meta_key = '_customer_user' )
+			GROUP BY
+				post_id";
+
+		$customers = $wpdb->get_results($query_str);
+
+		if(count($customers) == 0) {
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=4'));
+			die;
+		}
 
 		$count = 0;
 		$skipped = 0;
-		foreach($user_ids as $uid) {
-			$first_name = get_user_meta($uid, $first_name_key, true);
-			$last_name = get_user_meta($uid, $last_name_key, true);
-			$phone_number = get_user_meta($uid, $phone_number_key, true);
+		foreach($customers as $customer) {
+			$first_name = $customer->first_name;
+			$last_name = $customer->last_name;
+			$phone_number = trim($customer->phone_number);
+			$country_code = $customer->country_code;
+			$user_id = $customer->user_id;
 
-			if('' == $phone_number){
+			if('' == $phone_number) {
 				$skipped++;
 				continue;
 			}
+
+			// Cleanup phone number and combine with country code
+			$phone_number = self::get_formatted_phone_number($phone_number, $country_code);
+
 			$count++;
 
 			$existing_contact = get_posts( array(
 				'post_type'		=> 'wa_contact',
 				'fields'		=> 'ids',
 				'numberposts'	=> 1,
+				'post_status'	=> 'publish',
 				'meta_query'	=> array(
 				    array(
 						'key'   => WA_NOTIFIER_PREFIX . 'wa_number',
@@ -398,13 +461,22 @@ class WA_Notifier_Contacts {
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', $first_name);
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', $last_name);
 			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', $phone_number);
-			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'associated_user', $uid);
-			$term_id = wp_create_term($list, 'wa_contact_list');
+			if( 0 != $user_id ){
+				update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'associated_user', $user_id);
+			}
+
+			if('_add_new' == $list) {
+				$term_id = wp_create_term($list_name, 'wa_contact_list');
+			}
+			else{
+				$term = get_term_by( 'slug', $list, 'wa_contact_list' );
+				$term_id = $term->term_id;
+			}
 			wp_set_post_terms( $post_id, $term_id, 'wa_contact_list');
 			wp_set_post_terms( $post_id, $tags, 'wa_contact_tag');
 
 			unset($post_id);
-			unset($uid);
+			unset($user_id);
 		}
 
 		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=1&wa_import_count='.$count.'&wa_import_skipped='.$skipped));
@@ -452,38 +524,40 @@ class WA_Notifier_Contacts {
  		elseif('3' == $_GET['wa_contacts_import']) {
  			?>
 			<div class="notice notice-error is-dismissible">
-			    <p>There was an error during the import. Please enter all user meta keys before you start the import.</p>
+			    <p>There was an error during the import. Please enter a List name before you start the import.</p>
+			</div>
+			<?php
+ 		}
+ 		elseif('4' == $_GET['wa_contacts_import']) {
+ 			?>
+			<div class="notice notice-error is-dismissible">
+			    <p>No customers found.</p>
 			</div>
 			<?php
  		}
 	}
 
-
 	/**
 	 * Get contacts
 	 */
-	public static function get_contacts ($show_select = false)	 {
-		$search_keyword = isset($_POST['s']) ? $_POST['s'] : '';
-		// $contacts = get_posts( array(
-		//     'post_type'		=> 'wa_contact',
-		//     'post_status'	=> 'publish',
-		//     'orderby'		=> 'title',
-		//     'order'			=> 'ASC',
-		//     'numberposts' 	=> 20,
-		//     's'				=> $search_keyword
-		// ) );
+	public static function get_contacts ($show_select = false) {
+		global $wpdb;
+		$search_keyword = isset($_POST['s']) ? sanitize_text_field ($_POST['s']) : '';
 
 		$querystr = "
-			SELECT $wpdb->posts.ID
+			SELECT DISTINCT $wpdb->posts.ID
 	    	FROM $wpdb->posts, $wpdb->postmeta
             WHERE ($wpdb->posts.post_content LIKE '%$search_keyword%'
             	OR $wpdb->posts.post_title LIKE '%$search_keyword%'
-            	OR $wpdb->postmeta.option_value LIKE '%$search_keyword%')
+            	OR $wpdb->postmeta.meta_value LIKE '%$search_keyword%')
+            AND $wpdb->posts.post_type = 'wa_contact'
+            AND $wpdb->posts.post_status = 'publish'
 	        AND $wpdb->posts.ID = $wpdb->postmeta.post_id
-	        ORDER BY $wpdb->posts.post_title DESC
+	        LIMIT 20
 		";
 
-		$contacts = $wpdb->get_results($querystr, OBJECT_K);
+		$contacts = $wpdb->get_results($querystr);
+		$contacts = wp_list_pluck ( $contacts, 'ID');
 
 		$contacts_data = array();
 
@@ -539,10 +613,37 @@ class WA_Notifier_Contacts {
 		}
 
 		foreach ($users as $user) {
-			$users_list[$user->id] = $user->display_name;
+			$users_list[$user->ID] = $user->display_name;
 		}
 
 		return $users_list;
+	}
+
+	/**
+	 * Get phone number with country extension code
+	 */
+	public static function get_formatted_phone_number ($phone_number, $country_code) {
+		$phone_number = self::sanitize_phone_number( $phone_number );
+		$phone_number = ltrim($phone_number, '0');
+		if ( in_array( $country_code, array( 'US', 'CA' ), true ) ) {
+			$phone_number = ltrim( $phone_number, '+1' );
+		} else {
+			$calling_code = WC()->countries->get_country_calling_code( $country_code );
+			$calling_code = is_array( $calling_code ) ? $calling_code[0] : $calling_code;
+
+			if ( $calling_code ) {
+				$phone_number = str_replace( $calling_code, '', preg_replace( '/^0/', '', $phone_number ) );
+			}
+		}
+		$phone_number = ltrim($phone_number, '0');
+		return $calling_code . $phone_number;
+	}
+
+	/**
+	 * Sanitize phone number
+	 */
+	public static function sanitize_phone_number ($phone_number) {
+		return preg_replace( '/[^\d+]/', '', $phone_number );
 	}
 
 }

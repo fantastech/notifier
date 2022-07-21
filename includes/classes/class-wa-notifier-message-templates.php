@@ -20,9 +20,8 @@ class WA_Notifier_Message_Templates {
 		add_filter( 'manage_wa_message_template_posts_columns', array( __CLASS__ , 'add_columns' ) );
 		add_action( 'manage_wa_message_template_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
 		add_filter( 'bulk_post_updated_messages', array(__CLASS__, 'change_deletion_message'), 10, 2);
-		add_filter( 'post_updated_messages', array(__CLASS__, 'update_template_save_messages') );
+		add_filter( 'post_updated_messages', array(__CLASS__, 'update_save_messages') );
 		add_action( 'save_post_wa_message_template', array(__CLASS__, 'save_meta'), 10, 2 );
-		add_action( 'admin_notices', array(__CLASS__, 'show_admin_notices'), 10, 2 );
 		add_action( 'before_delete_post', array(__CLASS__, 'delete_template'), 10, 2 );
 		add_filter( 'admin_body_class', array(__CLASS__, 'admin_body_class'));
 		add_action( 'admin_head', array(__CLASS__, 'handle_refresh_status_request') );
@@ -34,7 +33,7 @@ class WA_Notifier_Message_Templates {
 	/**
 	 * Register custom post type
 	 */
-	public function register_cpt () {
+	public static function register_cpt () {
 		wa_notifier_register_post_type ( 'wa_message_template', 'Message Template', 'Message Templates');
 	}
 	
@@ -128,7 +127,9 @@ class WA_Notifier_Message_Templates {
 	 * Remove inline Quick Edit
 	 */
     public static function remove_quick_edit( $actions, $post ) { 
-    	unset($actions['inline hide-if-no-js']);
+    	if ('wa_message_template' == $post->post_type){
+	    	unset($actions['inline hide-if-no-js']);
+	    }
     	return $actions;
 	}
 
@@ -180,9 +181,9 @@ class WA_Notifier_Message_Templates {
 	 */
 	public static function add_columns ($columns) {
 		$columns['mt_name'] = 'Template Name';
-		$columns['mt_status'] = 'Status';
 		$columns['mt_category'] = 'Category';
 		$columns['mt_preview'] = 'Preview';
+		$columns['mt_status'] = 'Status';
 		unset($columns['date']);
 		return $columns;
 	}
@@ -196,11 +197,6 @@ class WA_Notifier_Message_Templates {
 		    echo ($template_name) ? '<code>'.$template_name.'</code>' : '-';
 		}
 
-		if ( 'mt_status' === $column ) {
-		    $status = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'status', true);
-		    echo ($status) ? '<span class="status status-'.strtolower($status).'">'.$status.'</span>' : '-';
-		}
-
 		if ( 'mt_category' === $column ) {
 		    $category = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'category', true);
 		    echo ($category) ? $category : '-';
@@ -209,6 +205,11 @@ class WA_Notifier_Message_Templates {
 		if ( 'mt_preview' === $column ) {
 		    $preview = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'body_text', true);
 		    echo ($preview) ? '<span class="truncate-string">' . strip_tags( $preview ) . '</span>' : '-';
+		}
+
+		if ( 'mt_status' === $column ) {
+		    $status = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'status', true);
+		    echo ($status) ? '<span class="status status-'.strtolower($status).'">'.$status.'</span>' : '-';
 		}
 	}
 
@@ -227,19 +228,6 @@ class WA_Notifier_Message_Templates {
 		$bulk_messages['post']['deleted'] = _n( '%s message template deleted permanently from the website and from WhatsApp server.', '%s message template deleted permanently from the website and from WhatsApp server.', (int) $count, 'wa-notifier' );
 
 		return $bulk_messages;
-	}
-
-	/**
-	 * Update save action messages
-	 */
-	public static function update_template_save_messages ($messages) {
-		if ( 'wa_message_template' !== get_post_type() ) {
- 			return;
- 		}
-
-		unset($messages['post'][1]);
-	    unset($messages['post'][6]);
-		return $messages;
 	}
 
 	/**
@@ -272,6 +260,19 @@ class WA_Notifier_Message_Templates {
 			}
 		}
 		self::submit_template_data_to_cloud_api($template_data);
+	}
+
+	/**
+	 * Update save action messages
+	 */
+	public static function update_save_messages ($messages) {
+		global $post;
+		$notice = get_transient( "mt_notice_{$post->ID}" );
+		if ( $notice ) {
+			delete_transient( "mt_notice_{$post->ID}" );
+			$messages['wa_message_template'][6] = $notice['message'];
+		}
+		return $messages;
 	}
 
 	/**
@@ -382,26 +383,6 @@ class WA_Notifier_Message_Templates {
 	}
 
 	/**
-	 * Show admin error noticces
-	 */
-	public static function show_admin_notices () {
-		if ( 'wa_message_template' !== get_post_type() ) {
- 			return;
- 		}
-
- 		global $post;
- 		$notice = get_transient( "mt_notice_{$post->ID}" );
-		if ( $notice ) {
-			delete_transient( "mt_notice_{$post->ID}" );
-			?>
-			<div class="notice notice-<?php echo $notice['type']; ?> is-dismissible">
-			    <p><?php echo $notice['message']; ?></p>
-			</div>
-			<?php	
-		}
-	}
-
-	/**
 	 * Delete template from Cloud API
 	 */
 	public static function delete_template ($post_id, $post) {
@@ -462,7 +443,7 @@ class WA_Notifier_Message_Templates {
 
  		$response = WA_Notifier::wa_business_api_request('message_templates', array(), 'GET');
 
-		if($response->error) {
+		if(isset($response->error)) {
 			$notices[] = array(
 				'message' => 'Status not refreshed. Error Code ' . $response->error->code . ': ' . $response->error->message ,
 				'type' => 'error'
@@ -568,10 +549,15 @@ class WA_Notifier_Message_Templates {
 	/**
 	 * Send message template to phone number
 	 */
-	public static function send_message_template_to_number ($template_id, $phone_number) {
+	public static function send_message_template_to_number ($template_id, $notification_id, $phone_number, $context_args = array()) {
 		$template_name = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . 'template_name', true);
 		$language = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . 'language', true);
 
+		$header_type = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . 'header_type', true);
+		$header_text = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . 'header_text', true);
+		$body_text = get_post_meta( $template_id, WA_NOTIFIER_PREFIX . 'body_text', true);
+
+		// Default message template sending args
 		$args = array (
 			'messaging_product' => 'whatsapp',
 			'recipient_type' => 'individual',
@@ -584,6 +570,53 @@ class WA_Notifier_Message_Templates {
 				)
 			)
 		);
+
+		$variable_mapping = get_post_meta( $notification_id, WA_NOTIFIER_PREFIX . 'notification_variable_mapping', true);
+
+		$total_header_vars = 0;
+		$total_body_vars = 0;
+
+		if('text' == $header_type) {
+			preg_match_all("~\{\{\s*(.*?)\s*\}\}~", $header_text, $header_var_matches);
+			$header_vars = $header_var_matches[0];
+			$total_header_vars = count($header_vars);
+		}
+
+		preg_match_all("~\{\{\s*(.*?)\s*\}\}~", $body_text, $body_var_matches);
+		$body_vars = $body_var_matches[0];
+		$total_body_vars = count($body_vars);
+
+		// If merge tag present in header
+		if($total_header_vars > 0 && is_array($variable_mapping)) {
+			$header_merge_tag_id = isset($variable_mapping['header'][0]) ? $variable_mapping['header'][0] : '';
+			$header_merge_tag_value = WA_Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_merge_tag_id, $context_args);
+			if($header_merge_tag_value) {
+				$args['template']['components'][] = array (
+					'type'			=> 'header',
+					'parameters'	=> array(
+						array(
+							'type'		=> 'text',
+							'text'		=> $header_merge_tag_value
+						)
+					)
+				);
+			}
+		}
+
+		// If merge tag present in body
+		if($total_body_vars > 0 && is_array($variable_mapping)) {
+			$parameters = array();
+			$body_merge_tag_values = array();
+			for ($num = 0; $num < $total_body_vars; $num++) {
+				$body_merge_tag_id = isset($variable_mapping['body'][$num]) ? $variable_mapping['body'][$num] : '';
+				$parameters[$num]['type'] = 'text';
+				$parameters[$num]['text'] = WA_Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($body_merge_tag_id, $context_args);
+			}
+			$args['template']['components'][] = array (
+				'type'			=> 'body',
+				'parameters'	=> $parameters
+			);
+		}
 
 		$response = WA_Notifier::wa_cloud_api_request('messages', $args);
 

@@ -72,6 +72,8 @@ class WA_Notifier {
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-message-templates.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-contacts.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notifications.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notification-merge-tags.php';
+		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notification-triggers.php';
 		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-settings.php';
 	}
 
@@ -85,16 +87,19 @@ class WA_Notifier {
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Message_Templates', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Contacts', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Notifications', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Notification_Merge_Tags', 'init' ) );
+		add_action( 'plugins_loaded', array( 'WA_Notifier_Notification_Triggers', 'init' ) );
 		add_action( 'plugins_loaded', array( 'WA_Notifier_Settings', 'init' ) );
-		add_action( 'plugins_loaded', array( $this, 'maybe_include_woocoomerce_code' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_include_woocoomerce_class' ) );
 
-		add_filter( 'init', array( $this , 'test_stuff') );
 		add_filter( 'init', array( $this , 'handle_webhook_requests') );
 
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 
 		add_action( 'removable_query_args', array( $this , 'remove_admin_query_args') );
+
+		add_action( 'admin_footer', array($this, 'add_admin_html_templates') );
 	}
 
 	/**
@@ -112,7 +117,7 @@ class WA_Notifier {
 	/**
 	 * Check if plugin's page
 	 */
-	public function is_wa_notifier_page() {
+	public static function is_wa_notifier_page() {
 		$current_screen = get_current_screen();
 		if ( strpos($current_screen->id, WA_NOTIFIER_NAME) !== false) {
 			return true;
@@ -138,7 +143,6 @@ class WA_Notifier {
     	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifier',
     		apply_filters( 'wa_notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
     	);
-    	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifierTemplates', apply_filters( 'wa_notifier_admin_html_templates', array() ) );
 
     	// Date / time picker
     	wp_enqueue_script('jquery-ui-datepicker');
@@ -194,7 +198,7 @@ class WA_Notifier {
 	/**
 	 * Handle response from Whatsapp
 	 */
-	public function handle_webhook_requests () {
+	public static function handle_webhook_requests () {
 		if( ! isset($_GET['wa_notifier']) ) {
 			return;
 		}
@@ -216,37 +220,9 @@ class WA_Notifier {
 	}
 
 	/**
-	 * Remove before pushing live
-	 */
-	public function test_stuff () {
-		if(!isset($_GET['test_stuff'])){
-			return;
-		}
-
-		$args = array (
-			'messaging_product' => 'whatsapp',
-			'recipient_type' => 'individual',
-			'to' => '+917828699878',
-			'type' => 'template',
-			'template' => array (
-				'name' => 'received_request',
-				'language' => array (
-					'code' => 'en_US'
-				)
-			)
-		);
-
-		$response = self::wa_cloud_api_request('messages', $args);
-
-		print_r($response);
-		
-		die;
-	}
-
-	/**
 	 * For sending requests to Cloud API
 	 */
-	public function wa_cloud_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
+	public static function wa_cloud_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
 		$phone_number_id = get_option('wa_notifier_phone_number_id');
 		$request_url = WA_NOTIFIER_WA_API_URL . $phone_number_id . '/' . untrailingslashit($endpoint);
 		return self::send_api_request($request_url, $args, $method);
@@ -255,7 +231,7 @@ class WA_Notifier {
 	/**
 	 * For sending requests to WA Business API
 	 */
-	public function wa_business_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
+	public static function wa_business_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
 		$business_account_id = get_option('wa_notifier_business_account_id');
 		$request_url = WA_NOTIFIER_WA_API_URL . $business_account_id . '/' . untrailingslashit($endpoint);
 		return self::send_api_request($request_url, $args, $method);
@@ -264,7 +240,7 @@ class WA_Notifier {
 	/**
 	 * For sending API requests
 	 */
-	private function send_api_request ( $request_url, $args, $method ) {
+	private static function send_api_request ( $request_url, $args, $method ) {
 		$permanent_access_token = get_option('wa_notifier_permanent_access_token');
 		$request_args = array(
 		    'method' => $method,
@@ -273,9 +249,6 @@ class WA_Notifier {
 		    ),
 		    'body' => $args
 	    );
-
-		// echo "<pre>"; print_r($args); die;
-
 		$response = wp_remote_request( $request_url, $request_args);
 		if ( is_wp_error( $response ) ) {
 			echo $response->get_error_message();
@@ -294,13 +267,34 @@ class WA_Notifier {
 	}
 
 	/**
-	 * Load Woocommerce related code if it's present is activated
+	 * Load Woocommerce class if it's present is activated
 	 */
-	public static function maybe_include_woocoomerce_code () {
+	public static function maybe_include_woocoomerce_class () {
 		if( class_exists( 'WooCommerce' ) ){
 			require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-woocommerce.php';
 			WA_Notifier_Woocommerce::init();
 		}
+	}
+
+	/**
+	 * Add admin html templates to footer
+	 */
+	public static function add_admin_html_templates (){
+		if(!self::is_wa_notifier_page()){
+			return;
+		}
+
+		$templates = apply_filters('wa_notifier_admin_html_templates', array());
+
+		if(count($templates) == 0) {
+			return;
+		}
+
+		echo '<div class="wa-notifier-templates">';
+		foreach($templates as $key => $template) {
+			echo '<template id="'.$key.'">'.$template.'</template>';
+		}
+		echo '</div>';
 	}
 
 }

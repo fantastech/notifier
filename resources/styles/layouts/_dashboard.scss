@@ -78,6 +78,11 @@
 				padding: 15px 20px;
 				display: none;
 				transition: height 0.5s ease-in-out;
+
+				p:first-child,
+				ol:first-child {
+					margin-top: 0;
+				}
 			}
 
 			&.active .step-body {
@@ -210,6 +215,7 @@
 	border-radius: 50%;
 	vertical-align: middle;
 	margin-left: 10px;
+	background: #cacaca;
 
 	&.quantity-rating-red {
 		background: red;

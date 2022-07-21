@@ -8,7 +8,8 @@
 		display: none;
 	}
 
-	.send-to-fields {
+	.send-to-fields,
+	.variables-mapping-fields {
 		width: calc(100% - 20px);
 
 		@include media-down(mobile) {
@@ -20,8 +21,17 @@
 			margin: 0px;
 		}
 	}
+
+	.variables-mapping-fields table td:first-child {
+		width: 10%;
+	}
 }
 
 .ui-datepicker-current {
 	display: none;
+}
+
+.add-recipient {
+	margin-left: auto !important;
+	margin-top: 5px !important;
 }

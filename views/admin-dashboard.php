@@ -23,23 +23,23 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 
 			<div class="onboarding">
 				<div class="onboarding-head">
-					<h3>IMPORTANT DISCLAIMER!</h3>
+					<h3>!!! [IMPORTANT DISCLAIMER] DO NOT SKIP WITHOUT READING !!!</h3>
 					<p>Please read and accept the following 3 points before you start using this plugin.</p>
 				</div>
 				<div class="onboarding-body">
 					<div class="onboarding-disclaimer">
-						<h4>1. Phone number</h4>
+						<h4>1. PHONE NUMBER WILL RESTRICTION</h4>
 						<p>This plugin uses WhatsApp's official <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/overview" target="_blank">Cloud API</a> to send notifications from your WordPress backend. In order to use the API, you need to register your phone number with them to be able to send notifications.</p>
 						<p>Once the phone number is setup in their app to use with this plugin, you will <b>not be able to use the number</b> on the <a href="https://business.whatsapp.com/products/business-app" target="_blank">WhastApp Business mobile app</a>.</p>
 						<p>If you want to use the phone number that you were using on their phone app, WhatsApp <a href="https://developers.facebook.com/docs/whatsapp/phone-numbers" target="_blank">requires you</a> to <b>delete that account from phone</b> (along with it's message history) to be able to use it via the API.</p>
 						<p>If you're using a different number that's not used in the mobile app or if you're okay to delete the phone app account, you can proceed with using this plugin.</p>
 						<hr />
-						<h4>2. One-way communication restriction</h4>
+						<h4>2. ONE-WAY COMMUNICATION ONLY</h4>
 						<p>Note that this plugin currently allows only <b>one-way communication</b>, that is, you can only <b>send notifications</b> on WhatsApp but <b>can not receive / read replies</b>.</p>
 						<p>If you want to use your phone number for two-way communication with your customers, we suggest using their mobile app. But if you're okay with the one-way communication restriction, you can proceed with using this plugin.</p>
 						<p>Note that we have plans to introduce <b>full-fledged WhatsApp inbox system</b> with this plugin that'll allow you <b>two-way communication</b> from WordPress dashbaord. But that'll take time to launch so be thoughtful about the phone number that you use with this plugin.</p>
 						<hr />
-						<h4>3. Metered Billing by WhatsApp</h4>
+						<h4>3. METERED BILLING BY WHATSAPP</h4>
 						<p>Notifications you send from the app are <a href="https://developers.facebook.com/docs/whatsapp/pricing" target="_blank">metered by WhatsApp</a>. <b>First 1000 messages per month are <em>free</em></b> to send but you're charged for the messages you send post that. The billing is handled by WhatsApp on their site and not by this plugin.</p>
 						<hr />
 						<p>If you understand and accept these points, click on button below to get started.</p>
@@ -62,13 +62,13 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 
 			<div class="onboarding">
 				<div class="onboarding-head">
-					<h3>Let's Get Started!</h3>
-					<p>Follow the steps below to setup your WhastApp Business account and the plugin to start sending notifications. Estimated time needed for setup: 8 to 10 minutes.</p>
+					<h3>Let's Configure The Plugin!</h3>
+					<p>Follow the steps below to configure the plugin to start sending WhatsApp notifications. Estimated time: 8 to 10 minutes.</p>
 				</div>
 				<div class="onboarding-body">
 					<div class="step active">
 						<div class="step-head">
-							<div class="step-title"><b>Step 1: Create Meta account and an app for WhastApp Cloud API</b></div>
+							<div class="step-title text-uppercase"><b>Step 1: Create Meta account and an app for WhastApp Cloud API</b></div>
 							<button class="toggle-step"></button>
 						</div>
 						<div class="step-body">
@@ -85,7 +85,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 					</div>
 					<div class="step">
 						<div class="step-head">
-							<div class="step-title"><b>Step 2: Setup your phone number in WhastApp Cloud API</b></div>
+							<div class="step-title text-uppercase"><b>Step 2: Setup your phone number in WhastApp Cloud API</b></div>
 							<button class="toggle-step"></button>
 						</div>
 						<div class="step-body">
@@ -102,7 +102,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 					</div>
 					<div class="step">
 						<div class="step-head">
-							<div class="step-title"><b>Step 3: Configure webhook and permanent token</b></div>
+							<div class="step-title text-uppercase"><b>Step 3: Configure webhook and permanent token</b></div>
 							<button class="toggle-step"></button>
 						</div>
 						<div class="step-body">
@@ -132,7 +132,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 					</div>
 					<div class="step">
 						<div class="step-head">
-							<div class="step-title"><b>Step 4: Validate and complete</b></div>
+							<div class="step-title text-uppercase"><b>Step 4: Validate and complete</b></div>
 							<button class="toggle-step"></button>
 						</div>
 						<div class="step-body">

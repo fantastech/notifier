@@ -32,7 +32,7 @@ class WA_Notifier_Dashboard {
 	/**
 	 * Handle displaimer forms
 	 */
-	public function handle_disclaimer_form () {
+	public static function handle_disclaimer_form () {
 		if ( ! self::is_dashboard_page() ) {
 			return;
 		}
@@ -49,7 +49,7 @@ class WA_Notifier_Dashboard {
 	/**
 	 * Handle validation forms
 	 */
-	public function handle_validation_form () {
+	public static function handle_validation_form () {
 		if ( ! self::is_dashboard_page() ) {
 			return;
 		}
@@ -65,9 +65,9 @@ class WA_Notifier_Dashboard {
 		$business_account_id = get_option( WA_NOTIFIER_PREFIX . 'business_account_id' );
 		$permanent_access_token = get_option( WA_NOTIFIER_PREFIX . 'permanent_access_token' );
 
-		if('' == $permanent_access_token || '' == $business_account_id || '' == $permanent_access_token){
+		if('' == $phone_number_id || '' == $business_account_id || '' == $permanent_access_token){
 			$notices[] = array(
-				'message' => 'Please add all fields on the <a href="admin.php?page='.WA_NOTIFIER_NAME.'-settings">Settings</a> page before proceeding for validation.',
+				'message' => 'Setup not complete. Please follow the steps shown below to create <b>Phone number ID</b> , <b>Business Account ID</b> and <b>Permanent Access Token</b>. Then add these details on the <a href="admin.php?page='.WA_NOTIFIER_NAME.'-settings">Settings</a> page before proceeding for validation.',
 				'type' => 'error'
 			);
 			new WA_Notifier_Admin_Notices($notices);
@@ -150,7 +150,7 @@ class WA_Notifier_Dashboard {
 	/**
 	 * Check if on dashboard page
 	 */
-	public function is_dashboard_page() {
+	public static function is_dashboard_page() {
 		$current_page = isset($_GET['page']) ? $_GET['page'] : '';
 		if($current_page == WA_NOTIFIER_NAME){
 			return true;
