@@ -9,10 +9,13 @@
     "lint:scripts": "eslint resources/scripts",
     "lint:styles": "stylelint \"resources/**/*.{css,scss}\"",
     "test": "npm run -s lint",
-    "move-to-build": "rsync -av --exclude='build' --exclude='*.git*' --exclude='node_modules' --exclude='vendor' --exclude='resources' --exclude='.*' --exclude='composer.*' --exclude='package*' --exclude='yarn*' --exclude='webpack*' --exclude='phpcs.xml' --exclude='*.DS_Store' * build/wa-notifier; cp -R build/wa-notifier build/wa-notifier-pro;",
-    "create-free-pro": "export LC_ALL=C; find build/wa-notifier/ -type f -exec sed -i '' '/==WA Notifier Pro Code Start==/,/==WA Notifier Pro Code End==/d' {} +; find build/wa-notifier-pro/ -type f -exec sed -i '' '/==WA Notifier Pro Code/d' {} +;",
+    "generate-pro-plugin": "rsync -av --exclude='build' --exclude='*.git*' --exclude='node_modules' --exclude='vendor' --exclude='resources' --exclude='.*' --exclude='composer.*' --exclude='package*' --exclude='yarn*' --exclude='webpack*' --exclude='phpcs.xml' --exclude='*.DS_Store' * build/wa-notifier-pro",
+    "generate-free-plugin": "cp -R build/wa-notifier-pro build/wa-notifier; mv build/wa-notifier/wa-notifier-pro.php build/wa-notifier/wa-notifier.php; sed -i '' 's/WA Notifier Pro/WA Notifier/g' build/wa-notifier/wa-notifier.php; sed -i '' 's/WA Notifier Pro/WA Notifier/g' build/wa-notifier/includes/classes/class-wa-notifier-dashboard.php",
+    "strip-free-pro-code": "export LC_ALL=C; find build/wa-notifier/ -type f -exec sed -i '' '/==WA Notifier Pro Code Start==/,/==WA Notifier Pro Code End==/d' {} +; find build/wa-notifier-pro/ -type f -exec sed -i '' '/==WA Notifier Pro Code/d' {} +;",
     "zip": "zip -r build/wa-notifier.zip build/wa-notifier; zip -r build/wa-notifier-pro.zip build/wa-notifier-pro",
-    "deploy": "rm -r build/*; yarn move-to-build; yarn create-free-pro; yarn zip;"
+    "copy-to-free-site": "rm -r ../wanotifier/app/public/wp-content/plugins/wa-notifier/; cp -r build/wa-notifier ../wanotifier/app/public/wp-content/plugins/wa-notifier/;",
+    "copy-to-pro-site": "rm -r ../wanotifier-pro/app/public/wp-content/plugins/wa-notifier-pro/; cp -r build/wa-notifier-pro ../wanotifier-pro/app/public/wp-content/plugins/wa-notifier-pro/",
+    "deploy": "rm -r build/*; yarn generate-pro-plugin; yarn generate-free-plugin; yarn strip-free-pro-code; yarn zip; yarn copy-to-free-site; yarn copy-to-pro-site;"
   },
   "engines": {
     "node": "^16.0.0"
