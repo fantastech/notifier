@@ -322,12 +322,13 @@ class WA_Notifier_Notifications {
 		$list_slug = get_post_meta($notification_id, 'wa_notifier_notification_list', true);
 		$template_id = get_post_meta($notification_id, 'wa_notifier_notification_message_template', true);
 		$list_offset = get_post_meta($notification_id, 'wa_notifier_notification_list_offset', true);
-		$sent_contact_ids = get_post_meta($notification_id, 'wa_notifier_notification_sent_contact_ids', true);
-		$unsent_contact_ids = get_post_meta($notification_id, 'wa_notifier_notification_unsent_contact_ids', true);
+		$sent_phone_numbers = get_post_meta($notification_id, 'wa_notifier_notification_sent_phone_numbers', true);
+		$unsent_phone_numbers = get_post_meta($notification_id, 'wa_notifier_notification_unsent_phone_numbers', true);
+
+		$sent_phone_numbers = (!$sent_phone_numbers) ? array() : $sent_phone_numbers;
+		$unsent_phone_numbers = (!$unsent_phone_numbers) ? array() : $unsent_phone_numbers;
 
 		$offset = (!$list_offset) ? 0 : (int)$list_offset;
-		$sent_contact_ids = (!$sent_contact_ids) ? array() : $sent_contact_ids;
-		$unsent_contact_ids = (!$unsent_contact_ids) ? array() : $unsent_contact_ids;
 
 		$count = 0;
 		$limit = 50; // Send to only 50 contacts at a time
@@ -352,17 +353,18 @@ class WA_Notifier_Notifications {
 			$message_sent = WA_Notifier_Message_Templates::send_message_template_to_number($template_id, $notification_id, $phone_number);
 
 			if($message_sent) {
-				$sent_contact_ids[] = $contact_id;
+				$sent_phone_numbers[] =  $phone_number;
 			}
 			else {
-				$unsent_contact_ids[] = $contact_id;
+				$sent_phone_numbers[] =  $phone_number;
 			}
 		}
 
+		update_post_meta($notification_id, 'wa_notifier_notification_sent_phone_numbers', $sent_numbers);
+		update_post_meta($notification_id, 'wa_notifier_notification_unsent_phone_numbers', $unsent_numbers);
+
 		$new_offset = $offset + $limit;
 		update_post_meta($notification_id, 'wa_notifier_notification_list_offset', $new_offset);
-		update_post_meta($notification_id, 'wa_notifier_notification_sent_contact_ids', $sent_contact_ids);
-		update_post_meta($notification_id, 'wa_notifier_notification_unsent_contact_ids', $unsent_contact_ids);
 		if($count == $limit){
 			as_enqueue_async_action( 'wa_notifier_marketing_notification', array($notification_id), 'wa-notifier' );
 		}
@@ -378,13 +380,12 @@ class WA_Notifier_Notifications {
 		$send_to = get_post_meta($notification_id, 'wa_notifier_notification_send_to', true);
 		$template_id = get_post_meta($notification_id, 'wa_notifier_notification_message_template', true);
 
-		$sent_contact_ids = get_post_meta($notification_id, 'wa_notifier_notification_sent_contact_ids', true);
-		$unsent_contact_ids = get_post_meta($notification_id, 'wa_notifier_notification_unsent_contact_ids', true);
+		$sent_phone_numbers = get_post_meta($notification_id, 'wa_notifier_notification_sent_phone_numbers', true);
+		$unsent_phone_numbers = get_post_meta($notification_id, 'wa_notifier_notification_unsent_phone_numbers', true);
 
-		$sent_contact_ids = (!$sent_contact_ids) ? array() : $sent_contact_ids;
-		$unsent_contact_ids = (!$unsent_contact_ids) ? array() : $unsent_contact_ids;
+		$sent_phone_numbers = (!$sent_phone_numbers) ? array() : $sent_phone_numbers;
+		$unsent_phone_numbers = (!$unsent_phone_numbers) ? array() : $unsent_phone_numbers;
 
-		$contact_ids = array();
 		$list_ids = array();
 
 		$phone_numbers = array();
@@ -393,7 +394,6 @@ class WA_Notifier_Notifications {
 			foreach($send_to as $recipient) {
 				switch ($recipient['type']) {
 					case 'contact':
-						$contact_ids[] = $recipient['recipient']['contact'];
 						$phone_number = get_post_meta( $recipient['recipient']['contact'], WA_NOTIFIER_PREFIX . 'wa_number', true);
 						if($phone_number) {
 							$phone_numbers[] = $phone_number;
@@ -425,8 +425,8 @@ class WA_Notifier_Notifications {
 			}
 		}
 
-		update_post_meta($notification_id, 'wa_notifier_notification_sent_contact_ids', $sent_numbers);
-		update_post_meta($notification_id, 'wa_notifier_notification_unsent_contact_ids', $unsent_numbers);
+		update_post_meta($notification_id, 'wa_notifier_notification_sent_phone_numbers', $sent_numbers);
+		update_post_meta($notification_id, 'wa_notifier_notification_unsent_phone_numbers', $unsent_numbers);
 	}
 
 	/**
@@ -469,12 +469,12 @@ class WA_Notifier_Notifications {
 		}
 
 		if ( 'notification_stats' === $column ) {
-		    $sent_contact_ids = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_sent_contact_ids', true);
+		    $sent_phone_numbers = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_sent_phone_numbers', true);
 		    echo '<b>Sent: </b>';
-		    echo ($sent_contact_ids && is_array($sent_contact_ids)) ? count($sent_contact_ids) : '0';
-		    $unsent_contact_ids = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_unsent_contact_ids', true);
+		    echo ($sent_phone_numbers && is_array($sent_phone_numbers)) ? count($sent_phone_numbers) : '0';
+		    $unsent_phone_numbers = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'notification_unsent_phone_numbers', true);
 		    echo '<br /><b>Failed: </b>';
-		    echo ($unsent_contact_ids && is_array($unsent_contact_ids)) ? count($unsent_contact_ids) : '0';
+		    echo ($unsent_phone_numbers && is_array($unsent_phone_numbers)) ? count($unsent_phone_numbers) : '0';
 		}
 	}
 

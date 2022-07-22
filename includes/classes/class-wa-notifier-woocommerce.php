@@ -48,7 +48,7 @@ class WA_Notifier_Woocommerce {
 			array(
 				'id'			=> 'processing_order',
 				'label' 		=> 'Order status changes to processing',
-				'description'	=> 'When status of an order changes to Processing.',
+				'description'	=> 'When status of the order changes to Processing.',
 				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_processing',
@@ -71,7 +71,7 @@ class WA_Notifier_Woocommerce {
 			array(
 				'id'			=> 'completed_order',
 				'label' 		=> 'Order is completed',
-				'description'	=> 'When status of an order changes to Completed.',
+				'description'	=> 'When status of the order changes to Completed.',
 				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_completed',
@@ -81,6 +81,98 @@ class WA_Notifier_Woocommerce {
 							return;
 						}
 
+						foreach($notif_ids as $nid){
+							$args = array (
+								'object_type' 	=> 'order',
+								'object_id'		=> $order_id
+							);
+							WA_Notifier_Notifications::send_triggered_notification($nid, $args);
+						}
+					}
+				)
+			),
+			array(
+				'id'			=> 'cancelled_order',
+				'label' 		=> 'Order is cancelled',
+				'description'	=> 'When status of the order changes to Cancelled.',
+				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'action'		=> array(
+					'hook'		=> 'woocommerce_order_status_cancelled',
+					'callback' 	=> function ( $order_id ) {
+						$notif_ids = WA_Notifier_Notification_Triggers::trigger_has_active_notification('cancelled_order');
+						if(empty($notif_ids)){
+							return;
+						}
+						error_log('Cancelled');
+						foreach($notif_ids as $nid){
+							$args = array (
+								'object_type' 	=> 'order',
+								'object_id'		=> $order_id
+							);
+							WA_Notifier_Notifications::send_triggered_notification($nid, $args);
+						}
+					}
+				)
+			),
+			array(
+				'id'			=> 'failed_order',
+				'label' 		=> 'Order gets failed',
+				'description'	=> 'When status of an order changes to Failed.',
+				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'action'		=> array(
+					'hook'		=> 'woocommerce_order_status_failed',
+					'callback' 	=> function ( $order_id ) {
+						$notif_ids = WA_Notifier_Notification_Triggers::trigger_has_active_notification('failed_order');
+						if(empty($notif_ids)){
+							return;
+						}
+						error_log('Failed');
+						foreach($notif_ids as $nid){
+							$args = array (
+								'object_type' 	=> 'order',
+								'object_id'		=> $order_id
+							);
+							WA_Notifier_Notifications::send_triggered_notification($nid, $args);
+						}
+					}
+				)
+			),
+			array(
+				'id'			=> 'on_hold_order',
+				'label' 		=> 'Order is on-hold',
+				'description'	=> 'When status of an order changes to On-hold.',
+				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'action'		=> array(
+					'hook'		=> 'woocommerce_order_status_on-hold',
+					'callback' 	=> function ( $order_id ) {
+						$notif_ids = WA_Notifier_Notification_Triggers::trigger_has_active_notification('on_hold_order');
+						if(empty($notif_ids)){
+							return;
+						}
+						error_log('Failed');
+						foreach($notif_ids as $nid){
+							$args = array (
+								'object_type' 	=> 'order',
+								'object_id'		=> $order_id
+							);
+							WA_Notifier_Notifications::send_triggered_notification($nid, $args);
+						}
+					}
+				)
+			),
+			array(
+				'id'			=> 'refunded_order',
+				'label' 		=> 'Order is refunded',
+				'description'	=> 'When status of an order changes to Refunded.',
+				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'action'		=> array(
+					'hook'		=> 'woocommerce_order_status_refunded',
+					'callback' 	=> function ( $order_id ) {
+						$notif_ids = WA_Notifier_Notification_Triggers::trigger_has_active_notification('refunded_order');
+						if(empty($notif_ids)){
+							return;
+						}
+						error_log('Failed');
 						foreach($notif_ids as $nid){
 							$args = array (
 								'object_type' 	=> 'order',
