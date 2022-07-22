@@ -9,7 +9,10 @@
     "lint:scripts": "eslint resources/scripts",
     "lint:styles": "stylelint \"resources/**/*.{css,scss}\"",
     "test": "npm run -s lint",
-    "zip": "zip -r wa-notifier.zip . -x '*.git*' -x 'node_modules/*' -x 'vendor/*' -x 'resources/*' -x '.*' -x 'composer.*' -x 'package*' -x 'yarn*' -x 'webpack*' -x 'phpcs.xml' -x '*.DS_Store'"
+    "move-to-build": "rsync -av --exclude='build' --exclude='*.git*' --exclude='node_modules' --exclude='vendor' --exclude='resources' --exclude='.*' --exclude='composer.*' --exclude='package*' --exclude='yarn*' --exclude='webpack*' --exclude='phpcs.xml' --exclude='*.DS_Store' * build/wa-notifier; cp -R build/wa-notifier build/wa-notifier-pro;",
+    "create-free-pro": "export LC_ALL=C; find build/wa-notifier/ -type f -exec sed -i '' '/==WA Notifier Pro Code Start==/,/==WA Notifier Pro Code End==/d' {} +; find build/wa-notifier-pro/ -type f -exec sed -i '' '/==WA Notifier Pro Code/d' {} +;",
+    "zip": "zip -r build/wa-notifier.zip build/wa-notifier; zip -r build/wa-notifier-pro.zip build/wa-notifier-pro",
+    "deploy": "rm -r build/*; yarn move-to-build; yarn create-free-pro; yarn zip;"
   },
   "engines": {
     "node": "^16.0.0"

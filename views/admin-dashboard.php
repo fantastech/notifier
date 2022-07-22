@@ -16,7 +16,9 @@ $phone_number_id = get_option( WA_NOTIFIER_PREFIX . 'phone_number_id' );
 $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details');
 ?>
 <div class="wrap wa-notifier">
+
 	<h1>Dashboard</h1>
+
 	<div class="wa-notifier-wrapper">
 
 		<?php if('accepted' != $disclaimer || $show_disclaimer) : ?>
