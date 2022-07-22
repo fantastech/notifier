@@ -34,8 +34,13 @@ class WA_Notifier_Settings {
 	private static function settings_fields() {
 		$settings = array(
 			array(
+				'title'			=> 'WhastApp Configuration',
+				'description'	=> '',
+				'type'			=> 'title',
+			),
+			array(
 				'id' 			=> 'phone_number_id',
-				'title'			=> 'WhastApp Phone Number ID',
+				'title'			=> 'Phone Number ID',
 				'description'	=> '',
 				'type'			=> 'text',
 				'default'		=> '',
@@ -43,7 +48,7 @@ class WA_Notifier_Settings {
 			),
 			array(
 				'id' 			=> 'business_account_id',
-				'title'			=> 'WhatsApp Business Account ID',
+				'title'			=> 'Business Account ID',
 				'description'	=> '',
 				'type'			=> 'text',
 				'default'		=> '',
@@ -86,10 +91,11 @@ class WA_Notifier_Settings {
 			$html .= '<tr><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
 			$html .= '<p>' . $field['description'] . '</p></th></tr>';
 		}
-
-		$html .= '<tr>';
-		$html .= '<th>'.$field['title'].'</th>';
-		$html .= '<td>';
+		else{
+			$html .= '<tr>';
+			$html .= '<th>'.$field['title'].'</th>';
+			$html .= '<td>';
+		}
 
 		switch( $field['type'] ) {
 
@@ -180,8 +186,9 @@ class WA_Notifier_Settings {
 		if( $field['description'] != '') {
 			$html .= '<p class="description">' . $field['description'] . '</p>';
 		}
-
-		$html .= '</td></tr>';
+		if( $field['type'] != 'title') {
+			$html .= '</td></tr>';
+		}
 
 		echo $html;
 	}
