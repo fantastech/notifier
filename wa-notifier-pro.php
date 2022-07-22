@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       WA Notifier - Send Broadcast & Transational Notifications on WhatsApp
+ * Plugin Name:       WA Notifier Pro - Send Broadcast & Transational Notifications on WhatsApp
  * Plugin URI:        https://wanotifier.com
  * Description:       Send bulk WhatsApp broadcast messages or transactional notifications to your contacts and Woocommerce customers using WhatsApp's Cloud API.
  * Version:           0.1
