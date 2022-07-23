@@ -1,5 +1,4 @@
 /* global waNotifier */
-require('select2');
 (function($) {
 
 	// Show / hide fields as per conditional logic
@@ -164,6 +163,7 @@ require('select2');
 
 	// Render message preview
 	function renderMessagePreview(previewData) {
+		messageTemplatePreviewData = previewData;
 		// Header
 		switch (previewData.header_type) {
 			case 'text':
@@ -260,7 +260,9 @@ require('select2');
 		const post_id = $('#post_ID').val() || 0;
 		const notification_type = $('#wa_notifier_notification_type').val() || '';
 		const trigger = $('#wa_notifier_notification_trigger').val() || '';
+		/* ==WA_Notifier_Pro_Code_Start== */
 		$('.variables-mapping-fields').html('<div class="loader"></div>');
+		/* ==WA_Notifier_Pro_Code_End== */
 		$.ajax({
 			type: 'post',
 			dataType: 'json',
@@ -276,8 +278,10 @@ require('select2');
 				if (response.status == 'success') {
 					$('#wa-notifier-message-template-preview').removeClass('hide').addClass('d-block');
 					renderMessagePreview(response.data);
+					/* ==WA_Notifier_Pro_Code_Start== */
 					// Add variable mapping fields
 					$('.variables-mapping-fields').html(response.variable_mapping_html);
+					/* ==WA_Notifier_Pro_Code_End== */
 				}
 			},
 		});
@@ -298,6 +302,8 @@ require('select2');
 	}
 
 	$(document).on('ready', function() {
+
+		window.messageTemplatePreviewData = {};
 
 		/*****************
 		 * Dashboard page
@@ -372,6 +378,13 @@ require('select2');
 				alert('Body text is a required field.');
 				return false;
 			}
+			/* ==WA_Notifier_Free_Code_Start== */
+			var header_text = $('#wa_notifier_header_text').val() || '';
+			if(header_text.match(/{{.*?}}/g) !== null || body_text.match(/{{.*?}}/g) !== null) {
+				alert('Free version of the plugin does not support variables. Please remove variables like {{}} and try again.');
+				return false;
+			}
+			/* ==WA_Notifier_Free_Code_End== */
 			return confirm('IMPORTANT NOTE:\n\nClicking "OK" will send your template data to WhatsApp for approval. It might take between 30 minutes to 24 hours for them to review it.\n\nYou\'ll get confirmation email from them after they complete their review. You will be able to send this template to your contacts only after their approval.');
 		});
 
@@ -384,6 +397,7 @@ require('select2');
 		var refresh_mt_status_template = $('#refresh_mt_status').html().trim();
 		$('.edit-php.post-type-wa_message_template .wrap .page-title-action').after(refresh_mt_status_template);
 
+		/* ==WA_Notifier_Pro_Code_Start== */
 		// Add variable
 		let bodyVar = 0;
 		$('.add-variable').on('click', function(e){
@@ -418,7 +432,7 @@ require('select2');
 			}
 			fetcDataAndPreviewTemplate();
 		});
-
+		/* ==WA_Notifier_Pro_Code_End== */
 		/***************
 		 * Contact page
 		 **************/
@@ -566,6 +580,15 @@ require('select2');
 					return false;
 				}
 			}
+
+			/* ==WA_Notifier_Free_Code_Start== */
+			var header_text = messageTemplatePreviewData.header_text || '';
+			var body_text = messageTemplatePreviewData.body_text || '';
+			if(header_text.match(/{{.*?}}/g) !== null || body_text.match(/{{.*?}}/g) !== null) {
+				alert('Free version of the plugin does not support sending message templates with variables. Please select a message template that does not use variables.');
+				return false;
+			}
+			/* ==WA_Notifier_Free_Code_End== */
 		});
 
 		// Add new Notification Send To receiver fields row

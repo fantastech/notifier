@@ -138,15 +138,47 @@ class WA_Notifier {
 		if(!self::is_wa_notifier_page()){
 			return;
 		}
-		wp_enqueue_style( WA_NOTIFIER_NAME . '-admin-css', WA_NOTIFIER_URL . 'assets/css/admin.css' );
-    	wp_enqueue_script( WA_NOTIFIER_NAME . '-admin-js', WA_NOTIFIER_URL . 'assets/js/admin.js' );
-    	wp_localize_script( WA_NOTIFIER_NAME . '-admin-js', 'waNotifier',
+
+    	// Select2
+    	wp_enqueue_script(
+    		WA_NOTIFIER_NAME . '-select2-js',
+    		WA_NOTIFIER_URL . 'assets/js/select2.min.js',
+    		array('jquery'),
+    		WA_NOTIFIER_VERSION,
+    		true
+    	);
+    	// Date / time picker
+    	wp_enqueue_script( 'jquery-ui-datepicker' );
+    	wp_enqueue_script(
+    		WA_NOTIFIER_NAME . '-timepicker-addon',
+    		WA_NOTIFIER_URL . 'assets/js/jquery-ui-timepicker-addon.min.js',
+    		array( 'jquery-ui-datepicker' ),
+    		WA_NOTIFIER_VERSION,
+    		true
+    	);
+    	// Admin JS file
+    	wp_enqueue_script(
+    		WA_NOTIFIER_NAME . '-admin-js',
+    		WA_NOTIFIER_URL . 'assets/js/admin.js',
+    		array('jquery'),
+    		WA_NOTIFIER_VERSION,
+    		true
+    	);
+    	wp_localize_script(
+    		WA_NOTIFIER_NAME . '-admin-js',
+    		'waNotifier',
     		apply_filters( 'wa_notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
     	);
 
-    	// Date / time picker
-    	wp_enqueue_script('jquery-ui-datepicker');
-	    wp_enqueue_style( WA_NOTIFIER_NAME . '-datepicker-style', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
+    	// Styles
+    	wp_enqueue_style(
+	    	WA_NOTIFIER_NAME . '-datepicker-style',
+	    	'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
+	    );
+	    wp_enqueue_style(
+	    	WA_NOTIFIER_NAME . '-admin-css',
+	    	WA_NOTIFIER_URL . 'assets/css/admin.css'
+	    );
 	}
 
 	/**

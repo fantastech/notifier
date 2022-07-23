@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name:       WA Notifier Pro - Send Broadcast & Transational Notifications on WhatsApp
- * Plugin URI:        https://wanotifier.com
- * Description:       Send bulk WhatsApp broadcast messages or transactional notifications to your contacts and Woocommerce customers using WhatsApp's Cloud API.
- * Version:           0.1
- * Author:            WANotifier.com
- * Author URI:        https://wanotifier.com
- * Text Domain:       wp-whatsapp-notifications
+ * Plugin Name: WA Notifier Pro
+ * Plugin URI: https://wanotifier.com
+ * Description: Send bulk broadcast messages or transactional notifications to your contacts and Woocommerce customers on WhatsApp using their offical Cloud API.
+ * Version: 0.1
+ * Author: WANotifier.com
+ * Author URI: https://wanotifier.com
+ * Text Domain: wa-notifier
  * Requires at least: 5.7
- * Requires PHP:      7.4
+ * Requires PHP: 7.4
  */
 
 // If this file is called directly, abort.
@@ -16,6 +16,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+/**
+ * Define constants
+ */
 if ( ! defined( 'WA_NOTIFIER_FILE' ) ) {
    define( 'WA_NOTIFIER_FILE', __FILE__ );
 }

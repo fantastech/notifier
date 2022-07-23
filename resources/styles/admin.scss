@@ -10,4 +10,5 @@
 @import "layouts/notifications";
 @import "layouts/settings";
 
-@import "../../node_modules/select2/src/scss/core";
+@import "select2.min.css";
+@import "jquery-ui-timepicker-addon.min.css";

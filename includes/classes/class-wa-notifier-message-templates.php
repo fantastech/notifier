@@ -27,7 +27,9 @@ class WA_Notifier_Message_Templates {
 		add_action( 'admin_head', array(__CLASS__, 'handle_refresh_status_request') );
 		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 		add_action( 'wa_notifier_refresh_mt_status', array(__CLASS__, 'refresh_mt_status') );
+		/* ==WA_Notifier_Pro_Code_Start== */
 		add_action( 'wa_notifier_after_meta_field', array(__CLASS__, 'add_variable_button'), 10, 2 );
+		/* ==WA_Notifier_Pro_Code_End== */
 	}
 
 	/**
@@ -629,6 +631,7 @@ class WA_Notifier_Message_Templates {
 		}
 	}
 
+	/* ==WA_Notifier_Pro_Code_Start== */
 	/**
 	 * Add variable button to heading and body text fields.
 	 */
@@ -641,5 +644,5 @@ class WA_Notifier_Message_Templates {
 		}
 		return;
 	}
-
+	/* ==WA_Notifier_Pro_Code_End== */
 }

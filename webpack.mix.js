@@ -9,7 +9,5 @@ mix
   .options({ processCssUrls: false });
 
 mix
-  .js('resources/scripts/admin.js', 'js');
-
-mix
+ .copyDirectory('resources/scripts', 'assets/js')
  .copyDirectory('resources/images', 'assets/images');

@@ -76,13 +76,15 @@ class WA_Notifier_Settings {
 
 		$html = '';
 
-		$option_name = WA_NOTIFIER_PREFIX . $field['id'];
-		$option = get_option( $option_name );
+		if(isset($field['id'])){
+			$option_name = WA_NOTIFIER_PREFIX . $field['id'];
+			$option = get_option( $option_name );
+		}
 
 		$data = '';
 		if( isset( $field['default'] ) ) {
 			$data = $field['default'];
-			if( $option ) {
+			if( isset( $option ) ) {
 				$data = $option;
 			}
 		}
