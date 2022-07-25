@@ -82,7 +82,7 @@ else {
 		<h3>Header <span class="optional-text">(Optional)</span></h3>
 		<p class="description">Add a title that you want to show in message header.</p>
 		<div class="d-flex">
-			<div class="col w-50">
+			<div class="col w-100">
 				<?php
 				wa_notifier_wp_select(
 					array(
@@ -91,15 +91,16 @@ else {
 						'label'             => 'Header Type',
 						'description'       => 'Select the header type.',
 						'options'           => array (
-							'none' => 'None',
-							'text' => 'Text',
+							'none' 	=> 'None',
+							'text' 	=> 'Text',
+							'media'	=> 'Media'
 						),
 						'custom_attributes' => $disabled
 					)
 				);
 				?>
 			</div>
-			<div class="col w-50">
+			<div class="col w-100">
 				<?php
 				wa_notifier_wp_text_input(
 					array(
@@ -120,7 +121,7 @@ else {
 				);
 				?>
 			</div>
-			<div class="col w-50 hide">
+			<div class="col w-50">
 				<?php
 				wa_notifier_wp_select(
 					array(
@@ -133,21 +134,35 @@ else {
 							'VIDEO' => 'Video',
 							'DOCUMENT' => 'Document'
 						),
-						'custom_attributes' => $disabled
+						'custom_attributes' => $disabled,
+						'conditional_logic'		=> array (
+							array (
+								'field'		=> WA_NOTIFIER_PREFIX . 'header_type',
+								'operator'	=> '==',
+								'value'		=> 'media'
+							)
+						)
 					)
 				);
 				?>
 			</div>
-			<div class="col w-50 hide">
+			<div class="col w-50">
 				<?php
 				wa_notifier_wp_text_input(
 					array(
 						'id'                => WA_NOTIFIER_PREFIX . 'media_url',
 						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'media_url', true),
-						'label'             => 'Media URL',
-						'description'       => '',
+						'label'             => 'Example Media URL',
+						'description'       => 'Provide example media URL for WhatsApp to check if it meets their guidelines.',
 						'data_type'         => 'url',
-						'custom_attributes' => $disabled
+						'custom_attributes' => $disabled,
+						'conditional_logic'		=> array (
+							array (
+								'field'		=> WA_NOTIFIER_PREFIX . 'header_type',
+								'operator'	=> '==',
+								'value'		=> 'media'
+							)
+						)
 					)
 				);
 				?>
