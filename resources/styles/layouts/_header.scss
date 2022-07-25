@@ -1,9 +1,9 @@
-#wa-notifier-admin-header {
+#notifier-admin-header {
 	@include media-down(mobile) {
 		padding-top: 46px;
 	}
 
-	.wa-notifier-admin-header-content {
+	.notifier-admin-header-content {
 		background: #fff;
 		box-sizing: border-box;
 		width: 100%;

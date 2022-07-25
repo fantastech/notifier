@@ -67,8 +67,8 @@
 			}
 
 			// Enable select2 for notification receiver contact dropdown
-			if($('.wa-notifier-recipient-contact').length > 0){
-				$('.wa-notifier-recipient-contact').each(function (i, obj) {
+			if($('.notifier-recipient-contact').length > 0){
+				$('.notifier-recipient-contact').each(function (i, obj) {
 					if($(obj).closest('.send-to-fields-row-template').length > 0){
 						return;
 					}
@@ -113,17 +113,17 @@
 	// Fetch message template data and generate preview
 	function fetcDataAndPreviewTemplate() {
 		let previewData = {};
-		previewData.header_type = $('#wa_notifier_header_type').val();
-		previewData.header_text = $('#wa_notifier_header_text').val() || 'Header text here';
-		previewData.body_text = $('#wa_notifier_body_text').val() || 'Body text here';
-		previewData.footer_text = $('#wa_notifier_footer_text').val() || '';
-		previewData.button_type = $('#wa_notifier_button_type').val();
+		previewData.header_type = $('#notifier_header_type').val();
+		previewData.header_text = $('#notifier_header_text').val() || 'Header text here';
+		previewData.body_text = $('#notifier_body_text').val() || 'Body text here';
+		previewData.footer_text = $('#notifier_footer_text').val() || '';
+		previewData.button_type = $('#notifier_button_type').val();
 
-		previewData.button_num = $('input[name="wa_notifier_button_num"]:checked').val();
+		previewData.button_num = $('input[name="notifier_button_num"]:checked').val();
 
-		previewData.button_1_type = $('#wa_notifier_button_1_type :selected').val();
-		previewData.button_1_text = $('#wa_notifier_button_1_text').val() || '';
-		previewData.button_2_text = $('#wa_notifier_button_2_text').val() || '';
+		previewData.button_1_type = $('#notifier_button_1_type :selected').val();
+		previewData.button_1_text = $('#notifier_button_1_text').val() || '';
+		previewData.button_2_text = $('#notifier_button_2_text').val() || '';
 
 		// Button
 		if (previewData.button_type != 'none') {
@@ -138,13 +138,13 @@
 			}
 
 			if (previewData.button_num == '1') {
-				$('#wa_notifier_button_1_type option').prop('disabled', false);
-				$('#wa_notifier_button_2_type option').prop('disabled', false);
+				$('#notifier_button_1_type option').prop('disabled', false);
+				$('#notifier_button_2_type option').prop('disabled', false);
 			} else {
-				$('#wa_notifier_button_1_type option').not('option[value="' + previewData.button_1_type + '"]').prop('disabled', true);
-				$('#wa_notifier_button_2_type option').not('option[value="' + previewData.button_1_type + '"]').prop('selected', true);
-				$('#wa_notifier_button_2_type option[value="' + previewData.button_1_type + '"]').prop('disabled', true);
-				previewData.button_2_type = $('#wa_notifier_button_2_type :selected').val();
+				$('#notifier_button_1_type option').not('option[value="' + previewData.button_1_type + '"]').prop('disabled', true);
+				$('#notifier_button_2_type option').not('option[value="' + previewData.button_1_type + '"]').prop('selected', true);
+				$('#notifier_button_2_type option[value="' + previewData.button_1_type + '"]').prop('disabled', true);
+				previewData.button_2_type = $('#notifier_button_2_type :selected').val();
 				if (previewData.button_2_type == 'URL') {
 					if (previewData.button_2_text == '') {
 						previewData.button_2_text = 'Visit Website';
@@ -223,8 +223,8 @@
 	// Fetch and display send to fields
 	function fetchAndDisplaySendToFields() {
 		const post_id = $('#post_ID').val() || 0;
-		const notification_type = $('#wa_notifier_notification_type').val() || '';
-		const trigger = $('#wa_notifier_notification_trigger').val() || '';
+		const notification_type = $('#notifier_notification_type').val() || '';
+		const trigger = $('#notifier_notification_trigger').val() || '';
 
 		if('marketing' == notification_type) {
 			return;
@@ -252,17 +252,17 @@
 
 	// Fetch and display message template
 	function fetchAndDisplayMessageTemplate() {
-		const template_id = $('#wa_notifier_notification_message_template :selected').val();
+		const template_id = $('#notifier_notification_message_template :selected').val();
 		if (template_id == '') {
-			$('#wa-notifier-message-template-preview').removeClass('d-block').addClass('hide');
+			$('#notifier-message-template-preview').removeClass('d-block').addClass('hide');
 			return false;
 		}
 		const post_id = $('#post_ID').val() || 0;
-		const notification_type = $('#wa_notifier_notification_type').val() || '';
-		const trigger = $('#wa_notifier_notification_trigger').val() || '';
-		/* ==WA_Notifier_Pro_Code_Start== */
+		const notification_type = $('#notifier_notification_type').val() || '';
+		const trigger = $('#notifier_notification_trigger').val() || '';
+		/* ==Notifier_Pro_Code_Start== */
 		$('.variables-mapping-fields').html('<div class="loader"></div>');
-		/* ==WA_Notifier_Pro_Code_End== */
+		/* ==Notifier_Pro_Code_End== */
 		$.ajax({
 			type: 'post',
 			dataType: 'json',
@@ -276,12 +276,12 @@
 			},
 			success: function(response) {
 				if (response.status == 'success') {
-					$('#wa-notifier-message-template-preview').removeClass('hide').addClass('d-block');
+					$('#notifier-message-template-preview').removeClass('hide').addClass('d-block');
 					renderMessagePreview(response.data);
-					/* ==WA_Notifier_Pro_Code_Start== */
+					/* ==Notifier_Pro_Code_Start== */
 					// Add variable mapping fields
 					$('.variables-mapping-fields').html(response.variable_mapping_html);
-					/* ==WA_Notifier_Pro_Code_End== */
+					/* ==Notifier_Pro_Code_End== */
 				}
 			},
 		});
@@ -289,8 +289,8 @@
 
 	// Notifications page - change save button text
 	function updateNotificationSaveButtonText() {
-		var type = $('#wa_notifier_notification_type :checked').val();
-		var when = $('#wa_notifier_notification_when :checked').val();
+		var type = $('#notifier_notification_type :checked').val();
+		var when = $('#notifier_notification_when :checked').val();
 		var btnText = '';
 		if(type == 'transactional'){
 			btnText = 'Save';
@@ -316,10 +316,10 @@
 		});
 
 		// Highlight menu items
-		const wan_menu_elem = $('#toplevel_page_wa-notifier');
-		const wa_notifier_cpts = ['wa_message_template', 'wa_contact', 'wa_notification'];
-		const current_cpt = $('#wa-notifier-admin-header').data('post-type') || '';
-		if (wa_notifier_cpts.includes(current_cpt)) {
+		const wan_menu_elem = $('#toplevel_page_notifier');
+		const notifier_cpts = ['wa_message_template', 'wa_contact', 'wa_notification'];
+		const current_cpt = $('#notifier-admin-header').data('post-type') || '';
+		if (notifier_cpts.includes(current_cpt)) {
 			wan_menu_elem
 				.removeClass('wp-not-current-submenu')
 				.addClass('wp-has-current-submenu')
@@ -334,8 +334,8 @@
 		 *************************/
 
 		// Make the WhatsApp preview sidebar sticky
-		if ($('#wa-notifier-message-template-preview').length > 0) {
-			var wa_preview = $('#wa-notifier-message-template-preview');
+		if ($('#notifier-message-template-preview').length > 0) {
+			var wa_preview = $('#notifier-message-template-preview');
 			var wa_preview_top = wa_preview.offset().top - 50;
 			var wa_preview_width = wa_preview.width();
 			wa_preview.width(wa_preview_width);
@@ -349,23 +349,23 @@
 		}
 
 		// Validate the message template name
-		$('#wa_notifier_template_name').on('keyup', function() {
+		$('#notifier_template_name').on('keyup', function() {
 			var value = $(this).val();
 			$(this).val(value.replace(' ', '_').replace(/[^a-zA-Z_]/g, '').toLowerCase());
 		});
 
 		// Trigger conditional logic and WhatsApp message template preview
-		if ($('#wa-notifier-message-template-data').length > 0) {
+		if ($('#notifier-message-template-data').length > 0) {
 			fetcDataAndPreviewTemplate();
-			$('#wa-notifier-message-template-data :input').on('change keyup', function() {
+			$('#notifier-message-template-data :input').on('change keyup', function() {
 				fetcDataAndPreviewTemplate();
 			});
 		}
 
 		// Message template publish confirmation
 		$('.post-type-wa_message_template #publish').on('click', function() {
-			const template_name = $('#wa_notifier_template_name').val() || '';
-			const body_text = $('#wa_notifier_body_text').val() || '';
+			const template_name = $('#notifier_template_name').val() || '';
+			const body_text = $('#notifier_body_text').val() || '';
 			if ('' === template_name && '' === body_text) {
 				alert('Template name and Body text are required fields.');
 				return false;
@@ -378,13 +378,13 @@
 				alert('Body text is a required field.');
 				return false;
 			}
-			/* ==WA_Notifier_Free_Code_Start== */
-			var header_text = $('#wa_notifier_header_text').val() || '';
+			/* ==Notifier_Free_Code_Start== */
+			var header_text = $('#notifier_header_text').val() || '';
 			if(header_text.match(/{{.*?}}/g) !== null || body_text.match(/{{.*?}}/g) !== null) {
 				alert('Free version of the plugin does not support variables. Please remove variables like {{}} and try again.');
 				return false;
 			}
-			/* ==WA_Notifier_Free_Code_End== */
+			/* ==Notifier_Free_Code_End== */
 			return confirm('IMPORTANT NOTE:\n\nClicking "OK" will send your template data to WhatsApp for approval. It might take between 30 minutes to 24 hours for them to review it.\n\nYou\'ll get confirmation email from them after they complete their review. You will be able to send this template to your contacts only after their approval.');
 		});
 
@@ -397,14 +397,14 @@
 		var refresh_mt_status_template = $('#refresh_mt_status').html().trim();
 		$('.edit-php.post-type-wa_message_template .wrap .page-title-action').after(refresh_mt_status_template);
 
-		/* ==WA_Notifier_Pro_Code_Start== */
+		/* ==Notifier_Pro_Code_Start== */
 		// Add variable
 		let bodyVar = 0;
 		$('.add-variable').on('click', function(e){
 			e.preventDefault();
 			var type = $(this).data('type');
 			if('header' == type) {
-				var header_text = $('#wa_notifier_header_text').val();
+				var header_text = $('#notifier_header_text').val();
 				var res_header = header_text.match(/{{.*?}}/g);
 				if(res_header === null) {
 					header_text = header_text + ' {{1}}';
@@ -412,10 +412,10 @@
 				else {
 					header_text = header_text.replace(/{{.*?}}/g, '{{1}}');
 				}
-				$('#wa_notifier_header_text').val(header_text).focus();
+				$('#notifier_header_text').val(header_text).focus();
 			}
 			if('body' == type) {
-				var body_text = $('#wa_notifier_body_text').val();
+				var body_text = $('#notifier_body_text').val();
 				var res = body_text.match(/{{.*?}}/g);
 				if(res === null) {
 					bodyVar = 1;
@@ -428,11 +428,11 @@
 						x++;
 					});
 				}
-				$('#wa_notifier_body_text').val(body_text + ' {{'+bodyVar+'}}').focus();
+				$('#notifier_body_text').val(body_text + ' {{'+bodyVar+'}}').focus();
 			}
 			fetcDataAndPreviewTemplate();
 		});
-		/* ==WA_Notifier_Pro_Code_End== */
+		/* ==Notifier_Pro_Code_End== */
 		/***************
 		 * Contact page
 		 **************/
@@ -456,12 +456,12 @@
 
 		// On submission of CSV import form
 		$(document).on('submit', '#import-contacts-csv', function() {
-			var file = $('#wa-notifier-contacts-csv').val();
+			var file = $('#notifier-contacts-csv').val();
 			if (file == '') {
 				alert('Please select a file to upload.');
 				return false;
 			} else {
-				var file_size = $('#wa-notifier-contacts-csv')[0].files[0].size / 1024 / 1024;
+				var file_size = $('#notifier-contacts-csv')[0].files[0].size / 1024 / 1024;
 				if (file_size > 24) {
 					alert('Please select CSV file smaller than 24MB.');
 					return false;
@@ -469,7 +469,7 @@
 				var allowedExtension = /(\.csv)$/i;
 				if (!allowedExtension.exec(file)) {
 					alert('Please select a CSV file.');
-					$('#wa-notifier-contacts-csv').val('');
+					$('#notifier-contacts-csv').val('');
 					return false;
 				}
 			}
@@ -486,9 +486,9 @@
 
 		// Contact publish confirmation
 		$('.post-type-wa_contact #publish').on('click', function() {
-			const first_name = $('#wa_notifier_first_name').val() || '';
-			const last_name = $('#wa_notifier_last_name').val() || '';
-			const wa_number = $('#wa_notifier_wa_number').val() || '';
+			const first_name = $('#notifier_first_name').val() || '';
+			const last_name = $('#notifier_last_name').val() || '';
+			const wa_number = $('#notifier_wa_number').val() || '';
 
 			if (first_name == '' || last_name == '' || wa_number == '') {
 				alert('First Name, Last Name and Phone Number are required fields.');
@@ -501,25 +501,25 @@
 		 ********************/
 
 		// Do stuff if on the notification edit page
-		if ($('#wa-notifier-notification-data').length > 0) {
+		if ($('#notifier-notification-data').length > 0) {
 			updateNotificationSaveButtonText(); // Update button text as per user selection
 			fetchAndDisplaySendToFields(); // Fetch and display send to fields
 			fetchAndDisplayMessageTemplate(); // Fetch and display message template preview + variable mapping fields
-			$('#wa-notifier-notification-data :input').on('change keyup', function(){
+			$('#notifier-notification-data :input').on('change keyup', function(){
 				updateNotificationSaveButtonText();
 
-				if('wa_notifier_notification_trigger' == $(this).attr('name')){
+				if('notifier_notification_trigger' == $(this).attr('name')){
 					fetchAndDisplaySendToFields();
 					fetchAndDisplayMessageTemplate();
 				}
 
-				if('wa_notifier_notification_message_template' == $(this).attr('name')){
+				if('notifier_notification_message_template' == $(this).attr('name')){
 					fetchAndDisplayMessageTemplate();
 				}
 			});
 
 			var dateToday = new Date();
-			$('#wa_notifier_notification_datetime').datetimepicker({
+			$('#notifier_notification_datetime').datetimepicker({
 				minDate: dateToday,
 				defaultDate: 1,
 			});
@@ -527,22 +527,22 @@
 
 		// Notification publish confirmation
 		$('.post-type-wa_notification #publish').on('click', function() {
-			const type = $('#wa_notifier_notification_type').val() || '';
-			const template_name = $('#wa_notifier_notification_message_template').val() || '';
+			const type = $('#notifier_notification_type').val() || '';
+			const template_name = $('#notifier_notification_message_template').val() || '';
 
 			if ('' === type) {
 				alert('Please select a notification type.');
 				return false;
 			}
 			else if ('transactional' == type) {
-				const trigger = $('#wa_notifier_notification_trigger :selected').val() || '';
+				const trigger = $('#notifier_notification_trigger :selected').val() || '';
 				if ('' === trigger) {
 					alert('Please select a trigger.');
 					return false;
 				}
 
 				var recipientMissing = false;
-				$('.wa-notifier-recipient').each(function(){
+				$('.notifier-recipient').each(function(){
 					const recipient = $('option:selected',this).val() || '';
 					if($(this).is(':visible') && '' == recipient){
 						recipientMissing = true;
@@ -555,7 +555,7 @@
 				}
 			}
 			else if ('marketing' == type) {
-				const list = $('#wa_notifier_notification_list :selected').val() || '';
+				const list = $('#notifier_notification_list :selected').val() || '';
 				if ('' === list) {
 					alert('Please select a contact list.');
 					return false;
@@ -567,9 +567,9 @@
 				return false;
 			}
 
-			if( $('.wa-notifier-variable-mapping').length > 0 ){
+			if( $('.notifier-variable-mapping').length > 0 ){
 				var recipientValue = false;
-				$('.wa-notifier-variable-mapping').each(function(){
+				$('.notifier-variable-mapping').each(function(){
 					const value = $('option:selected',this).val() || '';
 					if($(this).is(':visible') && '' == value){
 						recipientValue = true;
@@ -581,14 +581,14 @@
 				}
 			}
 
-			/* ==WA_Notifier_Free_Code_Start== */
+			/* ==Notifier_Free_Code_Start== */
 			var header_text = messageTemplatePreviewData.header_text || '';
 			var body_text = messageTemplatePreviewData.body_text || '';
 			if(header_text.match(/{{.*?}}/g) !== null || body_text.match(/{{.*?}}/g) !== null) {
 				alert('Free version of the plugin does not support sending message templates with variables. Please select a message template that does not use variables.');
 				return false;
 			}
-			/* ==WA_Notifier_Free_Code_End== */
+			/* ==Notifier_Free_Code_End== */
 		});
 
 		// Add new Notification Send To receiver fields row
@@ -613,9 +613,9 @@
 		var wpcontent_top = $('#wpcontent').offset().top;
 		$(window).scroll( function() {
 			if (window.pageYOffset > wpcontent_top) {
-				$('#wa-notifier-admin-header').addClass('sticky');
+				$('#notifier-admin-header').addClass('sticky');
 			} else {
-				$('#wa-notifier-admin-header').removeClass('sticky');
+				$('#notifier-admin-header').removeClass('sticky');
 			}
 		});
 

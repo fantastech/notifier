@@ -4,7 +4,7 @@
  *
  * @package    Wa_Notifier
  */
-class WA_Notifier_Notification_Merge_Tags extends WA_Notifier_Notifications {
+class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 
 	public $merge_tags = array();
 
@@ -12,9 +12,9 @@ class WA_Notifier_Notification_Merge_Tags extends WA_Notifier_Notifications {
 	 * Init.
 	 */
 	public static function init() {
-		add_filter( 'wa_notifier_notification_merge_tags', array(__CLASS__, 'post_merge_tags') );
-		add_filter( 'wa_notifier_notification_merge_tags', array(__CLASS__, 'comment_merge_tags') );
-		add_filter( 'wa_notifier_notification_merge_tags', array(__CLASS__, 'user_merge_tags') );
+		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'post_merge_tags') );
+		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'comment_merge_tags') );
+		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'user_merge_tags') );
 	}
 
 	/**
@@ -81,7 +81,7 @@ class WA_Notifier_Notification_Merge_Tags extends WA_Notifier_Notifications {
 			),
 		);
 
-		$merge_tags = apply_filters('wa_notifier_notification_merge_tags', $merge_tags);
+		$merge_tags = apply_filters('notifier_notification_merge_tags', $merge_tags);
 
 		$final_merge_tags = array();
 
@@ -350,7 +350,7 @@ class WA_Notifier_Notification_Merge_Tags extends WA_Notifier_Notifications {
 	 * Return notification merge tags for supplied trigger
 	 */
 	public static function get_notification_merge_tags($trigger) {
-		$main_triggers = WA_Notifier_Notification_Triggers::get_notification_triggers();
+		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
 		foreach($main_triggers as $key => $triggers) {
 			foreach($triggers as $t) {
 				if( $trigger == $t['id'] ) {

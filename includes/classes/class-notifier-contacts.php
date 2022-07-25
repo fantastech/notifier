@@ -4,7 +4,7 @@
  *
  * @package    Wa_Notifier
  */
-class WA_Notifier_Contacts {
+class Notifier_Contacts {
 
 	/**
 	 * Init.
@@ -20,9 +20,9 @@ class WA_Notifier_Contacts {
 		add_action( 'manage_wa_contact_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
 		add_action( 'save_post_wa_contact', array(__CLASS__, 'save_meta'), 10, 2 );
 		add_filter( 'post_updated_messages', array(__CLASS__, 'update_save_messages') );
-		add_filter( 'wa_notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
-		add_filter( 'admin_post_wa_notifier_import_contacts_csv', array( __CLASS__ , 'import_contacts_csv') );
-		add_filter( 'admin_post_wa_notifier_import_contacts_woocommerce', array( __CLASS__ , 'import_contacts_woocommerce') );
+		add_filter( 'notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
+		add_filter( 'admin_post_notifier_import_contacts_csv', array( __CLASS__ , 'import_contacts_csv') );
+		add_filter( 'admin_post_notifier_import_contacts_woocommerce', array( __CLASS__ , 'import_contacts_woocommerce') );
 		add_action( 'admin_notices', array( __CLASS__, 'show_admin_notices') );
 	}
 
@@ -30,20 +30,20 @@ class WA_Notifier_Contacts {
 	 * Register custom post type
 	 */
 	public static function register_cpt () {
-		wa_notifier_register_post_type ( 'wa_contact', 'Contact', 'Contacts' );
-		wa_notifier_register_taxonomy ( 'wa_contact_list', 'Contact List', 'Contact Lists', 'wa_contact' , array( 'hierarchical' => true, 'default_term' => array('name' => 'Default List', 'slug' => 'default_list') ) );
-		wa_notifier_register_taxonomy ( 'wa_contact_tag', 'Contact Tag', 'Contact Tags', 'wa_contact' );
+		notifier_register_post_type ( 'wa_contact', 'Contact', 'Contacts' );
+		notifier_register_taxonomy ( 'wa_contact_list', 'Contact List', 'Contact Lists', 'wa_contact' , array( 'hierarchical' => true, 'default_term' => array('name' => 'Default List', 'slug' => 'default_list') ) );
+		notifier_register_taxonomy ( 'wa_contact_tag', 'Contact Tag', 'Contact Tags', 'wa_contact' );
 	}
 	
 	/**
 	 * Add page to admin menu
 	 */
 	public static function setup_admin_page () {
-		$api_credentials_validated = get_option( WA_NOTIFIER_PREFIX . 'api_credentials_validated');
+		$api_credentials_validated = get_option( NOTIFIER_PREFIX . 'api_credentials_validated');
 		if(!$api_credentials_validated) {
 			return;
 		}
-		add_submenu_page( WA_NOTIFIER_NAME, 'Contacts', 'Contacts', 'manage_options', 'edit.php?post_type=wa_contact' );
+		add_submenu_page( NOTIFIER_NAME, 'Contacts', 'Contacts', 'manage_options', 'edit.php?post_type=wa_contact' );
 	}
 
 	/**
@@ -51,9 +51,9 @@ class WA_Notifier_Contacts {
 	 */
 	public static function create_meta_box () {
 		add_meta_box(
-	        WA_NOTIFIER_NAME . '-contact-data',
+	        NOTIFIER_NAME . '-contact-data',
 	        'Contact Details',
-	        'WA_Notifier_Contacts::output',
+	        'Notifier_Contacts::output',
 	        'wa_contact'
 	    );
 
@@ -65,7 +65,7 @@ class WA_Notifier_Contacts {
 	 * Output meta box
 	 */
 	public static function output () {
-		include_once WA_NOTIFIER_PATH . 'views/admin-contacts-meta-box.php';
+		include_once NOTIFIER_PATH . 'views/admin-contacts-meta-box.php';
 	}
 	
 	/**
@@ -94,22 +94,22 @@ class WA_Notifier_Contacts {
 	 */
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'wa_contact_first_name' === $column ) {
-		    $first_name = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', true);
+		    $first_name = get_post_meta( $post_id, NOTIFIER_PREFIX . 'first_name', true);
 		    echo $first_name;
 		}
 
 		if ( 'wa_contact_last_name' === $column ) {
-		    $last_name = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', true);
+		    $last_name = get_post_meta( $post_id, NOTIFIER_PREFIX . 'last_name', true);
 		    echo $last_name;
 		}
 
 		if ( 'wa_contact_phone_number' === $column ) {
-		    $wa_number = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', true);
+		    $wa_number = get_post_meta( $post_id, NOTIFIER_PREFIX . 'wa_number', true);
 		    echo $wa_number;
 		}
 
 		if ( 'wa_contact_associated_user' === $column ) {
-		    $user_id = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'associated_user', true);
+		    $user_id = get_post_meta( $post_id, NOTIFIER_PREFIX . 'associated_user', true);
 		    if($user_id) {
 		    	$user = get_user_by('id', $user_id);
 		    	echo '<a href="'.get_edit_user_link($user_id).'">'.$user->display_name.'</a>';
@@ -168,7 +168,7 @@ class WA_Notifier_Contacts {
 		$contact_data = array();
 
 		foreach ($_POST as $key => $data) {
-			if (strpos($key, WA_NOTIFIER_PREFIX) !== false) {
+			if (strpos($key, NOTIFIER_PREFIX) !== false) {
 				$contact_data[$key] = sanitize_text_field( wp_unslash ($data) );
 			    update_post_meta( $post_id, $key, $contact_data[$key]);
 			}
@@ -205,20 +205,20 @@ class WA_Notifier_Contacts {
 				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="users" <?php echo $disable_woo; ?>> Import from WooCommerce</label>
 				<div class="col-import col-import-csv">
 					<form id="import-contacts-csv" class="contacts-import-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
-						<p><a href="<?php echo WA_NOTIFIER_URL.'contacts-import-sample.csv'; ?>">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. <b>IMPORTANT:</b> In the WhatsApp number column, add phone numbers WITH country codes (but WITHOUT the plus + sign).</p>
-						<p><input type="file" name="wa_notifier_contacts_csv" id="wa-notifier-contacts-csv" /></p>
+						<p><a href="<?php echo NOTIFIER_URL.'contacts-import-sample.csv'; ?>">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. <b>IMPORTANT:</b> In the WhatsApp number column, add phone numbers WITH country codes (but WITHOUT the plus + sign).</p>
+						<p><input type="file" name="notifier_contacts_csv" id="notifier-contacts-csv" /></p>
 						<p><input type="submit" name="upload_csv" value="Import CSV" class="button-primary"></p>
-						<?php wp_nonce_field('wa_notifier_contacts_csv'); ?>
-						<input type="hidden" name="action" value="wa_notifier_import_contacts_csv" />
+						<?php wp_nonce_field('notifier_contacts_csv'); ?>
+						<input type="hidden" name="action" value="notifier_import_contacts_csv" />
 					</form>
 				</div>
 				<div class="col-import col-import-users hide">
 					<form id="import-contacts-users" class="meta-fields contacts-import-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
 						<p>Import contact data (billing name and phone number) from your Woocommerce <a href="admin.php?page=wc-admin&path=%2Fcustomers" target="_blank">customers</a>. Note that the customers with empty or incorrectly filled phone number fields will not be imported.</p>
 						<?php
-							$contact_lists = WA_Notifier_Contacts::get_contact_lists(true, true);
+							$contact_lists = Notifier_Contacts::get_contact_lists(true, true);
 							$contact_lists = array_slice($contact_lists, 0, 1, TRUE) + array('_add_new' => 'Add new list') + array_slice($contact_lists, 1, NULL, TRUE);
-							wa_notifier_wp_select(
+							notifier_wp_select(
 								array(
 									'id'                => 'wa_contact_list_name',
 									'value'             => '',
@@ -227,7 +227,7 @@ class WA_Notifier_Contacts {
 									'options'           => $contact_lists
 								)
 							);
-							wa_notifier_wp_text_input(
+							notifier_wp_text_input(
 								array(
 									'id'                => 'wa_contact_list_name_input',
 									'value'             => '',
@@ -243,7 +243,7 @@ class WA_Notifier_Contacts {
 									),
 								)
 							);
-							wa_notifier_wp_text_input(
+							notifier_wp_text_input(
 								array(
 									'id'                => 'wa_contact_tags',
 									'value'             => '',
@@ -254,8 +254,8 @@ class WA_Notifier_Contacts {
 							);
 						?>
 						<input type="submit" value="Import" class="button-primary">
-						<?php wp_nonce_field('wa_notifier_contacts_users'); ?>
-						<input type="hidden" name="action" value="wa_notifier_import_contacts_woocommerce" />
+						<?php wp_nonce_field('notifier_contacts_users'); ?>
+						<input type="hidden" name="action" value="notifier_import_contacts_woocommerce" />
 					</form>
 				</div>
 			</div>
@@ -270,7 +270,7 @@ class WA_Notifier_Contacts {
 	 */
 	public static function show_user_meta_keys_dropdown ($id = '') {
 		$meta_keys = array_keys( get_user_meta( get_current_user_id() ) );
-		$meta_keys = apply_filters('wa_notifier_user_meta_keys', $meta_keys);
+		$meta_keys = apply_filters('notifier_user_meta_keys', $meta_keys);
 		echo '<select id="'.$id.'" name="'.$id.'">';
 		foreach($meta_keys as $key) {
 			echo '<option value="'.$key.'">'.$key.'</option>';
@@ -282,17 +282,17 @@ class WA_Notifier_Contacts {
 	 * Handle CSV import
 	 */
 	public static function import_contacts_csv() {
-		if(!isset($_FILES['wa_notifier_contacts_csv'])) {
+		if(!isset($_FILES['notifier_contacts_csv'])) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
 
-		if(!check_admin_referer('wa_notifier_contacts_csv')) {
+		if(!check_admin_referer('notifier_contacts_csv')) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
 
-		$tmpName = $_FILES['wa_notifier_contacts_csv']['tmp_name'];
+		$tmpName = $_FILES['notifier_contacts_csv']['tmp_name'];
 		$contact_data = array_map('str_getcsv', file($tmpName));
 		$first_row = $contact_data[0];
 		if($first_row[0] != 'First Name' || $first_row[1] != 'Last Name') {
@@ -321,7 +321,7 @@ class WA_Notifier_Contacts {
 				'numberposts'	=> 1,
 				'meta_query'	=> array(
 				    array(
-						'key'   => WA_NOTIFIER_PREFIX . 'wa_number',
+						'key'   => NOTIFIER_PREFIX . 'wa_number',
 						'value' => $phone_number,
 				    ),
 				)
@@ -343,9 +343,9 @@ class WA_Notifier_Contacts {
 				unset($existing_contact);
 			}
 
-			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', $first_name);
-			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', $last_name);
-			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', $phone_number);
+			update_post_meta( $post_id, NOTIFIER_PREFIX . 'first_name', $first_name);
+			update_post_meta( $post_id, NOTIFIER_PREFIX . 'last_name', $last_name);
+			update_post_meta( $post_id, NOTIFIER_PREFIX . 'wa_number', $phone_number);
 			$term_id = wp_create_term($list, 'wa_contact_list');
 			wp_set_post_terms( $post_id, $term_id, 'wa_contact_list');
 			wp_set_post_terms( $post_id, $tags, 'wa_contact_tag');
@@ -362,7 +362,7 @@ class WA_Notifier_Contacts {
 	 */
 	public static function import_contacts_woocommerce() {
 		global $wpdb;
-		if(!check_admin_referer('wa_notifier_contacts_users')) {
+		if(!check_admin_referer('notifier_contacts_users')) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
@@ -436,7 +436,7 @@ class WA_Notifier_Contacts {
 				'post_status'	=> 'publish',
 				'meta_query'	=> array(
 				    array(
-						'key'   => WA_NOTIFIER_PREFIX . 'wa_number',
+						'key'   => NOTIFIER_PREFIX . 'wa_number',
 						'value' => $phone_number,
 				    ),
 				)
@@ -458,11 +458,11 @@ class WA_Notifier_Contacts {
 				unset($existing_contact);
 			}
 
-			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'first_name', $first_name);
-			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'last_name', $last_name);
-			update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'wa_number', $phone_number);
+			update_post_meta( $post_id, NOTIFIER_PREFIX . 'first_name', $first_name);
+			update_post_meta( $post_id, NOTIFIER_PREFIX . 'last_name', $last_name);
+			update_post_meta( $post_id, NOTIFIER_PREFIX . 'wa_number', $phone_number);
 			if( 0 != $user_id ){
-				update_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'associated_user', $user_id);
+				update_post_meta( $post_id, NOTIFIER_PREFIX . 'associated_user', $user_id);
 			}
 
 			if('_add_new' == $list) {
@@ -517,7 +517,7 @@ class WA_Notifier_Contacts {
  		elseif('2' == $_GET['wa_contacts_import']) {
  			?>
 			<div class="notice notice-error is-dismissible">
-			    <p>There was an error during the import. Please make sure your CSV format matches the <a href="<?php echo WA_NOTIFIER_URL.'/contacts-import-sample.csv'; ?>">sample document</a> format before uploading.</p>
+			    <p>There was an error during the import. Please make sure your CSV format matches the <a href="<?php echo NOTIFIER_URL.'/contacts-import-sample.csv'; ?>">sample document</a> format before uploading.</p>
 			</div>
 			<?php
  		}
@@ -566,9 +566,9 @@ class WA_Notifier_Contacts {
 		}
 
 		foreach ($contacts as $contact_id) {
-			$first_name = get_post_meta( $contact_id, WA_NOTIFIER_PREFIX . 'first_name', true);
-			$last_name = get_post_meta( $contact_id, WA_NOTIFIER_PREFIX . 'last_name', true);
-			$wa_number = get_post_meta( $contact_id, WA_NOTIFIER_PREFIX . 'wa_number', true);
+			$first_name = get_post_meta( $contact_id, NOTIFIER_PREFIX . 'first_name', true);
+			$last_name = get_post_meta( $contact_id, NOTIFIER_PREFIX . 'last_name', true);
+			$wa_number = get_post_meta( $contact_id, NOTIFIER_PREFIX . 'wa_number', true);
 			$contacts_data[$contact_id] = $first_name . ' ' . $last_name . ' (' . $wa_number . ')';
 		}
 

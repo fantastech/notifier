@@ -4,7 +4,7 @@
  *
  * @package    Wa_Notifier
  */
-class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
+class Notifier_Notification_Triggers extends Notifier_Notifications {
 
 	/**
 	 * Init.
@@ -42,7 +42,7 @@ class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
 			 	'id'			=> 'new_post',
 				'label' 		=> 'New post is published',
 				'description'	=> 'Send notification when a new post is published.',
-				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Post') ),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Post') ),
 				'action'		=> array (
 					'hook'		=> 'transition_post_status',
 					'args_num'	=> 3,
@@ -62,7 +62,7 @@ class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
 									'object_type' 	=> 'post',
 									'object_id'		=> $post->ID
 								);
-								WA_Notifier_Notifications::send_triggered_notification($nid, $args);
+								Notifier_Notifications::send_triggered_notification($nid, $args);
 							}
 						}
 					}
@@ -73,7 +73,7 @@ class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
 			 	'id'			=> 'new_comment',
 				'label' 		=> 'New comment is added',
 				'description'	=> 'Send notification when a new comment is added.',
-				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Comment') ),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Comment') ),
 				'action'		=> array (
 					'hook'		=> 'comment_post',
 					'args_num'	=> 3,
@@ -88,7 +88,7 @@ class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
 									'object_type' 	=> 'comment',
 									'object_id'		=> $comment_id
 								);
-								WA_Notifier_Notifications::send_triggered_notification($nid, $args);
+								Notifier_Notifications::send_triggered_notification($nid, $args);
 							}
 						}
 
@@ -99,7 +99,7 @@ class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
 			 	'id'			=> 'new_user',
 				'label' 		=> 'New user is registered',
 				'description'	=> 'Send notification when a new user is created.',
-				'merge_tags' 	=> WA_Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'User') ),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'User') ),
 				'action'		=> array (
 					'hook'		=> 'user_register',
 					'callback' 	=> function ( $user_id ) {
@@ -113,13 +113,13 @@ class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
 								'object_type' 	=> 'user',
 								'object_id'		=> $user_id
 							);
-							WA_Notifier_Notifications::send_triggered_notification($nid, $args);
+							Notifier_Notifications::send_triggered_notification($nid, $args);
 						}
 					}
 				)
 			)
 		);
-		return apply_filters('wa_notifier_notification_triggers', $triggers);
+		return apply_filters('notifier_notification_triggers', $triggers);
 	}
 
 	/**
@@ -138,7 +138,7 @@ class WA_Notifier_Notification_Triggers extends WA_Notifier_Notifications {
 	 * Check whether current trigger has active notification
 	 */
 	public static function trigger_has_active_notification($trigger) {
-		$active_triggers = get_option('wa_notifier_active_triggers');
+		$active_triggers = get_option('notifier_active_triggers');
 
 		$has_active_notification = false;
 

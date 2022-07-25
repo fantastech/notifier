@@ -4,7 +4,7 @@
  *
  * @package    Wa_Notifier
  */
-class WA_Notifier_Settings {
+class Notifier_Settings {
 
 	/**
 	 * Init
@@ -18,54 +18,89 @@ class WA_Notifier_Settings {
 	 * Add settings page to men
 	 */
 	public static function setup_admin_page () {
-		add_submenu_page( WA_NOTIFIER_NAME, 'WA FIlter Settings', 'Settings', 'manage_options', WA_NOTIFIER_NAME . '-settings', array( __CLASS__, 'output' ) );
+		add_submenu_page( NOTIFIER_NAME, 'WA FIlter Settings', 'Settings', 'manage_options', NOTIFIER_NAME . '-settings', array( __CLASS__, 'output' ) );
 	}
 
 	/**
 	 * Output
 	 */
 	public static function output() {
-        include_once WA_NOTIFIER_PATH . '/views/admin-settings.php';
+        include_once NOTIFIER_PATH . '/views/admin-settings.php';
+	}
+
+	/**
+	 * Get settings tabs
+	 */
+	private static function get_settings_tabs() {
+		$tabs = array(
+			'profile' 		=> 'WhatsApp Profile',
+			'general'		=> 'General',
+			'api' 			=> 'Configuration',
+		);
+		return $tabs;
 	}
 
 	/**
 	 * Settings fields
 	 */
-	private static function settings_fields() {
-		$settings = array(
-			array(
-				'title'			=> 'WhastApp Configuration',
-				'description'	=> '',
-				'type'			=> 'title',
-			),
-			array(
-				'id' 			=> 'phone_number_id',
-				'title'			=> 'Phone Number ID',
-				'description'	=> '',
-				'type'			=> 'text',
-				'default'		=> '',
-				'placeholder'	=> ''
-			),
-			array(
-				'id' 			=> 'business_account_id',
-				'title'			=> 'Business Account ID',
-				'description'	=> '',
-				'type'			=> 'text',
-				'default'		=> '',
-				'placeholder'	=> ''
-			),
-			array(
-				'id' 			=> 'permanent_access_token',
-				'title'			=> 'Permanent Access Token',
-				'description'	=> '',
-				'type'			=> 'textarea',
-				'default'		=> '',
-				'placeholder'	=> ''
-			)
-		);
+	private static function settings_fields($tab) {
+		$settings = array();
+		switch($tab) {
+			case 'profile':
+				$settings = array(
+					array(
+						'title'			=> 'WhatsApp Profile',
+						'description'	=> 'Update how your profile will look to your customers on WhatsApp.',
+						'type'			=> 'title',
+					)
+				);
+				break;
 
-		$settings = apply_filters( 'wa_notifier_settings_fields', $settings );
+			case 'general':
+				$settings = array(
+					array(
+						'title'			=> 'General',
+						'description'	=> '',
+						'type'			=> 'title',
+					)
+				);
+				break;
 
+			case 'api':
+				$settings = array(
+					array(
+						'title'			=> 'WhastApp Configuration',
+						'description'	=> '',
+						'type'			=> 'title',
+					),
+					array(
+						'id' 			=> 'phone_number_id',
+						'title'			=> 'Phone Number ID',
+						'description'	=> '',
+						'type'			=> 'text',
+						'default'		=> '',
+						'placeholder'	=> ''
+					),
+					array(
+						'id' 			=> 'business_account_id',
+						'title'			=> 'Business Account ID',
+						'description'	=> '',
+						'type'			=> 'text',
+						'default'		=> '',
+						'placeholder'	=> ''
+					),
+					array(
+						'id' 			=> 'permanent_access_token',
+						'title'			=> 'Permanent Access Token',
+						'description'	=> '',
+						'type'			=> 'textarea',
+						'default'		=> '',
+						'placeholder'	=> ''
+					)
+				);
+				break;
+		}
+		$settings = apply_filters( 'notifier_$tab_settings_fields', $settings );
 		return $settings;
 	}
 
@@ -77,7 +112,7 @@ class WA_Notifier_Settings {
 		$html = '';
 
 		if(isset($field['id'])){
-			$option_name = WA_NOTIFIER_PREFIX . $field['id'];
+			$option_name = NOTIFIER_PREFIX . $field['id'];
 			$option = get_option( $option_name );
 		}
 
@@ -198,9 +233,9 @@ class WA_Notifier_Settings {
 	/**
 	 * Show the setting fields
 	 */
-	public static function show_settings_fields () {
-		$setting_fields = self::settings_fields();
-		echo "<table class='wa-notifier-fields-table'>";
+	public static function show_settings_fields ($tab) {
+		$setting_fields = self::settings_fields($tab);
+		echo "<table class='notifier-fields-table'>";
 		foreach ($setting_fields as $field) {
 			self::display_field( $field );
 		}
@@ -221,7 +256,7 @@ class WA_Notifier_Settings {
 			return;
 		}
 
-		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], WA_NOTIFIER_NAME . '-settings' ) ) {
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-settings' ) ) {
 			return;	
 		}
 
@@ -235,7 +270,7 @@ class WA_Notifier_Settings {
 				continue;
 			}
 			
-			$option_name  = WA_NOTIFIER_PREFIX . $option['id'];
+			$option_name  = NOTIFIER_PREFIX . $option['id'];
 			$setting_name = '';
 			$raw_value    = isset( $data[ $option_name ] ) ? wp_unslash( $data[ $option_name ] ) : null;
 			
@@ -275,16 +310,16 @@ class WA_Notifier_Settings {
 			}
 		}
 
-		$phone_number_id = $update_options[ WA_NOTIFIER_PREFIX . 'phone_number_id' ];
-		$business_account_id = $update_options[ WA_NOTIFIER_PREFIX . 'business_account_id' ];
-		$permanent_access_token = $update_options[ WA_NOTIFIER_PREFIX . 'permanent_access_token' ];
+		$phone_number_id = $update_options[ NOTIFIER_PREFIX . 'phone_number_id' ];
+		$business_account_id = $update_options[ NOTIFIER_PREFIX . 'business_account_id' ];
+		$permanent_access_token = $update_options[ NOTIFIER_PREFIX . 'permanent_access_token' ];
 
 		if('' == $phone_number_id || '' == $business_account_id || '' == $permanent_access_token){
 			$notices[] = array(
 				'message' => 'Phone number ID, Business Account ID and Permanent Access Token are mandatory fields.',
 				'type' => 'error'
 			);
-			new WA_Notifier_Admin_Notices($notices);
+			new Notifier_Admin_Notices($notices);
 			return;
 		}
 
@@ -294,14 +329,14 @@ class WA_Notifier_Settings {
 		}
 
 		// Fetch phone number details
-		$response = WA_Notifier::wa_cloud_api_request('', array(), 'GET');
+		$response = Notifier::wa_cloud_api_request('', array(), 'GET');
 
 		if($response->error) {
 			$notices[] = array(
 				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
 				'type' => 'error'
 			);
-			new WA_Notifier_Admin_Notices($notices);
+			new Notifier_Admin_Notices($notices);
 		}
 		else {
 			$phone_number_details[$phone_number_id] = array (
@@ -310,12 +345,12 @@ class WA_Notifier_Settings {
 				'phone_num_status'	=> $response->code_verification_status,
 				'quality_rating'	=> $response->quality_rating
 			);
-			update_option( WA_NOTIFIER_PREFIX . 'phone_number_details', $phone_number_details );
+			update_option( NOTIFIER_PREFIX . 'phone_number_details', $phone_number_details );
 			$notices[] = array(
 				'message' => 'Settings saved.',
 				'type' => 'success'
 			);
-			new WA_Notifier_Admin_Notices($notices);
+			new Notifier_Admin_Notices($notices);
 		}
 
 	}
@@ -325,7 +360,7 @@ class WA_Notifier_Settings {
 	 */
 	public static function is_settings_page() {
 		$current_page = isset($_GET['page']) ? $_GET['page'] : '';
-		return strpos($current_page, WA_NOTIFIER_NAME . '-settings') !== false;
+		return strpos($current_page, NOTIFIER_NAME . '-settings') !== false;
 	}
 
 	

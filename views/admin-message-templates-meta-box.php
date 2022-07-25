@@ -2,7 +2,7 @@
 /**
  * Message Template CPT Meta Box
  *
- * @package WA_Notifier
+ * @package Notifier
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 global $post_id;
 
-$mt_status = get_post_meta ( $post_id, WA_NOTIFIER_PREFIX . 'status' , true);
+$mt_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'status' , true);
 $disable_states = array ('APPROVED', 'IN_APPEAL', 'PENDING', 'PENDING_DELETION', 'DELETED', 'DISABLED', 'LOCKED');
 
 if(in_array($mt_status, $disable_states)) {
@@ -27,10 +27,10 @@ else {
 		 <div class="d-flex">
 			<div class="col">
 				<?php
-				wa_notifier_wp_text_input(
+				notifier_wp_text_input(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'template_name',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'template_name', true),
+						'id'                => NOTIFIER_PREFIX . 'template_name',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'template_name', true),
 						'label'             => 'Template name',
 						'description'       => 'Spaces or special characters are not allowed.',
 						'placeholder'       => 'template_name',
@@ -41,10 +41,10 @@ else {
 			</div>
 			<div class="col">
 				<?php
-				wa_notifier_wp_select(
+				notifier_wp_select(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'category',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'category', true),
+						'id'                => NOTIFIER_PREFIX . 'category',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'category', true),
 						'label'             => 'Category',
 						'description'       => '',
 						'options'           => array (
@@ -59,10 +59,10 @@ else {
 			</div>
 			<div class="col">
 				<?php
-				wa_notifier_wp_select(
+				notifier_wp_select(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'language',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'language', true),
+						'id'                => NOTIFIER_PREFIX . 'language',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'language', true),
 						'label'             => 'Language',
 						'description'       => 'Select template language (More languages will be added in future plugin updates).',
 						'options'           => array (
@@ -84,10 +84,10 @@ else {
 		<div class="d-flex">
 			<div class="col w-100">
 				<?php
-				wa_notifier_wp_select(
+				notifier_wp_select(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'header_type',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'header_type', true),
+						'id'                => NOTIFIER_PREFIX . 'header_type',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'header_type', true),
 						'label'             => 'Header Type',
 						'description'       => 'Select the header type.',
 						'options'           => array (
@@ -102,17 +102,17 @@ else {
 			</div>
 			<div class="col w-100">
 				<?php
-				wa_notifier_wp_text_input(
+				notifier_wp_text_input(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'header_text',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'header_text', true),
+						'id'                => NOTIFIER_PREFIX . 'header_text',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'header_text', true),
 						'label'             => 'Header Text',
 						'description'       => 'Enter header text.',
 						'limit'             => 60,
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
 							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'header_type',
+								'field'		=> NOTIFIER_PREFIX . 'header_type',
 								'operator'	=> '==',
 								'value'		=> 'text'
 							)
@@ -123,10 +123,10 @@ else {
 			</div>
 			<div class="col w-50">
 				<?php
-				wa_notifier_wp_select(
+				notifier_wp_select(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'media_type',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'media_type', true),
+						'id'                => NOTIFIER_PREFIX . 'media_type',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_type', true),
 						'label'             => 'Media Type',
 						'description'       => '',
 						'options'           => array (
@@ -137,7 +137,7 @@ else {
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
 							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'header_type',
+								'field'		=> NOTIFIER_PREFIX . 'header_type',
 								'operator'	=> '==',
 								'value'		=> 'media'
 							)
@@ -148,17 +148,17 @@ else {
 			</div>
 			<div class="col w-50">
 				<?php
-				wa_notifier_wp_text_input(
+				notifier_wp_text_input(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'media_url',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'media_url', true),
+						'id'                => NOTIFIER_PREFIX . 'media_url',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_url', true),
 						'label'             => 'Example Media URL',
 						'description'       => 'Provide example media URL for WhatsApp to check if it meets their guidelines.',
 						'data_type'         => 'url',
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
 							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'header_type',
+								'field'		=> NOTIFIER_PREFIX . 'header_type',
 								'operator'	=> '==',
 								'value'		=> 'media'
 							)
@@ -178,10 +178,10 @@ else {
 		<div class="d-flex">
 			<div class="col">
 				<?php
-				wa_notifier_wp_textarea_input(
+				notifier_wp_textarea_input(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'body_text',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'body_text', true),
+						'id'                => NOTIFIER_PREFIX . 'body_text',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'body_text', true),
 						'label'             => 'Body content',
 						'description'       => 'Enter body content. HTML not allowed. You can format the text using following shorthands:<br><br>Bold: *text* will become <b>text</b><br>Italics: _text_ will become <em>text</em><br>Strikethrough: ~text~ will become <s>text</s><br>Monospace or code: ```text``` will become <code style="background-color: transparent;">text</code>',
 						'rows'              => 4,
@@ -202,10 +202,10 @@ else {
 		<div class="d-flex">
 			<div class="col">
 				<?php
-				wa_notifier_wp_text_input(
+				notifier_wp_text_input(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'footer_text',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'footer_text', true),
+						'id'                => NOTIFIER_PREFIX . 'footer_text',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'footer_text', true),
 						'label'             => 'Footer text',
 						'description'       => '',
 						'limit'             => 60,
@@ -225,10 +225,10 @@ else {
 		<div class="d-flex">
 			<div class="col">
 				<?php
-				wa_notifier_wp_select(
+				notifier_wp_select(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'button_type',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_type', true),
+						'id'                => NOTIFIER_PREFIX . 'button_type',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_type', true),
 						'label'             => 'Button Type',
 						'description'       => '',
 						'options'           => array (
@@ -242,11 +242,11 @@ else {
 			</div>
 			<div class="col">
 				<?php
-				$button_num = get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_num', true);
+				$button_num = get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_num', true);
 				$button_num = ($button_num) ? $button_num : '1';
-				wa_notifier_wp_radio(
+				notifier_wp_radio(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'button_num',
+						'id'                => NOTIFIER_PREFIX . 'button_num',
 						'value'             => $button_num,
 						'label'             => 'Number of buttons',
 						'description'       => '',
@@ -257,7 +257,7 @@ else {
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
 							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'button_type',
+								'field'		=> NOTIFIER_PREFIX . 'button_type',
 								'operator'	=> '==',
 								'value'		=> 'cta'
 							)
@@ -271,10 +271,10 @@ else {
 		<div class="d-flex">
 			<div class="col w-50 button-1-wrap">
 				<?php
-				wa_notifier_wp_select(
+				notifier_wp_select(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'button_1_type',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_type', true),
+						'id'                => NOTIFIER_PREFIX . 'button_1_type',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_1_type', true),
 						'label'             => 'Button 1 Type',
 						'description'       => '',
 						'options'           => array (
@@ -284,12 +284,12 @@ else {
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
 							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'button_num',
+								'field'		=> NOTIFIER_PREFIX . 'button_num',
 								'operator'	=> '==',
 								'value'		=> '1'
 							),
 							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'button_num',
+								'field'		=> NOTIFIER_PREFIX . 'button_num',
 								'operator'	=> '==',
 								'value'		=> '2'
 							)
@@ -300,22 +300,22 @@ else {
 				<div class="d-flex">
 					<div class="col" style="max-width: 40%;">
 					<?php
-						wa_notifier_wp_text_input(
+						notifier_wp_text_input(
 							array(
-								'id'                => WA_NOTIFIER_PREFIX . 'button_1_text',
-								'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_text', true),
+								'id'                => NOTIFIER_PREFIX . 'button_1_text',
+								'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_1_text', true),
 								'label'             => 'Button Text',
 								'description'       => '',
 								'limit'             => 25,
 								'custom_attributes' => $disabled,
 								'conditional_logic'		=> array (
 									array (
-										'field'		=> WA_NOTIFIER_PREFIX . 'button_num',
+										'field'		=> NOTIFIER_PREFIX . 'button_num',
 										'operator'	=> '==',
 										'value'		=> '1'
 									),
 									array (
-										'field'		=> WA_NOTIFIER_PREFIX . 'button_num',
+										'field'		=> NOTIFIER_PREFIX . 'button_num',
 										'operator'	=> '==',
 										'value'		=> '2'
 									)
@@ -326,10 +326,10 @@ else {
 					</div>
 					<div class="col">
 					<?php
-						wa_notifier_wp_text_input(
+						notifier_wp_text_input(
 							array(
-								'id'                => WA_NOTIFIER_PREFIX . 'button_1_url',
-								'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_url', true),
+								'id'                => NOTIFIER_PREFIX . 'button_1_url',
+								'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_1_url', true),
 								'label'             => 'Website URL',
 								'description'       => '',
 								'placeholder'       => 'http://',
@@ -337,17 +337,17 @@ else {
 								'custom_attributes' => $disabled,
 								'conditional_logic'		=> array (
 									array (
-										'field'		=> WA_NOTIFIER_PREFIX . 'button_1_type',
+										'field'		=> NOTIFIER_PREFIX . 'button_1_type',
 										'operator'	=> '==',
 										'value'		=> 'URL'
 									)
 								)
 							)
 						);
-						wa_notifier_wp_text_input(
+						notifier_wp_text_input(
 							array(
-								'id'                => WA_NOTIFIER_PREFIX . 'button_1_phone_num',
-								'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_1_phone_num', true),
+								'id'                => NOTIFIER_PREFIX . 'button_1_phone_num',
+								'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_1_phone_num', true),
 								'label'             => 'Phone Number',
 								'description'       => '',
 								'placeholder'       => 'Phone Number with Country Code',
@@ -355,7 +355,7 @@ else {
 								'custom_attributes' => $disabled,
 								'conditional_logic'		=> array (
 									array (
-										'field'		=> WA_NOTIFIER_PREFIX . 'button_1_type',
+										'field'		=> NOTIFIER_PREFIX . 'button_1_type',
 										'operator'	=> '==',
 										'value'		=> 'PHONE_NUMBER'
 									)
@@ -369,10 +369,10 @@ else {
 			</div>
 			<div class="col w-50 button-2-wrap">
 				<?php
-				wa_notifier_wp_select(
+				notifier_wp_select(
 					array(
-						'id'                => WA_NOTIFIER_PREFIX . 'button_2_type',
-						'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_type', true),
+						'id'                => NOTIFIER_PREFIX . 'button_2_type',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_2_type', true),
 						'label'             => 'Button 2 Type',
 						'description'       => '',
 						'options'           => array (
@@ -382,7 +382,7 @@ else {
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
 							array (
-								'field'		=> WA_NOTIFIER_PREFIX . 'button_num',
+								'field'		=> NOTIFIER_PREFIX . 'button_num',
 								'operator'	=> '==',
 								'value'		=> '2'
 							)
@@ -393,17 +393,17 @@ else {
 				<div class="d-flex">
 					<div class="col" style="max-width: 40%;">
 					<?php
-						wa_notifier_wp_text_input(
+						notifier_wp_text_input(
 							array(
-								'id'                => WA_NOTIFIER_PREFIX . 'button_2_text',
-								'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_text', true),
+								'id'                => NOTIFIER_PREFIX . 'button_2_text',
+								'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_2_text', true),
 								'label'             => 'Button Text',
 								'description'       => '',
 								'limit'             => 25,
 								'custom_attributes' => $disabled,
 								'conditional_logic'		=> array (
 									array (
-										'field'		=> WA_NOTIFIER_PREFIX . 'button_num',
+										'field'		=> NOTIFIER_PREFIX . 'button_num',
 										'operator'	=> '==',
 										'value'		=> '2'
 									)
@@ -414,10 +414,10 @@ else {
 					</div>
 					<div class="col">
 					<?php
-						wa_notifier_wp_text_input(
+						notifier_wp_text_input(
 							array(
-								'id'                => WA_NOTIFIER_PREFIX . 'button_2_url',
-								'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_url', true),
+								'id'                => NOTIFIER_PREFIX . 'button_2_url',
+								'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_2_url', true),
 								'label'             => 'Website URL',
 								'description'       => '',
 								'placeholder'       => 'http://',
@@ -425,17 +425,17 @@ else {
 								'custom_attributes' => $disabled,
 								'conditional_logic'		=> array (
 									array (
-										'field'		=> WA_NOTIFIER_PREFIX . 'button_2_type',
+										'field'		=> NOTIFIER_PREFIX . 'button_2_type',
 										'operator'	=> '==',
 										'value'		=> 'URL'
 									)
 								)
 							)
 						);
-						wa_notifier_wp_text_input(
+						notifier_wp_text_input(
 							array(
-								'id'                => WA_NOTIFIER_PREFIX . 'button_2_phone_num',
-								'value'             => get_post_meta( $post_id, WA_NOTIFIER_PREFIX . 'button_2_phone_num', true),
+								'id'                => NOTIFIER_PREFIX . 'button_2_phone_num',
+								'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'button_2_phone_num', true),
 								'label'             => 'Phone Number',
 								'description'       => '',
 								'placeholder'       => 'Phone Number with Country Code',
@@ -443,7 +443,7 @@ else {
 								'custom_attributes' => $disabled,
 								'conditional_logic'		=> array (
 									array (
-										'field'		=> WA_NOTIFIER_PREFIX . 'button_2_type',
+										'field'		=> NOTIFIER_PREFIX . 'button_2_type',
 										'operator'	=> '==',
 										'value'		=> 'PHONE_NUMBER'
 									)

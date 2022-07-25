@@ -2,24 +2,24 @@
 /**
  * Admin View: Dashboard
  *
- * @package WA_Notifier
+ * @package Notifier
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-$disclaimer = get_option(WA_NOTIFIER_PREFIX . 'disclaimer');
-$verify_token = get_option(WA_NOTIFIER_PREFIX . 'verify_token');
-$api_credentials_validated = get_option(WA_NOTIFIER_PREFIX . 'api_credentials_validated');
+$disclaimer = get_option(NOTIFIER_PREFIX . 'disclaimer');
+$verify_token = get_option(NOTIFIER_PREFIX . 'verify_token');
+$api_credentials_validated = get_option(NOTIFIER_PREFIX . 'api_credentials_validated');
 $show_disclaimer = ( isset($_GET['show']) && $_GET['show'] == 'disclaimer' ) ? true : false;
-$phone_number_id = get_option( WA_NOTIFIER_PREFIX . 'phone_number_id' );
-$phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details');
+$phone_number_id = get_option( NOTIFIER_PREFIX . 'phone_number_id' );
+$phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 ?>
-<div class="wrap wa-notifier">
+<div class="wrap notifier">
 
 	<h1>Dashboard</h1>
 
-	<div class="wa-notifier-wrapper">
+	<div class="notifier-wrapper">
 
 		<?php if('accepted' != $disclaimer || $show_disclaimer) : ?>
 
@@ -51,11 +51,11 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 					<?php if('accepted' != $disclaimer) : ?>
 						<form method="POST" action="" enctype="multipart/form-data">
 							<button name="disclaimer" class="button-primary" type="submit" value="">I Understand & Accept</button>
-	            			<?php wp_nonce_field( WA_NOTIFIER_NAME . '-disclaimer' ); ?>
+	            			<?php wp_nonce_field( NOTIFIER_NAME . '-disclaimer' ); ?>
 						</form>
 					<?php else : ?>
 						<button class="button" disabled="disabled">Already accepted</button>
-						<a class="button-primary" href="admin.php?page=wa-notifier">Back to Dashboard</a>
+						<a class="button-primary" href="admin.php?page=notifier">Back to Dashboard</a>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -98,7 +98,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 								<li>Next, you'll need to add your phone number. Enter your phone number and select a verification method to verify the number.</li>
 								<li>Enter the verfication code and click <b>Next</b>.</li>
 								<li>Once the phone number is added, scroll up on the <b>Get Started</b> page and select your added number from the dropdown under <b>Send and receive messages</b>.</li>
-								<li>After selecting your phone number the <b>Phone number ID</b> and <b>WhatsApp Business Account ID</b> values will get updated below it. Copy those values and add them on the <a href="<?php echo get_admin_url( null, 'admin.php?page=' . WA_NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page. We'll add <b>Permanent Access Token</b> in the next step.</li>
+								<li>After selecting your phone number the <b>Phone number ID</b> and <b>WhatsApp Business Account ID</b> values will get updated below it. Copy those values and add them on the <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page. We'll add <b>Permanent Access Token</b> in the next step.</li>
 							</ol>
 						</div>
 					</div>
@@ -113,7 +113,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 							<ol>
 								<li>From the <b>Get Started</b> screen's left sidebar, click on <b>Whatsapp > Configuration</b> link.</li>
 								<li>Click on the <b>Edit</b> button. That'll open a popup.</li>
-								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo site_url('/?wa_notifier'); ?></code></li>
+								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo site_url('/?notifier'); ?></code></li>
 								<li>In the <b>Verify Token</b> field enter: <code><?php echo $verify_token ?></code> and click <b>Verify</b>.</li>
 								<li>Under <b>Webhook fields:</b> click on <b>Manage</b>.</li>
 								<li>Click on <b>Subscribe</b> button in front of all fields and then click on <b>Done</b>.</li>
@@ -127,7 +127,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 								<li>Enter a name for your <b>System user name</b> (you can keep it admin or system, this will not be shown to your users). Select <b>System user role</b> as <b>Administrator</b> and click on <b>Create system user</b>.</li>
 								<li>Click on <b>Add Assets</b> button. Under <b>Select asset type</b> click on <b>Apps</b>, select your app from <b>Select assets</b> column and then enable <b>Full control > Manage App</b>. Click on <b>Save Changes</b>.</li>
 								<li>Now click on <b>Generate Token</b> button. Select your app from the dropdown and click on <b>Generate Token</b>. From the list of permissions under <b>Available Permissions:</b> select <em>whatsapp_business_messaging</em> and <em>whatsapp_business_management</em> and then click on <b>Generate Token</b>.</li>
-								<li>Copy the <b>Access token</b>. Open this plugin's <a href="<?php echo get_admin_url( null, 'admin.php?page=' . WA_NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page, add it in the <b>Permanent Access Token</b> field and save.</li>
+								<li>Copy the <b>Access token</b>. Open this plugin's <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page, add it in the <b>Permanent Access Token</b> field and save.</li>
 							</ol>
 							
 						</div>
@@ -142,7 +142,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 							<p>Once you click the button below, the plugin will connect to your account via Cloud API to validate the details. Once validated, it'll create draft <b>Message Templates</b> for you to start sending notifications.</p>
 							<form method="POST" action="" enctype="multipart/form-data">
 								<button name="validate" class="button-primary" type="submit" value="">Validate and Complete Setup</button>
-		            			<?php wp_nonce_field( WA_NOTIFIER_NAME . '-validate' ); ?>
+		            			<?php wp_nonce_field( NOTIFIER_NAME . '-validate' ); ?>
 							</form>
 						</div>
 					</div>
@@ -238,7 +238,7 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 									</tr>
 									<?php
 									foreach($message_templates as $template) {
-										$status = get_post_meta( $template->ID, WA_NOTIFIER_PREFIX . 'status', true);
+										$status = get_post_meta( $template->ID, NOTIFIER_PREFIX . 'status', true);
 			    						$status_text = ($status) ? '<span class="status status-'.strtolower($status).'">'.$status.'</span>' : '-';
 										echo '<tr><td><a href="'.get_edit_post_link($template->ID).'">'.$template->post_title.'</a></td><td>'.$status_text.'</td></tr>';
 									}
@@ -268,9 +268,9 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 									</tr>
 									<?php
 									foreach($contacts as $contact) {
-										$first_name = get_post_meta( $contact->ID, WA_NOTIFIER_PREFIX . 'first_name', true);
-										$last_name = get_post_meta( $contact->ID, WA_NOTIFIER_PREFIX . 'last_name', true);
-										$wa_number = get_post_meta( $contact->ID, WA_NOTIFIER_PREFIX . 'wa_number', true);
+										$first_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'first_name', true);
+										$last_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'last_name', true);
+										$wa_number = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'wa_number', true);
 										echo '<tr><td><a href="'.get_edit_post_link($contact->ID).'">'.$first_name . '</a></td><td>'.$last_name.'</td><td>'.$wa_number.'</td></tr>';
 									}
 									?>
@@ -299,10 +299,10 @@ $phone_number_details = get_option( WA_NOTIFIER_PREFIX . 'phone_number_details')
 									</tr>
 									<?php
 									foreach($notifications as $notification) {
-										$status = get_post_meta( $notification->ID, WA_NOTIFIER_PREFIX . 'notification_status', true);
-										$sent = get_post_meta( $notification->ID, WA_NOTIFIER_PREFIX . 'notification_sent_contact_ids', true);
+										$status = get_post_meta( $notification->ID, NOTIFIER_PREFIX . 'notification_status', true);
+										$sent = get_post_meta( $notification->ID, NOTIFIER_PREFIX . 'notification_sent_contact_ids', true);
 										$sent_count = ($sent && is_array($sent)) ? count($sent) : '0';
-										$unsent = get_post_meta( $notification->ID, WA_NOTIFIER_PREFIX . 'notification_unsent_contact_ids', true);
+										$unsent = get_post_meta( $notification->ID, NOTIFIER_PREFIX . 'notification_unsent_contact_ids', true);
 										$unsent_count = ($unsent && is_array($unsent)) ? count($unsent) : '0';
 										echo '<tr>';
 										echo '<td><a href="'.get_edit_post_link($notification->ID).'">'.$notification->post_title . '</a></td>';

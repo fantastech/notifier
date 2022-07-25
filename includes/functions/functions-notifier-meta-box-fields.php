@@ -2,7 +2,7 @@
 /**
  * WA Notifier Meta Box Functions
  *
- * @package     WA_Notifier
+ * @package     Notifier
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -13,10 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @param array $field
  */
-function wa_notifier_wp_text_input( $field ) {
+function notifier_wp_text_input( $field ) {
 	global $post;
 
-	$field = apply_filters ('wa_notifier_wp_text_input_args', $field, $post);
+	$field = apply_filters ('notifier_wp_text_input_args', $field, $post);
 
 	$field = wp_parse_args(
 		$field , array(
@@ -42,7 +42,7 @@ function wa_notifier_wp_text_input( $field ) {
 
 	switch ( $field['data_type'] ) {
 		case 'url':
-			$field['class'] .= ' wa_notifier_input_url';
+			$field['class'] .= ' notifier_input_url';
 			$field['value']  = esc_url( $field['value'] );
 			break;
 
@@ -71,7 +71,7 @@ function wa_notifier_wp_text_input( $field ) {
 	}
 
 	if($field['show_wrapper']){
-		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
@@ -79,21 +79,21 @@ function wa_notifier_wp_text_input( $field ) {
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
 	}
 
-	do_action('wa_notifier_before_meta_field', $field, $post);
+	do_action('notifier_before_meta_field', $field, $post);
 
 	echo '<input type="' . esc_attr( $field['type'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' /> ';
 
-	do_action('wa_notifier_after_meta_field', $field, $post);
+	do_action('notifier_after_meta_field', $field, $post);
 
 	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
-	do_action('wa_notifier_after_meta_field_description', $field, $post);
+	do_action('notifier_after_meta_field_description', $field, $post);
 
 	if($field['show_wrapper']){
 		echo '</p>';
-		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
 }
 
@@ -102,10 +102,10 @@ function wa_notifier_wp_text_input( $field ) {
  *
  * @param array $field
  */
-function wa_notifier_wp_hidden_input( $field ) {
+function notifier_wp_hidden_input( $field ) {
 	global $post;
 
-	$field = apply_filters ('wa_notifier_wp_hidden_input', $field, $post);
+	$field = apply_filters ('notifier_wp_hidden_input', $field, $post);
 
 	$field = wp_parse_args(
 		$field , array(
@@ -114,11 +114,11 @@ function wa_notifier_wp_hidden_input( $field ) {
 		)
 	);
 
-	do_action('wa_notifier_before_meta_field', $field, $post);
+	do_action('notifier_before_meta_field', $field, $post);
 
 	echo '<input type="hidden" class="' . esc_attr( $field['class'] ) . '" name="' . esc_attr( $field['id'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" /> ';
 
-	do_action('wa_notifier_after_meta_field', $field, $post);
+	do_action('notifier_after_meta_field', $field, $post);
 }
 
 /**
@@ -126,10 +126,10 @@ function wa_notifier_wp_hidden_input( $field ) {
  *
  * @param array $field
  */
-function wa_notifier_wp_textarea_input( $field ) {
+function notifier_wp_textarea_input( $field ) {
 	global $post;
 
-	$field = apply_filters ('wa_notifier_wp_textarea_input', $field, $post);
+	$field = apply_filters ('notifier_wp_textarea_input', $field, $post);
 
 	$field = wp_parse_args(
 		$field , array(
@@ -174,7 +174,7 @@ function wa_notifier_wp_textarea_input( $field ) {
 	}
 
 	if($field['show_wrapper']){
-		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
@@ -182,21 +182,21 @@ function wa_notifier_wp_textarea_input( $field ) {
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
 	}
 
-	do_action('wa_notifier_before_meta_field', $field, $post);
+	do_action('notifier_before_meta_field', $field, $post);
 
 	echo '<textarea class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '"  name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" rows="' . esc_attr( $field['rows'] ) . '" cols="' . esc_attr( $field['cols'] ) . '" ' . implode( ' ', $custom_attributes ) . ' >' . esc_textarea( $field['value'] ) . '</textarea> ';
 
-	do_action('wa_notifier_after_meta_field', $field, $post);
+	do_action('notifier_after_meta_field', $field, $post);
 
 	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
-	do_action('wa_notifier_after_meta_field_description', $field, $post);
+	do_action('notifier_after_meta_field_description', $field, $post);
 
 	if($field['show_wrapper']){
 		echo '</p>';
-		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
 }
 
@@ -205,10 +205,10 @@ function wa_notifier_wp_textarea_input( $field ) {
  *
  * @param array $field
  */
-function wa_notifier_wp_checkbox( $field ) {
+function notifier_wp_checkbox( $field ) {
 	global $post;
 
-	$field = apply_filters ('wa_notifier_wp_checkbox', $field, $post);
+	$field = apply_filters ('notifier_wp_checkbox', $field, $post);
 
 	$field = wp_parse_args(
 		$field , array(
@@ -239,7 +239,7 @@ function wa_notifier_wp_checkbox( $field ) {
 	}
 
 	if($field['show_wrapper']){
-		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
@@ -247,21 +247,21 @@ function wa_notifier_wp_checkbox( $field ) {
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
 	}
 
-	do_action('wa_notifier_before_meta_field', $field, $post);
+	do_action('notifier_before_meta_field', $field, $post);
 
 	echo '<input type="checkbox" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['cbvalue'] ) . '" ' . checked( $field['value'], $field['cbvalue'], false ) . '  ' . implode( ' ', $custom_attributes ) . '/> ';
 
-	do_action('wa_notifier_after_meta_field', $field, $post);
+	do_action('notifier_after_meta_field', $field, $post);
 
 	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
-	do_action('wa_notifier_after_meta_field_description', $field, $post);
+	do_action('notifier_after_meta_field_description', $field, $post);
 
 	if($field['show_wrapper']){
 		echo '</p>';
-		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
 }
 
@@ -270,10 +270,10 @@ function wa_notifier_wp_checkbox( $field ) {
  *
  * @param array $field Data about the field to render.
  */
-function wa_notifier_wp_select( $field ) {
+function notifier_wp_select( $field ) {
 	global $post;
 
-	$field = apply_filters ('wa_notifier_wp_select', $field, $post);
+	$field = apply_filters ('notifier_wp_select', $field, $post);
 
 	$field = wp_parse_args(
 		$field , array(
@@ -304,7 +304,7 @@ function wa_notifier_wp_select( $field ) {
 	$description = ! empty( $field['description'] ) ? $field['description'] : '';
 	
 	if($field['show_wrapper']){
-		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
 	}
 
@@ -312,7 +312,7 @@ function wa_notifier_wp_select( $field ) {
 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
 	}
 
-	do_action('wa_notifier_before_meta_field', $field, $post);
+	do_action('notifier_before_meta_field', $field, $post);
 
 	echo '<select class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '"' . implode( ' ', $custom_attributes ) . '/> ';
 
@@ -332,17 +332,17 @@ function wa_notifier_wp_select( $field ) {
 
 	echo '</select>';
 
-	do_action('wa_notifier_after_meta_field', $field, $post);
+	do_action('notifier_after_meta_field', $field, $post);
 
 	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
-	do_action('wa_notifier_after_meta_field_description', $field, $post);
+	do_action('notifier_after_meta_field_description', $field, $post);
 
 	if($field['show_wrapper']){
 		echo '</p>';
-		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
 }
 
@@ -351,10 +351,10 @@ function wa_notifier_wp_select( $field ) {
  *
  * @param array $field
  */
-function wa_notifier_wp_radio( $field ) {
+function notifier_wp_radio( $field ) {
 	global $post;
 
-	$field = apply_filters ('wa_notifier_wp_radio', $field, $post);
+	$field = apply_filters ('notifier_wp_radio', $field, $post);
 
 	$field = wp_parse_args(
 		$field , array(
@@ -383,7 +383,7 @@ function wa_notifier_wp_radio( $field ) {
 	}
 
 	if($field['show_wrapper']){
-		do_action('wa_notifier_before_meta_field_wrapper', $field, $post);
+		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js($field['conditional_logic']).'">';
 	}
 
@@ -391,7 +391,7 @@ function wa_notifier_wp_radio( $field ) {
 		echo '<legend>' . wp_kses_post( $field['label'] ) . '</legend>';
 	}
 
-	do_action('wa_notifier_before_meta_field', $field, $post);
+	do_action('notifier_before_meta_field', $field, $post);
 
 	echo '<ul class="radio-buttons">';
 
@@ -409,17 +409,17 @@ function wa_notifier_wp_radio( $field ) {
 	}
 	echo '</ul>';
 
-	do_action('wa_notifier_after_meta_field', $field, $post);
+	do_action('notifier_after_meta_field', $field, $post);
 
 	if ( '' != $field['description'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
-	do_action('wa_notifier_after_meta_field_description', $field, $post);
+	do_action('notifier_after_meta_field_description', $field, $post);
 
 	if($field['show_wrapper']){
 		echo '</fieldset>';
-		do_action('wa_notifier_after_meta_field_wrapper', $field, $post);
+		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
 
 }

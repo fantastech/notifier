@@ -4,7 +4,7 @@
  *
  * @package    Wa_Notifier
  */
-class WA_Notifier_Admin_Notices {
+class Notifier_Admin_Notices {
 
 	public $notices = array();
 

@@ -2,9 +2,9 @@
 /**
  * The core plugin class.
  *
- * @package    WA_Notifier
+ * @package    Notifier
  */
-class WA_Notifier {
+class Notifier {
 	/**
 	 * The single instance of the class.
 	 */
@@ -23,12 +23,12 @@ class WA_Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {		
-		$this->define( 'WA_NOTIFIER_VERSION', '0.1' );
-		$this->define( 'WA_NOTIFIER_NAME', 'wa-notifier' );
-		$this->define( 'WA_NOTIFIER_PREFIX', 'wa_notifier_' );
-		$this->define( 'WA_NOTIFIER_URL', trailingslashit( plugins_url( '' , dirname(__FILE__) ) ) );
-		$this->define( 'WA_NOTIFIER_WA_API_VERSION', 'v14.0' );
-		$this->define( 'WA_NOTIFIER_WA_API_URL', 'https://graph.facebook.com/' . WA_NOTIFIER_WA_API_VERSION . '/' );
+		$this->define( 'NOTIFIER_VERSION', '0.1' );
+		$this->define( 'NOTIFIER_NAME', 'notifier' );
+		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
+		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '' , dirname(__FILE__) ) ) );
+		$this->define( 'NOTIFIER_WA_API_VERSION', 'v14.0' );
+		$this->define( 'NOTIFIER_WA_API_URL', 'https://graph.facebook.com/' . NOTIFIER_WA_API_VERSION . '/' );
 	}
 
 	/**
@@ -60,36 +60,36 @@ class WA_Notifier {
 	 */
 	private function includes() {
 		// Libraries
-		require_once WA_NOTIFIER_PATH . 'libraries/action-scheduler/action-scheduler.php';
+		require_once NOTIFIER_PATH . 'libraries/action-scheduler/action-scheduler.php';
 
 		// Functions
-		require_once WA_NOTIFIER_PATH . 'includes/functions/functions-wa-notifier-helpers.php';
-		require_once WA_NOTIFIER_PATH . 'includes/functions/functions-wa-notifier-meta-box-fields.php';
+		require_once NOTIFIER_PATH . 'includes/functions/functions-notifier-helpers.php';
+		require_once NOTIFIER_PATH . 'includes/functions/functions-notifier-meta-box-fields.php';
 
 		// Classes
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-admin-notices.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-dashboard.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-message-templates.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-contacts.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notifications.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notification-merge-tags.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-notification-triggers.php';
-		require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-settings.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-admin-notices.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-dashboard.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-message-templates.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-contacts.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notifications.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-merge-tags.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-triggers.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-settings.php';
 	}
 
 	/**
 	 * Hook into actions and filters.
 	 */
 	private function init_hooks() {
-		register_activation_hook ( WA_NOTIFIER_FILE , array( $this, 'install') );
+		register_activation_hook ( NOTIFIER_FILE , array( $this, 'install') );
 
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Dashboard', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Message_Templates', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Contacts', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Notifications', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Notification_Merge_Tags', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Notification_Triggers', 'init' ) );
-		add_action( 'plugins_loaded', array( 'WA_Notifier_Settings', 'init' ) );
+		add_action( 'plugins_loaded', array( 'Notifier_Dashboard', 'init' ) );
+		add_action( 'plugins_loaded', array( 'Notifier_Message_Templates', 'init' ) );
+		add_action( 'plugins_loaded', array( 'Notifier_Contacts', 'init' ) );
+		add_action( 'plugins_loaded', array( 'Notifier_Notifications', 'init' ) );
+		add_action( 'plugins_loaded', array( 'Notifier_Notification_Merge_Tags', 'init' ) );
+		add_action( 'plugins_loaded', array( 'Notifier_Notification_Triggers', 'init' ) );
+		add_action( 'plugins_loaded', array( 'Notifier_Settings', 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'maybe_include_woocoomerce_class' ) );
 
 		add_filter( 'init', array( $this , 'handle_webhook_requests') );
@@ -106,20 +106,20 @@ class WA_Notifier {
 	 * Setup during plugin activation
 	 */
 	public function install() {
-		$verify_token = get_option(WA_NOTIFIER_PREFIX . 'verify_token');
+		$verify_token = get_option(NOTIFIER_PREFIX . 'verify_token');
 		if(!$verify_token) {
 			$bytes = random_bytes(20);
-			$verify_token = WA_NOTIFIER_NAME . '-' . substr(bin2hex($bytes), 0, 10);
-			update_option(WA_NOTIFIER_PREFIX . 'verify_token', $verify_token);
+			$verify_token = NOTIFIER_NAME . '-' . substr(bin2hex($bytes), 0, 10);
+			update_option(NOTIFIER_PREFIX . 'verify_token', $verify_token);
 		}
 	}
 
 	/**
 	 * Check if plugin's page
 	 */
-	public static function is_wa_notifier_page() {
+	public static function is_notifier_page() {
 		$current_screen = get_current_screen();
-		if ( strpos($current_screen->id, WA_NOTIFIER_NAME) !== false) {
+		if ( strpos($current_screen->id, NOTIFIER_NAME) !== false) {
 			return true;
 		}
 
@@ -135,49 +135,49 @@ class WA_Notifier {
 	 * Add admin scripts and styles
 	 */
 	public function admin_scripts () {
-		if(!self::is_wa_notifier_page()){
+		if(!self::is_notifier_page()){
 			return;
 		}
 
     	// Select2
     	wp_enqueue_script(
-    		WA_NOTIFIER_NAME . '-select2-js',
-    		WA_NOTIFIER_URL . 'assets/js/select2.min.js',
+    		NOTIFIER_NAME . '-select2-js',
+    		NOTIFIER_URL . 'assets/js/select2.min.js',
     		array('jquery'),
-    		WA_NOTIFIER_VERSION,
+    		NOTIFIER_VERSION,
     		true
     	);
     	// Date / time picker
     	wp_enqueue_script( 'jquery-ui-datepicker' );
     	wp_enqueue_script(
-    		WA_NOTIFIER_NAME . '-timepicker-addon',
-    		WA_NOTIFIER_URL . 'assets/js/jquery-ui-timepicker-addon.min.js',
+    		NOTIFIER_NAME . '-timepicker-addon',
+    		NOTIFIER_URL . 'assets/js/jquery-ui-timepicker-addon.min.js',
     		array( 'jquery-ui-datepicker' ),
-    		WA_NOTIFIER_VERSION,
+    		NOTIFIER_VERSION,
     		true
     	);
     	// Admin JS file
     	wp_enqueue_script(
-    		WA_NOTIFIER_NAME . '-admin-js',
-    		WA_NOTIFIER_URL . 'assets/js/admin.js',
+    		NOTIFIER_NAME . '-admin-js',
+    		NOTIFIER_URL . 'assets/js/admin.js',
     		array('jquery'),
-    		WA_NOTIFIER_VERSION,
+    		NOTIFIER_VERSION,
     		true
     	);
     	wp_localize_script(
-    		WA_NOTIFIER_NAME . '-admin-js',
+    		NOTIFIER_NAME . '-admin-js',
     		'waNotifier',
-    		apply_filters( 'wa_notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
+    		apply_filters( 'notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
     	);
 
     	// Styles
     	wp_enqueue_style(
-	    	WA_NOTIFIER_NAME . '-datepicker-style',
+	    	NOTIFIER_NAME . '-datepicker-style',
 	    	'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
 	    );
 	    wp_enqueue_style(
-	    	WA_NOTIFIER_NAME . '-admin-css',
-	    	WA_NOTIFIER_URL . 'assets/css/admin.css'
+	    	NOTIFIER_NAME . '-admin-css',
+	    	NOTIFIER_URL . 'assets/css/admin.css'
 	    );
 	}
 
@@ -186,15 +186,15 @@ class WA_Notifier {
 	 * The initial contents here are meant as a place loader for when the PHP page initialy loads.
 	 */
 	public static function embed_page_header() {
-		if(!self::is_wa_notifier_page()){
+		if(!self::is_notifier_page()){
 			return;
 		}
 		$current_screen = get_current_screen();
 		$cpt = ( '' !== $current_screen->post_type) ? $current_screen->post_type : '';
 		$tax = ( '' !== $current_screen->taxonomy) ? $current_screen->taxonomy : '';
 		?>
-		<div id="wa-notifier-admin-header" data-post-type="<?php echo $cpt; ?>">
-			<div class="wa-notifier-admin-header-content">
+		<div id="notifier-admin-header" data-post-type="<?php echo $cpt; ?>">
+			<div class="notifier-admin-header-content">
 				<div class="header-page-title w-30">
 					<h2><?php echo get_admin_page_title(); ?></h2>
 				</div>
@@ -220,7 +220,7 @@ class WA_Notifier {
 				<div class="header-action-links w-30 d-flex justify-content-end">
 					<span class="header-version">Version: 0.1 (beta)</span>
 					<a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20Help%20Needed%20on<?php echo get_site_url(); ?>">Help</a>
-					<a href="admin.php?page=wa-notifier&show=disclaimer">Disclaimer</a>
+					<a href="admin.php?page=notifier&show=disclaimer">Disclaimer</a>
 				</div>
 			</div>
 		</div>
@@ -231,7 +231,7 @@ class WA_Notifier {
 	 * Handle response from Whatsapp
 	 */
 	public static function handle_webhook_requests () {
-		if( ! isset($_GET['wa_notifier']) ) {
+		if( ! isset($_GET['notifier']) ) {
 			return;
 		}
 
@@ -241,7 +241,7 @@ class WA_Notifier {
 
 		/* Validate WhastApp API webbook */
 		if(isset($_GET['hub_mode']) && $_GET['hub_mode'] == 'subscribe') {
-			$verify_token = get_option(WA_NOTIFIER_PREFIX . 'verify_token');
+			$verify_token = get_option(NOTIFIER_PREFIX . 'verify_token');
 			if(isset($_GET['hub_verify_token']) && $_GET['hub_verify_token'] == $verify_token) {
 				echo isset($_GET['hub_challenge']) ? $_GET['hub_challenge'] : '';	
 			}
@@ -255,8 +255,8 @@ class WA_Notifier {
 	 * For sending requests to Cloud API
 	 */
 	public static function wa_cloud_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
-		$phone_number_id = get_option('wa_notifier_phone_number_id');
-		$request_url = WA_NOTIFIER_WA_API_URL . $phone_number_id . '/' . untrailingslashit($endpoint);
+		$phone_number_id = get_option('notifier_phone_number_id');
+		$request_url = NOTIFIER_WA_API_URL . $phone_number_id . '/' . untrailingslashit($endpoint);
 		return self::send_api_request($request_url, $args, $method);
 	}
 
@@ -264,8 +264,8 @@ class WA_Notifier {
 	 * For sending requests to WA Business API
 	 */
 	public static function wa_business_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
-		$business_account_id = get_option('wa_notifier_business_account_id');
-		$request_url = WA_NOTIFIER_WA_API_URL . $business_account_id . '/' . untrailingslashit($endpoint);
+		$business_account_id = get_option('notifier_business_account_id');
+		$request_url = NOTIFIER_WA_API_URL . $business_account_id . '/' . untrailingslashit($endpoint);
 		return self::send_api_request($request_url, $args, $method);
 	}
 
@@ -273,7 +273,7 @@ class WA_Notifier {
 	 * For sending API requests
 	 */
 	private static function send_api_request ( $request_url, $args, $method ) {
-		$permanent_access_token = get_option('wa_notifier_permanent_access_token');
+		$permanent_access_token = get_option('notifier_permanent_access_token');
 		$request_args = array(
 		    'method' => $method,
 		    'headers'     => array(
@@ -309,8 +309,8 @@ class WA_Notifier {
 	 */
 	public static function maybe_include_woocoomerce_class () {
 		if( class_exists( 'WooCommerce' ) ){
-			require_once WA_NOTIFIER_PATH . 'includes/classes/class-wa-notifier-woocommerce.php';
-			WA_Notifier_Woocommerce::init();
+			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-woocommerce.php';
+			Notifier_Woocommerce::init();
 		}
 	}
 
@@ -318,17 +318,17 @@ class WA_Notifier {
 	 * Add admin html templates to footer
 	 */
 	public static function add_admin_html_templates (){
-		if(!self::is_wa_notifier_page()){
+		if(!self::is_notifier_page()){
 			return;
 		}
 
-		$templates = apply_filters('wa_notifier_admin_html_templates', array());
+		$templates = apply_filters('notifier_admin_html_templates', array());
 
 		if(count($templates) == 0) {
 			return;
 		}
 
-		echo '<div class="wa-notifier-templates">';
+		echo '<div class="notifier-templates">';
 		foreach($templates as $key => $template) {
 			echo '<template id="'.$key.'">'.$template.'</template>';
 		}
