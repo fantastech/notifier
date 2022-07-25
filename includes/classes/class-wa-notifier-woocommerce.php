@@ -103,7 +103,6 @@ class WA_Notifier_Woocommerce {
 						if(empty($notif_ids)){
 							return;
 						}
-						error_log('Cancelled');
 						foreach($notif_ids as $nid){
 							$args = array (
 								'object_type' 	=> 'order',
@@ -126,7 +125,6 @@ class WA_Notifier_Woocommerce {
 						if(empty($notif_ids)){
 							return;
 						}
-						error_log('Failed');
 						foreach($notif_ids as $nid){
 							$args = array (
 								'object_type' 	=> 'order',
