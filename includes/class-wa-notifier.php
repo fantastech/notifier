@@ -284,7 +284,13 @@ class WA_Notifier {
 		$response = wp_remote_request( $request_url, $request_args);
 		if ( is_wp_error( $response ) ) {
 			echo $response->get_error_message();
-		} else {
+			return false;
+		}
+		else if(isset($response->error)) {
+			error_log($response->error_user_title . ' - ' . $response->eerror_user_msg);
+			return json_decode($response_body);
+		}
+		else {
 			$response_body = wp_remote_retrieve_body( $response );
 			return json_decode($response_body);
 		}
