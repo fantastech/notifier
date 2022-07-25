@@ -49,7 +49,7 @@ Now you can send the bulk broadcast messages and transactional notifications usi
 
 = UPCOMING FEATURES =
 
-* Support for more languages in message templates. Currently only supports US_en.
+* Support for more languages in message templates. Currently only supports en_US.
 * Inbox - 2-way message communication with your contacts.
 * Reply to buttons in message templates.
 * More fields for contacts as per demand.
