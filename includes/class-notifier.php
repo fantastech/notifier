@@ -173,10 +173,6 @@ class Notifier {
     	);
 
     	// Styles
-    	wp_enqueue_style(
-	    	NOTIFIER_NAME . '-datepicker-style',
-	    	'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'
-	    );
 	    wp_enqueue_style(
 	    	NOTIFIER_NAME . '-admin-css',
 	    	NOTIFIER_URL . 'assets/css/admin.css'
