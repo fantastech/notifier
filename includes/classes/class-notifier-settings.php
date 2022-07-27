@@ -480,9 +480,9 @@ class Notifier_Settings {
 		$profile_picture_id = isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture' ] : '';
 		// $pic_url = wp_get_attachment_image_url($profile_picture_id);
 
-		if($pic_url){
+		//if($pic_url){
 			// $args['profile_picture_handle'] = $pic_url;
-		}
+		//}
 
 		$response = Notifier::wa_cloud_api_request( 'whatsapp_business_profile', $args );
 
@@ -524,15 +524,6 @@ class Notifier_Settings {
 			update_option( NOTIFIER_PREFIX . 'phone_number_details', $phone_number_details );
 		}
 
-		$profile_fields = array (
-			'address' => 'wa_profile_address',
-			'description' => 'wa_profile_description',
-			'email' => 'wa_profile_email',
-			'profile_picture_url' => '',
-			'websites' => '',
-			'vertical' => 'wa_profile_category'
-		);
-
 		$response_profile = Notifier::wa_cloud_api_request('whatsapp_business_profile', array(
 			'fields' => 'about,address,description,email,profile_picture_url,websites,vertical'
 		), 'GET');
@@ -550,7 +541,7 @@ class Notifier_Settings {
 				update_option( NOTIFIER_PREFIX . 'wa_profile_address', isset($data->address) ? $data->address : '' );
 				update_option( NOTIFIER_PREFIX . 'wa_profile_description', isset($data->description) ? $data->description : '');
 				update_option( NOTIFIER_PREFIX . 'wa_profile_email', isset($data->email) ? $data->email : '');
-				update_option( NOTIFIER_PREFIX . 'wa_profile_category', isset($data->industry) ? $data->industry : '');
+				update_option( NOTIFIER_PREFIX . 'wa_profile_category', isset($data->vertical) ? $data->vertical : '');
 				if(isset($data->websites)) {
 					update_option( NOTIFIER_PREFIX . 'wa_profile_website_1', isset($data->websites[0]) ? $data->websites[0] : '');
 					update_option( NOTIFIER_PREFIX . 'wa_profile_website_2', isset($data->websites[1]) ? $data->websites[1] : '');

@@ -17,15 +17,17 @@ Send WhatsApp broadcast messages and transactional notification to your contacts
 
 WhatsApp recently launched it's [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) to let businesses send WhatsApp messages to customer using their official API. Before this if you had to send bulk WhatsApp messages or notifications, there were only two ways to do it:
 
-1. You either used **hack-y Chrome extensions or mobile apps** that would sit on top of WhatsApp web or your WhatsApp phone app to send the messages in a *not-so-elegant*, [unauthorized](https://faq.whatsapp.com/1104252539917581/) way.
+1. You either used **hack-y Chrome extensions or Windows / mobile apps** that would work on top of WhatsApp Web or your WhatsApp phone app to send the messages in a *shady* and [unauthorized](https://faq.whatsapp.com/1104252539917581/) way. This was a good way to get your phone number **banned** by WhatsApp!
 
 2. Or you had to sign up with one of the WhatsApp approved **Business Service Providers** and pay them high monthly fees to use their SaaS to send the messages. Not only that, they charged a premium of 10% - 20% on top of [WhatsApp's official pricing](https://developers.facebook.com/docs/whatsapp/pricing/).
 
 But that changes with this plugin!
 
-Now you can send the bulk broadcast messages and transactional notifications using the official WhatsApp way but without needing to pay for a costly middle-ware SaaS tools. Notifier is a FREE bridge between you and WhatsApp that lets you send messages without limitation or charging you a premium on top of their per conversation cost. You settle your billing directly with them!
+Now you can send the bulk broadcast messages and transactional notifications using the **official WhatsApp way** but without needing to pay for a costly middle-ware SaaS tools. Notifier uses **WhatsApp's official Cloud API** and acts as a FREE bridge between you and WhatsApp to send messages without limitation or charging you a premium on top of their per conversation cost. You settle your billing directly with them!
 
 *Note:* WhatsApp Cloud API allows you to **send upto 1,000 messages for FREE per month**. After that WhatsApp charges you a small fees per conversion as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/).
+
+If you're looking for a **safe, cost friendly and robust** solution for sending WhatsApp broadcasts or messages, this plugin is for you!
 
 = VERY IMPORTANT NOTES BEFORE YOU USE THE PLUGIN =
 
