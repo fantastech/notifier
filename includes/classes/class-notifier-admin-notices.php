@@ -9,7 +9,7 @@ class Notifier_Admin_Notices {
 	public $notices = array();
 
 	/**
-	 * WA Notifier Constructor.
+	 * Notifier Constructor.
 	 */
 	public function __construct($notices) {
 		$this->notices = $notices;

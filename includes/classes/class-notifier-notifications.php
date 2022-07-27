@@ -331,7 +331,7 @@ class Notifier_Notifications {
 		$offset = (!$list_offset) ? 0 : (int)$list_offset;
 
 		$count = 0;
-		$limit = 50; // Send to only 50 contacts at a time
+		$limit = get_option( NOTIFIER_PREFIX . 'bulk_message_batch_limit', 50 );
 
 		$contact_ids = get_posts( array(
 			'post_type'			=> 'wa_contact',
@@ -353,10 +353,10 @@ class Notifier_Notifications {
 			$message_sent = Notifier_Message_Templates::send_message_template_to_number($template_id, $notification_id, $phone_number);
 
 			if($message_sent) {
-				$sent_phone_numbers[] =  $phone_number;
+				$sent_numbers[] =  $phone_number;
 			}
 			else {
-				$sent_phone_numbers[] =  $phone_number;
+				$unsent_numbers[] =  $phone_number;
 			}
 		}
 

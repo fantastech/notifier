@@ -93,7 +93,7 @@ else {
 						'options'           => array (
 							'none' 	=> 'None',
 							'text' 	=> 'Text',
-							'media'	=> 'Media'
+							// 'media'	=> 'Media'
 						),
 						'custom_attributes' => $disabled
 					)

@@ -1,6 +1,6 @@
 <?php
 /**
- * WA Notifier Meta Box Functions
+ * Notifier Meta Box Functions
  *
  * @package     Notifier
  */

@@ -33,7 +33,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 						<h4>1. PHONE NUMBER WILL RESTRICTION</h4>
 						<p>This plugin uses WhatsApp's official <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/overview" target="_blank">Cloud API</a> to send notifications from your WordPress backend. In order to use the API, you need to register your phone number with them to be able to send notifications.</p>
 						<p>Once the phone number is setup in their app to use with this plugin, you will <b>not be able to use the number</b> on the <a href="https://business.whatsapp.com/products/business-app" target="_blank">WhastApp Business mobile app</a>.</p>
-						<p>If you want to use the phone number that you were using on their phone app, WhatsApp <a href="https://developers.facebook.com/docs/whatsapp/phone-numbers" target="_blank">requires you</a> to <b>delete that account from phone</b> (along with it's message history) to be able to use it via the API.</p>
+						<p>If you want to use your phone number that you were earlier using on the WhatsApp phone app, WhatsApp <a href="https://developers.facebook.com/docs/whatsapp/phone-numbers" target="_blank">requires you</a> to <b>delete that account from phone</b> (along with it's message history) to be able to use it via the API.</p>
 						<p>If you're using a different number that's not used in the mobile app or if you're okay to delete the phone app account, you can proceed with using this plugin.</p>
 						<hr />
 						<h4>2. ONE-WAY COMMUNICATION ONLY</h4>
@@ -98,7 +98,8 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 								<li>Next, you'll need to add your phone number. Enter your phone number and select a verification method to verify the number.</li>
 								<li>Enter the verfication code and click <b>Next</b>.</li>
 								<li>Once the phone number is added, scroll up on the <b>Get Started</b> page and select your added number from the dropdown under <b>Send and receive messages</b>.</li>
-								<li>After selecting your phone number the <b>Phone number ID</b> and <b>WhatsApp Business Account ID</b> values will get updated below it. Copy those values and add them on the <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page. We'll add <b>Permanent Access Token</b> in the next step.</li>
+								<li>After selecting your phone number the <b>Phone number ID</b> and <b>WhatsApp Business Account ID</b> values will get updated below it. Copy those values and add them on the <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page.</li>
+								<li>Do not save the page, just keep it open. We'll add <b>Permanent Access Token</b> in the next step.</li>
 							</ol>
 						</div>
 					</div>
@@ -113,7 +114,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							<ol>
 								<li>From the <b>Get Started</b> screen's left sidebar, click on <b>Whatsapp > Configuration</b> link.</li>
 								<li>Click on the <b>Edit</b> button. That'll open a popup.</li>
-								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo site_url('/?notifier'); ?></code></li>
+								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo site_url('/?notifier'); ?></code>. Note that if you have any kind of firewall set on your website the verification will fail.</li>
 								<li>In the <b>Verify Token</b> field enter: <code><?php echo $verify_token ?></code> and click <b>Verify</b>.</li>
 								<li>Under <b>Webhook fields:</b> click on <b>Manage</b>.</li>
 								<li>Click on <b>Subscribe</b> button in front of all fields and then click on <b>Done</b>.</li>
@@ -127,7 +128,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 								<li>Enter a name for your <b>System user name</b> (you can keep it admin or system, this will not be shown to your users). Select <b>System user role</b> as <b>Administrator</b> and click on <b>Create system user</b>.</li>
 								<li>Click on <b>Add Assets</b> button. Under <b>Select asset type</b> click on <b>Apps</b>, select your app from <b>Select assets</b> column and then enable <b>Full control > Manage App</b>. Click on <b>Save Changes</b>.</li>
 								<li>Now click on <b>Generate Token</b> button. Select your app from the dropdown and click on <b>Generate Token</b>. From the list of permissions under <b>Available Permissions:</b> select <em>whatsapp_business_messaging</em> and <em>whatsapp_business_management</em> and then click on <b>Generate Token</b>.</li>
-								<li>Copy the <b>Access token</b>. Open this plugin's <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page, add it in the <b>Permanent Access Token</b> field and save.</li>
+								<li>Copy the <b>Access token</b>. Open this plugin's <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings&tab=api'); ?>" target="_blank">Settings</a> page, add it in the <b>Permanent Access Token</b> field and save.</li>
 							</ol>
 							
 						</div>

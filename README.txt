@@ -1,10 +1,10 @@
-=== WA Notifier ===
+=== Notifier - Send Bulk Broadcast Messages & Transactional Notifications ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
 Tags: whatsapp, cloud api, notification, notifications, marketing
 Requires at least: 5.0
-Tested up to: 6.0
-Stable tag: 4.3
+Tested up to: 6.0.1
+Stable tag: 0.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,7 +13,7 @@ Send WhatsApp broadcast messages and transactional notification to your contacts
 
 == Description ==
 
-[WA Notifier](https://wanotifier.com) is the world's first and only FREE WordPress plugin that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) right from your WordPress backend using **WhatsApp's official Cloud API**!
+[Notifier](https://wanotifier.com) is the world's first and only FREE WordPress plugin that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) right from your WordPress backend using **WhatsApp's official Cloud API**!
 
 WhatsApp recently launched it's [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) to let businesses send WhatsApp messages to customer using their official API. Before this if you had to send bulk WhatsApp messages or notifications, there were only two ways to do it:
 
@@ -23,7 +23,7 @@ WhatsApp recently launched it's [Cloud API](https://developers.facebook.com/docs
 
 But that changes with this plugin!
 
-Now you can send the bulk broadcast messages and transactional notifications using the official WhatsApp way but without needing to pay for a costly middle-ware SaaS tools. WA Notifier is a FREE bridge between you and WhatsApp that lets you send messages without limitation or charging you a premium on top of their per conversation cost. You settle your billing directly with them!
+Now you can send the bulk broadcast messages and transactional notifications using the official WhatsApp way but without needing to pay for a costly middle-ware SaaS tools. Notifier is a FREE bridge between you and WhatsApp that lets you send messages without limitation or charging you a premium on top of their per conversation cost. You settle your billing directly with them!
 
 *Note:* WhatsApp Cloud API allows you to **send upto 1,000 messages for FREE per month**. After that WhatsApp charges you a small fees per conversion as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/).
 
@@ -67,7 +67,7 @@ Now you can send the bulk broadcast messages and transactional notifications usi
 
 1. Download the plugin zip, upload it to the `/wp-content/plugins/` directory and unzip. Or install the plugin via 'Plugins' page in your WordPress backend.
 2. Activate the plugin through the 'Plugins' page.
-3. Click on WA Notifier in the left side admin menu to setup the plugin.
+3. Click on Notifier in the left side admin menu to setup the plugin.
 
 == Frequently Asked Questions ==
 

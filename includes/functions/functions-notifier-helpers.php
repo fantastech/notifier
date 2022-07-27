@@ -1,6 +1,6 @@
 <?php
 /**
- * WA Notifier Helper Functions
+ * Notifier Helper Functions
  *
  * @package    Wa_Notifier
  */

@@ -1,11 +1,10 @@
 <?php
 /**
- * Plugin Name: Notifier Pro
+ * Plugin Name: Notifier Pro - Send Bulk Broadcast Messages & Transactional Notifications
  * Plugin URI: https://wanotifier.com
- * Description: Send bulk broadcast messages or transactional notifications to your contacts and Woocommerce customers on WhatsApp using their offical Cloud API.
- * Version: 0.1
+ * Description: Send bulk WhatsApp broadcast messages and transactional notifications to your contacts and Woocommerce customers using WhatsApp Cloud API.
+ * Version: 0.1.0
  * Author: WANotifier.com
- * Author URI: https://wanotifier.com
  * Text Domain: notifier
  * Requires at least: 5.7
  * Requires PHP: 7.4
@@ -30,7 +29,7 @@ if ( ! defined( 'NOTIFIER_PATH' ) ) {
 /**
  * Load the core plugin file.
  */
-require Notifier_PATH . 'includes/class-notifier.php';
+require NOTIFIER_PATH . 'includes/class-notifier.php';
 
 /**
  * Begin execution of the plugin.

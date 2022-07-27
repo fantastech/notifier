@@ -11,7 +11,7 @@ class Notifier {
 	protected static $_instance = null;
 
 	/**
-	 * WA Notifier Constructor.
+	 * Notifier Constructor.
 	 */
 	public function __construct() {
 		$this->define_constants();
@@ -44,9 +44,9 @@ class Notifier {
 	}
 
 	/**
-	 * Main WA Notifier Instance.
+	 * Main Notifier Instance.
 	 *
-	 * @return WA Notifier instance.
+	 * @return Notifier instance.
 	 */
 	public static function get_instance() {
 		if ( is_null( self::$_instance ) ) {
@@ -147,6 +147,7 @@ class Notifier {
     		NOTIFIER_VERSION,
     		true
     	);
+
     	// Date / time picker
     	wp_enqueue_script( 'jquery-ui-datepicker' );
     	wp_enqueue_script(
@@ -156,6 +157,7 @@ class Notifier {
     		NOTIFIER_VERSION,
     		true
     	);
+
     	// Admin JS file
     	wp_enqueue_script(
     		NOTIFIER_NAME . '-admin-js',

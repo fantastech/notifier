@@ -22,26 +22,6 @@
 }
 
 /* Meta Fields */
-.notifier-fields-table th {
-	vertical-align: top;
-	text-align: left;
-	padding: 20px 10px 20px 0;
-	width: 200px;
-	line-height: 1.3;
-	font-weight: 600;
-
-	&.section-title {
-		padding: 0;
-	}
-
-	td {
-		margin-bottom: 9px;
-		padding: 15px 10px;
-		line-height: 1.3;
-		vertical-align: middle;
-	}
-}
-
 .meta-fields {
 	.form-field {
 		position: relative;
