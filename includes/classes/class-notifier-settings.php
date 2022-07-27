@@ -13,8 +13,6 @@ class Notifier_Settings {
 		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'admin_init', array( __CLASS__ , 'save_settings_fields' ) );
         add_action( 'admin_enqueue_scripts', array( __CLASS__ , 'admin_scripts') );
-        // add_action( 'notifier_before_settings_fields', array( __CLASS__ , 'show_wa_profile_screenshot_start') );
-        // add_action( 'notifier_after_settings_fields', array( __CLASS__ , 'show_wa_profile_screenshot_end') );
 	}
 
 	/**
@@ -71,17 +69,17 @@ class Notifier_Settings {
 				$settings = array(
 					array(
 						'title'			=> 'WhatsApp Profile',
-						'description'	=> 'Update how your profile will look to your customers on WhatsApp.',
+						'description'	=> 'Update your WhatsApp Business profile details. These details will be visible to contacts when they open your profile on WhatsApp',
 						'type'			=> 'title',
 					),
-					// array(
-					// 	'id' 			=> 'wa_profile_picture',
-					// 	'title'			=> 'Profile Picture',
-					// 	'description'	=> 'Recommended profile image size 640px x 640px.',
-					// 	'type'			=> 'image',
-					// 	'default'		=> '',
-					// 	'placeholder'	=> ''
-					// ),
+					array(
+						'id' 			=> 'wa_profile_picture',
+						'title'			=> 'Profile Picture',
+						'description'	=> 'Recommended profile image size 640px x 640px.',
+						'type'			=> 'image',
+						'default'		=> '',
+						'placeholder'	=> ''
+					),
 					array(
 						'id' 			=> 'wa_profile_description',
 						'title'			=> 'Description',
@@ -478,17 +476,18 @@ class Notifier_Settings {
 		}
 
 		$profile_picture_id = isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture' ] : '';
-		// $pic_url = wp_get_attachment_image_url($profile_picture_id);
 
-		//if($pic_url){
-			// $args['profile_picture_handle'] = $pic_url;
-		//}
+		$profile_picture_handle = Notifier::wa_cloud_api_upload_profile_pic($profile_picture_id);
+
+		if($profile_picture_handle){
+			$args['profile_picture_handle'] = $profile_picture_handle;
+		}
 
 		$response = Notifier::wa_cloud_api_request( 'whatsapp_business_profile', $args );
 
 		if(isset($response->error)) {
 			$notices[] = array(
-				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
+				'message' => 'Error Code ' . $response->error->code . ': ' . $response->error->message ,
 				'type' => 'error'
 			);
 			return $notices;
@@ -542,9 +541,15 @@ class Notifier_Settings {
 				update_option( NOTIFIER_PREFIX . 'wa_profile_description', isset($data->description) ? $data->description : '');
 				update_option( NOTIFIER_PREFIX . 'wa_profile_email', isset($data->email) ? $data->email : '');
 				update_option( NOTIFIER_PREFIX . 'wa_profile_category', isset($data->vertical) ? $data->vertical : '');
+
 				if(isset($data->websites)) {
 					update_option( NOTIFIER_PREFIX . 'wa_profile_website_1', isset($data->websites[0]) ? $data->websites[0] : '');
 					update_option( NOTIFIER_PREFIX . 'wa_profile_website_2', isset($data->websites[1]) ? $data->websites[1] : '');
+				}
+
+				if(isset($data->profile_picture_url)) {
+					$profile_id = notifier_upload_file_by_url($data->profile_picture_url);
+					update_option( NOTIFIER_PREFIX . 'wa_profile_picture', $profile_id);
 				}
 			}
 			$notices[] = array(

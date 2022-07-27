@@ -252,32 +252,41 @@ class Notifier {
 	/**
 	 * For sending requests to Cloud API
 	 */
-	public static function wa_cloud_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
+	public static function wa_cloud_api_request ( $endpoint, $args = array(), $method = 'POST', $headers = array() ) {
 		$phone_number_id = get_option('notifier_phone_number_id');
 		$request_url = NOTIFIER_WA_API_URL . $phone_number_id . '/' . untrailingslashit($endpoint);
-		return self::send_api_request($request_url, $args, $method);
+		return self::send_api_request($request_url, $args, $method, $headers);
 	}
 
 	/**
 	 * For sending requests to WA Business API
 	 */
-	public static function wa_business_api_request ( $endpoint, $args = array(), $method = 'POST' ) {
+	public static function wa_business_api_request ( $endpoint, $args = array(), $method = 'POST', $headers = array() ) {
 		$business_account_id = get_option('notifier_business_account_id');
 		$request_url = NOTIFIER_WA_API_URL . $business_account_id . '/' . untrailingslashit($endpoint);
-		return self::send_api_request($request_url, $args, $method);
+		return self::send_api_request($request_url, $args, $method, $headers);
+	}
+
+	/**
+	 * For sending graph api requests
+	 */
+	public static function wa_graph_api_request ( $endpoint, $args = array(), $method = 'POST', $headers = array() ) {
+		$request_url = NOTIFIER_WA_API_URL . untrailingslashit($endpoint);
+		return self::send_api_request($request_url, $args, $method, $headers);
 	}
 
 	/**
 	 * For sending API requests
 	 */
-	private static function send_api_request ( $request_url, $args, $method ) {
+	private static function send_api_request ( $request_url, $args, $method, $headers ) {
 		$permanent_access_token = get_option('notifier_permanent_access_token');
+		$headers = wp_parse_args($headers, array(
+	        'Authorization' => 'Bearer ' . $permanent_access_token
+	    ));
 		$request_args = array(
-		    'method' => $method,
-		    'headers'     => array(
-		        'Authorization' => 'Bearer ' . $permanent_access_token ,
-		    ),
-		    'body' => $args
+		    'method' 	=> $method,
+		    'headers' 	=> $headers,
+		    'body' 		=> $args
 	    );
 		$response = wp_remote_request( $request_url, $request_args);
 		if ( is_wp_error( $response ) ) {
@@ -292,6 +301,55 @@ class Notifier {
 			$response_body = wp_remote_retrieve_body( $response );
 			return json_decode($response_body);
 		}
+	}
+
+	/**
+	 * For uploading profile pic to app
+	 */
+	public static function wa_cloud_api_upload_profile_pic($attachment_id){
+		$file_path = get_attached_file($attachment_id);
+		$file_size = filesize($file_path);
+
+		if(!$file_path) {
+			return;
+		}
+
+		$file_args = array (
+			'file_length' 	=> $file_size,
+			'file_type'		=> get_post_mime_type($attachment_id)
+		);
+
+		// $phone_number_id = get_option('notifier_phone_number_id');
+		// $request_url = NOTIFIER_WA_API_URL . $phone_number_id . '/media';
+		$permanent_access_token = get_option('notifier_permanent_access_token');
+
+		// Create session ID for upload
+		$upload_session = self::wa_graph_api_request('app/uploads', $file_args);
+		if(!isset($upload_session->id)){
+			error_log('Error creating WhatsApp image upload session: ' . $upload_session);
+			return false;
+		}
+
+		// Upload the file
+		$file = @fopen( $file_path, 'r' );
+		$file_data = fread( $file, $file_size );
+
+		$upload_headers = array(
+			'Authorization' => 'OAuth ' . $permanent_access_token,
+			'file_offset'	=> 0,
+			'Connection'	=> 'Close',
+			'Host'			=> 'graph.facebook.com',
+			'Content-Type'	=> 'multipart/form-data'
+		);
+
+		$upload_handle = self::wa_graph_api_request( $upload_session->id, $file_data, null, $upload_headers );
+
+		if(!isset($upload_handle->h)){
+			error_log('Error while uploading profile image: ' . $upload_handle);
+			return false;
+		}
+
+		return $upload_handle->h;
 	}
 
 	/**
