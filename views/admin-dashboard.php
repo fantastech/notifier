@@ -115,7 +115,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 								<li>From the <b>Get Started</b> screen's left sidebar, click on <b>Whatsapp > Configuration</b> link.</li>
 								<li>Click on the <b>Edit</b> button. That'll open a popup.</li>
 								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo site_url('/?notifier'); ?></code>. Note that if you have any kind of firewall set on your website the verification will fail.</li>
-								<li>In the <b>Verify Token</b> field enter: <code><?php echo $verify_token ?></code> and click <b>Verify</b>.</li>
+								<li>In the <b>Verify Token</b> field enter: <code><?php echo esc_html($verify_token) ?></code> and click <b>Verify</b>.</li>
 								<li>Under <b>Webhook fields:</b> click on <b>Manage</b>.</li>
 								<li>Click on <b>Subscribe</b> button in front of all fields and then click on <b>Done</b>.</li>
 							</ol>

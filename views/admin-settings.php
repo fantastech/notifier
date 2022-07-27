@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     	<?php do_action('notifier_before_settings_fields_form', $current_tab); ?>
 
-        <form method="POST" id="notifier_settings_form" class="notifier-settings-form notifier-settings-form-<?php echo $current_tab; ?>" action="" enctype="multipart/form-data">
+        <form method="POST" id="notifier_settings_form" class="notifier-settings-form notifier-settings-form-<?php echo esc_attr( $current_tab ); ?>" action="" enctype="multipart/form-data">
 
         	<?php do_action('notifier_before_settings_fields', $current_tab); ?>
 

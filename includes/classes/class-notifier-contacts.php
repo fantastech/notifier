@@ -95,17 +95,17 @@ class Notifier_Contacts {
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'wa_contact_first_name' === $column ) {
 		    $first_name = get_post_meta( $post_id, NOTIFIER_PREFIX . 'first_name', true);
-		    echo $first_name;
+		    echo esc_html( $first_name );
 		}
 
 		if ( 'wa_contact_last_name' === $column ) {
 		    $last_name = get_post_meta( $post_id, NOTIFIER_PREFIX . 'last_name', true);
-		    echo $last_name;
+		    echo esc_html( $last_name );
 		}
 
 		if ( 'wa_contact_phone_number' === $column ) {
 		    $wa_number = get_post_meta( $post_id, NOTIFIER_PREFIX . 'wa_number', true);
-		    echo $wa_number;
+		    echo esc_html( $wa_number );
 		}
 
 		if ( 'wa_contact_associated_user' === $column ) {
@@ -266,19 +266,6 @@ class Notifier_Contacts {
 	}
 
 	/**
-	 * Show user meta keys dropdown
-	 */
-	public static function show_user_meta_keys_dropdown ($id = '') {
-		$meta_keys = array_keys( get_user_meta( get_current_user_id() ) );
-		$meta_keys = apply_filters('notifier_user_meta_keys', $meta_keys);
-		echo '<select id="'.$id.'" name="'.$id.'">';
-		foreach($meta_keys as $key) {
-			echo '<option value="'.$key.'">'.$key.'</option>';
-		}
-		echo '</select>';
-	}
-
-	/**
 	 * Handle CSV import
 	 */
 	public static function import_contacts_csv() {
@@ -292,13 +279,17 @@ class Notifier_Contacts {
 			die;
 		}
 
-		$tmpName = $_FILES['notifier_contacts_csv']['tmp_name'];
-		$contact_data = array_map('str_getcsv', file($tmpName));
+		if(!is_uploaded_file($_FILES['notifier_contacts_csv']['tmp_name'])){
+			die;
+		}
+
+		$temp_name = $_FILES['notifier_contacts_csv']['tmp_name'];
+		$contact_data = array_map('str_getcsv', file($temp_name));
 		$first_row = $contact_data[0];
 		if($first_row[0] != 'First Name' || $first_row[1] != 'Last Name') {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=2'));
 		}
-		unset($contact_data[0]);
+		unset($contact_data[0]); // Remove first line
 		$count = 0;
 		$skipped = 0;
 		foreach($contact_data as $contact) {
@@ -366,8 +357,6 @@ class Notifier_Contacts {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
-
-		$data = $_POST;
 
 		$list = isset($_POST['wa_contact_list_name']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_list_name']) ) : '';
 		$list_name = isset($_POST['wa_contact_list_name_input']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_list_name_input']) ) : '';
@@ -497,8 +486,8 @@ class Notifier_Contacts {
  		}
 
  		if('1' == $_GET['wa_contacts_import']) {
- 			$count = isset($_GET['wa_import_count']) ? $_GET['wa_import_count'] : 0;
- 			$skipped = isset($_GET['wa_import_skipped']) ? $_GET['wa_import_skipped'] : 0;
+ 			$count = isset($_GET['wa_import_count']) ? intval($_GET['wa_import_count']) : 0;
+ 			$skipped = isset($_GET['wa_import_skipped']) ? intval($_GET['wa_import_skipped']) : 0;
  			if($count != 0){
  				$message = $count . ' contacts imported / updated. ';
  				if($skipped) {

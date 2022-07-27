@@ -318,7 +318,7 @@ class Notifier_Settings {
 				case 'color':
 					?>
 					<div class="color-picker" style="position:relative;">
-				        <input type="text" name="<?php echo esc_att( $option_name ); ?>" class="color" value="<?php echo esc_attr( $data ); ?>" />
+				        <input type="text" name="<?php echo esc_attr( $option_name ); ?>" class="color" value="<?php echo esc_attr( $data ); ?>" />
 				        <div style="position:absolute;background:#FFF;z-index:99;border-radius:100%;" class="colorpicker"></div>
 				    </div>
 				    <?php

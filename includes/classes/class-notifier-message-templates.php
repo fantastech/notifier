@@ -194,7 +194,7 @@ class Notifier_Message_Templates {
 		}
 
 		echo '<div class="mt-status">';
-		echo '<b>Status:</b> <span class="status status-' . strtolower($mt_status) . '">' . $mt_status . '</span>';
+		echo '<b>Status:</b> <span class="status status-' . esc_attr(strtolower($mt_status)) . '">' . esc_html($mt_status) . '</span>';
 		if('APPROVED' !== $mt_status){
 			echo $refresh_button;
 		}
@@ -223,22 +223,22 @@ class Notifier_Message_Templates {
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'mt_name' === $column ) {
 		    $template_name = get_post_meta( $post_id, NOTIFIER_PREFIX . 'template_name', true);
-		    echo ($template_name) ? '<code>'.$template_name.'</code>' : '-';
+		    echo ($template_name) ? '<code>'. esc_html( $template_name ) .'</code>' : '-';
 		}
 
 		if ( 'mt_category' === $column ) {
 		    $category = get_post_meta( $post_id, NOTIFIER_PREFIX . 'category', true);
-		    echo ($category) ? $category : '-';
+		    echo ($category) ? esc_html( $category ) : '-';
 		}
 
 		if ( 'mt_preview' === $column ) {
 		    $preview = get_post_meta( $post_id, NOTIFIER_PREFIX . 'body_text', true);
-		    echo ($preview) ? '<span class="truncate-string">' . strip_tags( $preview ) . '</span>' : '-';
+		    echo ($preview) ? '<span class="truncate-string">' . esc_html( strip_tags( $preview ) ) . '</span>' : '-';
 		}
 
 		if ( 'mt_status' === $column ) {
 		    $status = get_post_meta( $post_id, NOTIFIER_PREFIX . 'status', true);
-		    echo ($status) ? '<span class="status status-'.strtolower($status).'">'.$status.'</span>' : '-';
+		    echo ($status) ? '<span class="status status-'.esc_attr( strtolower($status) ).'">'. esc_html( $status ).'</span>' : '-';
 		}
 	}
 

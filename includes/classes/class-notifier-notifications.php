@@ -176,10 +176,10 @@ class Notifier_Notifications {
 			wp_die();
 		}
 
-		$template_id =  $_POST['template_id'];
-		$post_id =  isset($_POST['post_id']) ? $_POST['post_id'] : 0;
-		$notification_type =  isset($_POST['notification_type']) ? $_POST['notification_type'] : '';
-		$trigger =  isset($_POST['trigger']) ? $_POST['trigger'] : '';
+		$template_id =  intval($_POST['template_id']);
+		$post_id =  isset($_POST['post_id']) ? intval( $_POST['post_id'] ) : 0;
+		$notification_type =  isset($_POST['notification_type']) ? sanitize_text_field( $_POST['notification_type'] ) : '';
+		$trigger =  isset($_POST['trigger']) ? sanitize_text_field( $_POST['trigger'] ) : '';
 
 		if('marketing' == $notification_type) {
 			$trigger = '';
@@ -460,12 +460,12 @@ class Notifier_Notifications {
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'notification_type' === $column ) {
 		    $notification_type = get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_type', true);
-		    echo ($notification_type) ? '<code>' . $notification_type . '</code>' : '-';
+		    echo ($notification_type) ? '<code>' . esc_html($notification_type) . '</code>' : '-';
 		}
 
 		if ( 'notification_status' === $column ) {
 		    $notification_status = get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_status', true);
-		    echo ($notification_status) ? '<code>' . $notification_status . '</code>' : '-';
+		    echo ($notification_status) ? '<code>' . esc_html($notification_status) . '</code>' : '-';
 		}
 
 		if ( 'notification_stats' === $column ) {
@@ -489,8 +489,8 @@ class Notifier_Notifications {
 	 * Fetch Send to fields
 	 */
 	public static function fetch_send_to_fields () {
-		$post_id =  isset($_POST['post_id']) ? $_POST['post_id'] : 0;
-		$trigger =  isset($_POST['trigger']) ? $_POST['trigger'] : '';
+		$post_id =  isset($_POST['post_id']) ? intval( $_POST['post_id'] ) : 0;
+		$trigger =  isset($_POST['trigger']) ? sanitize_text_field( $_POST['trigger'] ) : '';
 		$send_to = get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_send_to', true);
 		$html = '<label>Recipients</label>';
 		$html .= '<table class="fields-repeater">
