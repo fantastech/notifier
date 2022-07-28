@@ -19,7 +19,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Define constants
  */
 if ( ! defined( 'NOTIFIER_FILE' ) ) {
-   define( 'NOTIFIER_FILE', __FILE__ );
+	define( 'NOTIFIER_FILE', __FILE__ );
 }
 
 if ( ! defined( 'NOTIFIER_PATH' ) ) {

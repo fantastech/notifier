@@ -85,11 +85,10 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 
 		$final_merge_tags = array();
 
-		if(empty($types)) {
+		if (empty($types)) {
 			$final_merge_tags = $merge_tags;
-		}
-		else {
-			foreach($types as $type) {
+		} else {
+			foreach ($types as $type) {
 				$final_merge_tags[$type] = $merge_tags[$type];
 			}
 		}
@@ -351,9 +350,9 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 	 */
 	public static function get_notification_merge_tags($trigger) {
 		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
-		foreach($main_triggers as $key => $triggers) {
-			foreach($triggers as $t) {
-				if( $trigger == $t['id'] ) {
+		foreach ($main_triggers as $key => $triggers) {
+			foreach ($triggers as $t) {
+				if ( $trigger == $t['id'] ) {
 					$tags = $t['merge_tags'];
 					break 2;
 				}
@@ -362,8 +361,8 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 
 		$merge_tags = array();
 
-		if(!empty($tags)){
-			foreach($tags as $tag_key => $tag) {
+		if (!empty($tags)) {
+			foreach ($tags as $tag_key => $tag) {
 				$merge_tags[$tag_key] = wp_list_pluck($tag, 'label', 'id');
 			}
 		}
@@ -381,16 +380,16 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 	 */
 	public static function get_notification_merge_tag_value($tag_id, $context_args) {
 		$merge_tags = self::get_merge_tags();
-		foreach($merge_tags as $tags) {
+		foreach ($merge_tags as $tags) {
 			foreach ($tags as $tag) {
-				if($tag['id'] == $tag_id) {
+				if ($tag['id'] == $tag_id) {
 					$the_tag = $tag;
 					break 2;
 				}
 			}
 		}
 		$value = trim($the_tag['value']($context_args));
-		if('' == $value) {
+		if ('' == $value) {
 			$value = ' ';
 		}
 		return $value;

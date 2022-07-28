@@ -14,10 +14,10 @@ class Notifier_Contacts {
         add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'add_meta_boxes', array( __CLASS__, 'create_meta_box' ) );
 		add_filter( 'bulk_actions-wa_contact', array( __CLASS__, 'remove_bulk_actions' ) );
-		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit') , 10, 2);
-		add_filter( 'gettext', array(__CLASS__, 'change_texts') , 10, 2 );
+		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit'), 10, 2);
+		add_filter( 'gettext', array(__CLASS__, 'change_texts'), 10, 2 );
 		add_filter( 'manage_wa_contact_posts_columns', array( __CLASS__ , 'add_columns' ) );
-		add_action( 'manage_wa_contact_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
+		add_action( 'manage_wa_contact_posts_custom_column', array( __CLASS__ , 'add_column_content' ), 10, 2 );
 		add_action( 'save_post_wa_contact', array(__CLASS__, 'save_meta'), 10, 2 );
 		add_filter( 'post_updated_messages', array(__CLASS__, 'update_save_messages') );
 		add_filter( 'notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
@@ -31,16 +31,16 @@ class Notifier_Contacts {
 	 */
 	public static function register_cpt () {
 		notifier_register_post_type ( 'wa_contact', 'Contact', 'Contacts' );
-		notifier_register_taxonomy ( 'wa_contact_list', 'Contact List', 'Contact Lists', 'wa_contact' , array( 'hierarchical' => true, 'default_term' => array('name' => 'Default List', 'slug' => 'default_list') ) );
+		notifier_register_taxonomy ( 'wa_contact_list', 'Contact List', 'Contact Lists', 'wa_contact', array( 'hierarchical' => true, 'default_term' => array('name' => 'Default List', 'slug' => 'default_list') ) );
 		notifier_register_taxonomy ( 'wa_contact_tag', 'Contact Tag', 'Contact Tags', 'wa_contact' );
 	}
-	
+
 	/**
 	 * Add page to admin menu
 	 */
 	public static function setup_admin_page () {
 		$api_credentials_validated = get_option( NOTIFIER_PREFIX . 'api_credentials_validated');
-		if(!$api_credentials_validated) {
+		if (!$api_credentials_validated) {
 			return;
 		}
 		add_submenu_page( NOTIFIER_NAME, 'Contacts', 'Contacts', 'manage_options', 'edit.php?post_type=wa_contact' );
@@ -67,7 +67,7 @@ class Notifier_Contacts {
 	public static function output () {
 		include_once NOTIFIER_PATH . 'views/admin-contacts-meta-box.php';
 	}
-	
+
 	/**
 	 * Add columns to list page
 	 */
@@ -110,11 +110,10 @@ class Notifier_Contacts {
 
 		if ( 'wa_contact_associated_user' === $column ) {
 		    $user_id = get_post_meta( $post_id, NOTIFIER_PREFIX . 'associated_user', true);
-		    if($user_id) {
+		    if ($user_id) {
 		    	$user = get_user_by('id', $user_id);
-		    	echo '<a href="'.get_edit_user_link($user_id).'">'.$user->display_name.'</a>';
-		    }
-		    else {
+		    	echo '<a href="' . esc_url ( get_edit_user_link($user_id) ) . '">' . esc_html($user->display_name) . '</a>';
+		    } else {
 		    	echo '—';
 		    }
 		}
@@ -123,7 +122,7 @@ class Notifier_Contacts {
 	/**
 	 * Remove inline edit from Bulk Edit
 	 */
-	public static function remove_bulk_actions( $actions ){
+	public static function remove_bulk_actions( $actions ) {
         unset( $actions['inline'] );
         return $actions;
     }
@@ -131,8 +130,8 @@ class Notifier_Contacts {
     /**
 	 * Remove inline Quick Edit
 	 */
-    public static function remove_quick_edit( $actions, $post ) { 
-    	if ('wa_contact' == $post->post_type){
+    public static function remove_quick_edit( $actions, $post ) {
+    	if ('wa_contact' === $post->post_type) {
         	unset($actions['inline hide-if-no-js']);
         }
     	return $actions;
@@ -142,12 +141,11 @@ class Notifier_Contacts {
 	 * Change text of buttons and links
 	 */
 	public static function change_texts( $translation, $text ) {
-		if ( 'wa_contact' == get_post_type() ) {
-			if ( $text == 'Update' ) {
-				return 'Update Contact'; 
-			}
-			elseif ($text == 'Publish') {
-				return 'Save Contact'; 
+		if ( 'wa_contact' === get_post_type() ) {
+			if ( 'Update' === $text ) {
+				return 'Update Contact';
+			} elseif ( 'Publish' === $text ) {
+				return 'Save Contact';
 			}
 		}
 		return $translation;
@@ -188,7 +186,7 @@ class Notifier_Contacts {
 	 * Admin HTML templates
 	 */
 	public static function admin_html_templates($templates) {
-		$import_from_users_url = '?' . http_build_query(array_merge($_GET, array("import_contacts_from_users"=>"1")));
+		$import_from_users_url = '?' . http_build_query(array_merge($_GET, array('import_contacts_from_users'=>'1')));
 		ob_start();
 		?>
 		<a href="#" class="page-title-action" id="import-contacts">Import Contacts</a>
@@ -198,14 +196,14 @@ class Notifier_Contacts {
 				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="csv" checked="checked"> Import from CSV file</label>
 				<?php
 					$disable_woo = '';
-					if( ! class_exists( 'WooCommerce' ) ){
-						$disable_woo = 'disabled="disabled" title="Woocommerce not installed."';
-					}
+				if ( ! class_exists( 'WooCommerce' ) ) {
+					$disable_woo = 'disabled="disabled" title="Woocommerce not installed."';
+				}
 				?>
-				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="users" <?php echo $disable_woo; ?>> Import from WooCommerce</label>
+				<label><input type="radio" name="csv_import_method" class="csv-import-method" value="users" <?php echo esc_attr($disable_woo); ?>> Import from WooCommerce</label>
 				<div class="col-import col-import-csv">
 					<form id="import-contacts-csv" class="contacts-import-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
-						<p><a href="<?php echo NOTIFIER_URL.'contacts-import-sample.csv'; ?>">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. <b>IMPORTANT:</b> In the WhatsApp number column, add phone numbers WITH country codes (but WITHOUT the plus + sign).</p>
+						<p><a href="<?php echo esc_url( NOTIFIER_URL . 'contacts-import-sample.csv' ); ?>">Click here</a> to download sample CSV file. Fill in the CSV with your contact data wtihtout changing the format of the CSV. <b>IMPORTANT:</b> In the WhatsApp number column, add phone numbers WITH country codes (but WITHOUT the plus + sign).</p>
 						<p><input type="file" name="notifier_contacts_csv" id="notifier-contacts-csv" /></p>
 						<p><input type="submit" name="upload_csv" value="Import CSV" class="button-primary"></p>
 						<?php wp_nonce_field('notifier_contacts_csv'); ?>
@@ -216,8 +214,8 @@ class Notifier_Contacts {
 					<form id="import-contacts-users" class="meta-fields contacts-import-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" enctype="multipart/form-data">
 						<p>Import contact data (billing name and phone number) from your Woocommerce <a href="admin.php?page=wc-admin&path=%2Fcustomers" target="_blank">customers</a>. Note that the customers with empty or incorrectly filled phone number fields will not be imported.</p>
 						<?php
-							$contact_lists = Notifier_Contacts::get_contact_lists(true, true);
-							$contact_lists = array_slice($contact_lists, 0, 1, TRUE) + array('_add_new' => 'Add new list') + array_slice($contact_lists, 1, NULL, TRUE);
+							$contact_lists = self::get_contact_lists(true, true);
+							$contact_lists = array_slice($contact_lists, 0, 1, true) + array('_add_new' => 'Add new list') + array_slice($contact_lists, 1, null, true);
 							notifier_wp_select(
 								array(
 									'id'                => 'wa_contact_list_name',
@@ -269,37 +267,39 @@ class Notifier_Contacts {
 	 * Handle CSV import
 	 */
 	public static function import_contacts_csv() {
-		if(!isset($_FILES['notifier_contacts_csv'])) {
+		if (!isset($_FILES['notifier_contacts_csv'])) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
 
-		if(!check_admin_referer('notifier_contacts_csv')) {
+		if (!check_admin_referer('notifier_contacts_csv')) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
 
-		if(!is_uploaded_file($_FILES['notifier_contacts_csv']['tmp_name'])){
+		if (!isset($_FILES['notifier_contacts_csv']['tmp_name'])) {
+			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
 
-		$temp_name = $_FILES['notifier_contacts_csv']['tmp_name'];
+		$temp_name = realpath( wp_unslash( $_FILES['notifier_contacts_csv']['tmp_name'] ) );
+
 		$contact_data = array_map('str_getcsv', file($temp_name));
 		$first_row = $contact_data[0];
-		if($first_row[0] != 'First Name' || $first_row[1] != 'Last Name') {
+		if ( 'First Name' !== $first_row[0] || 'Last Name' !== $first_row[1]) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=2'));
 		}
 		unset($contact_data[0]); // Remove first line
 		$count = 0;
 		$skipped = 0;
-		foreach($contact_data as $contact) {
+		foreach ($contact_data as $contact) {
 			$first_name = isset($contact[0]) ? sanitize_text_field( wp_unslash ($contact[0]) ) : '';
 			$last_name = isset($contact[1]) ? sanitize_text_field( wp_unslash ($contact[1]) ) : '';
-			$phone_number = isset($contact[2]) ? '+'. (int) $contact[2] : '';
+			$phone_number = isset($contact[2]) ? '+' . (int) $contact[2] : '';
 			$list = isset($contact[3]) ? sanitize_text_field( wp_unslash ($contact[3]) ) : '';
 			$tags = isset($contact[4]) ? explode( ',', sanitize_text_field( wp_unslash ($contact[4]) ) ) : '';
 
-			if('' == $phone_number){
+			if ('' === $phone_number) {
 				$skipped++;
 				continue;
 			}
@@ -318,14 +318,13 @@ class Notifier_Contacts {
 				)
 			) );
 
-			if(empty($existing_contact)) {
+			if (empty($existing_contact)) {
 				$post_id = wp_insert_post ( array(
 					'post_title' => $first_name . ' ' . $last_name,
 					'post_type' => 'wa_contact',
 					'post_status' => 'publish'
 				) );
-			}
-			else {
+			} else {
 				$post_id = $existing_contact[0];
 				wp_update_post ( array(
 					'ID'         => $post_id,
@@ -345,7 +344,7 @@ class Notifier_Contacts {
 
 		}
 
-		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=1&wa_import_count='.$count.'&wa_import_skipped='.$skipped));
+		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=1&wa_import_count=' . $count . '&wa_import_skipped=' . $skipped));
 	}
 
 	/**
@@ -353,7 +352,7 @@ class Notifier_Contacts {
 	 */
 	public static function import_contacts_woocommerce() {
 		global $wpdb;
-		if(!check_admin_referer('notifier_contacts_users')) {
+		if (!check_admin_referer('notifier_contacts_users')) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;
 		}
@@ -362,7 +361,7 @@ class Notifier_Contacts {
 		$list_name = isset($_POST['wa_contact_list_name_input']) ? sanitize_text_field( wp_unslash ($_POST['wa_contact_list_name_input']) ) : '';
 		$tags = isset($_POST['wa_contact_tags']) ? explode( ',', sanitize_text_field( wp_unslash ($_POST['wa_contact_tags']) ) ) : '';
 
-		if('' == $list) {
+		if ('' == $list) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=3'));
 			die;
 		}
@@ -394,21 +393,21 @@ class Notifier_Contacts {
 
 		$customers = $wpdb->get_results($query_str);
 
-		if(count($customers) == 0) {
+		if (count($customers) == 0) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=4'));
 			die;
 		}
 
 		$count = 0;
 		$skipped = 0;
-		foreach($customers as $customer) {
+		foreach ($customers as $customer) {
 			$first_name = $customer->first_name;
 			$last_name = $customer->last_name;
 			$phone_number = trim($customer->phone_number);
 			$country_code = $customer->country_code;
 			$user_id = $customer->user_id;
 
-			if('' == $phone_number) {
+			if ('' == $phone_number) {
 				$skipped++;
 				continue;
 			}
@@ -431,14 +430,13 @@ class Notifier_Contacts {
 				)
 			) );
 
-			if(empty($existing_contact)) {
+			if (empty($existing_contact)) {
 				$post_id = wp_insert_post ( array(
 					'post_title' => $first_name . ' ' . $last_name,
 					'post_type' => 'wa_contact',
 					'post_status' => 'publish'
 				) );
-			}
-			else {
+			} else {
 				$post_id = $existing_contact[0];
 				wp_update_post ( array(
 					'ID'         => $post_id,
@@ -450,14 +448,13 @@ class Notifier_Contacts {
 			update_post_meta( $post_id, NOTIFIER_PREFIX . 'first_name', $first_name);
 			update_post_meta( $post_id, NOTIFIER_PREFIX . 'last_name', $last_name);
 			update_post_meta( $post_id, NOTIFIER_PREFIX . 'wa_number', $phone_number);
-			if( 0 != $user_id ){
+			if ( 0 != $user_id ) {
 				update_post_meta( $post_id, NOTIFIER_PREFIX . 'associated_user', $user_id);
 			}
 
-			if('_add_new' == $list) {
+			if ('_add_new' == $list) {
 				$term_id = wp_create_term($list_name, 'wa_contact_list');
-			}
-			else{
+			} else {
 				$term = get_term_by( 'slug', $list, 'wa_contact_list' );
 				$term_id = $term->term_id;
 			}
@@ -468,7 +465,7 @@ class Notifier_Contacts {
 			unset($user_id);
 		}
 
-		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=1&wa_import_count='.$count.'&wa_import_skipped='.$skipped));
+		wp_safe_redirect(admin_url('edit.php?post_type=wa_contact&wa_contacts_import=1&wa_import_count=' . $count . '&wa_import_skipped=' . $skipped));
 	}
 
 	/**
@@ -485,39 +482,35 @@ class Notifier_Contacts {
  			return;
  		}
 
- 		if('1' == $_GET['wa_contacts_import']) {
+ 		if ('1' == $_GET['wa_contacts_import']) {
  			$count = isset($_GET['wa_import_count']) ? intval($_GET['wa_import_count']) : 0;
  			$skipped = isset($_GET['wa_import_skipped']) ? intval($_GET['wa_import_skipped']) : 0;
- 			if($count != 0){
+ 			if (0 != $count) {
  				$message = $count . ' contacts imported / updated. ';
- 				if($skipped) {
+ 				if ($skipped) {
  					$message .= $skipped . ' contacts skipped.';
  				}
- 			}
- 			else {
+ 			} else {
  				$message = 'No new contacts were imported / updated.';
  			}
  			?>
 			<div class="notice notice-success is-dismissible">
-			    <p><?php echo $message; ?></p>
+			    <p><?php echo esc_html($message); ?></p>
 			</div>
 			<?php
- 		}
- 		elseif('2' == $_GET['wa_contacts_import']) {
+ 		} elseif ('2' == $_GET['wa_contacts_import']) {
  			?>
 			<div class="notice notice-error is-dismissible">
-			    <p>There was an error during the import. Please make sure your CSV format matches the <a href="<?php echo NOTIFIER_URL.'/contacts-import-sample.csv'; ?>">sample document</a> format before uploading.</p>
+			    <p>There was an error during the import. Please make sure your CSV format matches the <a href="<?php echo esc_url( NOTIFIER_URL . '/contacts-import-sample.csv' ); ?>">sample document</a> format before uploading.</p>
 			</div>
 			<?php
- 		}
- 		elseif('3' == $_GET['wa_contacts_import']) {
+ 		} elseif ('3' == $_GET['wa_contacts_import']) {
  			?>
 			<div class="notice notice-error is-dismissible">
 			    <p>There was an error during the import. Please enter a List name before you start the import.</p>
 			</div>
 			<?php
- 		}
- 		elseif('4' == $_GET['wa_contacts_import']) {
+ 		} elseif ('4' == $_GET['wa_contacts_import']) {
  			?>
 			<div class="notice notice-error is-dismissible">
 			    <p>No customers found.</p>
@@ -531,7 +524,7 @@ class Notifier_Contacts {
 	 */
 	public static function get_contacts ($show_select = false) {
 		global $wpdb;
-		$search_keyword = isset($_POST['s']) ? sanitize_text_field ($_POST['s']) : '';
+		$search_keyword = isset($_POST['s']) ? sanitize_text_field ( wp_unslash($_POST['s']) ) : '';
 
 		$querystr = "
 			SELECT DISTINCT $wpdb->posts.ID
@@ -567,7 +560,7 @@ class Notifier_Contacts {
 	/**
 	 * Get contact lists
 	 */
-	public static function get_contact_lists ($show_select = false, $show_count = false)	 {
+	public static function get_contact_lists ($show_select = false, $show_count = false) {
 		$contact_list_terms = get_terms( array(
 		    'taxonomy' => 'wa_contact_list',
 		    'hide_empty' => true,
@@ -581,8 +574,8 @@ class Notifier_Contacts {
 
 		foreach ($contact_list_terms as $term) {
 			$contact_lists[$term->slug] = $term->name;
-			if($show_count) {
-				$contact_lists[$term->slug] .= ' ('.$term->count.' contacts)';
+			if ($show_count) {
+				$contact_lists[$term->slug] .= ' (' . $term->count . ' contacts)';
 			}
 		}
 
@@ -592,7 +585,7 @@ class Notifier_Contacts {
 	/**
 	 * Get website users list
 	 */
-	public static function get_website_users_list ($show_select = false )	 {
+	public static function get_website_users_list ($show_select = false ) {
 		$users = get_users();
 
 		$users_list = array();

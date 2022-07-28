@@ -14,8 +14,8 @@ class Notifier_Notifications {
         add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'add_meta_boxes', array( __CLASS__, 'create_meta_box' ) );
 		add_filter( 'bulk_actions-wa_notification', array( __CLASS__, 'remove_bulk_actions' ) );
-		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit') , 10, 2);
-		add_filter( 'gettext', array(__CLASS__, 'change_texts') , 10, 2 );
+		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit'), 10, 2);
+		add_filter( 'gettext', array(__CLASS__, 'change_texts'), 10, 2 );
 		add_action( 'wp_ajax_fetch_send_to_fields', array(__CLASS__, 'fetch_send_to_fields' ) );
 		add_action( 'wp_ajax_fetch_message_template_data', array(__CLASS__, 'fetch_message_template_data') );
 		add_filter( 'notifier_js_variables', array(__CLASS__, 'notifications_js_variables'));
@@ -23,7 +23,7 @@ class Notifier_Notifications {
 		add_filter( 'post_updated_messages', array(__CLASS__, 'update_save_messages') );
 		add_action( 'before_delete_post', array(__CLASS__, 'delete_from_active_triggers'), 10 );
 		add_filter( 'manage_wa_notification_posts_columns', array( __CLASS__ , 'add_columns' ) );
-		add_action( 'manage_wa_notification_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
+		add_action( 'manage_wa_notification_posts_custom_column', array( __CLASS__ , 'add_column_content' ), 10, 2 );
 		add_filter( 'notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 
 		add_action( 'notifier_marketing_notification', array(__CLASS__, 'send_broadcast_notifications') );
@@ -37,13 +37,13 @@ class Notifier_Notifications {
 	public static function register_cpt () {
 		notifier_register_post_type ('wa_notification', 'Notification', 'Notifications');
 	}
-	
+
 	/**
 	 * Add page to admin menu
 	 */
 	public static function setup_admin_page () {
 		$api_credentials_validated = get_option( NOTIFIER_PREFIX . 'api_credentials_validated');
-		if(!$api_credentials_validated) {
+		if (!$api_credentials_validated) {
 			return;
 		}
 
@@ -79,7 +79,7 @@ class Notifier_Notifications {
 	public static function output () {
 		include_once NOTIFIER_PATH . 'views/admin-notifications-meta-box.php';
 	}
-	
+
 	/**
 	 * Save meta
 	 */
@@ -94,23 +94,22 @@ class Notifier_Notifications {
 
 		$notification_data = array();
 
-		if(isset($_POST[NOTIFIER_PREFIX . 'notification_send_to']['row_num'])){
+		if (isset($_POST[NOTIFIER_PREFIX . 'notification_send_to']['row_num'])) {
 			unset($_POST[NOTIFIER_PREFIX . 'notification_send_to']['row_num']);
 		}
 
 		foreach ($_POST as $key => $data) {
 			if (strpos($key, NOTIFIER_PREFIX) !== false) {
-				if(is_array($data)) {
+				if (is_array($data)) {
 					$notification_data[$key] = notifier_sanitize_array($data);
-				}
-				else{
+				} else {
 					$notification_data[$key] = sanitize_text_field( wp_unslash ($data) );
 				}
 			    update_post_meta( $post_id, $key, $notification_data[$key]);
 			}
 		}
 
-		if(!empty($notification_data)){
+		if (!empty($notification_data)) {
 			self::setup_notifcation($notification_data, $post_id);
 		}
 	}
@@ -127,7 +126,7 @@ class Notifier_Notifications {
 	/**
 	 * Remove inline edit from Bulk Edit
 	 */
-	public static function remove_bulk_actions( $actions ){
+	public static function remove_bulk_actions( $actions ) {
         unset( $actions['inline'] );
         return $actions;
     }
@@ -135,8 +134,8 @@ class Notifier_Notifications {
     /**
 	 * Remove inline Quick Edit
 	 */
-    public static function remove_quick_edit( $actions, $post ) { 
-    	if ('wa_notification' == $post->post_type){
+    public static function remove_quick_edit( $actions, $post ) {
+    	if ('wa_notification' == $post->post_type) {
 	     	unset($actions['inline hide-if-no-js']);
 	    }
     	return $actions;
@@ -147,10 +146,9 @@ class Notifier_Notifications {
 	 */
 	public static function change_texts( $translation, $text ) {
 		if ( 'wa_notification' == get_post_type() ) {
-			if ( $text == 'Update' ) {
+			if ( 'Update' === $text ) {
 				return 'Update';
-			}
-			elseif ($text == 'Publish') {
+			} elseif ( 'Publish' === $text ) {
 				return 'Save';
 			}
 		}
@@ -168,20 +166,21 @@ class Notifier_Notifications {
 	 * Fetch and return message template data
 	 */
 	public static function fetch_message_template_data() {
-		if(!isset($_POST['template_id'])) {
-			wp_die();
-		}
-
-		if('wa_message_template' != get_post_type($_POST['template_id'])){
+		if (!isset($_POST['template_id'])) {
 			wp_die();
 		}
 
 		$template_id =  intval($_POST['template_id']);
-		$post_id =  isset($_POST['post_id']) ? intval( $_POST['post_id'] ) : 0;
-		$notification_type =  isset($_POST['notification_type']) ? sanitize_text_field( $_POST['notification_type'] ) : '';
-		$trigger =  isset($_POST['trigger']) ? sanitize_text_field( $_POST['trigger'] ) : '';
 
-		if('marketing' == $notification_type) {
+		if ('wa_message_template' != get_post_type( $template_id ) ) {
+			wp_die();
+		}
+
+		$post_id =  isset($_POST['post_id']) ? intval( $_POST['post_id'] ) : 0;
+		$notification_type =  isset($_POST['notification_type']) ? sanitize_text_field( wp_unslash($_POST['notification_type']) ) : '';
+		$trigger =  isset($_POST['trigger']) ? sanitize_text_field( wp_unslash($_POST['trigger']) ) : '';
+
+		if ('marketing' === $notification_type) {
 			$trigger = '';
 		}
 
@@ -203,13 +202,12 @@ class Notifier_Notifications {
 			$template_data[$meta] = get_post_meta( $template_id, NOTIFIER_PREFIX . $meta, true);
 		}
 
-		$notification_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'notification_status' , true);
-		if($notification_status && in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
+		$notification_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'notification_status', true);
+		if ($notification_status && in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
 			$disabled = array (
 				'disabled' => 'disabled'
 			);
-		}
-		else {
+		} else {
 			$disabled = array ();
 		}
 
@@ -220,7 +218,7 @@ class Notifier_Notifications {
 			'variable_mapping_html' => self::get_notification_variable_mapping_fields_html($template_id, $post_id, $trigger, $disabled)
 		);
 
-		echo wp_json_encode($response);
+		echo json_encode($response);
 		wp_die();
 	}
 
@@ -229,7 +227,7 @@ class Notifier_Notifications {
 	 */
 	public static function setup_notifcation($data, $id) {
 		$type = isset($data['notifier_notification_type']) ? $data['notifier_notification_type'] : 'marketing';
-		switch($type){
+		switch ($type) {
 			case 'marketing':
 				self::schedule_notification_to_list($data, $id);
 				break;
@@ -247,13 +245,14 @@ class Notifier_Notifications {
 		 	as_unschedule_action('notifier_marketing_notification', array($notification_id), 'notifier');
 		}
 
-		update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status' , 'Scheduled');
+		update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status', 'Scheduled');
 
 		// Remove from triggers if this notification was earlier a transactional one
 		$active_triggers = get_option('notifier_active_triggers');
-		if(false !== $active_triggers){
-			foreach($active_triggers as $trigger => $notif_ids){
-				if (($key = array_search($notification_id, $notif_ids)) !== false) {
+		if (false !== $active_triggers) {
+			foreach ($active_triggers as $trigger => $notif_ids) {
+				$key = array_search($notification_id, $notif_ids);
+				if (false !== $key) {
 				    unset($notif_ids[$key]);
 				}
 				$active_triggers[$trigger] = $notif_ids;
@@ -262,10 +261,9 @@ class Notifier_Notifications {
 		update_option('notifier_active_triggers', $active_triggers, true);
 
 		$when = isset($notification_data['notifier_notification_when']) ? $notification_data['notifier_notification_when'] : 'now';
-		if('now' == $when) {
+		if ('now' == $when) {
 			as_enqueue_async_action( 'notifier_marketing_notification', array($notification_id), 'notifier' );
-		}
-		else {
+		} else {
 			$datetime = isset($notification_data['notifier_notification_datetime']) ? $notification_data['notifier_notification_datetime'] : '';
 			$timestamp = strtotime($datetime);
 			as_schedule_single_action( $timestamp, 'notifier_marketing_notification', array($notification_id), 'notifier' );
@@ -276,20 +274,19 @@ class Notifier_Notifications {
 	 * Setup transactional notification
 	 */
 	public static function setup_transactional_notification ($notification_data, $notification_id) {
-		update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status' , 'On-going');
+		update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status', 'On-going');
 		$trigger = $notification_data['notifier_notification_trigger'];
 		$active_triggers = get_option('notifier_active_triggers');
-		if( false !== $active_triggers ){
-			foreach($active_triggers as $t => $notif_ids){
-
-				if (($key = array_search($notification_id, $notif_ids)) !== false) {
+		if ( false !== $active_triggers ) {
+			foreach ($active_triggers as $t => $notif_ids) {
+				$key = array_search($notification_id, $notif_ids);
+				if (false !== $key) {
 				    unset($notif_ids[$key]);
 				}
 				$active_triggers[$t] = $notif_ids;
 			}
 			$active_triggers[$trigger][] = $notification_id;
-		}
-		else {
+		} else {
 			$active_triggers = array(
 				$trigger => array($notification_id)
 			);
@@ -302,9 +299,10 @@ class Notifier_Notifications {
 	 */
 	public static function delete_from_active_triggers ($post_id) {
 		$active_triggers = get_option('notifier_active_triggers');
-		if(false !== $active_triggers){
-			foreach($active_triggers as $trigger => $notif_ids){
-				if (($key = array_search($post_id, $notif_ids)) !== false) {
+		if (false !== $active_triggers) {
+			foreach ($active_triggers as $trigger => $notif_ids) {
+				$key = array_search($post_id, $notif_ids);
+				if (false !== $key) {
 				    unset($notif_ids[$key]);
 				}
 				$active_triggers[$trigger] = $notif_ids;
@@ -317,7 +315,7 @@ class Notifier_Notifications {
 	 * Send scheduled broadcast notifications
 	 */
 	public static function send_broadcast_notifications ($notification_id) {
-		update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status' , 'Sending');
+		update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status', 'Sending');
 
 		$list_slug = get_post_meta($notification_id, 'notifier_notification_list', true);
 		$template_id = get_post_meta($notification_id, 'notifier_notification_message_template', true);
@@ -328,7 +326,7 @@ class Notifier_Notifications {
 		$sent_phone_numbers = (!$sent_phone_numbers) ? array() : $sent_phone_numbers;
 		$unsent_phone_numbers = (!$unsent_phone_numbers) ? array() : $unsent_phone_numbers;
 
-		$offset = (!$list_offset) ? 0 : (int)$list_offset;
+		$offset = (!$list_offset) ? 0 : (int) $list_offset;
 
 		$count = 0;
 		$limit = get_option( NOTIFIER_PREFIX . 'bulk_message_batch_limit', 50 );
@@ -342,20 +340,19 @@ class Notifier_Notifications {
 			'posts_per_page'	=> $limit
 		) );
 
-		foreach($contact_ids as $contact_id) {
+		foreach ($contact_ids as $contact_id) {
 			$count++;
 
 			$phone_number = get_post_meta( $contact_id, NOTIFIER_PREFIX . 'wa_number', true);
-			if('' == $phone_number) {
+			if ('' == $phone_number) {
 				continue;
 			}
 
 			$message_sent = Notifier_Message_Templates::send_message_template_to_number($template_id, $notification_id, $phone_number);
 
-			if($message_sent) {
+			if ($message_sent) {
 				$sent_numbers[] =  $phone_number;
-			}
-			else {
+			} else {
 				$unsent_numbers[] =  $phone_number;
 			}
 		}
@@ -365,11 +362,10 @@ class Notifier_Notifications {
 
 		$new_offset = $offset + $limit;
 		update_post_meta($notification_id, 'notifier_notification_list_offset', $new_offset);
-		if($count == $limit){
+		if ($count == $limit) {
 			as_enqueue_async_action( 'notifier_marketing_notification', array($notification_id), 'notifier' );
-		}
-		else {
-			update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status' , 'Sent');
+		} else {
+			update_post_meta ( $notification_id, NOTIFIER_PREFIX . 'notification_status', 'Sent');
 		}
 	}
 
@@ -390,12 +386,12 @@ class Notifier_Notifications {
 
 		$phone_numbers = array();
 
-		if(false !== $send_to && is_array($send_to)) {
-			foreach($send_to as $recipient) {
+		if (false !== $send_to && is_array($send_to)) {
+			foreach ($send_to as $recipient) {
 				switch ($recipient['type']) {
 					case 'contact':
 						$phone_number = get_post_meta( $recipient['recipient']['contact'], NOTIFIER_PREFIX . 'wa_number', true);
-						if($phone_number) {
+						if ($phone_number) {
 							$phone_numbers[] = $phone_number;
 						}
 						break;
@@ -414,13 +410,12 @@ class Notifier_Notifications {
 			}
 		}
 
-		foreach($phone_numbers as $phone_number) {
+		foreach ($phone_numbers as $phone_number) {
 			$message_sent = Notifier_Message_Templates::send_message_template_to_number($template_id, $notification_id, $phone_number, $context_args);
 
-			if($message_sent) {
+			if ($message_sent) {
 				$sent_numbers[] = $phone_number;
-			}
-			else {
+			} else {
 				$unsent_numbers[] = $phone_number;
 			}
 		}
@@ -436,7 +431,7 @@ class Notifier_Notifications {
 		global $post_id, $current_screen;
 		if ( 'wa_notification' == $current_screen->id ) {
 			$sent = get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_status', true);
-			if(in_array($sent, array('Sending', 'Sent', 'Scheduled'))) {
+			if (in_array($sent, array('Sending', 'Sent', 'Scheduled'))) {
 	 			$classes = $classes . ' disable-publishing';
 	 		}
  		}
@@ -490,7 +485,7 @@ class Notifier_Notifications {
 	 */
 	public static function fetch_send_to_fields () {
 		$post_id =  isset($_POST['post_id']) ? intval( $_POST['post_id'] ) : 0;
-		$trigger =  isset($_POST['trigger']) ? sanitize_text_field( $_POST['trigger'] ) : '';
+		$trigger =  isset($_POST['trigger']) ? sanitize_text_field( wp_unslash( $_POST['trigger'] ) ) : '';
 		$send_to = get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_send_to', true);
 		$html = '<label>Recipients</label>';
 		$html .= '<table class="fields-repeater">
@@ -501,14 +496,13 @@ class Notifier_Notifications {
 					<th></th>
 				</tr>';
 
-		if($send_to && is_array($send_to)) {
+		if ($send_to && is_array($send_to)) {
 			$row = 0;
 			foreach ($send_to as $recipient) {
 				$html .= self::get_notification_send_to_fields_row($row, $recipient, $post_id, $trigger, $disabled);
 				$row++;
 			}
-		}
-		else {
+		} else {
 			$html .= self::get_notification_send_to_fields_row(0, null, $post_id, $trigger);
 		}
 		$html .= '</tbody>
@@ -523,7 +517,7 @@ class Notifier_Notifications {
 			'html'		=> $html
 		);
 
-		echo wp_json_encode($response);
+		echo json_encode($response);
 		wp_die();
 	}
 
@@ -549,8 +543,8 @@ class Notifier_Notifications {
 				<?php
 					notifier_wp_select(
 						array(
-							'id'                => NOTIFIER_PREFIX . 'notification_send_to_'.$num.'_type',
-							'name'              => NOTIFIER_PREFIX . 'notification_send_to['.$num.'][type]',
+							'id'                => NOTIFIER_PREFIX . 'notification_send_to_' . $num . '_type',
+							'name'              => NOTIFIER_PREFIX . 'notification_send_to[' . $num . '][type]',
 							'value'             => $type,
 							'label'             => '',
 							'description'       => 'Select recipient type',
@@ -563,28 +557,28 @@ class Notifier_Notifications {
 			<td>
 				<?php
 					$contacts_array = array();
-					if('' != $recipient['contact']) {
-						$contact = get_post($recipient['contact']);
-						if(!empty($contact)){
-							$first_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'first_name', true);
-							$last_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'last_name', true);
-							$wa_number = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'wa_number', true);
-							$contacts_array[$contact->ID] = $first_name . ' ' . $last_name . ' (' . $wa_number . ')';
-						}
+				if ('' != $recipient['contact']) {
+					$contact = get_post($recipient['contact']);
+					if (!empty($contact)) {
+						$first_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'first_name', true);
+						$last_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'last_name', true);
+						$wa_number = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'wa_number', true);
+						$contacts_array[$contact->ID] = $first_name . ' ' . $last_name . ' (' . $wa_number . ')';
 					}
+				}
 					do_action('notifier_notification_before_send_to_reciever_fields', $num);
 					notifier_wp_select(
 						array(
-							'id'                => NOTIFIER_PREFIX . 'notification_send_to_'.$num.'_recipient_contact',
-							'name'              => NOTIFIER_PREFIX . 'notification_send_to['.$num.'][recipient][contact]',
+							'id'                => NOTIFIER_PREFIX . 'notification_send_to_' . $num . '_recipient_contact',
+							'name'              => NOTIFIER_PREFIX . 'notification_send_to[' . $num . '][recipient][contact]',
 							'class'				=> 'notifier-recipient notifier-recipient-contact',
 							'value'             => $recipient['contact'],
 							'label'             => '',
-							'description'       => 'Select one of your <a href="'.admin_url('edit.php?post_type=wa_contact').'">Contacts</a>',
+							'description'       => 'Select one of your <a href="' . admin_url('edit.php?post_type=wa_contact') . '">Contacts</a>',
 							'options'           => $contacts_array,
 							'conditional_logic'	=> array (
 								array (
-									'field'		=> NOTIFIER_PREFIX . 'notification_send_to_'.$num.'_type',
+									'field'		=> NOTIFIER_PREFIX . 'notification_send_to_' . $num . '_type',
 									'operator'	=> '==',
 									'value'		=> 'contact'
 								)
@@ -594,16 +588,16 @@ class Notifier_Notifications {
 					);
 					notifier_wp_select(
 						array(
-							'id'                => NOTIFIER_PREFIX . 'notification_send_to_'.$num.'_recipient_list',
-							'name'              => NOTIFIER_PREFIX . 'notification_send_to['.$num.'][recipient][list]',
+							'id'                => NOTIFIER_PREFIX . 'notification_send_to_' . $num . '_recipient_list',
+							'name'              => NOTIFIER_PREFIX . 'notification_send_to[' . $num . '][recipient][list]',
 							'class'				=> 'notifier-recipient notifier-recipient-list',
 							'value'             => $recipient['list'],
 							'label'             => '',
-							'description'       => 'Select one of your Contact <a href="'.admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact').'">Lists</a>',
+							'description'       => 'Select one of your Contact <a href="' . admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact') . '">Lists</a>',
 							'options'           => Notifier_Contacts::get_contact_lists(true, true),
 							'conditional_logic'	=> array (
 								array (
-									'field'		=> NOTIFIER_PREFIX . 'notification_send_to_'.$num.'_type',
+									'field'		=> NOTIFIER_PREFIX . 'notification_send_to_' . $num . '_type',
 									'operator'	=> '==',
 									'value'		=> 'list'
 								)
@@ -615,7 +609,7 @@ class Notifier_Notifications {
 				?>
 			</td>
 			<td class="delete-repeater-field">
-				<?php if ($num !== 0): ?>
+				<?php if (0 !== $num) : ?>
 					<span class="dashicons dashicons-trash"></span>
 				<?php endif; ?>
 			</td>
@@ -630,7 +624,7 @@ class Notifier_Notifications {
 	 */
 	public static function get_notification_variable_mapping_fields_html ($template_id, $post_id = 0, $trigger = '', $disabled = array()) {
 		$data = array();
-		if(0 != $post_id){
+		if (0 != $post_id) {
 			$data = get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_variable_mapping', true);
 		}
 
@@ -638,39 +632,39 @@ class Notifier_Notifications {
 		$header_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'header_text', true);
 		$body_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'body_text', true);
 
-		if('text' == $header_type) {
-			preg_match_all("~\{\{\s*(.*?)\s*\}\}~", $header_text, $header_var_matches);
+		if ('text' == $header_type) {
+			preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $header_text, $header_var_matches);
 			$header_vars = $header_var_matches[0];
 			$total_header_vars = count($header_vars);
 		}
 
-		preg_match_all("~\{\{\s*(.*?)\s*\}\}~", $body_text, $body_var_matches);
+		preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $body_text, $body_var_matches);
 		$body_vars = $body_var_matches[0];
 		$total_body_vars = count($body_vars);
 
 		$html = '';
 
-		if($total_header_vars > 0 || $total_body_vars > 0 ) {
+		if ($total_header_vars > 0 || $total_body_vars > 0 ) {
 			$html .= '<label>Map template variables with values</label>';
 			$html .= '<table class="fields-repeater"><tbody>';
 		}
 
 		// Header variable mapping
-		if(count($header_vars) > 0) {
+		if (count($header_vars) > 0) {
 			$header_var_map = isset($data['header'][0]) ? $data['header'][0] : '';
 			$html .= '<tr class="header-variable"><th>Header Variable</th><th>Value</th></tr>';
-			$html .= Notifier_Notifications::get_notification_variable_mapping_row(0, 'header', $header_var_map, $trigger, $disabled);
+			$html .= self::get_notification_variable_mapping_row(0, 'header', $header_var_map, $trigger, $disabled);
 		}
 
 		// Header variables mapping
-		if($total_body_vars > 0) {
+		if ($total_body_vars > 0) {
 			$html .= '<tr class="body-variables"><th>Body Variables</th><th>Value</th></tr>';
 			for ($num = 0; $num < $total_body_vars; $num++) {
 				$body_var_map = isset($data['body'][$num]) ? $data['body'][$num] : '';
-				$html .= Notifier_Notifications::get_notification_variable_mapping_row($num, 'body', $body_var_map, $trigger, $disabled);
+				$html .= self::get_notification_variable_mapping_row($num, 'body', $body_var_map, $trigger, $disabled);
 			}
 		}
-		if($total_header_vars > 0 || $total_body_vars > 0 ) {
+		if ($total_header_vars > 0 || $total_body_vars > 0 ) {
 			$html .= '</tbody></table>';
 			$html .= '<p class="description">Select the value that you want to pass to the respective message template variable when this notification gets triggered.</p>';
 		}
@@ -687,14 +681,14 @@ class Notifier_Notifications {
 		?>
 		<tr class="row">
 			<td>
-				<code>{{<?php echo $var_num; ?>}}</code>
+				<code>{{<?php echo esc_html($var_num); ?>}}</code>
 			</td>
 			<td>
 			<?php
 			 	notifier_wp_select(
 					array(
-						'id'                => NOTIFIER_PREFIX . 'notification_variable_mapping_'.$type.'_'.$num,
-						'name'              => NOTIFIER_PREFIX . 'notification_variable_mapping['.$type.']['.$num.']',
+						'id'                => NOTIFIER_PREFIX . 'notification_variable_mapping_' . $type . '_' . $num,
+						'name'              => NOTIFIER_PREFIX . 'notification_variable_mapping[' . $type . '][' . $num . ']',
 						'class'				=> 'notifier-variable-mapping',
 						'value'             => $value,
 						'label'             => '',
@@ -714,7 +708,7 @@ class Notifier_Notifications {
 	/**
 	 * Handle AJAX call to get contacts / lists
 	 */
-	public static function get_wa_contacts_data(){
+	public static function get_wa_contacts_data() {
 		$contacts = Notifier_Contacts::get_contacts();
 		echo json_encode( $contacts );
 		die;

@@ -21,7 +21,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 
 	<div class="notifier-wrapper">
 
-		<?php if('accepted' != $disclaimer || $show_disclaimer) : ?>
+		<?php if ('accepted' != $disclaimer || $show_disclaimer) : ?>
 
 			<div class="onboarding">
 				<div class="onboarding-head">
@@ -48,7 +48,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 					</div>
 				</div>
 				<div class="onboarding-footer">
-					<?php if('accepted' != $disclaimer) : ?>
+					<?php if ('accepted' != $disclaimer) : ?>
 						<form method="POST" action="" enctype="multipart/form-data">
 							<button name="disclaimer" class="button-primary" type="submit" value="">I Understand & Accept</button>
 	            			<?php wp_nonce_field( NOTIFIER_NAME . '-disclaimer' ); ?>
@@ -60,7 +60,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 				</div>
 			</div>
 
-		<?php elseif (!$api_credentials_validated): ?>
+		<?php elseif (!$api_credentials_validated) : ?>
 
 			<div class="onboarding">
 				<div class="onboarding-head">
@@ -115,7 +115,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 								<li>From the <b>Get Started</b> screen's left sidebar, click on <b>Whatsapp > Configuration</b> link.</li>
 								<li>Click on the <b>Edit</b> button. That'll open a popup.</li>
 								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo site_url('/?notifier'); ?></code>. Note that if you have any kind of firewall set on your website the verification will fail.</li>
-								<li>In the <b>Verify Token</b> field enter: <code><?php echo esc_html($verify_token) ?></code> and click <b>Verify</b>.</li>
+								<li>In the <b>Verify Token</b> field enter: <code><?php echo esc_html($verify_token); ?></code> and click <b>Verify</b>.</li>
 								<li>Under <b>Webhook fields:</b> click on <b>Manage</b>.</li>
 								<li>Click on <b>Subscribe</b> button in front of all fields and then click on <b>Done</b>.</li>
 							</ol>
@@ -150,7 +150,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 				</div>
 			</div>
 
-		<?php else: ?>		
+		<?php else : ?>		
 			<div class="dashboard-boxes">
 				<div class="col w-100">
 					<div class="dashboard-box dashboard-box-top">
@@ -202,7 +202,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 					);
 					$notifications_count = count($notifications);
 				?>
-				<?php if($message_templates_count == 0 || $contacts_count == 0 || $notifications_count == 0): ?>
+				<?php if ($message_templates_count == 0 || $contacts_count == 0 || $notifications_count == 0) : ?>
 					<div class="col w-33">
 						<div class="dashboard-box">
 							<div class="dashboard-box-head">
@@ -224,8 +224,8 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							</div>
 						</div>
 					</div>
-				<?php endif;?>
-				<?php if($message_templates_count > 0): ?>
+				<?php endif; ?>
+				<?php if ($message_templates_count > 0) : ?>
 					<div class="col w-33">
 						<div class="dashboard-box">
 							<div class="dashboard-box-head">
@@ -238,10 +238,10 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 										<th>Status</th>
 									</tr>
 									<?php
-									foreach($message_templates as $template) {
+									foreach ($message_templates as $template) {
 										$status = get_post_meta( $template->ID, NOTIFIER_PREFIX . 'status', true);
-			    						$status_text = ($status) ? '<span class="status status-'.strtolower($status).'">'.$status.'</span>' : '-';
-										echo '<tr><td><a href="'.get_edit_post_link($template->ID).'">'.$template->post_title.'</a></td><td>'.$status_text.'</td></tr>';
+			    						$status_text = ($status) ? '<span class="status status-' . strtolower($status) . '">' . $status . '</span>' : '-';
+										echo '<tr><td><a href="' . get_edit_post_link($template->ID) . '">' . $template->post_title . '</a></td><td>' . $status_text . '</td></tr>';
 									}
 									?>
 								</table>
@@ -253,8 +253,8 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							</div>
 						</div>
 					</div>
-				<?php endif;?>
-				<?php if($contacts_count > 0): ?>
+				<?php endif; ?>
+				<?php if ($contacts_count > 0) : ?>
 					<div class="col w-33">
 						<div class="dashboard-box">
 							<div class="dashboard-box-head">
@@ -268,11 +268,11 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 										<th>Number</th>
 									</tr>
 									<?php
-									foreach($contacts as $contact) {
+									foreach ($contacts as $contact) {
 										$first_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'first_name', true);
 										$last_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'last_name', true);
 										$wa_number = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'wa_number', true);
-										echo '<tr><td><a href="'.get_edit_post_link($contact->ID).'">'.$first_name . '</a></td><td>'.$last_name.'</td><td>'.$wa_number.'</td></tr>';
+										echo '<tr><td><a href="' . get_edit_post_link($contact->ID) . '">' . $first_name . '</a></td><td>' . $last_name . '</td><td>' . $wa_number . '</td></tr>';
 									}
 									?>
 								</table>
@@ -284,8 +284,8 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							</div>
 						</div>
 					</div>
-				<?php endif;?>
-				<?php if($notifications_count > 0): ?>
+				<?php endif; ?>
+				<?php if ($notifications_count > 0) : ?>
 					<div class="col w-33">
 						<div class="dashboard-box">
 							<div class="dashboard-box-head">
@@ -299,16 +299,16 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 										<th>Stats</th>
 									</tr>
 									<?php
-									foreach($notifications as $notification) {
+									foreach ($notifications as $notification) {
 										$status = get_post_meta( $notification->ID, NOTIFIER_PREFIX . 'notification_status', true);
 										$sent = get_post_meta( $notification->ID, NOTIFIER_PREFIX . 'notification_sent_contact_ids', true);
 										$sent_count = ($sent && is_array($sent)) ? count($sent) : '0';
 										$unsent = get_post_meta( $notification->ID, NOTIFIER_PREFIX . 'notification_unsent_contact_ids', true);
 										$unsent_count = ($unsent && is_array($unsent)) ? count($unsent) : '0';
 										echo '<tr>';
-										echo '<td><a href="'.get_edit_post_link($notification->ID).'">'.$notification->post_title . '</a></td>';
-										echo '<td>'.$status.'</td>';
-										echo '<td>Sent: '.$sent_count.' / Failed: '.$unsent_count.'</td>';
+										echo '<td><a href="' . get_edit_post_link($notification->ID) . '">' . $notification->post_title . '</a></td>';
+										echo '<td>' . $status . '</td>';
+										echo '<td>Sent: ' . $sent_count . ' / Failed: ' . $unsent_count . '</td>';
 										echo '</tr>';
 									}
 									?>
@@ -321,7 +321,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							</div>
 						</div>
 					</div>
-				<?php endif;?>
+				<?php endif; ?>
 			</div>
 
 		<?php endif; ?>

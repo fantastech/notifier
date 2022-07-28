@@ -645,9 +645,12 @@
 
 	        // Create the media frame.
 	        file_frame = wp.media.frames.file_frame = wp.media({
-	          title: jQuery( this ).data( 'uploader_title' ),
+	          title: button.data( 'uploader_title' ),
 	          button: {
-	            text: jQuery( this ).data( 'uploader_button_text' ),
+	            text: button.data( 'uploader_button_text' ),
+	          },
+	          library: {
+	          	type: button.data( 'uploader_supported_file_types' )
 	          },
 	          multiple: false
 	        });

@@ -20,10 +20,12 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
-    "style:check": "phpcs --ignore=libraries/*",
+    "style:check": "phpcs",
     "style:fix": "phpcbf"
   },
-  "require-dev": {
+  "require": {
+ 	"php": "^7.4",
+    "dealerdirect/phpcodesniffer-composer-installer": ">=0.7.0",
     "wp-coding-standards/wpcs": "^2.3"
   }
 }

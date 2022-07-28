@@ -15,11 +15,11 @@ class Notifier_Message_Templates {
         add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'add_meta_boxes', array( __CLASS__, 'create_meta_box' ) );
 		add_filter( 'bulk_actions-wa_message_template', array( __CLASS__, 'remove_bulk_actions' ) );
-		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit') , 10, 2);
-		add_filter( 'gettext', array(__CLASS__, 'change_texts') , 10, 2 );
+		add_filter( 'post_row_actions', array(__CLASS__, 'remove_quick_edit'), 10, 2);
+		add_filter( 'gettext', array(__CLASS__, 'change_texts'), 10, 2 );
 		add_action( 'post_submitbox_minor_actions', array( __CLASS__ , 'add_submitbox_meta' ) );
 		add_filter( 'manage_wa_message_template_posts_columns', array( __CLASS__ , 'add_columns' ) );
-		add_action( 'manage_wa_message_template_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
+		add_action( 'manage_wa_message_template_posts_custom_column', array( __CLASS__ , 'add_column_content' ), 10, 2 );
 		add_filter( 'bulk_post_updated_messages', array(__CLASS__, 'change_deletion_message'), 10, 2);
 		add_action( 'save_post_wa_message_template', array(__CLASS__, 'save_meta'), 10, 2 );
 		add_action( 'before_delete_post', array(__CLASS__, 'delete_template'), 10, 2 );
@@ -39,13 +39,13 @@ class Notifier_Message_Templates {
 	public static function register_cpt () {
 		notifier_register_post_type ( 'wa_message_template', 'Message Template', 'Message Templates');
 	}
-	
+
 	/**
 	 * Show transient admin notices
 	 */
 	public static function show_transient_admin_notices () {
 		global $post;
-		if('wa_message_template' != get_post_type()){
+		if ('wa_message_template' != get_post_type()) {
 			return;
 		}
 		$notice = get_transient( "mt_notice_{$post->ID}" );
@@ -60,7 +60,7 @@ class Notifier_Message_Templates {
 	 */
 	public static function setup_admin_page () {
 		$api_credentials_validated = get_option( NOTIFIER_PREFIX . 'api_credentials_validated');
-		if(!$api_credentials_validated) {
+		if (!$api_credentials_validated) {
 			return;
 		}
 
@@ -136,7 +136,7 @@ class Notifier_Message_Templates {
 	/**
 	 * Remove inline edit from Bulk Edit
 	 */
-	public static function remove_bulk_actions( $actions ){
+	public static function remove_bulk_actions( $actions ) {
         unset( $actions['inline'] );
         return $actions;
     }
@@ -144,8 +144,8 @@ class Notifier_Message_Templates {
     /**
 	 * Remove inline Quick Edit
 	 */
-    public static function remove_quick_edit( $actions, $post ) { 
-    	if ('wa_message_template' == $post->post_type){
+    public static function remove_quick_edit( $actions, $post ) {
+    	if ('wa_message_template' == $post->post_type) {
 	    	unset($actions['inline hide-if-no-js']);
 	    }
     	return $actions;
@@ -156,14 +156,12 @@ class Notifier_Message_Templates {
 	 */
 	public static function change_texts( $translation, $text ) {
 		if ( 'wa_message_template' == get_post_type() ) {
-			if ( $text == 'Publish') {
-				return 'Submit for Approval'; 
-			}
-			elseif ( $text == 'Update' ) {
-				return 'Submit for Review'; 
-			}
-			elseif ( $text == 'Move to Trash' ) {
-				return 'Trash'; 
+			if ( 'Publish' === $text) {
+				return 'Submit for Approval';
+			} elseif ( 'Update' === $text ) {
+				return 'Submit for Review';
+			} elseif ( 'Move to Trash' === $text ) {
+				return 'Trash';
 			}
 		}
 		return $translation;
@@ -183,24 +181,24 @@ class Notifier_Message_Templates {
 	 */
 	public static function add_submitbox_meta () {
 		global $post_id;
-		$mt_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'status' , true);
+		$mt_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'status', true);
 
-		$refresh_url = '?' . http_build_query(array_merge($_GET, array("refresh_status"=>"1")));
-		$refresh_button = '<a href="'.$refresh_url.'" class="refresh-status" title="Click here to refresh status"><img src="'.NOTIFIER_URL . '/assets/images/refresh.svg"></a>';
+		$refresh_url = '?' . http_build_query(array_merge($_GET, array('refresh_status'=>'1')));
+		$refresh_button = '<a href="' . $refresh_url . '" class="refresh-status" title="Click here to refresh status"><img src="' . NOTIFIER_URL . '/assets/images/refresh.svg"></a>';
 
-		if(!$mt_status) {
+		if (!$mt_status) {
 			$mt_status = 'DRAFT';
 			$refresh_button = '';
 		}
 
 		echo '<div class="mt-status">';
 		echo '<b>Status:</b> <span class="status status-' . esc_attr(strtolower($mt_status)) . '">' . esc_html($mt_status) . '</span>';
-		if('APPROVED' !== $mt_status){
-			echo $refresh_button;
+		if ('APPROVED' !== $mt_status) {
+			echo esc_html($refresh_button);
 		}
 		echo '</div>';
 
-		if('REJECTED' == $mt_status) {
+		if ('REJECTED' == $mt_status) {
 			echo '<p><b>Note:</b> Your template was rejected by WhatsApp. Please make sure you\'re following their <a href="https://developers.facebook.com/docs/whatsapp/message-templates/guidelines" target="_blank">Message Template Guidelines</a> when creating the template. You can edit this template and re-submit it for review.</p>';
 		}
 	}
@@ -223,7 +221,7 @@ class Notifier_Message_Templates {
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'mt_name' === $column ) {
 		    $template_name = get_post_meta( $post_id, NOTIFIER_PREFIX . 'template_name', true);
-		    echo ($template_name) ? '<code>'. esc_html( $template_name ) .'</code>' : '-';
+		    echo ($template_name) ? '<code>' . esc_html( $template_name ) . '</code>' : '-';
 		}
 
 		if ( 'mt_category' === $column ) {
@@ -238,7 +236,7 @@ class Notifier_Message_Templates {
 
 		if ( 'mt_status' === $column ) {
 		    $status = get_post_meta( $post_id, NOTIFIER_PREFIX . 'status', true);
-		    echo ($status) ? '<span class="status status-'.esc_attr( strtolower($status) ).'">'. esc_html( $status ).'</span>' : '-';
+		    echo ($status) ? '<span class="status status-' . esc_attr( strtolower($status) ) . '">' . esc_html( $status ) . '</span>' : '-';
 		}
 	}
 
@@ -246,10 +244,10 @@ class Notifier_Message_Templates {
 	 * Change deletion message
 	 */
 	public static function change_deletion_message ( $bulk_messages, $count ) {
-		if( 'wa_message_template' !== get_post_type() ) {
+		if ( 'wa_message_template' !== get_post_type() ) {
 			return $bulk_messages;
 		}
-		
+
 		// translators: %s: number of templates
 		$bulk_messages['post']['trashed'] = _n( '%s message template moved to the Trash. To delete it from the website and from WhatsApp server, permanently delete it from Trash.', '%s message templates moved to the Trash. To delete them from the website and from WhatsApp server, permanently delete it from Trash.', (int) $count, 'notifier' );
 
@@ -263,7 +261,7 @@ class Notifier_Message_Templates {
 	 * Save meta
 	 */
 	public static function save_meta( $post_id, $post ) {
- 		if ( isset($_GET['action']) && in_array( $_GET['action'] , array('trash', 'untrash') ) ) {
+ 		if ( isset($_GET['action']) && in_array( $_GET['action'], array('trash', 'untrash') ) ) {
 	        return;
 	    }
 
@@ -279,10 +277,9 @@ class Notifier_Message_Templates {
 
 		foreach ($_POST as $key => $data) {
 			if (strpos($key, NOTIFIER_PREFIX) !== false) {
-				if(NOTIFIER_PREFIX . 'body_text' == $key) {
+				if (NOTIFIER_PREFIX . 'body_text' == $key) {
 					$template_data[$key] = sanitize_textarea_field( wp_unslash ($data) );
-				}
-				else {
+				} else {
 					$template_data[$key] = sanitize_text_field( wp_unslash ($data) );
 				}
 			    update_post_meta( $post_id, $key, $template_data[$key]);
@@ -304,15 +301,14 @@ class Notifier_Message_Templates {
 		);
 
 		// Header
-		if(isset($data[NOTIFIER_PREFIX . 'header_type'])) {
-			if('text' == $data[NOTIFIER_PREFIX . 'header_type']) {
+		if (isset($data[NOTIFIER_PREFIX . 'header_type'])) {
+			if ('text' == $data[NOTIFIER_PREFIX . 'header_type']) {
 				$args['components'][] = array (
 					'type' => 'HEADER',
 					'format' => 'TEXT',
 					'text' => isset($data[NOTIFIER_PREFIX . 'header_text']) ? $data[NOTIFIER_PREFIX . 'header_text'] : ''
 				);
-			}
-			else if('media' == $data[NOTIFIER_PREFIX . 'header_type']) {
+			} elseif ('media' == $data[NOTIFIER_PREFIX . 'header_type']) {
 				$args['components'][] = array (
 					'type' => 'HEADER',
 					'format' => isset($data[NOTIFIER_PREFIX . 'media_type']) ? strtoupper($data[NOTIFIER_PREFIX . 'media_type']) : '',
@@ -328,7 +324,7 @@ class Notifier_Message_Templates {
 		);
 
 		// Footer
-		if(isset($data[NOTIFIER_PREFIX . 'footer_text']) && '' != $data[NOTIFIER_PREFIX . 'footer_text']) {
+		if (isset($data[NOTIFIER_PREFIX . 'footer_text']) && '' != $data[NOTIFIER_PREFIX . 'footer_text']) {
 			$args['components'][] = array (
 				'type' => 'FOOTER',
 				'text' => isset($data[NOTIFIER_PREFIX . 'footer_text']) ? $data[NOTIFIER_PREFIX . 'footer_text'] : ''
@@ -336,7 +332,7 @@ class Notifier_Message_Templates {
 		}
 
 		// Buttons
-		if( isset($data[NOTIFIER_PREFIX . 'button_type']) && 'none' !== $data[NOTIFIER_PREFIX . 'button_type']) {
+		if ( isset($data[NOTIFIER_PREFIX . 'button_type']) && 'none' !== $data[NOTIFIER_PREFIX . 'button_type']) {
 			$button_component = array();
 			$button_component['type'] = 'BUTTONS';
 
@@ -348,17 +344,16 @@ class Notifier_Message_Templates {
 				'text' => $btn_1_text,
 			);
 
-			if('URL' == $btn_1_type) {
+			if ('URL' == $btn_1_type) {
 				$btn_1['url'] = isset($data[NOTIFIER_PREFIX . 'button_1_url']) ? $data[NOTIFIER_PREFIX . 'button_1_url'] : '';
-			}
-			elseif ('PHONE_NUMBER' == $btn_1_type) {
+			} elseif ('PHONE_NUMBER' == $btn_1_type) {
 				$btn_1['phone_number'] = isset($data[NOTIFIER_PREFIX . 'button_1_phone_num']) ? $data[NOTIFIER_PREFIX . 'button_1_phone_num'] : '';
 			}
 
 			$button_component['buttons'][] = $btn_1;
 
 		 	$btn_2 = array();
-			if(isset($data[NOTIFIER_PREFIX . 'button_num']) && '2' == $data[NOTIFIER_PREFIX . 'button_num']) {
+			if (isset($data[NOTIFIER_PREFIX . 'button_num']) && '2' == $data[NOTIFIER_PREFIX . 'button_num']) {
 				$btn_2_type = isset($data[NOTIFIER_PREFIX . 'button_2_type']) ? $data[NOTIFIER_PREFIX . 'button_2_type'] : '';
 				$btn_2_text = isset($data[NOTIFIER_PREFIX . 'button_2_text']) ? $data[NOTIFIER_PREFIX . 'button_2_text'] : '';
 
@@ -367,10 +362,9 @@ class Notifier_Message_Templates {
 					'text' => $btn_2_text,
 				);
 
-				if('URL' == $btn_2_type) {
+				if ('URL' == $btn_2_type) {
 					$btn_2['url'] = isset($data[NOTIFIER_PREFIX . 'button_2_url']) ? $data[NOTIFIER_PREFIX . 'button_2_url'] : '';
-				}
-				elseif ('PHONE_NUMBER' == $btn_2_type) {
+				} elseif ('PHONE_NUMBER' == $btn_2_type) {
 					$btn_2['phone_number'] = isset($data[NOTIFIER_PREFIX . 'button_2_phone_num']) ? $data[NOTIFIER_PREFIX . 'button_2_phone_num'] : '';
 				}
 				$button_component['buttons'][] = $btn_2;
@@ -381,27 +375,26 @@ class Notifier_Message_Templates {
 
 		$response = Notifier::wa_business_api_request( 'message_templates', $args );
 
-		if(isset($response->error)) {
+		if (isset($response->error)) {
 			$notice = array(
 				'type' => 'error'
 			);
-			if( isset($response->error->error_user_title) ){
+			if ( isset($response->error->error_user_title) ) {
 				$notice['message'] = '<b>' . $response->error->error_user_title . '</b> - ' . $response->error->error_user_msg;
-			}
-			elseif (isset($response->error->message)) {
+			} elseif (isset($response->error->message)) {
 				$notice['message'] = $response->error->message;
 			}
 			set_transient( 'mt_notice_' . $post_id, $notice, 60 );
 		}
 
-		if(isset($response->id)) {
+		if (isset($response->id)) {
 			update_post_meta( $post_id, NOTIFIER_PREFIX . 'template_id', $response->id);
 			update_post_meta( $post_id, NOTIFIER_PREFIX . 'status', 'PENDING');
 			$notice = array(
 				'message' => 'Template submitted to WhatsApp for approval. You\'ll get an email from WhatsApp about approval status.',
 				'type' => 'success'
 			);
-			set_transient( "mt_notice_" . $post_id, $notice, 60 );
+			set_transient( 'mt_notice_' . $post_id, $notice, 60 );
 			if ( false === as_has_scheduled_action( 'notifier_refresh_mt_status', array($post_id), 'notifier' ) ) {
 			 	as_enqueue_async_action( 'notifier_refresh_mt_status', array($post_id), 'notifier' );
 			}
@@ -420,10 +413,10 @@ class Notifier_Message_Templates {
 		$args = array (
 			'name' => $template_name
 		);
-		
+
 		$response = Notifier::wa_business_api_request( 'message_templates', $args, 'DELETE' );
 
-		if(isset($response->error)) {
+		if (isset($response->error)) {
 			$notice = array(
 				'message' => '<b>' . $response->error->error_user_title . '</b> - ' . $response->error->error_user_msg,
 				'type' => 'error'
@@ -439,11 +432,10 @@ class Notifier_Message_Templates {
 		global $post_id, $current_screen;
 		if ( 'wa_message_template' == $current_screen->id ) {
  			$status = get_post_meta( $post_id, NOTIFIER_PREFIX . 'status', true);
-	 		if('' != $status) {
+	 		if ('' != $status) {
 	 			$classes = $classes . ' mt-status-' . strtolower($status);
-	 		}
-	 		else {
-	 			$classes = $classes . ' mt-status-draft';	
+	 		} else {
+	 			$classes = $classes . ' mt-status-draft';
 	 		}
  		}
 
@@ -463,21 +455,20 @@ class Notifier_Message_Templates {
  			return;
  		}
 
- 		if(!isset($_GET['refresh_status'])) {
+ 		if (!isset($_GET['refresh_status'])) {
  			return;
  		}
 
  		$response = Notifier::wa_business_api_request('message_templates', array(), 'GET');
 
-		if(isset($response->error)) {
+		if (isset($response->error)) {
 			$notices[] = array(
 				'message' => 'Status not refreshed. Error Code ' . $response->error->code . ': ' . $response->error->message ,
 				'type' => 'error'
 			);
 
 			new Notifier_Admin_Notices($notices);
-		}
-		else {
+		} else {
 			$wa_message_templates = $response->data;
 			$local_message_templates = get_posts(
 				array (
@@ -490,8 +481,8 @@ class Notifier_Message_Templates {
 
 			foreach ($local_message_templates as $post_id) {
 				$template_name = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'template_name', true);
-				foreach($wa_message_templates as $template) {
-					if($template_name == $template->name && 'en_US' == $template->language) {
+				foreach ($wa_message_templates as $template) {
+					if ($template_name == $template->name && 'en_US' == $template->language) {
 						update_post_meta ( $post_id, NOTIFIER_PREFIX . 'status', $template->status);
 						break;
 					}
@@ -512,17 +503,16 @@ class Notifier_Message_Templates {
 	 */
 	public static function refresh_mt_status ($mt_id) {
 		$response = Notifier::wa_business_api_request('message_templates', array(), 'GET');
-		if(!isset($response->error)){
+		if (!isset($response->error)) {
 			$wa_message_templates = $response->data;
 			$template_name = get_post_meta ( $mt_id, NOTIFIER_PREFIX . 'template_name', true);
-			foreach($wa_message_templates as $template) {
-				if($template_name == $template->name && 'en_US' == $template->language) {
+			foreach ($wa_message_templates as $template) {
+				if ($template_name == $template->name && 'en_US' == $template->language) {
 					update_post_meta ( $mt_id, NOTIFIER_PREFIX . 'status', $template->status);
 					break;
 				}
 			}
-		}
-		else {
+		} else {
 			error_log('[WA Notifer] Message template status update error: ' . json_encode($response));
 		}
 
@@ -535,15 +525,15 @@ class Notifier_Message_Templates {
 	 * Admin HTML templates
 	 */
 	public static function admin_html_templates($templates) {
-		$refresh_url = '?' . http_build_query(array_merge($_GET, array("refresh_status"=>"1")));
-		$templates['refresh_mt_status'] = '<a href="'.$refresh_url.'" class="refresh-status page-title-action">Refresh Status</a>';
+		$refresh_url = '?' . http_build_query(array_merge($_GET, array('refresh_status'=>'1')));
+		$templates['refresh_mt_status'] = '<a href="' . $refresh_url . '" class="refresh-status page-title-action">Refresh Status</a>';
 		return $templates;
 	}
 
 	/**
 	 * Get approved message templates
 	 */
-	public static function get_approved_message_templates ($show_select = false)	 {
+	public static function get_approved_message_templates ($show_select = false) {
 		$message_templates = get_posts(
 			array (
 				'post_type' => 'wa_message_template',
@@ -602,21 +592,21 @@ class Notifier_Message_Templates {
 		$total_header_vars = 0;
 		$total_body_vars = 0;
 
-		if('text' == $header_type) {
-			preg_match_all("~\{\{\s*(.*?)\s*\}\}~", $header_text, $header_var_matches);
+		if ('text' == $header_type) {
+			preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $header_text, $header_var_matches);
 			$header_vars = $header_var_matches[0];
 			$total_header_vars = count($header_vars);
 		}
 
-		preg_match_all("~\{\{\s*(.*?)\s*\}\}~", $body_text, $body_var_matches);
+		preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $body_text, $body_var_matches);
 		$body_vars = $body_var_matches[0];
 		$total_body_vars = count($body_vars);
 
 		// If merge tag present in header
-		if($total_header_vars > 0 && is_array($variable_mapping)) {
+		if ($total_header_vars > 0 && is_array($variable_mapping)) {
 			$header_merge_tag_id = isset($variable_mapping['header'][0]) ? $variable_mapping['header'][0] : '';
 			$header_merge_tag_value = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_merge_tag_id, $context_args);
-			if($header_merge_tag_value) {
+			if ($header_merge_tag_value) {
 				$args['template']['components'][] = array (
 					'type'			=> 'header',
 					'parameters'	=> array(
@@ -630,7 +620,7 @@ class Notifier_Message_Templates {
 		}
 
 		// If merge tag present in body
-		if($total_body_vars > 0 && is_array($variable_mapping)) {
+		if ($total_body_vars > 0 && is_array($variable_mapping)) {
 			$parameters = array();
 			$body_merge_tag_values = array();
 			for ($num = 0; $num < $total_body_vars; $num++) {
@@ -646,11 +636,10 @@ class Notifier_Message_Templates {
 
 		$response = Notifier::wa_cloud_api_request('messages', $args);
 
-		if($response->error) {
+		if ($response->error) {
 			error_log('[WhatsApp Send Error] ' . json_encode($response->error));
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
@@ -660,10 +649,10 @@ class Notifier_Message_Templates {
 	 * Add variable button to heading and body text fields.
 	 */
 	public static function add_variable_button ($field, $post) {
-		if(NOTIFIER_PREFIX . 'header_text' == $field['id'] && 'disabled' != $field['custom_attributes']['disabled']) {
+		if (NOTIFIER_PREFIX . 'header_text' == $field['id'] && 'disabled' != $field['custom_attributes']['disabled']) {
 			echo '<button class="add-variable" data-type="header" title="Add Variable"><span class="dashicons dashicons-plus-alt2"></span><span class="hide">Add Variable</span></button>';
 		}
-		if(NOTIFIER_PREFIX . 'body_text' == $field['id'] && 'disabled' != $field['custom_attributes']['disabled']) {
+		if (NOTIFIER_PREFIX . 'body_text' == $field['id'] && 'disabled' != $field['custom_attributes']['disabled']) {
 			echo '<button class="add-variable" data-type="body" title="Add Variable"><span class="dashicons dashicons-plus-alt2"></span><span class="hide">Add Variable</span></button>';
 		}
 		return;

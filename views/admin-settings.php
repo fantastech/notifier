@@ -15,10 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     		$current_tab = isset($_GET['tab']) ? $_GET['tab'] : 'profile';
     		$tabs = Notifier_Settings::get_settings_tabs();
 		 	echo '<h2 class="nav-tab-wrapper">';
-		    foreach( $tabs as $tab => $name ){
-		        $class = ( $tab == $current_tab ) ? ' nav-tab-active' : '';
-		        echo "<a class='nav-tab$class' href='?page=notifier-settings&tab=$tab'>$name</a>";
-		    }
+		foreach ( $tabs as $tab => $name ) {
+			$class = ( $tab == $current_tab ) ? ' nav-tab-active' : '';
+			echo "<a class='nav-tab$class' href='?page=notifier-settings&tab=$tab'>$name</a>";
+		}
 		    echo '</h2>';
     	?>
 

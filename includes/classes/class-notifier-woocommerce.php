@@ -31,11 +31,11 @@ class Notifier_Woocommerce {
 					'hook'		=> 'woocommerce_new_order',
 					'callback' 	=> function ( $order_id ) {
 						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('new_order');
-						if(empty($notif_ids)){
+						if (empty($notif_ids)) {
 							return;
 						}
 
-						foreach($notif_ids as $nid){
+						foreach ($notif_ids as $nid) {
 							$args = array (
 								'object_type' 	=> 'order',
 								'object_id'		=> $order_id
@@ -54,11 +54,11 @@ class Notifier_Woocommerce {
 					'hook'		=> 'woocommerce_order_status_processing',
 					'callback' 	=> function ( $order_id ) {
 						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('processing_order');
-						if(empty($notif_ids)){
+						if (empty($notif_ids)) {
 							return;
 						}
 
-						foreach($notif_ids as $nid){
+						foreach ($notif_ids as $nid) {
 							$args = array (
 								'object_type' 	=> 'order',
 								'object_id'		=> $order_id
@@ -77,11 +77,11 @@ class Notifier_Woocommerce {
 					'hook'		=> 'woocommerce_order_status_completed',
 					'callback' 	=> function ( $order_id ) {
 						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('completed_order');
-						if(empty($notif_ids)){
+						if (empty($notif_ids)) {
 							return;
 						}
 
-						foreach($notif_ids as $nid){
+						foreach ($notif_ids as $nid) {
 							$args = array (
 								'object_type' 	=> 'order',
 								'object_id'		=> $order_id
@@ -100,10 +100,10 @@ class Notifier_Woocommerce {
 					'hook'		=> 'woocommerce_order_status_cancelled',
 					'callback' 	=> function ( $order_id ) {
 						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('cancelled_order');
-						if(empty($notif_ids)){
+						if (empty($notif_ids)) {
 							return;
 						}
-						foreach($notif_ids as $nid){
+						foreach ($notif_ids as $nid) {
 							$args = array (
 								'object_type' 	=> 'order',
 								'object_id'		=> $order_id
@@ -122,10 +122,10 @@ class Notifier_Woocommerce {
 					'hook'		=> 'woocommerce_order_status_failed',
 					'callback' 	=> function ( $order_id ) {
 						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('failed_order');
-						if(empty($notif_ids)){
+						if (empty($notif_ids)) {
 							return;
 						}
-						foreach($notif_ids as $nid){
+						foreach ($notif_ids as $nid) {
 							$args = array (
 								'object_type' 	=> 'order',
 								'object_id'		=> $order_id
@@ -144,10 +144,10 @@ class Notifier_Woocommerce {
 					'hook'		=> 'woocommerce_order_status_on-hold',
 					'callback' 	=> function ( $order_id ) {
 						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('on_hold_order');
-						if(empty($notif_ids)){
+						if (empty($notif_ids)) {
 							return;
 						}
-						foreach($notif_ids as $nid){
+						foreach ($notif_ids as $nid) {
 							$args = array (
 								'object_type' 	=> 'order',
 								'object_id'		=> $order_id
@@ -166,10 +166,10 @@ class Notifier_Woocommerce {
 					'hook'		=> 'woocommerce_order_status_refunded',
 					'callback' 	=> function ( $order_id ) {
 						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('refunded_order');
-						if(empty($notif_ids)){
+						if (empty($notif_ids)) {
 							return;
 						}
-						foreach($notif_ids as $nid){
+						foreach ($notif_ids as $nid) {
 							$args = array (
 								'object_type' 	=> 'order',
 								'object_id'		=> $order_id
@@ -198,7 +198,7 @@ class Notifier_Woocommerce {
 		$woo_triggers = self::get_woo_notification_triggers();
 		$woo_triggers = wp_list_pluck( $woo_triggers, 'id' );
 
-		if(in_array($trigger, $woo_triggers)){
+		if (in_array($trigger, $woo_triggers)) {
 			$send_to_types = array('customer' => 'WooCommerce Customer') + $send_to_types;
 		}
 
@@ -354,12 +354,11 @@ class Notifier_Woocommerce {
 
 		);
 
-		foreach($woo_fields as $woo_field_key => $woo_field) {
-			foreach($woo_field as $field => $field_data) {
+		foreach ($woo_fields as $woo_field_key => $woo_field) {
+			foreach ($woo_field as $field => $field_data) {
 				if (isset($field_data['label'])) {
 					$label = $field_data['label'];
-				}
-				else {
+				} else {
 					$label = ucfirst( str_replace('_', ' ', $field) );
 				}
 
@@ -370,10 +369,9 @@ class Notifier_Woocommerce {
 					'value'			=> function ($args) use ($field, $field_data) {
 						$order = wc_get_order( $args['object_id'] );
 						$field_function = 'get_' . $field;
-						if(isset($field_data['value'])) {
+						if (isset($field_data['value'])) {
 							$value = $field_data['value']($order, $field_function);
-						}
-						else {
+						} else {
 							$value = $order->$field_function();
 						}
 						return html_entity_decode(sanitize_text_field($value));
@@ -390,9 +388,9 @@ class Notifier_Woocommerce {
 	 * column for customer Send to field
 	 */
 	public static function send_to_customer_description($num) {
-		$conditional_logic	= array (
+		$conditional_logic = array (
 			array (
-				'field'		=> NOTIFIER_PREFIX . 'notification_send_to_'.$num.'_type',
+				'field'		=> NOTIFIER_PREFIX . 'notification_send_to_' . $num . '_type',
 				'operator'	=> '==',
 				'value'		=> 'customer'
 			)

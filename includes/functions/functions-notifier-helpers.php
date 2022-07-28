@@ -50,10 +50,10 @@ function notifier_register_post_type($cpt_slug, $cpt_name, $cpt_name_plural, $ar
 }
 
 /**
-* Create new taxonomy for a post type
-*
-* @return null
-*/
+ * Create new taxonomy for a post type
+ *
+ * @return null
+ */
 function notifier_register_taxonomy($taxonomy_slug, $taxonomy_name, $taxonomy_name_plural, $cpt_slug, $args = array()) {
     $labels = array (
         'name' => $taxonomy_name_plural,
@@ -83,16 +83,15 @@ function notifier_register_taxonomy($taxonomy_slug, $taxonomy_name, $taxonomy_na
 }
 
 /**
-* Sanitize array
-*
-* @return Array
-*/
+ * Sanitize array
+ *
+ * @return Array
+ */
 function notifier_sanitize_array ( $array ) {
 	foreach ( $array as $key => &$value ) {
         if ( is_array( $value ) ) {
             $value = notifier_sanitize_array($value);
-        }
-        else {
+        } else {
             $value = sanitize_text_field( $value );
         }
     }
@@ -105,12 +104,12 @@ function notifier_sanitize_array ( $array ) {
 function notifier_upload_file_by_url( $image_url ) {
 
 	// it allows us to use download_url() and wp_handle_sideload() functions
-	require_once( ABSPATH . 'wp-admin/includes/file.php' );
+	require_once ABSPATH . 'wp-admin/includes/file.php';
 
 	// download to temp dir
 	$temp_file = download_url( $image_url );
 
-	if( is_wp_error( $temp_file ) ) {
+	if ( is_wp_error( $temp_file ) ) {
 		return false;
 	}
 
@@ -129,7 +128,7 @@ function notifier_upload_file_by_url( $image_url ) {
 		)
 	);
 
-	if( ! empty( $sideload[ 'error' ] ) ) {
+	if ( ! empty( $sideload[ 'error' ] ) ) {
 		// you may return error message if you want
 		return false;
 	}
@@ -146,12 +145,12 @@ function notifier_upload_file_by_url( $image_url ) {
 		$sideload[ 'file' ]
 	);
 
-	if( is_wp_error( $attachment_id ) || ! $attachment_id ) {
+	if ( is_wp_error( $attachment_id ) || ! $attachment_id ) {
 		return false;
 	}
 
 	// update medatata, regenerate image sizes
-	require_once( ABSPATH . 'wp-admin/includes/image.php' );
+	require_once ABSPATH . 'wp-admin/includes/image.php';
 
 	wp_update_attachment_metadata(
 		$attachment_id,

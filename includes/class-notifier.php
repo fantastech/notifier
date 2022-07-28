@@ -22,11 +22,11 @@ class Notifier {
 	/**
 	 * Define Constants.
 	 */
-	private function define_constants() {		
-		$this->define( 'NOTIFIER_VERSION', '0.1' );
+	private function define_constants() {
+		$this->define( 'NOTIFIER_VERSION', '0.1.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
-		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '' , dirname(__FILE__) ) ) );
+		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
 		$this->define( 'NOTIFIER_WA_API_VERSION', 'v14.0' );
 		$this->define( 'NOTIFIER_WA_API_URL', 'https://graph.facebook.com/' . NOTIFIER_WA_API_VERSION . '/' );
 	}
@@ -81,7 +81,7 @@ class Notifier {
 	 * Hook into actions and filters.
 	 */
 	private function init_hooks() {
-		register_activation_hook ( NOTIFIER_FILE , array( $this, 'install') );
+		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
 
 		add_action( 'plugins_loaded', array( 'Notifier_Dashboard', 'init' ) );
 		add_action( 'plugins_loaded', array( 'Notifier_Message_Templates', 'init' ) );
@@ -107,7 +107,7 @@ class Notifier {
 	 */
 	public function install() {
 		$verify_token = get_option(NOTIFIER_PREFIX . 'verify_token');
-		if(!$verify_token) {
+		if (!$verify_token) {
 			$bytes = random_bytes(20);
 			$verify_token = NOTIFIER_NAME . '-' . substr(bin2hex($bytes), 0, 10);
 			update_option(NOTIFIER_PREFIX . 'verify_token', $verify_token);
@@ -135,7 +135,7 @@ class Notifier {
 	 * Add admin scripts and styles
 	 */
 	public function admin_scripts () {
-		if(!self::is_notifier_page()){
+		if (!self::is_notifier_page()) {
 			return;
 		}
 
@@ -175,7 +175,9 @@ class Notifier {
     	// Styles
 	    wp_enqueue_style(
 	    	NOTIFIER_NAME . '-admin-css',
-	    	NOTIFIER_URL . 'assets/css/admin.css'
+	    	NOTIFIER_URL . 'assets/css/admin.css',
+	    	null,
+	    	NOTIFIER_VERSION
 	    );
 	}
 
@@ -184,40 +186,40 @@ class Notifier {
 	 * The initial contents here are meant as a place loader for when the PHP page initialy loads.
 	 */
 	public static function embed_page_header() {
-		if(!self::is_notifier_page()){
+		if (!self::is_notifier_page()) {
 			return;
 		}
 		$current_screen = get_current_screen();
 		$cpt = ( '' !== $current_screen->post_type) ? $current_screen->post_type : '';
 		$tax = ( '' !== $current_screen->taxonomy) ? $current_screen->taxonomy : '';
 		?>
-		<div id="notifier-admin-header" data-post-type="<?php echo $cpt; ?>">
+		<div id="notifier-admin-header" data-post-type="<?php echo esc_attr($cpt); ?>">
 			<div class="notifier-admin-header-content">
 				<div class="header-page-title w-30">
-					<h2><?php echo get_admin_page_title(); ?></h2>
+					<h2><?php echo esc_attr(get_admin_page_title()); ?></h2>
 				</div>
 				<div class="header-menu-items w-40 d-flex justify-content-center">
 					<?php
-						if ( 'wa_contact' == $cpt ) {
-					?>
+					if ( 'wa_contact' == $cpt ) {
+						?>
 							<ul>
 								<li>
-									<a class="<?php echo ('wa_contact_list' !== $tax && 'wa_contact_tag' !== $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit.php?post_type=wa_contact') ?>" class="">Contacts</a>
+									<a class="<?php echo ('wa_contact_list' !== $tax && 'wa_contact_tag' !== $tax) ? 'active' : ''; ?>" href="<?php echo esc_url( admin_url('edit.php?post_type=wa_contact') ); ?>" class="">Contacts</a>
 								</li>
 								<li>
-									<a class="<?php echo ('wa_contact_list' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact'); ?>">Lists</a>
+									<a class="<?php echo ('wa_contact_list' == $tax) ? 'active' : ''; ?>" href="<?php echo esc_url( admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact') ); ?>">Lists</a>
 								</li>
 								<li>
-									<a class="<?php echo ('wa_contact_tag' == $tax) ? 'active' : ''; ?>" href="<?php echo admin_url('edit-tags.php?taxonomy=wa_contact_tag&post_type=wa_contact'); ?>">Tags</a>
+									<a class="<?php echo ('wa_contact_tag' == $tax) ? 'active' : ''; ?>" href="<?php echo esc_url( admin_url('edit-tags.php?taxonomy=wa_contact_tag&post_type=wa_contact') ); ?>">Tags</a>
 								</li>
 							</ul>
-					<?php
-						}
+						<?php
+					}
 					?>
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">
 					<span class="header-version">Version: 0.1 (beta)</span>
-					<a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20Help%20Needed%20on<?php echo get_site_url(); ?>">Help</a>
+					<a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20Help%20Needed%20on<?php echo esc_url(get_site_url()); ?>">Help</a>
 					<a href="admin.php?page=notifier&show=disclaimer">Disclaimer</a>
 				</div>
 			</div>
@@ -229,21 +231,24 @@ class Notifier {
 	 * Handle response from Whatsapp
 	 */
 	public static function handle_webhook_requests () {
-		if( ! isset($_GET['notifier']) ) {
+		if ( ! isset($_GET['notifier']) ) {
 			return;
 		}
 
-		if( ! isset($_POST) ) {
+		if ( ! isset($_POST) ) {
 			return;
 		}
+
+		$hub_mode = isset($_GET['hub_mode']) ? sanitize_text_field( wp_unslash( $_GET['hub_mode'] ) ) : '';
+		$hub_verify_token = isset($_GET['hub_verify_token']) ? sanitize_text_field( wp_unslash( $_GET['hub_verify_token'] ) ) : '';
+		$hub_challenge = isset($_GET['hub_challenge']) ? sanitize_text_field( wp_unslash( $_GET['hub_challenge'] ) ) : '';
 
 		/* Validate WhastApp API webbook */
-		if(isset($_GET['hub_mode']) && $_GET['hub_mode'] == 'subscribe') {
+		if ( 'subscribe' === $hub_mode ) {
 			$verify_token = get_option(NOTIFIER_PREFIX . 'verify_token');
-			if(isset($_GET['hub_verify_token']) && $_GET['hub_verify_token'] == $verify_token) {
-				echo isset($_GET['hub_challenge']) ? $_GET['hub_challenge'] : '';	
+			if ($hub_verify_token == $verify_token) {
+				echo esc_html($hub_challenge);
 			}
-			
 		}
 
 		exit;
@@ -290,14 +295,12 @@ class Notifier {
 	    );
 		$response = wp_remote_request( $request_url, $request_args);
 		if ( is_wp_error( $response ) ) {
-			echo $response->get_error_message();
+			error_log( $response->get_error_message() );
 			return false;
-		}
-		else if(isset($response->error)) {
+		} elseif (isset($response->error)) {
 			error_log($response->error_user_title . ' - ' . $response->eerror_user_msg);
 			return json_decode($response_body);
-		}
-		else {
+		} else {
 			$response_body = wp_remote_retrieve_body( $response );
 			return json_decode($response_body);
 		}
@@ -306,11 +309,11 @@ class Notifier {
 	/**
 	 * For uploading profile pic to app
 	 */
-	public static function wa_cloud_api_upload_profile_pic($attachment_id){
+	public static function wa_cloud_api_upload_profile_pic($attachment_id) {
 		$file_path = get_attached_file($attachment_id);
 		$file_size = filesize($file_path);
 
-		if(!$file_path) {
+		if (!$file_path) {
 			return;
 		}
 
@@ -325,7 +328,7 @@ class Notifier {
 
 		// Create session ID for upload
 		$upload_session = self::wa_graph_api_request('app/uploads', $file_args);
-		if(!isset($upload_session->id)){
+		if (!isset($upload_session->id)) {
 			error_log('Error creating WhatsApp image upload session: ' . $upload_session);
 			return false;
 		}
@@ -344,7 +347,7 @@ class Notifier {
 
 		$upload_handle = self::wa_graph_api_request( $upload_session->id, $file_data, null, $upload_headers );
 
-		if(!isset($upload_handle->h)){
+		if (!isset($upload_handle->h)) {
 			error_log('Error while uploading profile image: ' . $upload_handle);
 			return false;
 		}
@@ -364,7 +367,7 @@ class Notifier {
 	 * Load Woocommerce class if it's present is activated
 	 */
 	public static function maybe_include_woocoomerce_class () {
-		if( class_exists( 'WooCommerce' ) ){
+		if ( class_exists( 'WooCommerce' ) ) {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-woocommerce.php';
 			Notifier_Woocommerce::init();
 		}
@@ -373,20 +376,20 @@ class Notifier {
 	/**
 	 * Add admin html templates to footer
 	 */
-	public static function add_admin_html_templates (){
-		if(!self::is_notifier_page()){
+	public static function add_admin_html_templates () {
+		if (!self::is_notifier_page()) {
 			return;
 		}
 
 		$templates = apply_filters('notifier_admin_html_templates', array());
 
-		if(count($templates) == 0) {
+		if (count($templates) == 0) {
 			return;
 		}
 
 		echo '<div class="notifier-templates">';
-		foreach($templates as $key => $template) {
-			echo '<template id="'.$key.'">'.$template.'</template>';
+		foreach ($templates as $key => $template) {
+			echo '<template id="' . esc_attr($key) . '">' . esc_html($template) . '</template>';
 		}
 		echo '</div>';
 	}

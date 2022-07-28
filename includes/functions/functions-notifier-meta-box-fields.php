@@ -19,7 +19,7 @@ function notifier_wp_text_input( $field ) {
 	$field = apply_filters ('notifier_wp_text_input_args', $field, $post);
 
 	$field = wp_parse_args(
-		$field , array(
+		$field, array(
 			'label'				=> '',
 			'placeholder'		=> '',
 			'class'             => '',
@@ -51,8 +51,8 @@ function notifier_wp_text_input( $field ) {
 	}
 
 	$show_limit_text = '';
-	if($field['limit'] != 0) {
-		$show_limit_text = '<span class="limit-text"><span class="limit-used">0</span> / <span>'.$field['limit'].'</span></span>';
+	if ($field['limit'] != 0) {
+		$show_limit_text = '<span class="limit-text"><span class="limit-used">0</span> / <span>' . $field['limit'] . '</span></span>';
 		$field['custom_attributes']['data-limit'] = $field['limit'];
 		$field['class'] = $field['class'] . ' force-text-limit';
 	}
@@ -66,13 +66,13 @@ function notifier_wp_text_input( $field ) {
 		}
 	}
 
-	if( '' != $field['required'] ) {
+	if ( '' != $field['required'] ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -91,7 +91,7 @@ function notifier_wp_text_input( $field ) {
 
 	do_action('notifier_after_meta_field_description', $field, $post);
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		echo '</p>';
 		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
@@ -108,7 +108,7 @@ function notifier_wp_hidden_input( $field ) {
 	$field = apply_filters ('notifier_wp_hidden_input', $field, $post);
 
 	$field = wp_parse_args(
-		$field , array(
+		$field, array(
 			'class'             => '',
 			'value'             => ''
 		)
@@ -132,7 +132,7 @@ function notifier_wp_textarea_input( $field ) {
 	$field = apply_filters ('notifier_wp_textarea_input', $field, $post);
 
 	$field = wp_parse_args(
-		$field , array(
+		$field, array(
 			'label'				=> '',
 			'placeholder'		=> '',
 			'class'             => '',
@@ -154,8 +154,8 @@ function notifier_wp_textarea_input( $field ) {
 	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
 
 	$show_limit_text = '';
-	if($field['limit'] != 0) {
-		$show_limit_text = '<span class="limit-text"><span class="limit-used">0</span> / <span>'.$field['limit'].'</span></span>';
+	if ($field['limit'] != 0) {
+		$show_limit_text = '<span class="limit-text"><span class="limit-used">0</span> / <span>' . $field['limit'] . '</span></span>';
 		$field['custom_attributes']['data-limit'] = $field['limit'];
 		$field['class'] = $field['class'] . ' force-text-limit';
 	}
@@ -169,13 +169,13 @@ function notifier_wp_textarea_input( $field ) {
 		}
 	}
 
-	if( '' != $field['required'] ) {
+	if ( '' != $field['required'] ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -194,7 +194,7 @@ function notifier_wp_textarea_input( $field ) {
 
 	do_action('notifier_after_meta_field_description', $field, $post);
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		echo '</p>';
 		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
@@ -211,7 +211,7 @@ function notifier_wp_checkbox( $field ) {
 	$field = apply_filters ('notifier_wp_checkbox', $field, $post);
 
 	$field = wp_parse_args(
-		$field , array(
+		$field, array(
 			'label'				=> '',
 			'class'             => '',
 			'style'             => '',
@@ -238,9 +238,9 @@ function notifier_wp_checkbox( $field ) {
 		}
 	}
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -259,7 +259,7 @@ function notifier_wp_checkbox( $field ) {
 
 	do_action('notifier_after_meta_field_description', $field, $post);
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		echo '</p>';
 		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
@@ -276,7 +276,7 @@ function notifier_wp_select( $field ) {
 	$field = apply_filters ('notifier_wp_select', $field, $post);
 
 	$field = wp_parse_args(
-		$field , array(
+		$field, array(
 			'label'				=> '',
 			'class'             => '',
 			'style'             => '',
@@ -302,10 +302,10 @@ function notifier_wp_select( $field ) {
 	}
 
 	$description = ! empty( $field['description'] ) ? $field['description'] : '';
-	
-	if($field['show_wrapper']){
+
+	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
-		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js( $field['conditional_logic'] ).'">';
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -317,15 +317,14 @@ function notifier_wp_select( $field ) {
 	echo '<select class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '"' . implode( ' ', $custom_attributes ) . '/> ';
 
 	foreach ( $field['options'] as $key => $value ) {
-		if(is_array($value)){
+		if (is_array($value)) {
 			$opt_group_options = $value;
-			echo '<optgroup label="'.$key.'">';
-			foreach($opt_group_options as $opt_key => $opt_val) {
+			echo '<optgroup label="' . $key . '">';
+			foreach ($opt_group_options as $opt_key => $opt_val) {
 				echo '<option value="' . esc_attr( $opt_key ) . '"' . selected( $opt_key, $field['value'], false) . '>' . esc_html( $opt_val ) . '</option>';
 			}
 			echo '</optgroup>';
-		}
-		else {
+		} else {
 			echo '<option value="' . esc_attr( $key ) . '"' . selected( $key, $field['value'], false) . '>' . esc_html( $value ) . '</option>';
 		}
 	}
@@ -340,7 +339,7 @@ function notifier_wp_select( $field ) {
 
 	do_action('notifier_after_meta_field_description', $field, $post);
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		echo '</p>';
 		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
@@ -357,7 +356,7 @@ function notifier_wp_radio( $field ) {
 	$field = apply_filters ('notifier_wp_radio', $field, $post);
 
 	$field = wp_parse_args(
-		$field , array(
+		$field, array(
 			'label'				=> '',
 			'class'             => '',
 			'style'             => '',
@@ -382,9 +381,9 @@ function notifier_wp_radio( $field ) {
 		}
 	}
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
-		echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="'.esc_js($field['conditional_logic']).'">';
+		echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js($field['conditional_logic']) . '">';
 	}
 
 	if ( '' != $field['label'] ) {
@@ -417,9 +416,86 @@ function notifier_wp_radio( $field ) {
 
 	do_action('notifier_after_meta_field_description', $field, $post);
 
-	if($field['show_wrapper']){
+	if ($field['show_wrapper']) {
 		echo '</fieldset>';
 		do_action('notifier_after_meta_field_wrapper', $field, $post);
 	}
 
+}
+
+/**
+ * Output a file upload input box.
+ *
+ * @param array $field
+ */
+function notifier_wp_file_input( $field ) {
+	global $post;
+
+	$field = apply_filters ('notifier_wp_text_input_args', $field, $post);
+
+	$field = wp_parse_args(
+		$field, array(
+			'label'				=> '',
+			'placeholder'		=> '',
+			'class'             => '',
+			'wrapper_class'     => '',
+			'value'             => '',
+			'name'              => $field['id'],
+			'description'		=> '',
+			'conditional_logic'	=> '',
+			'show_wrapper'		=> true,
+			'custom_attributes' => array(),
+			'uploader_title'	=> 'Upload media',
+			'uploader_button_text'	=> 'Select',
+			'uploader_supported_file_types'	=> array()
+		)
+	);
+
+	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
+
+	// Custom attribute handling
+	$custom_attributes = array();
+
+	if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
+		foreach ( $field['custom_attributes'] as $attribute => $value ) {
+			$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
+		}
+	}
+
+	if ($field['show_wrapper']) {
+		do_action('notifier_before_meta_field_wrapper', $field, $post);
+		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
+	}
+
+	if ( '' != $field['label'] ) {
+		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
+	}
+
+	do_action('notifier_before_meta_field', $field, $post);
+
+	$image_thumb = '';
+	if ( '' != $field['value'] ) {
+		$image_thumb = wp_get_attachment_thumb_url( $field['value'] );
+	}
+
+	if ($image_thumb) {
+		echo '<img id="' . esc_attr( $field['id'] ) . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>' . "\n";
+	}
+
+	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr(json_encode($field['uploader_supported_file_types'])) . '" class="image_upload_button button" value="Upload" />' . "\n";
+	echo '<input id="' . esc_attr( $field['id'] ) . '_delete" type="button" class="image_delete_button button" value="Remove" />' . "\n";
+	echo '<input class="' . esc_attr( $field['class'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" type="hidden" /><br/>' . "\n";
+
+	do_action('notifier_after_meta_field', $field, $post);
+
+	if ( '' != $field['description'] ) {
+		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
+	}
+
+	do_action('notifier_after_meta_field_description', $field, $post);
+
+	if ($field['show_wrapper']) {
+		echo '</p>';
+		do_action('notifier_after_meta_field_wrapper', $field, $post);
+	}
 }

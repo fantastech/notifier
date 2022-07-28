@@ -10,13 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 global $post_id;
 
-$notification_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'notification_status' , true);
-if(in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
+$notification_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'notification_status', true);
+if (in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
 	$disabled = array (
 		'disabled' => 'disabled'
 	);
-}
-else {
+} else {
 	$disabled = array ();
 }
 ?>
@@ -70,7 +69,7 @@ else {
 							'value'		=> ''
 						)
 					);
-				?>
+					?>
 				<div class="form-field send-to-fields" data-conditions="<?php echo esc_attr ( json_encode( $send_to_conditions ) ); ?>">
 
 				</div>
@@ -82,7 +81,7 @@ else {
 						'id'                => NOTIFIER_PREFIX . 'notification_list',
 						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_list', true),
 						'label'             => 'Contact List',
-						'description'       => 'Select the contact list you want to send this notification to. <a href="'. admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact') .'">Click here</a> to create new list.',
+						'description'       => 'Select the contact list you want to send this notification to. <a href="' . admin_url('edit-tags.php?taxonomy=wa_contact_list&post_type=wa_contact') . '">Click here</a> to create new list.',
 						'options'			=> Notifier_Contacts::get_contact_lists(true, true),
 						'conditional_logic'		=> array (
 							array (

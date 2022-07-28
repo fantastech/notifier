@@ -10,15 +10,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 global $post_id;
 
-$mt_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'status' , true);
+$mt_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'status', true);
 $disable_states = array ('APPROVED', 'IN_APPEAL', 'PENDING', 'PENDING_DELETION', 'DELETED', 'DISABLED', 'LOCKED');
 
-if(in_array($mt_status, $disable_states)) {
+if (in_array($mt_status, $disable_states)) {
 	$disabled = array (
 		'disabled' => 'disabled'
 	);
-}
-else {
+} else {
 	$disabled = array ();
 }
 ?>
@@ -50,7 +49,7 @@ else {
 						'options'           => array (
 							'MARKETING' => 'Marketing',
 							'TRANSACTIONAL' => 'Transactional',
-							//'OTP' => 'One Time Password (OTP)'
+							// 'OTP' => 'One Time Password (OTP)'
 						),
 						'custom_attributes' => $disabled
 					)
@@ -148,12 +147,12 @@ else {
 			</div>
 			<div class="col w-50">
 				<?php
-				notifier_wp_text_input(
+				notifier_wp_file_input(
 					array(
-						'id'                => NOTIFIER_PREFIX . 'media_url',
-						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_url', true),
-						'label'             => 'Example Media URL',
-						'description'       => 'Provide example media URL for WhatsApp to check if it meets their guidelines.',
+						'id'                => NOTIFIER_PREFIX . 'media_item',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item', true),
+						'label'             => 'Example Media',
+						'description'       => 'Provide example media for WhatsApp to check if it meets their guidelines.',
 						'data_type'         => 'url',
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
@@ -322,7 +321,7 @@ else {
 								)
 							)
 						);
-					?>
+						?>
 					</div>
 					<div class="col">
 					<?php
@@ -363,7 +362,7 @@ else {
 							)
 						);
 
-					?>
+						?>
 					</div>
 				</div>
 			</div>
@@ -410,7 +409,7 @@ else {
 								)
 							)
 						);
-					?>
+						?>
 					</div>
 					<div class="col">
 					<?php
@@ -451,7 +450,7 @@ else {
 							)
 						);
 
-					?>
+						?>
 					</div>
 				</div>
 

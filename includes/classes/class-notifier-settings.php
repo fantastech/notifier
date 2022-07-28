@@ -45,7 +45,7 @@ class Notifier_Settings {
 	 * Add JS to settings page
 	 */
 	public static function admin_scripts () {
-		if(!self::is_settings_page()){
+		if (!self::is_settings_page()) {
 			return;
 		}
 	    wp_enqueue_media();
@@ -55,7 +55,7 @@ class Notifier_Settings {
 	 * Check if on settings page
 	 */
 	public static function is_settings_page() {
-		$current_page = isset($_GET['page']) ? $_GET['page'] : '';
+		$current_page = isset($_GET['page']) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 		return strpos($current_page, NOTIFIER_NAME . '-settings') !== false;
 	}
 
@@ -64,7 +64,7 @@ class Notifier_Settings {
 	 */
 	private static function settings_fields($tab) {
 		$settings = array();
-		switch($tab) {
+		switch ($tab) {
 			case 'profile':
 				$settings = array(
 					array(
@@ -78,7 +78,10 @@ class Notifier_Settings {
 						'description'	=> 'Recommended profile image size 640px x 640px.',
 						'type'			=> 'image',
 						'default'		=> '',
-						'placeholder'	=> ''
+						'placeholder'	=> '',
+						'uploader_title'	=> 'WhatsApp profile image',
+						'uploader_button_text'	=> 'Select',
+						'uploader_supported_file_types'	=> array('image/jpeg', 'image/png')
 					),
 					array(
 						'id' 			=> 'wa_profile_description',
@@ -215,103 +218,105 @@ class Notifier_Settings {
 
 		$html = '';
 
-		if(isset($field['id'])){
+		if (isset($field['id'])) {
 			$option_name = NOTIFIER_PREFIX . $field['id'];
 			$option = get_option( $option_name );
 		}
 
 		$data = '';
-		if( isset( $field['default'] ) ) {
+		if ( isset( $field['default'] ) ) {
 			$data = $field['default'];
-			if( isset( $option ) && '' != $option) {
+			if ( isset( $option ) && '' != $option) {
 				$data = $option;
 			}
 		}
 
-		if( $field['type'] == 'title') {
+		if ( 'title' === $field['type']) {
 			$html .= '<tr><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
 			$html .= '<p>' . $field['description'] . '</p></th></tr>';
-		}
-		else{
+		} else {
 			$html .= '<tr>';
-			$html .= '<th>'.$field['title'].'</th>';
+			$html .= '<th>' . $field['title'] . '</th>';
 			$html .= '<td>';
 
-
-			switch( $field['type'] ) {
+			switch ( $field['type'] ) {
 
 				case 'text':
 				case 'password':
 				case 'number':
 					$html .= '<input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '"/>';
-				break;
+				    break;
 
 				case 'textarea':
 					$html .= '<textarea id="' . esc_attr( $option_name ) . '" rows="5" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '">' . $data . '</textarea><br/>';
-				break;
+				    break;
 
 				case 'checkbox':
 					$checked = '';
-					if( $option && 'on' == $option ){
+					if ( $option && 'on' == $option ) {
 						$checked = 'checked="checked"';
 					}
-					$html .= '<label><input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" ' . $checked . '/>' . $field['label'] . "</label>";
-				break;
+					$html .= '<label><input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" ' . $checked . '/>' . $field['label'] . '</label>';
+				    break;
 
 				case 'checkbox_multi':
-					foreach( $field['options'] as $k => $v ) {
+					foreach ( $field['options'] as $k => $v ) {
 						$checked = false;
-						if( in_array( $k, $data ) ) {
+						if ( in_array( $k, $data ) ) {
 							$checked = true;
 						}
 						$html .= '<p><label for="' . esc_attr( $field['id'] . '_' . $k ) . '"><input type="checkbox" ' . checked( $checked, true, false ) . ' name="' . esc_attr( $option_name ) . '[]" value="' . esc_attr( $k ) . '" id="' . esc_attr( $option_name . '_' . $k ) . '" /> ' . $v . '</label></p>';
 					}
-				break;
+				    break;
 
 				case 'radio':
-					foreach( $field['options'] as $k => $v ) {
+					foreach ( $field['options'] as $k => $v ) {
 						$checked = false;
-						if( $k == $data ) {
+						if ( $k == $data ) {
 							$checked = true;
 						}
 						$html .= '<p><label for="' . esc_attr( $field['id'] . '_' . $k ) . '"><input type="radio" ' . checked( $checked, true, false ) . ' name="' . esc_attr( $option_name ) . '" value="' . esc_attr( $k ) . '" id="' . esc_attr( $option_name . '_' . $k ) . '" /> ' . $v . '</label></p>';
 					}
-				break;
+				    break;
 
 				case 'select':
 					$html .= '<select name="' . esc_attr( $option_name ) . '" id="' . esc_attr( $field['id'] ) . '">';
-					foreach( $field['options'] as $k => $v ) {
+					foreach ( $field['options'] as $k => $v ) {
 						$selected = false;
-						if( $k == $data ) {
+						if ( $k == $data ) {
 							$selected = true;
 						}
 						$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '">' . $v . '</option>';
 					}
 					$html .= '</select> ';
-				break;
+				    break;
 
 				case 'select_multi':
 					$html .= '<select name="' . esc_attr( $option_name ) . '[]" id="' . esc_attr( $field['id'] ) . '" multiple="multiple">';
-					foreach( $field['options'] as $k => $v ) {
+					foreach ( $field['options'] as $k => $v ) {
 						$selected = false;
-						if( in_array( $k, $data ) ) {
+						if ( in_array( $k, $data ) ) {
 							$selected = true;
 						}
 						$html .= '<option ' . selected( $selected, true, false ) . ' value="' . esc_attr( $k ) . '" />' . $v . '</label> ';
 					}
 					$html .= '</select> ';
-				break;
+				    break;
 
 				case 'image':
 					$image_thumb = '';
-					if( $data ) {
+					if ( $data ) {
 						$image_thumb = wp_get_attachment_thumb_url( $data );
 					}
-					$html .= '<img id="' . $option_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>' . "\n";
-					$html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . 'Upload an image' . '" data-uploader_button_text="' . 'Use image' . '" class="image_upload_button button" value="'. 'Upload new image' . '" />' . "\n";
-					$html .= '<input id="' . $option_name . '_delete" type="button" class="image_delete_button button" value="'. 'Remove image' . '" />' . "\n";
-					$html .= '<input id="' . $option_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>' . "\n";
-				break;
+					$uploader_title = isset($field['uploader_title']) ? $field['uploader_title'] : 'Upload media';
+					$uploader_button_text = isset($field['uploader_button_text']) ? $field['uploader_button_text'] : 'Select';
+					$file_types = isset($field['uploader_supported_file_types']) ? json_encode($field['uploader_supported_file_types']) : array();
+
+					$html .= '<img id="' . $option_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>';
+					$html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="image_upload_button button" value="' . 'Upload' . '" />';
+					$html .= '<input id="' . $option_name . '_delete" type="button" class="image_delete_button button" value="' . 'Remove' . '" />';
+					$html .= '<input id="' . $option_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>';
+				    break;
 
 				case 'color':
 					?>
@@ -320,15 +325,14 @@ class Notifier_Settings {
 				        <div style="position:absolute;background:#FFF;z-index:99;border-radius:100%;" class="colorpicker"></div>
 				    </div>
 				    <?php
-				break;
+				    break;
 
 			}
 
-			if( $field['description'] != '') {
-				$html .= '<p class="description">' . $field['description'] . '</p>';
+			if ( '' != $field['description'] ) {
+				$html .= '<p class="description">' . esc_html($field['description']) . '</p>';
 			}
 		}
-
 		echo $html;
 	}
 
@@ -341,13 +345,13 @@ class Notifier_Settings {
 		foreach ($setting_fields as $field) {
 			self::display_field( $field );
 		}
-		echo "</table>";
+		echo '</table>';
 	}
 
 	/**
 	 * Save the settings.
-	 * 
-	 * TODO - check fields other than text and textarea 
+	 *
+	 * TODO - check fields other than text and textarea
 	 */
 	public static function save_settings_fields() {
 		if ( ! self::is_settings_page() ) {
@@ -359,10 +363,10 @@ class Notifier_Settings {
 		}
 
 		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-settings' ) ) {
-			return;	
+			return;
 		}
 
-		$tab = isset($_GET['tab']) ? $_GET['tab'] : 'profile';
+		$tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'profile';
 
 		$settings_fields = self::settings_fields($tab);
 		$data = $_POST;
@@ -373,11 +377,11 @@ class Notifier_Settings {
 			if ( ! isset( $option['id'] ) || ! isset( $option['type'] ) ) {
 				continue;
 			}
-			
+
 			$option_name  = NOTIFIER_PREFIX . $option['id'];
 			$setting_name = '';
 			$raw_value    = isset( $data[ $option_name ] ) ? wp_unslash( $data[ $option_name ] ) : null;
-			
+
 			// Format the value based on option type.
 			switch ( $option['type'] ) {
 				case 'checkbox':
@@ -414,12 +418,12 @@ class Notifier_Settings {
 			}
 		}
 
-		if('api' == $tab) {
+		if ('api' == $tab) {
 			$phone_number_id = isset($update_options[ NOTIFIER_PREFIX . 'phone_number_id' ]) ? $update_options[ NOTIFIER_PREFIX . 'phone_number_id' ] : '';
 			$business_account_id = isset($update_options[ NOTIFIER_PREFIX . 'business_account_id' ]) ? $update_options[ NOTIFIER_PREFIX . 'business_account_id' ] : '';
 			$permanent_access_token = isset($update_options[ NOTIFIER_PREFIX . 'permanent_access_token' ]) ? $update_options[ NOTIFIER_PREFIX . 'permanent_access_token' ] : '';
 
-			if('' == $phone_number_id || '' == $business_account_id || '' == $permanent_access_token){
+			if ('' == $phone_number_id || '' == $business_account_id || '' == $permanent_access_token) {
 				$notices[] = array(
 					'message' => 'Phone number ID, Business Account ID and Permanent Access Token are mandatory fields.',
 					'type' => 'error'
@@ -436,13 +440,13 @@ class Notifier_Settings {
 
 		// Do other things after updating settings
 
-		switch($tab) {
+		switch ($tab) {
 			case 'profile':
-				$notices = Notifier_Settings::save_whatsapp_profile_details($update_options);
+				$notices = self::save_whatsapp_profile_details($update_options);
 				break;
 
 			case 'api':
-				$notices = Notifier_Settings::fetch_and_save_whatsapp_details($phone_number_id);
+				$notices = self::fetch_and_save_whatsapp_details($phone_number_id);
 				break;
 
 			default:
@@ -467,11 +471,11 @@ class Notifier_Settings {
 			'email' 	=> isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_email']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_email' ] : '',
 		);
 
-		if(isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1' ]) && '' != $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1' ]) {
+		if (isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1' ]) && '' != $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1' ]) {
 			$args['websites'][] = $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1'];
 		}
 
-		if(isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ]) && '' != $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ]) {
+		if (isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ]) && '' != $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ]) {
 			$args['websites'][] = $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ];
 		}
 
@@ -479,20 +483,19 @@ class Notifier_Settings {
 
 		$profile_picture_handle = Notifier::wa_cloud_api_upload_profile_pic($profile_picture_id);
 
-		if($profile_picture_handle){
+		if ($profile_picture_handle) {
 			$args['profile_picture_handle'] = $profile_picture_handle;
 		}
 
 		$response = Notifier::wa_cloud_api_request( 'whatsapp_business_profile', $args );
 
-		if(isset($response->error)) {
+		if (isset($response->error)) {
 			$notices[] = array(
 				'message' => 'Error Code ' . $response->error->code . ': ' . $response->error->message ,
 				'type' => 'error'
 			);
 			return $notices;
-		}
-		else {
+		} else {
 			$notices[] = array(
 				'message' => 'Profile updated successfully.',
 				'type' => 'success'
@@ -506,14 +509,14 @@ class Notifier_Settings {
 	 */
 	public static function fetch_and_save_whatsapp_details($phone_number_id) {
 		$response = Notifier::wa_cloud_api_request('', array(), 'GET');
-		if(isset($response->error)) {
+		print_r($response);
+		if (isset($response->error)) {
 			$notices[] = array(
 				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
 				'type' => 'error'
 			);
 			return $notices;
-		}
-		else {
+		} else {
 			$phone_number_details[$phone_number_id] = array (
 				'display_num'		=> $response->display_phone_number,
 				'display_name'		=> $response->verified_name,
@@ -527,27 +530,26 @@ class Notifier_Settings {
 			'fields' => 'about,address,description,email,profile_picture_url,websites,vertical'
 		), 'GET');
 
-		if(isset($response_profile->error)) {
+		if (isset($response_profile->error)) {
 			$notices[] = array(
 				'message' => 'WhatsApp Error Code: ' . $response_profile->error->code . ': ' . $response_profile->error->message ,
 				'type' => 'error'
 			);
 			return $notices;
-		}
-		else {
-			if(isset($response_profile->data)){
+		} else {
+			if (isset($response_profile->data)) {
 				$data = $response_profile->data[0];
 				update_option( NOTIFIER_PREFIX . 'wa_profile_address', isset($data->address) ? $data->address : '' );
 				update_option( NOTIFIER_PREFIX . 'wa_profile_description', isset($data->description) ? $data->description : '');
 				update_option( NOTIFIER_PREFIX . 'wa_profile_email', isset($data->email) ? $data->email : '');
 				update_option( NOTIFIER_PREFIX . 'wa_profile_category', isset($data->vertical) ? $data->vertical : '');
 
-				if(isset($data->websites)) {
+				if (isset($data->websites)) {
 					update_option( NOTIFIER_PREFIX . 'wa_profile_website_1', isset($data->websites[0]) ? $data->websites[0] : '');
 					update_option( NOTIFIER_PREFIX . 'wa_profile_website_2', isset($data->websites[1]) ? $data->websites[1] : '');
 				}
 
-				if(isset($data->profile_picture_url)) {
+				if (isset($data->profile_picture_url)) {
 					$profile_id = notifier_upload_file_by_url($data->profile_picture_url);
 					update_option( NOTIFIER_PREFIX . 'wa_profile_picture', $profile_id);
 				}
@@ -564,7 +566,7 @@ class Notifier_Settings {
 	 * Show WA profile screenshot on Profile tab
 	 */
 	public static function show_wa_profile_screenshot_start($tab) {
-		if('profile' != $tab){
+		if ('profile' != $tab) {
 			return;
 		}
 		echo '<div class="notifier-profile-fields-left">';
@@ -574,9 +576,9 @@ class Notifier_Settings {
 	 * Show WA profile screenshot on Profile tab
 	 */
 	public static function show_wa_profile_screenshot_end($tab) {
-		if('profile' != $tab){
+		if ('profile' != $tab) {
 			return;
 		}
-		echo '</div><div class="notifier-profile-fields-right"><img src="' . NOTIFIER_URL . 'assets/images/wa-profile.jpg" /></div>';
+		echo '</div><div class="notifier-profile-fields-right"><img src="' . esc_url(NOTIFIER_URL) . 'assets/images/wa-profile.jpg" /></div>';
 	}
 }
