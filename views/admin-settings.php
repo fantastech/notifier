@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap notifier">
     <div class="notifier-wrapper">
     	<?php
-    		$current_tab = isset($_GET['tab']) ? $_GET['tab'] : 'profile';
-    		$tabs = Notifier_Settings::get_settings_tabs();
+    		$current_tab = isset($_GET['tab']) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'profile';
+    		$settings_tabs = Notifier_Settings::get_settings_tabs();
 		 	echo '<h2 class="nav-tab-wrapper">';
-		foreach ( $tabs as $tab => $name ) {
-			$class = ( $tab == $current_tab ) ? ' nav-tab-active' : '';
-			echo "<a class='nav-tab$class' href='?page=notifier-settings&tab=$tab'>$name</a>";
+		foreach ( $settings_tabs as $tab_key => $name ) {
+			$class = ( $tab_key == $current_tab ) ? ' nav-tab-active' : '';
+			echo '<a class="nav-tab' . esc_attr( $class ) . '" href="?page=notifier-settings&tab=' . esc_attr( $tab_key ) . '">' . esc_html($name) . '</a>';
 		}
 		    echo '</h2>';
     	?>

@@ -51,7 +51,7 @@ function notifier_wp_text_input( $field ) {
 	}
 
 	$show_limit_text = '';
-	if ($field['limit'] != 0) {
+	if (0 != $field['limit']) {
 		$show_limit_text = '<span class="limit-text"><span class="limit-used">0</span> / <span>' . $field['limit'] . '</span></span>';
 		$field['custom_attributes']['data-limit'] = $field['limit'];
 		$field['class'] = $field['class'] . ' force-text-limit';
@@ -70,18 +70,20 @@ function notifier_wp_text_input( $field ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
+	$custom_attributes_string = implode( ' ', $custom_attributes );
+
 	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
 	}
 
 	if ( '' != $field['label'] ) {
-		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
+ 		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] . $show_limit_text ) . '</label>';
 	}
 
 	do_action('notifier_before_meta_field', $field, $post);
 
-	echo '<input type="' . esc_attr( $field['type'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" ' . implode( ' ', $custom_attributes ) . ' /> ';
+	echo '<input type="' . esc_attr( $field['type'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" ' . esc_attr( $custom_attributes_string ) . ' /> ';
 
 	do_action('notifier_after_meta_field', $field, $post);
 
@@ -173,18 +175,20 @@ function notifier_wp_textarea_input( $field ) {
 		$custom_attributes[] = 'required="required"';
 	}
 
+	$custom_attributes_string = implode( ' ', $custom_attributes );
+
 	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
 	}
 
 	if ( '' != $field['label'] ) {
-		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . $show_limit_text . '</label>';
+		echo '<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] . $show_limit_text ) . '</label>';
 	}
 
 	do_action('notifier_before_meta_field', $field, $post);
 
-	echo '<textarea class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '"  name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" rows="' . esc_attr( $field['rows'] ) . '" cols="' . esc_attr( $field['cols'] ) . '" ' . implode( ' ', $custom_attributes ) . ' >' . esc_textarea( $field['value'] ) . '</textarea> ';
+	echo '<textarea class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '"  name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" rows="' . esc_attr( $field['rows'] ) . '" cols="' . esc_attr( $field['cols'] ) . '" ' . esc_attr( $custom_attributes_string ) . ' >' . esc_textarea( $field['value'] ) . '</textarea> ';
 
 	do_action('notifier_after_meta_field', $field, $post);
 
@@ -238,6 +242,8 @@ function notifier_wp_checkbox( $field ) {
 		}
 	}
 
+	$custom_attributes_string = implode( ' ', $custom_attributes );
+
 	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
@@ -249,7 +255,7 @@ function notifier_wp_checkbox( $field ) {
 
 	do_action('notifier_before_meta_field', $field, $post);
 
-	echo '<input type="checkbox" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['cbvalue'] ) . '" ' . checked( $field['value'], $field['cbvalue'], false ) . '  ' . implode( ' ', $custom_attributes ) . '/> ';
+	echo '<input type="checkbox" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['cbvalue'] ) . '" ' . checked( $field['value'], $field['cbvalue'], false ) . '  ' . esc_attr( $custom_attributes_string ) . '/> ';
 
 	do_action('notifier_after_meta_field', $field, $post);
 
@@ -301,6 +307,8 @@ function notifier_wp_select( $field ) {
 		}
 	}
 
+	$custom_attributes_string = implode( ' ', $custom_attributes );
+
 	$description = ! empty( $field['description'] ) ? $field['description'] : '';
 
 	if ($field['show_wrapper']) {
@@ -314,12 +322,12 @@ function notifier_wp_select( $field ) {
 
 	do_action('notifier_before_meta_field', $field, $post);
 
-	echo '<select class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '"' . implode( ' ', $custom_attributes ) . '/> ';
+	echo '<select class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '"' . esc_attr( $custom_attributes_string ) . '/> ';
 
 	foreach ( $field['options'] as $key => $value ) {
 		if (is_array($value)) {
 			$opt_group_options = $value;
-			echo '<optgroup label="' . $key . '">';
+			echo '<optgroup label="' . esc_attr($key) . '">';
 			foreach ($opt_group_options as $opt_key => $opt_val) {
 				echo '<option value="' . esc_attr( $opt_key ) . '"' . selected( $opt_key, $field['value'], false) . '>' . esc_html( $opt_val ) . '</option>';
 			}
@@ -381,6 +389,8 @@ function notifier_wp_radio( $field ) {
 		}
 	}
 
+	$custom_attributes_string = implode( ' ', $custom_attributes );
+
 	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js($field['conditional_logic']) . '">';
@@ -402,7 +412,7 @@ function notifier_wp_radio( $field ) {
 				class="' . esc_attr( $field['class'] ) . '"
 				style="' . esc_attr( $field['style'] ) . '"
 				' . checked( esc_attr( $field['value'] ), esc_attr( $key ), false ) . '
-				' . implode( ' ', $custom_attributes ) . '
+				' . esc_attr( $custom_attributes_string ) . '
 				/> ' . esc_html( $value ) . '</label>
 		</li>';
 	}
@@ -462,6 +472,8 @@ function notifier_wp_file_input( $field ) {
 		}
 	}
 
+	$custom_attributes_string = implode( ' ', $custom_attributes );
+
 	if ($field['show_wrapper']) {
 		do_action('notifier_before_meta_field_wrapper', $field, $post);
 		echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '" data-conditions="' . esc_js( $field['conditional_logic'] ) . '">';
@@ -479,7 +491,7 @@ function notifier_wp_file_input( $field ) {
 	}
 
 	if ($image_thumb) {
-		echo '<img id="' . esc_attr( $field['id'] ) . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>' . "\n";
+		echo '<img id="' . esc_attr( $field['id'] ) . '_preview" class="image_preview" src="' . esc_url($image_thumb) . '" /><br/>' . "\n";
 	}
 
 	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr(json_encode($field['uploader_supported_file_types'])) . '" class="image_upload_button button" value="Upload" />' . "\n";

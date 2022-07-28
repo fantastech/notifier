@@ -69,13 +69,13 @@ class Notifier_Settings {
 				$settings = array(
 					array(
 						'title'			=> 'WhatsApp Profile',
-						'description'	=> 'Update your WhatsApp Business profile details. These details will be visible to contacts when they open your profile on WhatsApp',
+						'description'	=> 'Update your WhatsApp Business profile details. These details will be visible to contacts when they open your profile on WhatsApp.',
 						'type'			=> 'title',
 					),
 					array(
 						'id' 			=> 'wa_profile_picture',
 						'title'			=> 'Profile Picture',
-						'description'	=> 'Recommended profile image size 640px x 640px.',
+						'description'	=> 'Recommended profile image size: 640px X 640px.',
 						'type'			=> 'image',
 						'default'		=> '',
 						'placeholder'	=> '',
@@ -313,7 +313,7 @@ class Notifier_Settings {
 					$file_types = isset($field['uploader_supported_file_types']) ? json_encode($field['uploader_supported_file_types']) : array();
 
 					$html .= '<img id="' . $option_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>';
-					$html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="image_upload_button button" value="' . 'Upload' . '" />';
+					$html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="image_upload_button button" value="' . 'Upload' . '" /> ';
 					$html .= '<input id="' . $option_name . '_delete" type="button" class="image_delete_button button" value="' . 'Remove' . '" />';
 					$html .= '<input id="' . $option_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>';
 				    break;
@@ -333,6 +333,8 @@ class Notifier_Settings {
 				$html .= '<p class="description">' . esc_html($field['description']) . '</p>';
 			}
 		}
+
+		//phpcs:ignore
 		echo $html;
 	}
 
@@ -362,6 +364,7 @@ class Notifier_Settings {
 			return;
 		}
 
+		//phpcs:ignore
 		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-settings' ) ) {
 			return;
 		}
@@ -509,7 +512,6 @@ class Notifier_Settings {
 	 */
 	public static function fetch_and_save_whatsapp_details($phone_number_id) {
 		$response = Notifier::wa_cloud_api_request('', array(), 'GET');
-		print_r($response);
 		if (isset($response->error)) {
 			$notices[] = array(
 				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,

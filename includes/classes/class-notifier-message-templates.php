@@ -293,7 +293,7 @@ class Notifier_Message_Templates {
 	 */
 	public static function submit_template_data_to_cloud_api($data) {
 		global $post;
-		$post_id = $post->ID;
+		$post_id = isset($post->ID) ? $post->ID : 0;
 		$args = array (
 			'name' => isset($data[ NOTIFIER_PREFIX . 'template_name' ]) ? $data[ NOTIFIER_PREFIX . 'template_name' ] : '',
 			'category' => isset($data[ NOTIFIER_PREFIX . 'category' ]) ? $data[ NOTIFIER_PREFIX . 'category' ] : '',

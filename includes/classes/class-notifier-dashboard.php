@@ -39,6 +39,7 @@ class Notifier_Dashboard {
 		if ( ! isset( $_POST['disclaimer'] ) ) {
 			return;
 		}
+		//phpcs:ignore
 		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-disclaimer' ) ) {
 			return;
 		}
@@ -56,6 +57,7 @@ class Notifier_Dashboard {
 		if ( ! isset( $_POST['validate'] ) ) {
 			return;
 		}
+		//phpcs:ignore
 		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-validate' ) ) {
 			return;
 		}

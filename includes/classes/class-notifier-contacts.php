@@ -277,6 +277,7 @@ class Notifier_Contacts {
 			die;
 		}
 
+		//phpcs:ignore
 		if (!isset($_FILES['notifier_contacts_csv']['tmp_name'])) {
 			wp_safe_redirect(admin_url('edit.php?post_type=wa_contact'));
 			die;

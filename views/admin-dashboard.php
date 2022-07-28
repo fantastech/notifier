@@ -98,7 +98,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 								<li>Next, you'll need to add your phone number. Enter your phone number and select a verification method to verify the number.</li>
 								<li>Enter the verfication code and click <b>Next</b>.</li>
 								<li>Once the phone number is added, scroll up on the <b>Get Started</b> page and select your added number from the dropdown under <b>Send and receive messages</b>.</li>
-								<li>After selecting your phone number the <b>Phone number ID</b> and <b>WhatsApp Business Account ID</b> values will get updated below it. Copy those values and add them on the <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings'); ?>" target="_blank">Settings</a> page.</li>
+								<li>After selecting your phone number the <b>Phone number ID</b> and <b>WhatsApp Business Account ID</b> values will get updated below it. Copy those values and add them on the <a href="<?php echo esc_url( get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings') ); ?>" target="_blank">Settings</a> page.</li>
 								<li>Do not save the page, just keep it open. We'll add <b>Permanent Access Token</b> in the next step.</li>
 							</ol>
 						</div>
@@ -114,7 +114,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							<ol>
 								<li>From the <b>Get Started</b> screen's left sidebar, click on <b>Whatsapp > Configuration</b> link.</li>
 								<li>Click on the <b>Edit</b> button. That'll open a popup.</li>
-								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo site_url('/?notifier'); ?></code>. Note that if you have any kind of firewall set on your website the verification will fail.</li>
+								<li>Enter the following in the <b>Callback URL</b> field: <code><?php echo esc_url (site_url('/?notifier') ); ?></code>. Note that if you have any kind of firewall set on your website the verification will fail.</li>
 								<li>In the <b>Verify Token</b> field enter: <code><?php echo esc_html($verify_token); ?></code> and click <b>Verify</b>.</li>
 								<li>Under <b>Webhook fields:</b> click on <b>Manage</b>.</li>
 								<li>Click on <b>Subscribe</b> button in front of all fields and then click on <b>Done</b>.</li>
@@ -128,7 +128,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 								<li>Enter a name for your <b>System user name</b> (you can keep it admin or system, this will not be shown to your users). Select <b>System user role</b> as <b>Administrator</b> and click on <b>Create system user</b>.</li>
 								<li>Click on <b>Add Assets</b> button. Under <b>Select asset type</b> click on <b>Apps</b>, select your app from <b>Select assets</b> column and then enable <b>Full control > Manage App</b>. Click on <b>Save Changes</b>.</li>
 								<li>Now click on <b>Generate Token</b> button. Select your app from the dropdown and click on <b>Generate Token</b>. From the list of permissions under <b>Available Permissions:</b> select <em>whatsapp_business_messaging</em> and <em>whatsapp_business_management</em> and then click on <b>Generate Token</b>.</li>
-								<li>Copy the <b>Access token</b>. Open this plugin's <a href="<?php echo get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings&tab=api'); ?>" target="_blank">Settings</a> page, add it in the <b>Permanent Access Token</b> field and save.</li>
+								<li>Copy the <b>Access token</b>. Open this plugin's <a href="<?php echo esc_url(get_admin_url( null, 'admin.php?page=' . NOTIFIER_NAME . '-settings&tab=api') ); ?>" target="_blank">Settings</a> page, add it in the <b>Permanent Access Token</b> field and save.</li>
 							</ol>
 							
 						</div>
@@ -157,19 +157,19 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 						<div class="dashboard-box-body d-flex w-100">
 							<div class="w-25">
 								<b>Phone Number:</b>
-								<?php echo $phone_number_details[$phone_number_id]['display_num']; ?>
+								<?php echo esc_html($phone_number_details[$phone_number_id]['display_num']); ?>
 							</div>
 							<div class="w-25">
 								<b>Display Name:</b>
-								<?php echo $phone_number_details[$phone_number_id]['display_name']; ?>
+								<?php echo esc_html($phone_number_details[$phone_number_id]['display_name']); ?>
 							</div>
 							<div class="w-25">
 								<b>Status:</b>
-								<?php echo $phone_number_details[$phone_number_id]['phone_num_status']; ?>
+								<?php echo esc_html($phone_number_details[$phone_number_id]['phone_num_status']); ?>
 							</div>
 							<div class="w-25">
 								<b>Qaulity Rating:</b>
-								<span class="quantity-rating quantity-rating-<?php echo strtolower($phone_number_details[$phone_number_id]['quality_rating']); ?>"></span>
+								<span class="quantity-rating quantity-rating-<?php echo esc_attr( strtolower($phone_number_details[$phone_number_id]['quality_rating']) ); ?>"></span>
 							</div>
 						</div>
 					</div>
@@ -211,15 +211,15 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							<div class="dashboard-box-body">
 								<p>
 									<span class="dashicons <?php echo ($message_templates_count == 0) ? 'dashicons-marker' : 'dashicons-yes-alt'; ?>"> </span>
-									<b>STEP 1</b> - Create your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_message_template' ); ?>" target="_blank">Message Template</a>.
+									<b>STEP 1</b> - Create your first <a href="<?php echo esc_url(admin_url( 'edit.php?post_type=wa_message_template' )); ?>" target="_blank">Message Template</a>.
 								</p>
 								<p>
 									<span class="dashicons <?php echo ($contacts_count == 0) ? 'dashicons-marker' : 'dashicons-yes-alt'; ?>"> </span>
-									<b>STEP 2</b> - Add / import <a href="<?php echo admin_url( 'edit.php?post_type=wa_contact' ); ?>" target="_blank">Contacts</a>.
+									<b>STEP 2</b> - Add / import <a href="<?php echo esc_url(admin_url( 'edit.php?post_type=wa_contact' )); ?>" target="_blank">Contacts</a>.
 								</p>
 								<p>
 									<span class="dashicons <?php echo ($notifications_count == 0) ? 'dashicons-marker' : 'dashicons-yes-alt'; ?>"> </span>
-									<b>STEP 3</b> - Create and send your first <a href="<?php echo admin_url( 'edit.php?post_type=wa_notification' ); ?>" target="_blank">Notification</a>.
+									<b>STEP 3</b> - Create and send your first <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=wa_notification' ) ); ?>" target="_blank">Notification</a>.
 								</p>
 							</div>
 						</div>
@@ -240,15 +240,15 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 									<?php
 									foreach ($message_templates as $template) {
 										$status = get_post_meta( $template->ID, NOTIFIER_PREFIX . 'status', true);
-			    						$status_text = ($status) ? '<span class="status status-' . strtolower($status) . '">' . $status . '</span>' : '-';
-										echo '<tr><td><a href="' . get_edit_post_link($template->ID) . '">' . $template->post_title . '</a></td><td>' . $status_text . '</td></tr>';
+			    						$status_text = ($status) ? '<span class="status status-' . esc_attr(strtolower($status)) . '">' . esc_html($status) . '</span>' : '-';
+										echo '<tr><td><a href="' . esc_url(get_edit_post_link($template->ID)) . '">' . esc_html($template->post_title) . '</a></td><td>' . esc_html($status_text) . '</td></tr>';
 									}
 									?>
 								</table>
 							</div>
 							<div class="dashboard-box-footer">
 								<div class="dashboard-box-buttons-wrap">
-									<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_message_template'); ?>">View All</a>
+									<a class="button" href="<?php echo esc_url(admin_url('edit.php?post_type=wa_message_template')); ?>">View All</a>
 								</div>
 							</div>
 						</div>
@@ -272,14 +272,14 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 										$first_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'first_name', true);
 										$last_name = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'last_name', true);
 										$wa_number = get_post_meta( $contact->ID, NOTIFIER_PREFIX . 'wa_number', true);
-										echo '<tr><td><a href="' . get_edit_post_link($contact->ID) . '">' . $first_name . '</a></td><td>' . $last_name . '</td><td>' . $wa_number . '</td></tr>';
+										echo '<tr><td><a href="' . esc_url( get_edit_post_link($contact->ID) ) . '">' . esc_html($first_name) . '</a></td><td>' . esc_html($last_name) . '</td><td>' . esc_html($wa_number) . '</td></tr>';
 									}
 									?>
 								</table>
 							</div>
 							<div class="dashboard-box-footer">
 								<div class="dashboard-box-buttons-wrap">
-									<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_contact'); ?>">View All</a>
+									<a class="button" href="<?php echo esc_url(admin_url('edit.php?post_type=wa_contact')); ?>">View All</a>
 								</div>
 							</div>
 						</div>
@@ -306,9 +306,9 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 										$unsent = get_post_meta( $notification->ID, NOTIFIER_PREFIX . 'notification_unsent_contact_ids', true);
 										$unsent_count = ($unsent && is_array($unsent)) ? count($unsent) : '0';
 										echo '<tr>';
-										echo '<td><a href="' . get_edit_post_link($notification->ID) . '">' . $notification->post_title . '</a></td>';
-										echo '<td>' . $status . '</td>';
-										echo '<td>Sent: ' . $sent_count . ' / Failed: ' . $unsent_count . '</td>';
+										echo '<td><a href="' . esc_url( get_edit_post_link($notification->ID) ) . '">' . esc_html($notification->post_title) . '</a></td>';
+										echo '<td>' . esc_html($status) . '</td>';
+										echo '<td>Sent: ' . esc_html($sent_count) . ' / Failed: ' . esc_html($unsent_count) . '</td>';
 										echo '</tr>';
 									}
 									?>
@@ -316,7 +316,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 							</div>
 							<div class="dashboard-box-footer">
 								<div class="dashboard-box-buttons-wrap">
-									<a class="button" href="<?php echo admin_url('edit.php?post_type=wa_notification'); ?>">View All</a>
+									<a class="button" href="<?php echo esc_url( admin_url('edit.php?post_type=wa_notification') ); ?>">View All</a>
 								</div>
 							</div>
 						</div>

@@ -389,7 +389,8 @@ class Notifier {
 
 		echo '<div class="notifier-templates">';
 		foreach ($templates as $key => $template) {
-			echo '<template id="' . esc_attr($key) . '">' . esc_html($template) . '</template>';
+			//phpcs:ignore
+			echo '<template id="' . esc_attr($key) . '">' . $template . '</template>';
 		}
 		echo '</div>';
 	}
