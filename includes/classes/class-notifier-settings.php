@@ -304,18 +304,22 @@ class Notifier_Settings {
 				    break;
 
 				case 'image':
-					$image_thumb = '';
-					if ( $data ) {
-						$image_thumb = wp_get_attachment_thumb_url( $data );
-					}
 					$uploader_title = isset($field['uploader_title']) ? $field['uploader_title'] : 'Upload media';
 					$uploader_button_text = isset($field['uploader_button_text']) ? $field['uploader_button_text'] : 'Select';
 					$file_types = isset($field['uploader_supported_file_types']) ? json_encode($field['uploader_supported_file_types']) : array();
 
-					$html .= '<img id="' . $option_name . '_preview" class="image_preview" src="' . $image_thumb . '" /><br/>';
-					$html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="image_upload_button button" value="' . 'Upload' . '" /> ';
-					$html .= '<input id="' . $option_name . '_delete" type="button" class="image_delete_button button" value="' . 'Remove' . '" />';
-					$html .= '<input id="' . $option_name . '" class="image_data_field" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>';
+					$image_thumb = '';
+					if ( $data ) {
+						$image_thumb = wp_get_attachment_thumb_url( $data );
+					}
+
+					if ('' != $image_thumb) {
+						$html .= '<img id="' . $option_name . '_preview" class="notifier-media-preview" src="' . $image_thumb . '" /><br/>';
+					}
+
+					$html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="notifier-media-upload-button button" value="' . 'Upload' . '" /> ';
+					$html .= '<input id="' . $option_name . '_delete" type="button" class="notifier-media-delete-button button" value="' . 'Remove' . '" />';
+					$html .= '<input id="' . $option_name . '" class="notifier-media-attachment-id" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>';
 				    break;
 
 				case 'color':

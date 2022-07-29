@@ -222,7 +222,7 @@ class Notifier {
 					?>
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">
-					<span class="header-version">Version: 0.1 (beta)</span>
+					<span class="header-version">Version: <?php echo esc_html(NOTIFIER_VERSION); ?> (beta)</span>
 					<a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20Help%20Needed%20on<?php echo esc_url(get_site_url()); ?>">Help</a>
 					<a href="admin.php?page=notifier&show=disclaimer">Disclaimer</a>
 				</div>
