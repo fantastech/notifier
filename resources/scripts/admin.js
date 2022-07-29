@@ -317,12 +317,6 @@
         var field_id = button_id.replace( '_button', '' );
         var preview_id = button_id.replace( '_button', '_preview' );
 
-        // If the media frame already exists, reopen it.
-        if ( file_frame ) {
-          file_frame.open();
-          return;
-        }
-
         // Create the media frame.
         file_frame = wp.media.frames.file_frame = wp.media({
           title: button.data( 'uploader_title' ),
@@ -330,7 +324,7 @@
             text: button.data( 'uploader_button_text' ),
           },
           library: {
-          	type: button.data( 'uploader_supported_file_types' )
+          	type: button.data( 'uploader_supported_file_types' ).split(',')
           },
           multiple: false
         });

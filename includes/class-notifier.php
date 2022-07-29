@@ -176,6 +176,9 @@ class Notifier {
     		apply_filters( 'notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
     	);
 
+    	// Media upload library
+    	wp_enqueue_media();
+
     	// Styles
 	    wp_enqueue_style(
 	    	NOTIFIER_NAME . '-admin-css',

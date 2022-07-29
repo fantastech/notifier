@@ -12,7 +12,6 @@ class Notifier_Settings {
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'admin_init', array( __CLASS__ , 'save_settings_fields' ) );
-        add_action( 'admin_enqueue_scripts', array( __CLASS__ , 'admin_scripts') );
 	}
 
 	/**
@@ -39,16 +38,6 @@ class Notifier_Settings {
 			'api' 			=> 'API Configuration',
 		);
 		return $tabs;
-	}
-
-	/**
-	 * Add JS to settings page
-	 */
-	public static function admin_scripts () {
-		if (!self::is_settings_page()) {
-			return;
-		}
-	    wp_enqueue_media();
 	}
 
 	/**
@@ -306,7 +295,7 @@ class Notifier_Settings {
 				case 'image':
 					$uploader_title = isset($field['uploader_title']) ? $field['uploader_title'] : 'Upload media';
 					$uploader_button_text = isset($field['uploader_button_text']) ? $field['uploader_button_text'] : 'Select';
-					$file_types = isset($field['uploader_supported_file_types']) ? json_encode($field['uploader_supported_file_types']) : array();
+					$file_types = isset($field['uploader_supported_file_types']) ? implode(',',$field['uploader_supported_file_types']) : array();
 
 					$image_thumb = '';
 					if ( $data ) {

@@ -155,6 +155,9 @@ if (in_array($mt_status, $disable_states)) {
 						'label'             => 'Upload example image',
 						'description'       => 'Provide an example image for WhatsApp to check if it meets their guidelines. Supported formats: JPEG and PNG.',
 						'custom_attributes' => $disabled,
+						'uploader_title'	=> 'Upload Image',
+						'uploader_button_text'	=> 'Select',
+						'uploader_supported_file_types' => array('image/jpeg', 'image/png'),
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',
@@ -170,8 +173,11 @@ if (in_array($mt_status, $disable_states)) {
 						'id'                => NOTIFIER_PREFIX . 'media_item_video',
 						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item_video', true),
 						'label'             => 'Upload example video',
-						'description'       => 'Provide an example video for WhatsApp to check if it meets their guidelines.',
+						'description'       => 'Provide an example video for WhatsApp to check if it meets their guidelines. Supported format: MP4',
 						'custom_attributes' => $disabled,
+						'uploader_title'	=> 'Upload Video',
+						'uploader_button_text'	=> 'Select',
+						'uploader_supported_file_types' => array('video/mp4'),
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',
@@ -187,8 +193,11 @@ if (in_array($mt_status, $disable_states)) {
 						'id'                => NOTIFIER_PREFIX . 'media_item',
 						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item', true),
 						'label'             => 'Upload example document',
-						'description'       => 'Provide an example document for WhatsApp to check if it meets their guidelines.',
+						'description'       => 'Provide an example document for WhatsApp to check if it meets their guidelines. Supported format: PDF',
 						'custom_attributes' => $disabled,
+						'uploader_title'	=> 'Upload Document',
+						'uploader_button_text'	=> 'Select',
+						'uploader_supported_file_types' => array('application/pdf'),
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',
