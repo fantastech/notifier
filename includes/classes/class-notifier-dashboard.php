@@ -62,7 +62,6 @@ class Notifier_Dashboard {
 			return;
 		}
 
-		// update_option(NOTIFIER_PREFIX . 'disclaimer', 'accepted');
 		$phone_number_id = get_option( NOTIFIER_PREFIX . 'phone_number_id' );
 		$business_account_id = get_option( NOTIFIER_PREFIX . 'business_account_id' );
 		$permanent_access_token = get_option( NOTIFIER_PREFIX . 'permanent_access_token' );

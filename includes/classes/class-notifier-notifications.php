@@ -215,7 +215,9 @@ class Notifier_Notifications {
 			'status' => 'success',
 			'data' => $template_data,
 			'notification_status' => $notification_status,
-			'variable_mapping_html' => self::get_notification_variable_mapping_fields_html($template_id, $post_id, $trigger, $disabled)
+			/* ==Notifier_Pro_Code_Start== */
+			'variable_mapping_html' => self::get_notification_variable_mapping_fields_html($template_id, $post_id, $trigger, $disabled),
+			/* ==Notifier_Pro_Code_End== */
 		);
 
 		echo json_encode($response);
@@ -618,7 +620,7 @@ class Notifier_Notifications {
 		$html = ob_get_clean();
 		return $html;
 	}
-
+	/* ==Notifier_Pro_Code_Start== */
 	/**
 	 * Generates variable mapping fields html
 	 */
@@ -704,6 +706,15 @@ class Notifier_Notifications {
 		$html = ob_get_clean();
 		return $html;
 	}
+	/* ==Notifier_Pro_Code_End== */
+
+	/**
+	 * Admin HTML templates
+	 */
+	public static function admin_html_templates($templates) {
+		$templates[] = 'notification-send-to-fields-row';
+		return $templates;
+	}
 
 	/**
 	 * Handle AJAX call to get contacts / lists
@@ -712,14 +723,6 @@ class Notifier_Notifications {
 		$contacts = Notifier_Contacts::get_contacts();
 		echo json_encode( $contacts );
 		die;
-	}
-
-	/**
-	 * Admin HTML templates
-	 */
-	public static function admin_html_templates($templates) {
-		$templates['notification_send_to_fields_row'] = self::get_notification_send_to_fields_row('row_num');
-		return $templates;
 	}
 
 }

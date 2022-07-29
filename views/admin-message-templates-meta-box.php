@@ -81,7 +81,7 @@ if (in_array($mt_status, $disable_states)) {
 		<h3>Header <span class="optional-text">(Optional)</span></h3>
 		<p class="description">Add a title that you want to show in message header.</p>
 		<div class="d-flex">
-			<div class="col w-100">
+			<div class="col w-50">
 				<?php
 				notifier_wp_select(
 					array(
@@ -92,14 +92,16 @@ if (in_array($mt_status, $disable_states)) {
 						'options'           => array (
 							'none' 	=> 'None',
 							'text' 	=> 'Text',
-							// 'media'	=> 'Media'
+							/* ==Notifier_Pro_Code_Start== */
+							'media'	=> 'Media'
+							/* ==Notifier_Pro_Code_End== */
 						),
 						'custom_attributes' => $disabled
 					)
 				);
 				?>
 			</div>
-			<div class="col w-100">
+			<div class="col w-50">
 				<?php
 				notifier_wp_text_input(
 					array(
@@ -118,10 +120,7 @@ if (in_array($mt_status, $disable_states)) {
 						)
 					)
 				);
-				?>
-			</div>
-			<div class="col w-50">
-				<?php
+				/* ==Notifier_Pro_Code_Start== */
 				notifier_wp_select(
 					array(
 						'id'                => NOTIFIER_PREFIX . 'media_type',
@@ -143,29 +142,65 @@ if (in_array($mt_status, $disable_states)) {
 						)
 					)
 				);
+				/* ==Notifier_Pro_Code_End== */
 				?>
 			</div>
+			<!-- ==Notifier_Pro_Code_Start== -->
 			<div class="col w-50">
 				<?php
 				notifier_wp_file_input(
 					array(
-						'id'                => NOTIFIER_PREFIX . 'media_item',
-						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item', true),
-						'label'             => 'Example Media',
-						'description'       => 'Provide example media for WhatsApp to check if it meets their guidelines.',
-						'data_type'         => 'url',
+						'id'                => NOTIFIER_PREFIX . 'media_item_image',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item_image', true),
+						'label'             => 'Upload example image',
+						'description'       => 'Provide an example image for WhatsApp to check if it meets their guidelines. Supported formats: JPEG and PNG.',
 						'custom_attributes' => $disabled,
 						'conditional_logic'		=> array (
 							array (
-								'field'		=> NOTIFIER_PREFIX . 'header_type',
+								'field'		=> NOTIFIER_PREFIX . 'media_type',
 								'operator'	=> '==',
-								'value'		=> 'media'
+								'value'		=> 'IMAGE'
+							)
+						)
+					)
+				);
+
+				notifier_wp_file_input(
+					array(
+						'id'                => NOTIFIER_PREFIX . 'media_item_video',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item_video', true),
+						'label'             => 'Upload example video',
+						'description'       => 'Provide an example video for WhatsApp to check if it meets their guidelines.',
+						'custom_attributes' => $disabled,
+						'conditional_logic'		=> array (
+							array (
+								'field'		=> NOTIFIER_PREFIX . 'media_type',
+								'operator'	=> '==',
+								'value'		=> 'VIDEO'
+							)
+						)
+					)
+				);
+
+				notifier_wp_file_input(
+					array(
+						'id'                => NOTIFIER_PREFIX . 'media_item',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item', true),
+						'label'             => 'Upload example document',
+						'description'       => 'Provide an example document for WhatsApp to check if it meets their guidelines.',
+						'custom_attributes' => $disabled,
+						'conditional_logic'		=> array (
+							array (
+								'field'		=> NOTIFIER_PREFIX . 'media_type',
+								'operator'	=> '==',
+								'value'		=> 'DOCUMENT'
 							)
 						)
 					)
 				);
 				?>
 			</div>
+			<!-- ==Notifier_Pro_Code_End== -->
 		</div>
 	</div>
 

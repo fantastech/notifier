@@ -105,8 +105,11 @@ class Notifier_Message_Templates {
 			<div class="wa-template-preview">
 				<div class="message-container">
 					<div class="message-content">
-						<div class="message-head">
+						<div class="message-head message-head-text">
 							Header text here
+						</div>
+						<div class="message-head message-head-media">
+							<div class="message-head-media-inner"></div>
 						</div>
 						<div class="message-body">
 							Body text here
@@ -194,7 +197,7 @@ class Notifier_Message_Templates {
 		echo '<div class="mt-status">';
 		echo '<b>Status:</b> <span class="status status-' . esc_attr(strtolower($mt_status)) . '">' . esc_html($mt_status) . '</span>';
 		if ('APPROVED' !== $mt_status) {
-			echo esc_html($refresh_button);
+			echo wp_kses_post($refresh_button);
 		}
 		echo '</div>';
 
@@ -525,8 +528,7 @@ class Notifier_Message_Templates {
 	 * Admin HTML templates
 	 */
 	public static function admin_html_templates($templates) {
-		$refresh_url = '?' . http_build_query(array_merge($_GET, array('refresh_status'=>'1')));
-		$templates['refresh_mt_status'] = '<a href="' . $refresh_url . '" class="refresh-status page-title-action">Refresh Status</a>';
+		$templates[] = 'wa-mt-refresh';
 		return $templates;
 	}
 

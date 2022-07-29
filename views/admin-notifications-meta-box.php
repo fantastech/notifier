@@ -157,17 +157,21 @@ if (in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
 						'custom_attributes' => $disabled
 					)
 				);
-				$variables_mapping_field_conditions = array (
-					array (
-						'field'		=> NOTIFIER_PREFIX . 'notification_message_template',
-						'operator'	=> '!=',
-						'value'		=> ''
-					)
-				);
 				?>
+				<!-- ==Notifier_Pro_Code_Start== -->
+				<?php
+					$variables_mapping_field_conditions = array (
+						array (
+							'field'		=> NOTIFIER_PREFIX . 'notification_message_template',
+							'operator'	=> '!=',
+							'value'		=> ''
+						)
+					);
+					?>
 				<div class="form-field variables-mapping-fields" data-conditions="<?php echo esc_attr ( json_encode( $variables_mapping_field_conditions ) ); ?>">
 
 				</div>
+				<!-- ==Notifier_Pro_Code_End== -->
 			</div>
 		</div>
 	</div>

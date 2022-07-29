@@ -57,6 +57,10 @@
 			cursor: not-allowed;
 		}
 
+		*:disabled {
+			background-color: #f6f7f7;
+		}
+
 		.radio-buttons {
 			margin: 0;
 

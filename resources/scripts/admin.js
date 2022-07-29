@@ -114,7 +114,13 @@
 	function fetcDataAndPreviewTemplate() {
 		let previewData = {};
 		previewData.header_type = $('#notifier_header_type').val();
-		previewData.header_text = $('#notifier_header_text').val() || 'Header text here';
+		if('text' == previewData.header_type){
+			previewData.header_text = $('#notifier_header_text').val() || 'Header text here';
+		}
+		else if('media' == previewData.header_type){
+			previewData.media_type = $('#notifier_media_type').val() || 'image';
+		}
+
 		previewData.body_text = $('#notifier_body_text').val() || 'Body text here';
 		previewData.footer_text = $('#notifier_footer_text').val() || '';
 		previewData.button_type = $('#notifier_button_type').val();
@@ -165,12 +171,15 @@
 	function renderMessagePreview(previewData) {
 		messageTemplatePreviewData = previewData;
 		// Header
+		$('.wa-template-preview .message-head').hide();
 		switch (previewData.header_type) {
 			case 'text':
-				$('.wa-template-preview .message-head').show().text(previewData.header_text);
+				$('.wa-template-preview .message-head-text').show().text(previewData.header_text);
 				break;
-			default:
-				$('.wa-template-preview .message-head').hide();
+			case 'media':
+				var media_type = previewData.media_type.toLowerCase();
+				var head_preview_classes = 'message-head message-head-media message-head-'+media_type;
+				$('.wa-template-preview .message-head-media').show().attr('class', head_preview_classes);
 				break;
 		}
 
@@ -350,8 +359,8 @@
 
 		// Validate the message template name
 		$('#notifier_template_name').on('keyup', function() {
-			var value = $(this).val();
-			$(this).val(value.replace(' ', '_').replace(/[^a-zA-Z_]/g, '').toLowerCase());
+			var value = $(this).val().trim();
+			$(this).val(value.replaceAll(' ', '_').replaceAll(/[^a-zA-Z0-9_]/g, '').toLowerCase());
 		});
 
 		// Trigger conditional logic and WhatsApp message template preview
@@ -361,6 +370,16 @@
 				fetcDataAndPreviewTemplate();
 			});
 		}
+
+		// Update template name as per the title value
+		$('.post-type-wa_message_template #title').on('change', function() {
+			const title = $(this).val().trim() || '';
+			const template_name = $('#notifier_template_name').val() || '';
+			if('' !== template_name) {
+				return;
+			}
+			$('#notifier_template_name').val(title.replaceAll(' ', '_').replaceAll(/[^a-zA-Z0-9_]/g, '').toLowerCase());
+		})
 
 		// Message template publish confirmation
 		$('.post-type-wa_message_template #publish').on('click', function() {
@@ -394,7 +413,7 @@
 		});
 
 		// Add Refresh Status button to the message template lisitng page
-		var refresh_mt_status_template = $('#refresh_mt_status').html().trim();
+		var refresh_mt_status_template = $('#notifier-template-wa-mt-refresh').html().trim();
 		$('.edit-php.post-type-wa_message_template .wrap .page-title-action').after(refresh_mt_status_template);
 
 		/* ==Notifier_Pro_Code_Start== */
@@ -438,7 +457,7 @@
 		 **************/
 
 		// Add Import button and HTML to the Contacts lisitng page
-		var import_contact_template = $('#import_contact').html().trim();
+		var import_contact_template = $('#notifier-template-import-contacts').html().trim();
 		$('.edit-php.post-type-wa_contact .wrap .page-title-action').after(import_contact_template);
 
 		// Show import options
@@ -595,7 +614,7 @@
 		$(document).on('click', '.add-recipient', function(e){
 			e.preventDefault();
 			var next = $('.send-to-fields .fields-repeater tr.row').length;
-			var nextRowHtml = $('#notification_send_to_fields_row').html().replaceAll('row_num', next);
+			var nextRowHtml = $('#notifier-template-notification-send-to-fields-row').html().replaceAll('row_num', next);
 			$('.send-to-fields .fields-repeater tbody').append(nextRowHtml);
 			conditionallyShowFields();
 		});

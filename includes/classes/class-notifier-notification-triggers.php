@@ -42,7 +42,9 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 			 	'id'			=> 'new_post',
 				'label' 		=> 'New post is published',
 				'description'	=> 'Send notification when a new post is published.',
+				/* ==Notifier_Pro_Code_Start== */
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Post') ),
+				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array (
 					'hook'		=> 'transition_post_status',
 					'args_num'	=> 3,
@@ -73,7 +75,9 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 			 	'id'			=> 'new_comment',
 				'label' 		=> 'New comment is added',
 				'description'	=> 'Send notification when a new comment is added.',
+				/* ==Notifier_Pro_Code_Start== */
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Comment') ),
+				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array (
 					'hook'		=> 'comment_post',
 					'args_num'	=> 3,
@@ -99,7 +103,9 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 			 	'id'			=> 'new_user',
 				'label' 		=> 'New user is registered',
 				'description'	=> 'Send notification when a new user is created.',
+				/* ==Notifier_Pro_Code_Start== */
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'User') ),
+				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array (
 					'hook'		=> 'user_register',
 					'callback' 	=> function ( $user_id ) {

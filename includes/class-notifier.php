@@ -72,7 +72,9 @@ class Notifier {
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-message-templates.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-contacts.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notifications.php';
+		/* ==Notifier_Pro_Code_Start== */
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-merge-tags.php';
+		/* ==Notifier_Pro_Code_End== */
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-triggers.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-settings.php';
 	}
@@ -87,7 +89,9 @@ class Notifier {
 		add_action( 'plugins_loaded', array( 'Notifier_Message_Templates', 'init' ) );
 		add_action( 'plugins_loaded', array( 'Notifier_Contacts', 'init' ) );
 		add_action( 'plugins_loaded', array( 'Notifier_Notifications', 'init' ) );
+		/* ==Notifier_Pro_Code_Start== */
 		add_action( 'plugins_loaded', array( 'Notifier_Notification_Merge_Tags', 'init' ) );
+		/* ==Notifier_Pro_Code_End== */
 		add_action( 'plugins_loaded', array( 'Notifier_Notification_Triggers', 'init' ) );
 		add_action( 'plugins_loaded', array( 'Notifier_Settings', 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'maybe_include_woocoomerce_class' ) );
@@ -388,9 +392,14 @@ class Notifier {
 		}
 
 		echo '<div class="notifier-templates">';
-		foreach ($templates as $key => $template) {
-			//phpcs:ignore
-			echo '<template id="' . esc_attr($key) . '">' . $template . '</template>';
+		foreach ($templates as $template) {
+			$file_path = NOTIFIER_PATH . '/views/templates/admin-' . $template . '.php';
+			if ( ! file_exists($file_path) ) {
+				continue;
+			}
+			echo '<template id="notifier-template-' . esc_attr($template) . '">';
+			require_once $file_path;
+			echo '</template>';
 		}
 		echo '</div>';
 	}
