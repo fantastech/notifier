@@ -157,7 +157,7 @@ if (in_array($mt_status, $disable_states)) {
 						'custom_attributes' => $disabled,
 						'uploader_title'	=> 'Upload Image',
 						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types' => array('image/jpeg', 'image/png'),
+						'uploader_supported_file_types' => array('image'),
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',
@@ -190,8 +190,8 @@ if (in_array($mt_status, $disable_states)) {
 
 				notifier_wp_file_input(
 					array(
-						'id'                => NOTIFIER_PREFIX . 'media_item',
-						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item', true),
+						'id'                => NOTIFIER_PREFIX . 'media_item_document',
+						'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'media_item_document', true),
 						'label'             => 'Upload example document',
 						'description'       => 'Provide an example document for WhatsApp to check if it meets their guidelines. Supported format: PDF',
 						'custom_attributes' => $disabled,

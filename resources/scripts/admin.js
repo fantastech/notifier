@@ -333,9 +333,20 @@
         file_frame.on( 'select', function() {
           attachment = file_frame.state().get('selection').first().toJSON();
           jQuery("#"+field_id).val(attachment.id);
+          jQuery("#"+field_id).data('type', attachment.type);
+          jQuery("#"+field_id).data('subtype', attachment.subtype);
+          jQuery("#"+field_id).siblings('.notifier-media-preview').find().hide();
           if( preview_media ) {
-            jQuery("#"+preview_id).attr('src',attachment.sizes.thumbnail.url);
-          }
+	        if('image' == attachment.type || ('application' == attachment.type && 'pdf' == attachment.subtype) ) {
+				jQuery("#"+field_id).data('url', attachment.sizes.thumbnail.url);
+				jQuery("#"+preview_id+'_image').show().attr('src',attachment.sizes.thumbnail.url);
+	        }
+	        else if ('video' == attachment.type) {
+	        	jQuery("#"+field_id).data('url', attachment.url);
+	        	jQuery("#"+preview_id+'_video').show().find('source').attr('src',attachment.url);
+	        }
+	      }
+
         });
 
         // Finally, open the modal
@@ -686,7 +697,7 @@
 
 	    jQuery('.notifier-media-delete-button').click(function() {
 	        jQuery(this).next( '.notifier-media-attachment-id' ).val( '' );
-	        jQuery( '.notifier-media-preview' ).remove();
+	        jQuery(this).siblings( '.notifier-media-preview' ).find('img').attr('src', '');
 	        return false;
 	    });
 

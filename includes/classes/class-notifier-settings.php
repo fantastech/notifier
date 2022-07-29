@@ -65,12 +65,12 @@ class Notifier_Settings {
 						'id' 			=> 'wa_profile_picture',
 						'title'			=> 'Profile Picture',
 						'description'	=> 'Recommended profile image size: 640px X 640px.',
-						'type'			=> 'image',
+						'type'			=> 'media',
 						'default'		=> '',
 						'placeholder'	=> '',
 						'uploader_title'	=> 'WhatsApp profile image',
 						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types'	=> array('image/jpeg', 'image/png')
+						'uploader_supported_file_types'	=> array('image')
 					),
 					array(
 						'id' 			=> 'wa_profile_description',
@@ -292,7 +292,7 @@ class Notifier_Settings {
 					$html .= '</select> ';
 				    break;
 
-				case 'image':
+				case 'media':
 					$uploader_title = isset($field['uploader_title']) ? $field['uploader_title'] : 'Upload media';
 					$uploader_button_text = isset($field['uploader_button_text']) ? $field['uploader_button_text'] : 'Select';
 					$file_types = isset($field['uploader_supported_file_types']) ? implode(',',$field['uploader_supported_file_types']) : array();
@@ -302,13 +302,16 @@ class Notifier_Settings {
 						$image_thumb = wp_get_attachment_thumb_url( $data );
 					}
 
+					$html .= '<span class="notifier-media-preview">';
 					if ('' != $image_thumb) {
-						$html .= '<img id="' . $option_name . '_preview" class="notifier-media-preview" src="' . $image_thumb . '" /><br/>';
+						$html .= '<img id="' . esc_attr( $option_name ) . '_preview_image" src="' . esc_url( $image_thumb ) . '" /><br/>';
+						$html .= '<video id="' . esc_attr( $option_name ) . '_preview_video"><source src="' . esc_url($image_thumb) . '"></video><br/>';
 					}
+					$html .= '</span>';
 
-					$html .= '<input id="' . $option_name . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="notifier-media-upload-button button" value="' . 'Upload' . '" /> ';
-					$html .= '<input id="' . $option_name . '_delete" type="button" class="notifier-media-delete-button button" value="' . 'Remove' . '" />';
-					$html .= '<input id="' . $option_name . '" class="notifier-media-attachment-id" type="hidden" name="' . $option_name . '" value="' . $data . '"/><br/>';
+					$html .= '<input id="' . esc_attr( $option_name ) . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="notifier-media-upload-button button" value="' . 'Upload' . '" /> ';
+					$html .= '<input id="' . esc_attr( $option_name ) . '_delete" type="button" class="notifier-media-delete-button button" value="' . 'Remove' . '" />';
+					$html .= '<input id="' . esc_attr( $option_name ) . '" class="notifier-media-attachment-id" type="hidden" name="' . esc_attr( $option_name ) . '" value="' . esc_attr( $data ) . '"/><br/>';
 				    break;
 
 				case 'color':
