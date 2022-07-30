@@ -295,7 +295,7 @@ class Notifier_Settings {
 				case 'media':
 					$uploader_title = isset($field['uploader_title']) ? $field['uploader_title'] : 'Upload media';
 					$uploader_button_text = isset($field['uploader_button_text']) ? $field['uploader_button_text'] : 'Select';
-					$file_types = isset($field['uploader_supported_file_types']) ? implode(',',$field['uploader_supported_file_types']) : array();
+					$file_types = isset($field['uploader_supported_file_types']) ? implode(',', $field['uploader_supported_file_types']) : array();
 
 					$image_thumb = '';
 					if ( $data ) {

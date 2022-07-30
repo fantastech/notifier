@@ -497,7 +497,7 @@ function notifier_wp_file_input( $field ) {
 	}
 	echo '</span>';
 
-	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr(implode(',',$field['uploader_supported_file_types'])) . '" class="notifier-media-upload-button button" value="Upload" /> ';
+	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr(implode(',', $field['uploader_supported_file_types'])) . '" class="notifier-media-upload-button button" value="Upload" /> ';
 
 	echo '<input id="' . esc_attr( $field['id'] ) . '_delete" type="button" class="notifier-media-delete-button button" value="Remove" />';
 
