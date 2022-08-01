@@ -9,11 +9,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send bulk WhatsApp broadcast messages and transactional notifications to contacts and Woocommerce customers using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) from the WordPress backend.
+Send bulk WhatsApp messages and transactional notifications to your contacts and Woocommerce customers using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) from the WordPress backend.
 
 == Description ==
 
-Send bulk WhatsApp broadcast messages and transactional notifications using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) from the WordPress backend.
+Send bulk WhatsApp messages and transactional notifications using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) from the WordPress backend.
 
 [Notifier](https://wanotifier.com) is the world's first and only FREE WordPress plugin that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) right from your WordPress backend using **WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)**!
 

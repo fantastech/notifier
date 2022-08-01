@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Notifier Pro - Send Bulk Broadcast Messages & Transactional Notifications
  * Plugin URI: https://wordpress.org/plugins/notifier/
- * Description: Send bulk WhatsApp broadcast messages and transactional notifications to your contacts and Woocommerce customers using WhatsApp Cloud API.
+ * Description: Send bulk WhatsApp messages and transactional notifications to your contacts and Woocommerce customers using WhatsApp Cloud API.
  * Version: 0.1.0
  * Author: WANotifier.com
  * Author URI: https://wanotifier.com
