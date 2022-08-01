@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, bulk messaging, notifications, cloud api, notification, notifier, marketing, bulk message
 Requires at least: 5.0
 Tested up to: 6.0.1
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -86,8 +86,16 @@ The plugin itself is free and WhatsApp provides 1000 business initiated messages
 
 == Screenshots ==
 
-1. This is the first screen shot
-2. This is the second screen shot
+1. Plugin use disclaimer
+2. Step-by-step plugin setup instructions
+3. Dashboard
+4. Message templates page
+5. Add new message template
+6. Contacts page
+7. Notifications
+8. Add new notification
+9. WhatsApp Business profile settings
+10. API configuration
 
 == Changelog ==
 
