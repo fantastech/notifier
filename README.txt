@@ -1,7 +1,7 @@
 === Notifier - Send Bulk Broadcast Messages & Transactional Notifications ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
-Tags: whatsapp, notification, notifications, notifier, cloud api, whatsapp cloud api, marketing, bulk message, bulk messaging
+Tags: whatsapp, whatsapp cloud api, bulk messaging, notifications, cloud api, notification, notifier, marketing, bulk message
 Requires at least: 5.0
 Tested up to: 6.0.1
 Stable tag: 0.1.0
@@ -9,9 +9,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send WhatsApp broadcast messages and transactional notifications to your contacts and Woocommerce customers using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview).
+Send bulk WhatsApp broadcast messages and transactional notifications to contacts and Woocommerce customers using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) from the WordPress backend.
 
 == Description ==
+
+Send bulk WhatsApp broadcast messages and transactional notifications using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview) from the WordPress backend.
 
 [Notifier](https://wanotifier.com) is the world's first and only FREE WordPress plugin that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) right from your WordPress backend using **WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)**!
 
@@ -45,23 +47,24 @@ If you're looking for a **safe, cost friendly and robust** solution for sending 
 
 * Send unlimited bulk marketing messages to your WhatsApp contacts.
 * Send transactional WhatsApp notifications to your users on specific triggers / user actions like WooCommerce order placement.
-* Create and manage message tempaltes from WordPress backend.
-* Manage all your contacts from a single screen.
-* Import contacts using CSV or import from your WooCommerce customers.
+* Create and manage text-based message templates from WordPress backend.
+* Create and manage contacts from WordPress backend.
+* Import contacts using CSV or import phone numbers from your WooCommerce customers.
+* Update WhatsApp business profile details from plugin settings.
 
 = UPCOMING FEATURES =
 
 * Support for more languages in message templates. Currently only supports en_US.
-* Inbox - 2-way message communication with your contacts.
-* Reply to buttons in message templates.
-* More fields for contacts as per demand.
+* Inbox - multi=agent, 2-way message communication with your contacts.
+* Quick reply buttons in message templates.
+* More fields for contacts to use it like a CRM.
 * Ability to re-submit rejected templates for approaval.
-* More notification triggers as per demand.
+* More notification triggers as per request.
 
 = GET MORE FEATURES WITH THE PRO PLUGIN (to be released soon) =
 
-* Media support in message templates to send photos, video or document in message.
-* Variables support in message templates to send user/customer specific data in notifications. Think of this as email merge tags.
+* Media support in message templates to send photos, video or document in notification messages.
+* Dynamic message template with variables support to send user/customer specific data in notifications. Think of this as email merge tags.
 * Ability to fetch and use default WhatsApp message templates.
 * Webhooks - create notification on the site and trigger it from any of your apps using Zapier or a similar tool.
 
@@ -73,13 +76,13 @@ If you're looking for a **safe, cost friendly and robust** solution for sending 
 
 == Frequently Asked Questions ==
 
-= Can I receive WhatsApp responses from customers using this plugin? =
+= Does this plugin show responses from customers on WhatsApp? =
 
-No. Currently the plugin only allows you to send messages and that too using approved message templates. 2-way communication is not possible right now.
+No. Currently the plugin only allows one-way communication and you can only send pre-approved message templates. You can not read the user responses and 2-way communication is not possible right now.
 
 = What costs are involved using this plugin? =
 
-The plugin itself is free. WhatsApp provides 1000 free messages per month but you need to pay them per message post that. You can learn more about it [here](https://developers.facebook.com/docs/whatsapp/pricing/). Billing for this is handled by WhatsApp themselves and not via the plugin.
+The plugin itself is free and WhatsApp provides 1000 business initiated messages per month. But you need to pay them per message after that. You can learn more about their pricing [here](https://developers.facebook.com/docs/whatsapp/pricing/). Billing for this is handled by WhatsApp themselves and not via the plugin.
 
 == Screenshots ==
 
