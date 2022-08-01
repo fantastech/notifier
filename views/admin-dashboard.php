@@ -241,7 +241,7 @@ $phone_number_details = get_option( NOTIFIER_PREFIX . 'phone_number_details');
 									foreach ($message_templates as $template) {
 										$status = get_post_meta( $template->ID, NOTIFIER_PREFIX . 'status', true);
 			    						$status_text = ($status) ? '<span class="status status-' . esc_attr(strtolower($status)) . '">' . esc_html($status) . '</span>' : '-';
-										echo '<tr><td><a href="' . esc_url(get_edit_post_link($template->ID)) . '">' . esc_html($template->post_title) . '</a></td><td>' . esc_html($status_text) . '</td></tr>';
+										echo '<tr><td><a href="' . esc_url(get_edit_post_link($template->ID)) . '">' . esc_html($template->post_title) . '</a></td><td>' . wp_kses_post($status_text) . '</td></tr>';
 									}
 									?>
 								</table>

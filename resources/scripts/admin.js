@@ -69,7 +69,7 @@
 			// Enable select2 for notification receiver contact dropdown
 			if($('.notifier-recipient-contact').length > 0){
 				$('.notifier-recipient-contact').each(function (i, obj) {
-					if($(obj).closest('.send-to-fields-row-template').length > 0){
+					if($(obj).closest('.row-add-recipient-template').length > 0){
 						return;
 					}
 					if (!$(obj).data('select2')){
@@ -657,7 +657,7 @@
 		$(document).on('click', '.add-recipient', function(e){
 			e.preventDefault();
 			var next = $('.send-to-fields .fields-repeater tr.row').length;
-			var nextRowHtml = $('#notifier-template-notification-send-to-fields-row').html().replaceAll('row_num', next);
+			var nextRowHtml = $('.row-add-recipient-template').get(0).outerHTML.replaceAll('row_num', next).replace('hide row-add-recipient-template', '');
 			$('.send-to-fields .fields-repeater tbody').append(nextRowHtml);
 			conditionallyShowFields();
 		});

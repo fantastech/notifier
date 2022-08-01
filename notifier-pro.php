@@ -5,6 +5,7 @@
  * Description: Send bulk WhatsApp broadcast messages and transactional notifications to your contacts and Woocommerce customers using WhatsApp Cloud API.
  * Version: 0.1.0
  * Author: WANotifier.com
+ * Author URI: https://wanotifier.com
  * Text Domain: notifier
  * Requires at least: 5.7
  * Requires PHP: 7.4

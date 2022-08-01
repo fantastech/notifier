@@ -8,7 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-$num = isset($num) ? $num : 'row_num';
 $recipient_type = isset($data['type']) ? $data['type'] : '';
 $recipient = isset($data['recipient']) ? $data['recipient'] : array();
 $recipient = wp_parse_args ($recipient, array (
@@ -20,9 +19,8 @@ $send_to_types = array (
 	// 'list'		=> 'Contact List', // TODO: implement this on a later stage
 );
 $send_to_types = apply_filters( NOTIFIER_PREFIX . 'notification_send_to_types', $send_to_types, $post_id, $trigger );
-
 ?>
-<tr class="row">
+<tr class="row <?php echo ('row_num' === $num) ? 'hide row-add-recipient-template' : ''; ?> ">
 	<td>
 		<?php
 			notifier_wp_select(

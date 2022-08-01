@@ -24,7 +24,6 @@ class Notifier_Notifications {
 		add_action( 'before_delete_post', array(__CLASS__, 'delete_from_active_triggers'), 10 );
 		add_filter( 'manage_wa_notification_posts_columns', array( __CLASS__ , 'add_columns' ) );
 		add_action( 'manage_wa_notification_posts_custom_column', array( __CLASS__ , 'add_column_content' ), 10, 2 );
-		add_filter( 'notifier_admin_html_templates', array(__CLASS__, 'admin_html_templates') );
 
 		add_action( 'notifier_marketing_notification', array(__CLASS__, 'send_broadcast_notifications') );
 		add_filter( 'admin_body_class', array(__CLASS__, 'admin_body_class'));
@@ -507,6 +506,7 @@ class Notifier_Notifications {
 		} else {
 			$html .= self::get_notification_send_to_fields_row(0, null, $post_id, $trigger);
 		}
+		$html .= self::get_notification_send_to_fields_row('row_num', null, $post_id, $trigger);
 		$html .= '</tbody>
 		</table>
 		<div class="d-flex">
@@ -619,14 +619,6 @@ class Notifier_Notifications {
 		return $html;
 	}
 	/* ==Notifier_Pro_Code_End== */
-
-	/**
-	 * Admin HTML templates
-	 */
-	public static function admin_html_templates($templates) {
-		$templates[] = 'notification-send-to-fields-row';
-		return $templates;
-	}
 
 	/**
 	 * Handle AJAX call to get contacts / lists
