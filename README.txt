@@ -1,4 +1,4 @@
-=== Notifier - Send Bulk Broadcast Messages & Transactional Notifications ===
+=== Notifier - Send Bulk Messages & Transactional Notifications ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, bulk messaging, notifications, cloud api, notification, notifier, marketing, bulk message
