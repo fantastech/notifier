@@ -487,23 +487,26 @@ function notifier_wp_file_input( $field ) {
 
 	$image_thumb = '';
 	$video_url = '';
-	$show_image = '';
-	$show_video = '';
+	$show_image = 'hide';
+	$show_video = 'hide';
 
 	echo '<span class="notifier-media-preview">';
 	if ( '' != $field['value'] ) {
 		$file_type = $field['uploader_supported_file_types'];
 		switch ($file_type) {
+			case 'image':
 		    case 'image/jpeg':
 		    case 'image/png':
 		    case 'application/pdf':
 		    	$image_thumb = wp_get_attachment_thumb_url( $field['value'] );
+		    	$show_image = '';
 		    	$show_video = 'hide';
 		    	break;
 
 		    case 'video/mp4':
 		    	$video_url = wp_get_attachment_url( $field['value'] );
 				$show_image = 'hide';
+				$show_video = '';
 				break;
 
 			default:
@@ -511,8 +514,8 @@ function notifier_wp_file_input( $field ) {
 				$show_video = 'hide';
 	  	}
 	}
-	echo '<img id="' . esc_attr( $field['id'] ) . '_preview_image" class="notifier-media-preview-item hide" src="' . esc_url($image_thumb) . '" />';
-  	echo '<video id="' . esc_attr( $field['id'] ) . '_preview_video" class="notifier-media-preview-item hide"  width="300" height="169" controls autoplay muted><source src="' . esc_url($video_url) . '"  type="video/mp4"></video><br/>';
+	echo '<img id="' . esc_attr( $field['id'] ) . '_preview_image" class="notifier-media-preview-item '. esc_attr($show_image) .'" src="' . esc_url($image_thumb) . '" />';
+  	echo '<video id="' . esc_attr( $field['id'] ) . '_preview_video" class="notifier-media-preview-item '. esc_attr($show_video) .'"  width="300" height="169" controls muted><source src="' . esc_url($video_url) . '"  type="video/mp4"></video><br/>';
 	echo '</span>';
 
 	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr($field['uploader_supported_file_types']) . '" class="notifier-media-upload-button button" value="Upload" /> ';

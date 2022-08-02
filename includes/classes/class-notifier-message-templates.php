@@ -112,7 +112,7 @@ class Notifier_Message_Templates {
 							<div class="message-head-media-inner"></div>
 							<div class="message-head-media-preview">
 								<img src="" class="message-head-media-preview-image hide" />
-								<video class="message-head-media-preview-video hide" controls autoplay muted width="100%" height="131px">
+								<video class="message-head-media-preview-video hide" controls muted width="100%" height="140">
 									<source src="" type="video/mp4">
 								</video>
 							</div>

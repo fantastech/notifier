@@ -65,12 +65,23 @@ class Notifier_Settings {
 						'id' 			=> 'wa_profile_picture',
 						'title'			=> 'Profile Picture',
 						'description'	=> 'Recommended profile image size: 640px X 640px.',
-						'type'			=> 'media',
+						'type'			=> 'file',
 						'default'		=> '',
 						'placeholder'	=> '',
 						'uploader_title'	=> 'WhatsApp profile image',
 						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types'	=> array('image')
+						'uploader_supported_file_types'	=> 'image'
+					),
+					array(
+						'id' 			=> 'wa_profile_video',
+						'title'			=> 'Profile Video',
+						'description'	=> 'Recommended profile video size: 640px X 640px.',
+						'type'			=> 'file',
+						'default'		=> '',
+						'placeholder'	=> '',
+						'uploader_title'	=> 'WhatsApp profile image',
+						'uploader_button_text'	=> 'Select',
+						'uploader_supported_file_types'	=> 'video/mp4'
 					),
 					array(
 						'id' 			=> 'wa_profile_description',
@@ -292,21 +303,42 @@ class Notifier_Settings {
 					$html .= '</select> ';
 				    break;
 
-				case 'media':
+				case 'file':
 					$uploader_title = isset($field['uploader_title']) ? $field['uploader_title'] : 'Upload media';
 					$uploader_button_text = isset($field['uploader_button_text']) ? $field['uploader_button_text'] : 'Select';
-					$file_types = isset($field['uploader_supported_file_types']) ? implode(',', $field['uploader_supported_file_types']) : array();
+					$file_types = isset($field['uploader_supported_file_types']) ? $field['uploader_supported_file_types'] : array();
 
 					$image_thumb = '';
-					if ( $data ) {
-						$image_thumb = wp_get_attachment_thumb_url( $data );
-					}
+					$video_url = '';
+					$show_image = 'hide';
+					$show_video = 'hide';
 
 					$html .= '<span class="notifier-media-preview">';
-					if ('' != $image_thumb) {
-						$html .= '<img id="' . esc_attr( $option_name ) . '_preview_image" src="' . esc_url( $image_thumb ) . '" /><br/>';
-						$html .= '<video id="' . esc_attr( $option_name ) . '_preview_video"><source src="' . esc_url($image_thumb) . '"></video><br/>';
+					if ( '' != $data ) {
+						$file_type = $field['uploader_supported_file_types'];
+						switch ($file_type) {
+						    case 'image':
+						    case 'image/jpeg':
+						    case 'image/png':
+						    case 'application/pdf':
+						    	$image_thumb = wp_get_attachment_thumb_url( $data );
+						    	$show_image = '';
+						    	$show_video = 'hide';
+						    	break;
+
+						    case 'video/mp4':
+						    	$video_url = wp_get_attachment_url( $data );
+								$show_image = 'hide';
+								$show_video = '';
+								break;
+
+							default:
+								$show_image = 'hide';
+								$show_video = 'hide';
+					  	}
 					}
+					$html .= '<img id="' . esc_attr( $option_name ) . '_preview_image" class="notifier-media-preview-item '. esc_attr($show_image) .'" src="' . esc_url($image_thumb) . '" />';
+				  	$html .= '<video id="' . esc_attr( $option_name ) . '_preview_video" class="notifier-media-preview-item '. esc_attr($show_video) .'"  width="300" height="169" controls muted><source src="' . esc_url($video_url) . '"  type="video/mp4"></video><br/>';
 					$html .= '</span>';
 
 					$html .= '<input id="' . esc_attr( $option_name ) . '_button" type="button" data-uploader_title="' . esc_attr($uploader_title) . '" data-uploader_button_text="' . esc_attr($uploader_button_text) . '" data-uploader_supported_file_types="' . esc_attr($file_types) . '" class="notifier-media-upload-button button" value="' . 'Upload' . '" /> ';

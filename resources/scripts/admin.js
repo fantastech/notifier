@@ -214,10 +214,12 @@
 					break;
 
 				case 'video':
-					$('.message-head-media-inner').addClass('hide');
-					$('.message-head-media-preview').removeClass('hide');
-					$('.message-head-media-preview-video').removeClass('hide').find('source').attr('src', previewData.media_url);
-					$('.message-head-media-preview-video')[0].play();
+					if(previewData.media_url){
+						$('.message-head-media-inner').addClass('hide');
+						$('.message-head-media-preview').removeClass('hide');
+						$('.message-head-media-preview-video').removeClass('hide').find('source').attr('src', previewData.media_url);
+						$('.message-head-media-preview-video').get(0).load();
+					}
 					break;
 			}
 		}
@@ -382,7 +384,7 @@
 	        else if ('video' == attachment.type) {
 	        	jQuery("#"+field_id).attr('data-url', attachment.url);
 	        	jQuery("#"+preview_id+'_video').removeClass('hide').find('source').attr('src', attachment.url);
-	        	jQuery("#"+preview_id+'_video')[0].play();
+	        	jQuery("#"+preview_id+'_video')[0].load();
 	        }
 	      }
 	      jQuery("#"+field_id).val(attachment.id).change();
@@ -730,14 +732,14 @@
 		 * Settings page
 		 ****************/
 
-	    jQuery('.notifier-media-upload-button').click(function() {
-	        uploadMediaFile( jQuery(this), true );
+	    $('.notifier-media-upload-button').click(function() {
+	        uploadMediaFile( $(this), true );
 	    });
 
-	    jQuery('.notifier-media-delete-button').click(function() {
-	        jQuery(this).next( '.notifier-media-attachment-id' ).val( '' );
-	        jQuery(this).siblings( '.notifier-media-preview' ).find('img').attr('src', '');
-	        jQuery(this).siblings( '.notifier-media-preview' ).find('source').attr('src', '');
+	    $('.notifier-media-delete-button').click(function() {
+	        $(this).next( '.notifier-media-attachment-id' ).val( '' ).attr('data-tyoe', '').attr('data-subtyoe', '').attr('data-url', '').change();
+	        $(this).siblings( '.notifier-media-preview' ).find('img').attr('src', '').addClass('hide');
+	        $(this).siblings( '.notifier-media-preview' ).find('source').attr('src', '').parent().addClass('hide');
 	        return false;
 	    });
 

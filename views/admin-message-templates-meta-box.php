@@ -157,7 +157,7 @@ if (in_array($mt_status, $disable_states)) {
 						'custom_attributes' => $disabled,
 						'uploader_title'	=> 'Upload Image',
 						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types' => 'image/jpeg',
+						'uploader_supported_file_types' => 'image',
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',
