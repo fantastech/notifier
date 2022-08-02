@@ -119,6 +119,20 @@
 		}
 		else if('media' == previewData.header_type){
 			previewData.media_type = $('#notifier_media_type').val() || 'image';
+			var media_type = previewData.media_type.toLowerCase();
+			switch(media_type) {
+				case 'image':
+					previewData.media_url = $('#notifier_media_item_image').attr('data-url') || '';
+					break;
+
+				case 'document':
+					previewData.media_url = $('#notifier_media_item_document').attr('data-url') || '';
+					break;
+
+				case 'video':
+					previewData.media_url = $('#notifier_media_item_video').attr('data-url') || '';
+					break;
+			}
 		}
 
 		previewData.body_text = $('#notifier_body_text').val() || 'Body text here';
@@ -172,15 +186,40 @@
 		messageTemplatePreviewData = previewData;
 		// Header
 		$('.wa-template-preview .message-head').hide();
-		switch (previewData.header_type) {
-			case 'text':
-				$('.wa-template-preview .message-head-text').show().text(previewData.header_text);
-				break;
-			case 'media':
-				var media_type = previewData.media_type.toLowerCase();
-				var head_preview_classes = 'message-head message-head-media message-head-'+media_type;
-				$('.wa-template-preview .message-head-media').show().attr('class', head_preview_classes);
-				break;
+		if('text' == previewData.header_type){
+			$('.wa-template-preview .message-head-text').show().text(previewData.header_text);
+		}
+		else if('media' == previewData.header_type){
+			var media_type = previewData.media_type.toLowerCase();
+			var head_preview_classes = 'message-head message-head-media message-head-'+media_type;
+			$('.wa-template-preview .message-head-media').show().attr('class', head_preview_classes);
+			$('.message-head-media-inner').removeClass('hide');
+			$('.message-head-media-preview').addClass('hide');
+			$('.message-head-media-preview > *').addClass('hide');
+			switch(media_type) {
+				case 'image':
+					if(previewData.media_url){
+						$('.message-head-media-inner').addClass('hide');
+						$('.message-head-media-preview').removeClass('hide');
+						$('.message-head-media-preview-image').removeClass('hide').attr('src', previewData.media_url);
+					}
+					break;
+
+				case 'document':
+					if(previewData.media_url){
+						$('.message-head-media-inner').addClass('hide');
+						$('.message-head-media-preview').removeClass('hide');
+						$('.message-head-media-preview-image').removeClass('hide').attr('src', previewData.media_url);
+					}
+					break;
+
+				case 'video':
+					$('.message-head-media-inner').addClass('hide');
+					$('.message-head-media-preview').removeClass('hide');
+					$('.message-head-media-preview-video').removeClass('hide').find('source').attr('src', previewData.media_url);
+					$('.message-head-media-preview-video')[0].play();
+					break;
+			}
 		}
 
 		// Body
@@ -332,21 +371,21 @@
         // When an image is selected, run a callback.
         file_frame.on( 'select', function() {
           attachment = file_frame.state().get('selection').first().toJSON();
-          jQuery("#"+field_id).val(attachment.id);
-          jQuery("#"+field_id).data('type', attachment.type);
-          jQuery("#"+field_id).data('subtype', attachment.subtype);
-          jQuery("#"+field_id).siblings('.notifier-media-preview').find().hide();
+          jQuery("#"+field_id).attr('data-type', attachment.type);
+          jQuery("#"+field_id).attr('data-subtype', attachment.subtype);
+          jQuery("#"+field_id).siblings('.notifier-media-preview').find('.notifier-media-preview-item').addClass('hide');
           if( preview_media ) {
 	        if('image' == attachment.type || ('application' == attachment.type && 'pdf' == attachment.subtype) ) {
-				jQuery("#"+field_id).data('url', attachment.sizes.thumbnail.url);
-				jQuery("#"+preview_id+'_image').show().attr('src',attachment.sizes.thumbnail.url);
+				jQuery("#"+field_id).attr('data-url', attachment.sizes.full.url);
+				jQuery("#"+preview_id+'_image').removeClass('hide').attr('src', attachment.sizes.thumbnail.url);
 	        }
 	        else if ('video' == attachment.type) {
-	        	jQuery("#"+field_id).data('url', attachment.url);
-	        	jQuery("#"+preview_id+'_video').show().find('source').attr('src',attachment.url);
+	        	jQuery("#"+field_id).attr('data-url', attachment.url);
+	        	jQuery("#"+preview_id+'_video').removeClass('hide').find('source').attr('src', attachment.url);
+	        	jQuery("#"+preview_id+'_video')[0].play();
 	        }
 	      }
-
+	      jQuery("#"+field_id).val(attachment.id).change();
         });
 
         // Finally, open the modal
@@ -698,6 +737,7 @@
 	    jQuery('.notifier-media-delete-button').click(function() {
 	        jQuery(this).next( '.notifier-media-attachment-id' ).val( '' );
 	        jQuery(this).siblings( '.notifier-media-preview' ).find('img').attr('src', '');
+	        jQuery(this).siblings( '.notifier-media-preview' ).find('source').attr('src', '');
 	        return false;
 	    });
 

@@ -157,7 +157,7 @@ if (in_array($mt_status, $disable_states)) {
 						'custom_attributes' => $disabled,
 						'uploader_title'	=> 'Upload Image',
 						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types' => array('image'),
+						'uploader_supported_file_types' => 'image/jpeg',
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',
@@ -177,7 +177,7 @@ if (in_array($mt_status, $disable_states)) {
 						'custom_attributes' => $disabled,
 						'uploader_title'	=> 'Upload Video',
 						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types' => array('video/mp4'),
+						'uploader_supported_file_types' => 'video/mp4',
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',
@@ -197,7 +197,7 @@ if (in_array($mt_status, $disable_states)) {
 						'custom_attributes' => $disabled,
 						'uploader_title'	=> 'Upload Document',
 						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types' => array('application/pdf'),
+						'uploader_supported_file_types' => 'application/pdf',
 						'conditional_logic'		=> array (
 							array (
 								'field'		=> NOTIFIER_PREFIX . 'media_type',

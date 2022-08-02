@@ -110,6 +110,12 @@ class Notifier_Message_Templates {
 						</div>
 						<div class="message-head message-head-media">
 							<div class="message-head-media-inner"></div>
+							<div class="message-head-media-preview">
+								<img src="" class="message-head-media-preview-image hide" />
+								<video class="message-head-media-preview-video hide" controls autoplay muted width="100%" height="131px">
+									<source src="" type="video/mp4">
+								</video>
+							</div>
 						</div>
 						<div class="message-body">
 							Body text here

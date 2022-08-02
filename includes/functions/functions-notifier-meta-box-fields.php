@@ -486,18 +486,36 @@ function notifier_wp_file_input( $field ) {
 	do_action('notifier_before_meta_field', $field, $post);
 
 	$image_thumb = '';
-	if ( '' != $field['value'] ) {
-		$image_thumb = wp_get_attachment_thumb_url( $field['value'] );
-	}
+	$video_url = '';
+	$show_image = '';
+	$show_video = '';
 
 	echo '<span class="notifier-media-preview">';
-	if ('' == $image_thumb) {
-		echo '<img id="' . esc_attr( $field['id'] ) . '_preview_image" src="' . esc_url($image_thumb) . '" /><br/>';
-		echo '<video id="' . esc_attr( $field['id'] ) . '_preview_video"><source src="' . esc_url($image_thumb) . '"></video><br/>';
+	if ( '' != $field['value'] ) {
+		$file_type = $field['uploader_supported_file_types'];
+		switch ($file_type) {
+		    case 'image/jpeg':
+		    case 'image/png':
+		    case 'application/pdf':
+		    	$image_thumb = wp_get_attachment_thumb_url( $field['value'] );
+		    	$show_video = 'hide';
+		    	break;
+
+		    case 'video/mp4':
+		    	$video_url = wp_get_attachment_url( $field['value'] );
+				$show_image = 'hide';
+				break;
+
+			default:
+				$show_image = 'hide';
+				$show_video = 'hide';
+	  	}
 	}
+	echo '<img id="' . esc_attr( $field['id'] ) . '_preview_image" class="notifier-media-preview-item hide" src="' . esc_url($image_thumb) . '" />';
+  	echo '<video id="' . esc_attr( $field['id'] ) . '_preview_video" class="notifier-media-preview-item hide"  width="300" height="169" controls autoplay muted><source src="' . esc_url($video_url) . '"  type="video/mp4"></video><br/>';
 	echo '</span>';
 
-	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr(implode(',', $field['uploader_supported_file_types'])) . '" class="notifier-media-upload-button button" value="Upload" /> ';
+	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr($field['uploader_supported_file_types']) . '" class="notifier-media-upload-button button" value="Upload" /> ';
 
 	echo '<input id="' . esc_attr( $field['id'] ) . '_delete" type="button" class="notifier-media-delete-button button" value="Remove" />';
 

@@ -180,6 +180,17 @@ a.refresh-status.page-title-action::before {
 						&.message-head-document .message-head-media-inner {
 							background-image: url('../images/mt-preview-document.png');
 						}
+
+						.message-head-media-preview {
+							border-radius: 4px;
+							height: 140px;
+						}
+
+						.message-head-media-preview-image {
+						    width: 100%;
+						    height: 100%;
+						    object-fit: cover;
+						}
 					}
 
 					.message-body {
