@@ -99,7 +99,7 @@ The plugin itself is free and WhatsApp provides 1000 business initiated messages
 
 == Changelog ==
 
-= 0.1.1 - 2022-08-03 =
+= 0.1.1 - 2022-08-04 =
 * Fix - Minor bug fixes and code cleanup
 
 = 0.1.0 - 2022-07-30 =
@@ -107,7 +107,7 @@ The plugin itself is free and WhatsApp provides 1000 business initiated messages
 
 == Upgrade Notice ==
 
-= 0.1.1 - 2022-08-03 =
+= 0.1.1 - 2022-08-04 =
 * Fix - Minor bug fixes and code cleanup
 
 = 0.1.0 - 2022-07-30 =
