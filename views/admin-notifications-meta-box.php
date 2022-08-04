@@ -47,7 +47,7 @@ if (in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
 							'id'                => NOTIFIER_PREFIX . 'notification_trigger',
 							'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'notification_trigger', true),
 							'label'             => 'Trigger',
-							'description'       => 'Select a trigger when you want to send notification. You can request more triggers by <a href="mailto:ram@fantastech.co?subject=%5BWA%20Notifier%5D%20New%20Trigger%20Request" target="_blank">mailing us</a>.',
+							'description'       => 'Select a trigger when you want to send notification. You can request more triggers by <a href="mailto:ram@fantastech.co?subject=%5BNotifier%5D%20New%20Trigger%20Request" target="_blank">mailing us</a>.',
 							'options'           => Notifier_Notification_Triggers::get_notification_triggers_dropdown(),
 							'conditional_logic'		=> array (
 								array (

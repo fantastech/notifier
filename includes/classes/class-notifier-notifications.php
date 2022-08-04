@@ -613,7 +613,7 @@ class Notifier_Notifications {
 		}
 		if ($total_header_vars > 0 || $total_body_vars > 0 ||  ('' != $media_type)) {
 			$html .= '</tbody></table>';
-			$html .= '<p class="description">Select the value that you want to pass to the respective message template variable when this notification gets triggered.</p>';
+			$html .= '<p class="description">Select the value that you want to pass to the respective message template variable when this notification gets triggered. You can request more values by <a href="mailto:ram@fantastech.co?subject=%5BNotifier%5D%20New%20Merge%20Tags%20Request" target="_blank">mailing us</a>.</p>';
 		}
 		return $html;
 	}
