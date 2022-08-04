@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '0.1.0' );
+		$this->define( 'NOTIFIER_VERSION', '0.1.1' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -298,6 +298,7 @@ class Notifier {
 		$request_args = array(
 		    'method' 	=> $method,
 		    'headers' 	=> $headers,
+		    'timeout'   => 120,
 		    'body' 		=> $args
 	    );
 		$response = wp_remote_request( $request_url, $request_args);
@@ -314,9 +315,9 @@ class Notifier {
 	}
 
 	/**
-	 * For uploading profile pic to app
+	 * For uploading media to WhatsApp
 	 */
-	public static function wa_cloud_api_upload_profile_pic($attachment_id) {
+	public static function wa_cloud_api_upload_media($attachment_id) {
 		$file_path = get_attached_file($attachment_id);
 		$file_size = filesize($file_path);
 
@@ -329,8 +330,6 @@ class Notifier {
 			'file_type'		=> get_post_mime_type($attachment_id)
 		);
 
-		// $phone_number_id = get_option('notifier_phone_number_id');
-		// $request_url = NOTIFIER_WA_API_URL . $phone_number_id . '/media';
 		$permanent_access_token = get_option('notifier_permanent_access_token');
 
 		// Create session ID for upload
@@ -353,7 +352,6 @@ class Notifier {
 		);
 
 		$upload_handle = self::wa_graph_api_request( $upload_session->id, $file_data, null, $upload_headers );
-
 		if (!isset($upload_handle->h)) {
 			error_log('Error while uploading profile image: ' . $upload_handle);
 			return false;

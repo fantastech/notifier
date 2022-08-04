@@ -186,6 +186,12 @@ class Notifier_Notifications {
 		$template_meta = array(
 			'header_type',
 			'header_text',
+			/* ==Notifier_Pro_Code_Start== */
+			'media_type',
+			'media_item_image',
+			'media_item_document',
+			'media_item_video',
+			/* ==Notifier_Pro_Code_End== */
 			'body_text',
 			'footer_text',
 			'button_type',
@@ -201,6 +207,21 @@ class Notifier_Notifications {
 			$template_data[$meta] = get_post_meta( $template_id, NOTIFIER_PREFIX . $meta, true);
 		}
 
+		/* ==Notifier_Pro_Code_Start== */
+		switch (strtolower($template_data['media_type'])) {
+			case 'image':
+				$template_data['media_url'] = wp_get_attachment_image_url( $template_data[ 'media_item_image'], 'large' );
+				break;
+
+		    case 'document':
+		    	$template_data['media_url'] = wp_get_attachment_thumb_url( $template_data[ 'media_item_document'] );
+		    	break;
+
+		    case 'video':
+		    	$template_data['media_url'] = wp_get_attachment_url( $template_data[ 'media_item_video'] );
+				break;
+	  	}
+	  	/* ==Notifier_Pro_Code_End== */
 		$notification_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'notification_status', true);
 		if ($notification_status && in_array($notification_status, array('Sending', 'Sent', 'Scheduled'))) {
 			$disabled = array (
@@ -324,8 +345,8 @@ class Notifier_Notifications {
 		$sent_phone_numbers = get_post_meta($notification_id, 'notifier_notification_sent_phone_numbers', true);
 		$unsent_phone_numbers = get_post_meta($notification_id, 'notifier_notification_unsent_phone_numbers', true);
 
-		$sent_phone_numbers = (!$sent_phone_numbers) ? array() : $sent_phone_numbers;
-		$unsent_phone_numbers = (!$unsent_phone_numbers) ? array() : $unsent_phone_numbers;
+		$sent_phone_numbers = (isset($sent_phone_numbers)) ? $sent_phone_numbers : array();
+		$unsent_phone_numbers = (isset($unsent_phone_numbers)) ? $unsent_phone_numbers : array();
 
 		$offset = (!$list_offset) ? 0 : (int) $list_offset;
 
@@ -546,10 +567,15 @@ class Notifier_Notifications {
 		$header_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'header_text', true);
 		$body_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'body_text', true);
 
+		$total_header_vars = 0;
+		$media_type = '';
 		if ('text' == $header_type) {
 			preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $header_text, $header_var_matches);
 			$header_vars = $header_var_matches[0];
 			$total_header_vars = count($header_vars);
+		}
+		elseif ('media' == $header_type) {
+			$media_type = get_post_meta( $template_id, NOTIFIER_PREFIX . 'media_type', true);
 		}
 
 		preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $body_text, $body_var_matches);
@@ -558,27 +584,34 @@ class Notifier_Notifications {
 
 		$html = '';
 
-		if ($total_header_vars > 0 || $total_body_vars > 0 ) {
+		if ($total_header_vars > 0 || $total_body_vars > 0 || ('' != $media_type) ) {
 			$html .= '<label>Map template variables with values</label>';
 			$html .= '<table class="fields-repeater"><tbody>';
 		}
 
 		// Header variable mapping
-		if (count($header_vars) > 0) {
+		if ($total_header_vars > 0) {
 			$header_var_map = isset($data['header'][0]) ? $data['header'][0] : '';
 			$html .= '<tr class="header-variable"><th>Header Variable</th><th>Value</th></tr>';
-			$html .= self::get_notification_variable_mapping_row(0, 'header', $header_var_map, $trigger, $disabled);
+			$html .= self::get_notification_variable_mapping_row(0, 'header', $header_var_map, $trigger, null, $disabled);
 		}
 
-		// Header variables mapping
+		// Header media mapping
+		if ('' != $media_type) {
+			$header_var_map = isset($data['header']['media']) ? $data['header']['media'] : '';
+			$html .= '<tr class="header-variable"><th>Header Media</th><th>Value</th></tr>';
+			$html .= self::get_notification_variable_mapping_row('media', 'header', $header_var_map, $trigger, $media_type, $disabled);
+		}
+
+		// Body variables mapping
 		if ($total_body_vars > 0) {
 			$html .= '<tr class="body-variables"><th>Body Variables</th><th>Value</th></tr>';
 			for ($num = 0; $num < $total_body_vars; $num++) {
 				$body_var_map = isset($data['body'][$num]) ? $data['body'][$num] : '';
-				$html .= self::get_notification_variable_mapping_row($num, 'body', $body_var_map, $trigger, $disabled);
+				$html .= self::get_notification_variable_mapping_row($num, 'body', $body_var_map, $trigger, null, $disabled);
 			}
 		}
-		if ($total_header_vars > 0 || $total_body_vars > 0 ) {
+		if ($total_header_vars > 0 || $total_body_vars > 0 ||  ('' != $media_type)) {
 			$html .= '</tbody></table>';
 			$html .= '<p class="description">Select the value that you want to pass to the respective message template variable when this notification gets triggered.</p>';
 		}
@@ -588,14 +621,33 @@ class Notifier_Notifications {
 	/**
 	 * Generates variable mapping row
 	 */
-	public static function get_notification_variable_mapping_row ($num, $type, $value, $trigger = '', $disabled = array()) {
-		$var_num = $num + 1;
-		$merge_tags = array('' => 'Select a value') + Notifier_Notification_Merge_Tags::get_notification_merge_tags($trigger);
+	public static function get_notification_variable_mapping_row ($num, $type, $value, $trigger = '', $media_type = '', $disabled = array()) {
+		$default_option = array('' => 'Select a value');
+		if('media' === $num){
+			$merge_tags = $default_option + Notifier_Notification_Merge_Tags::get_notification_merge_tags($trigger, 'media');
+		}
+		else{
+			$merge_tags = $default_option + Notifier_Notification_Merge_Tags::get_notification_merge_tags($trigger);
+		}
+
 		ob_start();
 		?>
 		<tr class="row">
 			<td>
-				<code>{{<?php echo esc_html($var_num); ?>}}</code>
+				<?php
+					if('media' === $num){
+						if('' != $media_type){
+							echo ucfirst(strtolower($media_type));
+						}
+						else {
+							echo 'Media';
+						}
+					}
+					else{
+						$var_num = $num + 1;
+						echo '<code>{{'. esc_html($var_num) . '}}</code>';
+					}
+				?>
 			</td>
 			<td>
 			<?php

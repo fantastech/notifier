@@ -317,13 +317,36 @@ class Notifier_Message_Templates {
 					'format' => 'TEXT',
 					'text' => isset($data[NOTIFIER_PREFIX . 'header_text']) ? $data[NOTIFIER_PREFIX . 'header_text'] : ''
 				);
-			} elseif ('media' == $data[NOTIFIER_PREFIX . 'header_type']) {
+			}
+			/* ==Notifier_Pro_Code_Start== */
+			elseif ('media' == $data[NOTIFIER_PREFIX . 'header_type']) {
+				$format = isset($data[NOTIFIER_PREFIX . 'media_type']) ? $data[NOTIFIER_PREFIX . 'media_type'] : '';
+
+				switch($format) {
+					case 'IMAGE':
+						$media_id = isset($data[NOTIFIER_PREFIX . 'media_item_image']) ? $data[NOTIFIER_PREFIX . 'media_item_image'] : 0;
+						break;
+
+					case 'VIDEO':
+						$media_id = isset($data[NOTIFIER_PREFIX . 'media_item_video']) ? $data[NOTIFIER_PREFIX . 'media_item_video'] : 0;
+						break;
+
+					case 'DOCUMENT':
+						$media_id = isset($data[NOTIFIER_PREFIX . 'media_item_document']) ? $data[NOTIFIER_PREFIX . 'media_item_document'] : 0;
+						break;
+				}
+
+				$handle = Notifier::wa_cloud_api_upload_media($media_id);
+
 				$args['components'][] = array (
 					'type' => 'HEADER',
-					'format' => isset($data[NOTIFIER_PREFIX . 'media_type']) ? strtoupper($data[NOTIFIER_PREFIX . 'media_type']) : '',
-					'example' => isset($data[NOTIFIER_PREFIX . 'media_url']) ? array( 'header_handle' => $data[NOTIFIER_PREFIX . 'media_url'] ) : '',
+					'format' => $format,
+					'example' => array(
+						'header_handle' => array ( $handle )
+					)
 				);
 			}
+			/* ==Notifier_Pro_Code_End== */
 		}
 
 		// Body
@@ -577,10 +600,6 @@ class Notifier_Message_Templates {
 		$template_name = get_post_meta( $template_id, NOTIFIER_PREFIX . 'template_name', true);
 		$language = get_post_meta( $template_id, NOTIFIER_PREFIX . 'language', true);
 
-		$header_type = get_post_meta( $template_id, NOTIFIER_PREFIX . 'header_type', true);
-		$header_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'header_text', true);
-		$body_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'body_text', true);
-
 		// Default message template sending args
 		$args = array (
 			'messaging_product' => 'whatsapp',
@@ -595,6 +614,12 @@ class Notifier_Message_Templates {
 			)
 		);
 
+		/* ==Notifier_Pro_Code_Start== */
+		$header_type = get_post_meta( $template_id, NOTIFIER_PREFIX . 'header_type', true);
+		$header_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'header_text', true);
+		$body_text = get_post_meta( $template_id, NOTIFIER_PREFIX . 'body_text', true);
+		$media_type = get_post_meta( $template_id, NOTIFIER_PREFIX . 'media_type', true);
+
 		$variable_mapping = get_post_meta( $notification_id, NOTIFIER_PREFIX . 'notification_variable_mapping', true);
 
 		$total_header_vars = 0;
@@ -604,28 +629,45 @@ class Notifier_Message_Templates {
 			preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $header_text, $header_var_matches);
 			$header_vars = $header_var_matches[0];
 			$total_header_vars = count($header_vars);
+
+			// If merge tag present in header
+			if ($total_header_vars > 0 && is_array($variable_mapping)) {
+				$header_merge_tag_id = isset($variable_mapping['header'][0]) ? $variable_mapping['header'][0] : '';
+				$header_merge_tag_value = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_merge_tag_id, $context_args);
+				if ($header_merge_tag_value) {
+					$args['template']['components'][] = array (
+						'type'			=> 'header',
+						'parameters'	=> array(
+							array(
+								'type'		=> 'text',
+								'text'		=> $header_merge_tag_value
+							)
+						)
+					);
+				}
+			}
 		}
-
-		preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $body_text, $body_var_matches);
-		$body_vars = $body_var_matches[0];
-		$total_body_vars = count($body_vars);
-
-		// If merge tag present in header
-		if ($total_header_vars > 0 && is_array($variable_mapping)) {
-			$header_merge_tag_id = isset($variable_mapping['header'][0]) ? $variable_mapping['header'][0] : '';
-			$header_merge_tag_value = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_merge_tag_id, $context_args);
-			if ($header_merge_tag_value) {
+		elseif ('media' == $header_type){
+			$header_media_merge_tag = isset($variable_mapping['header']['media']) ? $variable_mapping['header']['media'] : '';
+			$header_media_url = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_media_merge_tag, $context_args);
+			if('' != $header_media_url) {
 				$args['template']['components'][] = array (
 					'type'			=> 'header',
 					'parameters'	=> array(
 						array(
-							'type'		=> 'text',
-							'text'		=> $header_merge_tag_value
+							'type'		=> 'image',
+							'image'		=> array(
+								'link'	=> $header_media_url
+							)
 						)
 					)
 				);
 			}
 		}
+
+		preg_match_all('~\{\{\s*(.*?)\s*\}\}~', $body_text, $body_var_matches);
+		$body_vars = $body_var_matches[0];
+		$total_body_vars = count($body_vars);
 
 		// If merge tag present in body
 		if ($total_body_vars > 0 && is_array($variable_mapping)) {
@@ -641,11 +683,10 @@ class Notifier_Message_Templates {
 				'parameters'	=> $parameters
 			);
 		}
-
+		/* ==Notifier_Pro_Code_End== */
 		$response = Notifier::wa_cloud_api_request('messages', $args);
-
-		if ($response->error) {
-			error_log('[WhatsApp Send Error] ' . json_encode($response->error));
+		if (isset($response->error)) {
+			error_log('[Notifier] WhatsApp Send Error: ' . json_encode($response->error));
 			return false;
 		} else {
 			return true;

@@ -230,6 +230,7 @@ class Notifier_Woocommerce {
 				'id' 			=> 'woo_store_url',
 				'label' 		=> 'Shop page url',
 				'preview_value' => 'https://example.com/shop/',
+				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					return get_permalink( wc_get_page_id( 'shop' ) );
 				}
@@ -238,6 +239,7 @@ class Notifier_Woocommerce {
 				'id' 			=> 'woo_my_account_url',
 				'label' 		=> 'My Account page url',
 				'preview_value' => 'https://example.com/my-account/',
+				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					return get_permalink( wc_get_page_id( 'myaccount' ) );
 				}
@@ -302,6 +304,19 @@ class Notifier_Woocommerce {
 			'status'			=>	array(
 				'preview'	=> 'Processing',
 				'label' 	=> 'Order status'
+			),
+			'first_product_image' => array(
+				'preview'	=> '',
+				'label' 	=> 'Order product image (first image)',
+				'return_type'	=> 'media',
+				'value'		=> function ($order, $field_function) {
+					foreach($order->get_items() as $item){
+						$first_product_id = $item->get_product_id();
+						break;
+					}
+					$product = wc_get_product( $first_product_id );
+	                return wp_get_attachment_url( $product->get_image_id() );
+				}
 			),
 		);
 
@@ -382,6 +397,7 @@ class Notifier_Woocommerce {
 					'id' 			=> 'woo_order_' . $field,
 					'label' 		=> $label,
 					'preview_value' => isset($field_data['preview']) ? $field_data['preview'] : '',
+					'return_type'	=> isset($field_data['return_type']) ? $field_data['return_type'] : 'text',
 					'value'			=> function ($args) use ($field, $field_data) {
 						$order = wc_get_order( $args['object_id'] );
 						$field_function = 'get_' . $field;

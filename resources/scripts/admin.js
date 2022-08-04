@@ -303,8 +303,9 @@
 	// Fetch and display message template
 	function fetchAndDisplayMessageTemplate() {
 		const template_id = $('#notifier_notification_message_template :selected').val();
+		var wa_preview = $('#notifier-message-template-preview');
 		if (template_id == '') {
-			$('#notifier-message-template-preview').removeClass('d-block').addClass('hide');
+			wa_preview.removeClass('d-block').addClass('hide');
 			return false;
 		}
 		const post_id = $('#post_ID').val() || 0;
@@ -326,7 +327,7 @@
 			},
 			success: function(response) {
 				if (response.status == 'success') {
-					$('#notifier-message-template-preview').removeClass('hide').addClass('d-block');
+					wa_preview.removeClass('hide').addClass('d-block');
 					renderMessagePreview(response.data);
 					/* ==Notifier_Pro_Code_Start== */
 					// Add variable mapping fields
@@ -429,9 +430,10 @@
 		// Make the WhatsApp preview sidebar sticky
 		if ($('#notifier-message-template-preview').length > 0) {
 			var wa_preview = $('#notifier-message-template-preview');
-			var wa_preview_top = wa_preview.offset().top - 50;
+			var wa_preview_top = wa_preview.removeClass('hide-if-js hide').offset().top - 50;
 			var wa_preview_width = wa_preview.width();
 			wa_preview.width(wa_preview_width);
+			wa_preview.addClass('hide')
 			$(window).scroll( function() {
 				if (window.pageYOffset > wa_preview_top && window.innerWidth > 850) {
 					wa_preview.addClass('sticky');
@@ -481,6 +483,14 @@
 				alert('Body text is a required field.');
 				return false;
 			}
+
+			/* ==Notifier_Pro_Code_Start== */
+			const media_type = $('#notifier_media_type :selected').val().toLowerCase() || '';
+			if('' != media_type && 0 == $('#notifier_media_item_' + media_type).val().length){
+				alert( 'Please upload example ' + media_type + ' for template header. It is a required field.');
+				return false;
+			}
+			/* ==Notifier_Pro_Code_End== */
 			/* ==Notifier_Free_Code_Start== */
 			var header_text = $('#notifier_header_text').val() || '';
 			if(header_text.match(/{{.*?}}/g) !== null || body_text.match(/{{.*?}}/g) !== null) {
@@ -488,6 +498,7 @@
 				return false;
 			}
 			/* ==Notifier_Free_Code_End== */
+
 			return confirm('IMPORTANT NOTE:\n\nClicking "OK" will send your template data to WhatsApp for approval. It might take between 30 minutes to 24 hours for them to review it.\n\nYou\'ll get confirmation email from them after they complete their review. You will be able to send this template to your contacts only after their approval.');
 		});
 

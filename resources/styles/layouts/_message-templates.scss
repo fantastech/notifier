@@ -97,6 +97,8 @@ a.refresh-status.page-title-action::before {
 }
 
 #notifier-message-template-preview {
+	min-width: 278px;
+
 	.inside {
 		margin-top: 0;
 		padding: 0;

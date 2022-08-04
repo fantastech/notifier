@@ -73,17 +73,6 @@ class Notifier_Settings {
 						'uploader_supported_file_types'	=> 'image'
 					),
 					array(
-						'id' 			=> 'wa_profile_video',
-						'title'			=> 'Profile Video',
-						'description'	=> 'Recommended profile video size: 640px X 640px.',
-						'type'			=> 'file',
-						'default'		=> '',
-						'placeholder'	=> '',
-						'uploader_title'	=> 'WhatsApp profile image',
-						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types'	=> 'video/mp4'
-					),
-					array(
 						'id' 			=> 'wa_profile_description',
 						'title'			=> 'Description',
 						'description'	=> '',
@@ -512,7 +501,7 @@ class Notifier_Settings {
 
 		$profile_picture_id = isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture' ] : '';
 
-		$profile_picture_handle = Notifier::wa_cloud_api_upload_profile_pic($profile_picture_id);
+		$profile_picture_handle = Notifier::wa_cloud_api_upload_media($profile_picture_id);
 
 		if ($profile_picture_handle) {
 			$args['profile_picture_handle'] = $profile_picture_handle;

@@ -518,9 +518,9 @@ function notifier_wp_file_input( $field ) {
   	echo '<video id="' . esc_attr( $field['id'] ) . '_preview_video" class="notifier-media-preview-item '. esc_attr($show_video) .'"  width="300" height="169" controls muted><source src="' . esc_url($video_url) . '"  type="video/mp4"></video><br/>';
 	echo '</span>';
 
-	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr($field['uploader_supported_file_types']) . '" class="notifier-media-upload-button button" value="Upload" /> ';
+	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr($field['uploader_supported_file_types']) . '" class="notifier-media-upload-button button" value="Upload" '. esc_attr($custom_attributes_string) .' /> ';
 
-	echo '<input id="' . esc_attr( $field['id'] ) . '_delete" type="button" class="notifier-media-delete-button button" value="Remove" />';
+	echo '<input id="' . esc_attr( $field['id'] ) . '_delete" type="button" class="notifier-media-delete-button button" value="Remove" '. esc_attr($custom_attributes_string) .' />';
 
 	echo '<input class="notifier-media-attachment-id ' . esc_attr( $field['class'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" type="hidden" /><br/>';
 
