@@ -434,7 +434,6 @@
 			var wa_preview_top = wa_preview.removeClass('hide-if-js hide').offset().top - 50;
 			var wa_preview_width = wa_preview.width();
 			wa_preview.width(wa_preview_width);
-			wa_preview.addClass('hide')
 			$(window).scroll( function() {
 				if (window.pageYOffset > wa_preview_top && window.innerWidth > 850) {
 					wa_preview.addClass('sticky');

@@ -664,17 +664,24 @@ class Notifier_Message_Templates {
 				$header_media_url = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_media_merge_tag, $context_args);
 			}
 
+			$media_type_text = strtolower($media_type);
+			$media_parameters = array(
+				array(
+					'type' => $media_type_text,
+					$media_type_text	=> array(
+						'link'	=> $header_media_url
+					)
+				)
+			);
+
+			if('document' == $media_type_text){
+				$media_parameters[0][$media_type_text]['filename'] = basename($header_media_url);
+			}
+
 			if('' != $header_media_url) {
 				$args['template']['components'][] = array (
 					'type'			=> 'header',
-					'parameters'	=> array(
-						array(
-							'type'		=> 'image',
-							'image'		=> array(
-								'link'	=> $header_media_url
-							)
-						)
-					)
+					'parameters'	=> $media_parameters
 				);
 			}
 		}

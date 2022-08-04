@@ -401,6 +401,7 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 	 * Return notification merge tags for supplied trigger
 	 */
 	public static function get_notification_merge_tags($trigger, $merge_tag_type = 'text') {
+		$tags = array();
 		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
 		foreach ($main_triggers as $key => $triggers) {
 			foreach ($triggers as $t) {

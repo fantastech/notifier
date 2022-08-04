@@ -463,6 +463,46 @@ function notifier_wp_file_input( $field ) {
 
 	$field['conditional_logic'] = ('' != $field['conditional_logic']) ? json_encode($field['conditional_logic']) : '';
 
+	$image_thumb = '';
+	$video_url = '';
+	$show_image = 'hide';
+	$show_video = 'hide';
+
+	$value = isset($field['value']) ? $field['value'] : '';
+
+	echo '<span class="notifier-media-preview">';
+	if ( '' != $value ) {
+		$file_type = $field['uploader_supported_file_types'];
+		switch ($file_type) {
+			case 'image':
+		    case 'image/jpeg':
+		    case 'image/png':
+		    case 'application/pdf':
+		    	$image_thumb = wp_get_attachment_thumb_url( $value );
+		    	$file_mime_type = get_post_mime_type($value);
+		    	$file_mime_type = explode('/', $file_mime_type);
+		    	$show_image = '';
+		    	$show_video = 'hide';
+		    	$field['custom_attributes']['data-type'] = $file_mime_type[0];
+		    	$field['custom_attributes']['data-subtype'] = $file_mime_type[1];
+		    	$field['custom_attributes']['data-url'] = $image_thumb;
+		    	break;
+
+		    case 'video/mp4':
+		    	$video_url = wp_get_attachment_url( $value );
+				$show_image = 'hide';
+				$show_video = '';
+				$field['custom_attributes']['data-type'] = 'video';
+		    	$field['custom_attributes']['data-subtype'] = 'mp4';
+		    	$field['custom_attributes']['data-url'] = $video_url;
+				break;
+
+			default:
+				$show_image = 'hide';
+				$show_video = 'hide';
+	  	}
+	}
+
 	// Custom attribute handling
 	$custom_attributes = array();
 
@@ -485,44 +525,15 @@ function notifier_wp_file_input( $field ) {
 
 	do_action('notifier_before_meta_field', $field, $post);
 
-	$image_thumb = '';
-	$video_url = '';
-	$show_image = 'hide';
-	$show_video = 'hide';
-
-	echo '<span class="notifier-media-preview">';
-	if ( '' != $field['value'] ) {
-		$file_type = $field['uploader_supported_file_types'];
-		switch ($file_type) {
-			case 'image':
-		    case 'image/jpeg':
-		    case 'image/png':
-		    case 'application/pdf':
-		    	$image_thumb = wp_get_attachment_thumb_url( $field['value'] );
-		    	$show_image = '';
-		    	$show_video = 'hide';
-		    	break;
-
-		    case 'video/mp4':
-		    	$video_url = wp_get_attachment_url( $field['value'] );
-				$show_image = 'hide';
-				$show_video = '';
-				break;
-
-			default:
-				$show_image = 'hide';
-				$show_video = 'hide';
-	  	}
-	}
 	echo '<img id="' . esc_attr( $field['id'] ) . '_preview_image" class="notifier-media-preview-item '. esc_attr($show_image) .'" src="' . esc_url($image_thumb) . '" />';
   	echo '<video id="' . esc_attr( $field['id'] ) . '_preview_video" class="notifier-media-preview-item '. esc_attr($show_video) .'"  width="300" height="169" controls muted><source src="' . esc_url($video_url) . '"  type="video/mp4"></video><br/>';
 	echo '</span>';
 
-	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr($field['uploader_supported_file_types']) . '" class="notifier-media-upload-button button" value="Upload" '. esc_attr($custom_attributes_string) .' /> ';
+	echo '<input id="' . esc_attr( $field['id'] ) . '_button" type="button" data-uploader_title="' . esc_attr($field['uploader_title']) . '" data-uploader_button_text="' . esc_attr($field['uploader_button_text']) . '" data-uploader_supported_file_types="' . esc_attr($field['uploader_supported_file_types']) . '" class="notifier-media-upload-button button" value="Upload" '. $custom_attributes_string .' /> ';
 
-	echo '<input id="' . esc_attr( $field['id'] ) . '_delete" type="button" class="notifier-media-delete-button button" value="Remove" '. esc_attr($custom_attributes_string) .' />';
+	echo '<input id="' . esc_attr( $field['id'] ) . '_delete" type="button" class="notifier-media-delete-button button" value="Remove" '. $custom_attributes_string .' />';
 
-	echo '<input class="notifier-media-attachment-id ' . esc_attr( $field['class'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['value'] ) . '" type="hidden" /><br/>';
+	echo '<input class="notifier-media-attachment-id ' . esc_attr( $field['class'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $value ) . '" type="hidden" '. $custom_attributes_string .' /><br/>';
 
 	do_action('notifier_after_meta_field', $field, $post);
 
