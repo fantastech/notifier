@@ -15,6 +15,7 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'post_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'comment_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'user_merge_tags') );
+		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'media_merge_tags') );
 	}
 
 	/**
@@ -85,17 +86,7 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 				'value'			=> function ($args) {
 					return current_datetime()->format(get_option('time_format'));
 				}
-			),
-			array(
-				'id' 			=> 'site_logo_image',
-				'label' 		=> 'Site logo image',
-				'preview_value' => get_custom_logo(),
-				'return_type'	=> 'media',
-				'value'			=> function ($args) {
-				 	$custom_logo_id = get_theme_mod( 'custom_logo' );
-				 	return wp_get_attachment_image_url( $custom_logo_id, 'full' );
-				}
-			),
+			)
 		);
 
 		$merge_tags = apply_filters('notifier_notification_merge_tags', $merge_tags);
@@ -388,11 +379,29 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 	}
 
 	/**
+	 * Site media merge tags
+	 */
+	public static function media_merge_tags($merge_tags) {
+		$merge_tags['Media'] = array(
+			array(
+				'id' 			=> 'site_logo_image',
+				'label' 		=> 'Site logo image',
+				'preview_value' => get_custom_logo(),
+				'return_type'	=> 'media',
+				'value'			=> function ($args) {
+				 	$custom_logo_id = get_theme_mod( 'custom_logo' );
+				 	return wp_get_attachment_image_url( $custom_logo_id, 'full' );
+				}
+			),
+		);
+		return $merge_tags;
+	}
+
+	/**
 	 * Return notification merge tags for supplied trigger
 	 */
 	public static function get_notification_merge_tags($trigger, $merge_tag_type = 'text') {
 		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
-
 		foreach ($main_triggers as $key => $triggers) {
 			foreach ($triggers as $t) {
 				if ( $trigger == $t['id'] ) {
@@ -402,25 +411,25 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 			}
 		}
 
-		$merge_tags = array();
-
-		if (!empty($tags)) {
-			foreach ($tags as $tag_key => $merge_tags_list) {
-				foreach($merge_tags_list as $tag) {
-					if($merge_tag_type != $tag['return_type']){
-						continue;
-					}
-					$merge_tags[$tag_key][$tag['id']] = $tag['label'];
-				}
-			}
+		// Default merge tags
+		if('media' == $merge_tag_type) {
+			$default_tags = self::get_merge_tags(array('WordPress', 'Media'));
+		}
+		else{
+			$default_tags = self::get_merge_tags(array('WordPress'));
 		}
 
-		$default_tags = self::get_merge_tags(array('WordPress'));
-		foreach($default_tags['WordPress'] as $wp_tag){
-			if($merge_tag_type != $tag['return_type']){
-				continue;
+		$tags = $tags + $default_tags;
+
+		$merge_tags = array();
+
+		foreach ($tags as $tag_key => $merge_tags_list) {
+			foreach($merge_tags_list as $tag) {
+				if($merge_tag_type != $tag['return_type']){
+					continue;
+				}
+				$merge_tags[$tag_key][$tag['id']] = $tag['label'];
 			}
-			$merge_tags['WordPress'][$wp_tag['id']] = $wp_tag['label'];
 		}
 
 		return $merge_tags;

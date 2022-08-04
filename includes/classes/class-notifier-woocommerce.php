@@ -22,7 +22,7 @@ class Notifier_Woocommerce {
 	 * Add Woocommerce notification triggers
 	 */
 	public static function get_woo_notification_triggers() {
-		$merge_tag_types = array('WordPress', 'WooCommerce', 'WooCommerce Order', 'WooCommerce Customer');
+		$merge_tag_types = array('WooCommerce', 'WooCommerce Order', 'WooCommerce Customer');
 		$triggers = array (
 			array(
 				'id'			=> 'new_order',

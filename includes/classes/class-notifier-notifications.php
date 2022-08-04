@@ -621,14 +621,29 @@ class Notifier_Notifications {
 	/**
 	 * Generates variable mapping row
 	 */
-	public static function get_notification_variable_mapping_row ($num, $type, $value, $trigger = '', $media_type = '', $disabled = array()) {
-		$default_option = array('' => 'Select a value');
+	public static function get_notification_variable_mapping_row ($num, $type, $selected_tag, $trigger = '', $media_type = '', $disabled = array()) {
+		$default_tags = array();
+		$supported_formats = array(
+			'IMAGE' => 'JPEG and PNG',
+			'VIDEO' => 'MP4',
+			'DOCUMENT' => 'PDF'
+		);
 		if('media' === $num){
-			$merge_tags = $default_option + Notifier_Notification_Merge_Tags::get_notification_merge_tags($trigger, 'media');
+			$default_tags[''] = 'Select media';
+			$default_tags['custom'] = 'Custom media URL';
+			$merge_tag_type = 'media';
+			$placeholder = 'Enter ' . strtolower($media_type) . ' URL here';
+			$desc = 'Enter a ' . strtolower($media_type) . ' URL. You can also enter a shortcode that returns ' . strtolower($media_type) . ' URL. Supported format: ' . $supported_formats[$media_type];
 		}
 		else{
-			$merge_tags = $default_option + Notifier_Notification_Merge_Tags::get_notification_merge_tags($trigger);
+			$default_tags[''] = 'Select a value';
+			$default_tags['custom'] = 'Custom value';
+			$merge_tag_type = 'text';
+			$placeholder = 'Enter custom value here';
+			$desc = 'Enter a custom text value here. You can also enter a shortcode. HTML not allowed.';
 		}
+
+		$merge_tags = $default_tags + Notifier_Notification_Merge_Tags::get_notification_merge_tags($trigger, $merge_tag_type);
 
 		ob_start();
 		?>
@@ -654,13 +669,31 @@ class Notifier_Notifications {
 			 	notifier_wp_select(
 					array(
 						'id'                => NOTIFIER_PREFIX . 'notification_variable_mapping_' . $type . '_' . $num,
-						'name'              => NOTIFIER_PREFIX . 'notification_variable_mapping[' . $type . '][' . $num . ']',
+						'name'              => NOTIFIER_PREFIX . 'notification_variable_mapping[' . $type . '][' . $num . '][merge_tag]',
 						'class'				=> 'notifier-variable-mapping',
-						'value'             => $value,
+						'value'             => isset($selected_tag['merge_tag']) ? $selected_tag['merge_tag'] : '',
 						'label'             => '',
 						'description'       => '',
 						'options'           => $merge_tags,
 						'custom_attributes' => $disabled
+					)
+				);
+				notifier_wp_text_input(
+					array(
+						'id'                => NOTIFIER_PREFIX . 'notification_variable_mapping_' . $type . '_' . $num,
+						'name'              => NOTIFIER_PREFIX . 'notification_variable_mapping[' . $type . '][' . $num . '][custom_value]',
+						'class'				=> 'notifier-custom-value',
+						'value'             => isset($selected_tag['custom_value']) ? $selected_tag['custom_value'] : '',
+						'placeholder'		=> $placeholder,
+						'description'       => $desc,
+						'custom_attributes' => $disabled,
+						'conditional_logic'		=> array (
+							array (
+								'field'		=> NOTIFIER_PREFIX . 'notification_variable_mapping_' . $type . '_' . $num,
+								'operator'	=> '==',
+								'value'		=> 'custom'
+							)
+						)
 					)
 				);
 			?>

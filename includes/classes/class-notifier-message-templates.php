@@ -632,8 +632,15 @@ class Notifier_Message_Templates {
 
 			// If merge tag present in header
 			if ($total_header_vars > 0 && is_array($variable_mapping)) {
-				$header_merge_tag_id = isset($variable_mapping['header'][0]) ? $variable_mapping['header'][0] : '';
-				$header_merge_tag_value = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_merge_tag_id, $context_args);
+				$header_merge_tag_id = isset($variable_mapping['header'][0]['merge_tag']) ? $variable_mapping['header'][0]['merge_tag'] : '';
+
+				if('custom' == $header_merge_tag_id) {
+					$header_merge_tag_value = isset($variable_mapping['header'][0]['custom_value']) ? $variable_mapping['header'][0]['custom_value'] : '';
+				}
+				else {
+					$header_merge_tag_value = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_merge_tag_id, $context_args);
+				}
+
 				if ($header_merge_tag_value) {
 					$args['template']['components'][] = array (
 						'type'			=> 'header',
@@ -648,8 +655,15 @@ class Notifier_Message_Templates {
 			}
 		}
 		elseif ('media' == $header_type){
-			$header_media_merge_tag = isset($variable_mapping['header']['media']) ? $variable_mapping['header']['media'] : '';
-			$header_media_url = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_media_merge_tag, $context_args);
+			$header_media_merge_tag = isset($variable_mapping['header']['media']['merge_tag']) ? $variable_mapping['header']['media']['merge_tag'] : '';
+
+			if('custom' == $header_media_merge_tag) {
+				$header_media_url = isset($variable_mapping['header']['media']['custom_value']) ? $variable_mapping['header']['media']['custom_value'] : '';
+			}
+			else {
+				$header_media_url = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($header_media_merge_tag, $context_args);
+			}
+
 			if('' != $header_media_url) {
 				$args['template']['components'][] = array (
 					'type'			=> 'header',
@@ -674,9 +688,16 @@ class Notifier_Message_Templates {
 			$parameters = array();
 			$body_merge_tag_values = array();
 			for ($num = 0; $num < $total_body_vars; $num++) {
-				$body_merge_tag_id = isset($variable_mapping['body'][$num]) ? $variable_mapping['body'][$num] : '';
-				$parameters[$num]['type'] = 'text';
-				$parameters[$num]['text'] = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($body_merge_tag_id, $context_args);
+				$body_merge_tag_id = isset($variable_mapping['body'][$num]['merge_tag']) ? $variable_mapping['body'][$num]['merge_tag'] : '';
+
+				if('custom' == $body_merge_tag_id) {
+					$parameters[$num]['type'] = 'text';
+					$parameters[$num]['text'] = isset($variable_mapping['body'][$num]['custom_value']) ? $variable_mapping['body'][$num]['custom_value'] : '';
+				}
+				else {
+					$parameters[$num]['type'] = 'text';
+					$parameters[$num]['text'] = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($body_merge_tag_id, $context_args);
+				}
 			}
 			$args['template']['components'][] = array (
 				'type'			=> 'body',

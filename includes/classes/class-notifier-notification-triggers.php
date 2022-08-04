@@ -43,7 +43,7 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 				'label' 		=> 'New post is published',
 				'description'	=> 'Send notification when a new post is published.',
 				/* ==Notifier_Pro_Code_Start== */
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Post') ),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') ),
 				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array (
 					'hook'		=> 'transition_post_status',
@@ -76,7 +76,7 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 				'label' 		=> 'New comment is added',
 				'description'	=> 'Send notification when a new comment is added.',
 				/* ==Notifier_Pro_Code_Start== */
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'Comment') ),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Comment') ),
 				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array (
 					'hook'		=> 'comment_post',
@@ -104,7 +104,7 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 				'label' 		=> 'New user is registered',
 				'description'	=> 'Send notification when a new user is created.',
 				/* ==Notifier_Pro_Code_Start== */
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('WordPress', 'User') ),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User') ),
 				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array (
 					'hook'		=> 'user_register',

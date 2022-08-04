@@ -332,6 +332,7 @@
 					/* ==Notifier_Pro_Code_Start== */
 					// Add variable mapping fields
 					$('.variables-mapping-fields').html(response.variable_mapping_html);
+					conditionallyShowFields();
 					/* ==Notifier_Pro_Code_End== */
 				}
 			},
@@ -621,6 +622,11 @@
 			fetchAndDisplayMessageTemplate(); // Fetch and display message template preview + variable mapping fields
 			$('#notifier-notification-data :input').on('change keyup', function(){
 				updateNotificationSaveButtonText();
+
+				if('notifier_notification_type' == $(this).attr('name')){
+					$('#notifier_notification_trigger').val('').change();
+					$('#notifier_notification_message_template').val('').change();
+				}
 
 				if('notifier_notification_trigger' == $(this).attr('name')){
 					fetchAndDisplaySendToFields();
