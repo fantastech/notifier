@@ -69,7 +69,6 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 						}
 					}
 				)
-
 			),
 			array(
 			 	'id'			=> 'new_comment',
@@ -95,7 +94,6 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 								Notifier_Notifications::send_triggered_notification($nid, $args);
 							}
 						}
-
 					}
 				)
 			),
