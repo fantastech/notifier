@@ -189,7 +189,11 @@ class Notifier_Message_Templates {
 	 * Add message template meta data in submit box
 	 */
 	public static function add_submitbox_meta () {
-		global $post_id;
+		global $post_id, $current_screen;
+		if ( 'wa_message_template' != $current_screen->id ) {
+			return;
+		}
+
 		$mt_status = get_post_meta ( $post_id, NOTIFIER_PREFIX . 'status', true);
 
 		$refresh_url = '?' . http_build_query(array_merge($_GET, array('refresh_status'=>'1')));
