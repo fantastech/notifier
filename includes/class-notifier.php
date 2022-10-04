@@ -23,11 +23,11 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '0.1.1' );
+		$this->define( 'NOTIFIER_VERSION', '1.0.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
-		$this->define( 'NOTIFIER_WA_API_VERSION', 'v14.0' );
+		$this->define( 'NOTIFIER_WA_API_VERSION', 'v15.0' );
 		$this->define( 'NOTIFIER_WA_API_URL', 'https://graph.facebook.com/' . NOTIFIER_WA_API_VERSION . '/' );
 	}
 

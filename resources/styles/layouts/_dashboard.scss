@@ -20,76 +20,7 @@
 	}
 
 	.onboarding-body {
-		.onboarding-disclaimer {
-			padding: 10px 20px;
-		}
-
-		.step {
-			border-bottom: 1px solid #eee;
-
-			.step-head {
-				border-bottom: 1px solid #eee;
-				display: flex;
-				justify-content: space-between;
-
-				.step-title {
-					padding: 15px 20px;
-				}
-
-				.est-time {
-					display: flex;
-					align-items: center;
-					align-content: center;
-					margin-top: -10px;
-					justify-content: center;
-					padding: 0 20px;
-				}
-
-				.toggle-step {
-					position: relative;
-					padding: 0 20px;
-					border: 0;
-					background: transparent;
-					cursor: pointer;
-				}
-
-				.toggle-step::after {
-					content: "";
-					display: block;
-					width: 8px;
-					height: 8px;
-					border: 0;
-					background: transparent;
-					border-left: 2px solid #999;
-					border-bottom: 2px solid #999;
-					transform: rotate(-45deg);
-					margin-top: -6px;
-				}
-			}
-
-			&.active {
-				.step-head .toggle-step::after {
-					transform: rotate(135deg);
-					margin-top: 0;
-				}
-			}
-
-			.step-body {
-				padding: 15px 20px;
-				display: none;
-				transition: height 0.5s ease-in-out;
-
-				p:first-child,
-				ol:first-child {
-					margin-top: 0;
-				}
-			}
-
-			&.active .step-body {
-				display: block;
-				transition: height 0.5s ease-in-out;
-			}
-		}
+		padding: 15px 20px;
 	}
 
 	.onboarding-footer {
@@ -206,6 +137,11 @@
 			}
 		}
 	}
+}
+
+#notifier-api-key {
+	width: 100%;
+	margin-bottom: 10px;
 }
 
 .quantity-rating {

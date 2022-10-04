@@ -19,7 +19,7 @@ class Notifier_Dashboard {
 	 * Add dashboard page to admin menu
 	 */
 	public static function setup_admin_page () {
-		add_menu_page( 'Notifier Pro', 'Notifier Pro', 'manage_options', NOTIFIER_NAME, array( __CLASS__ , 'output'), 'dashicons-megaphone', '51' );
+		add_menu_page( 'WA Notifier', 'WA Notifier', 'manage_options', NOTIFIER_NAME, array( __CLASS__ , 'output'), 'dashicons-megaphone', '51' );
 	}
 
 	/**

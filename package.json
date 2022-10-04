@@ -8,15 +8,7 @@
     "lint": "npm run -s lint:scripts && npm run -s lint:styles",
     "lint:scripts": "eslint resources/scripts",
     "lint:styles": "stylelint \"resources/**/*.{css,scss}\"",
-    "test": "npm run -s lint",
-    "generate-pro-plugin": "rsync -av --exclude='build' --exclude='*.git*' --exclude='node_modules' --exclude='vendor' --exclude='resources' --exclude='.*' --exclude='composer.*' --exclude='package*' --exclude='yarn*' --exclude='webpack*' --exclude='phpcs.xml' --exclude='exclude-in-free.txt' --exclude='*.DS_Store' * build/notifier-pro",
-    "generate-free-plugin": "cp -R build/notifier-pro build/notifier; mv build/notifier/notifier-pro.php build/notifier/notifier.php; sed -i '' 's/Notifier Pro/Notifier/g' build/notifier/notifier.php; sed -i '' 's/Notifier Pro/Notifier/g' build/notifier/includes/classes/class-notifier-dashboard.php; (cd build/notifier && xargs rm < ../../exclude-in-free.txt);",
-    "strip-pro-code": "export LC_ALL=C; find build/notifier/ -type f -exec sed -i '' '/==Notifier_Pro_Code_Start==/,/==Notifier_Pro_Code_End==/d' {} +; find build/notifier/ -type f -exec sed -i '' '/==Notifier_Pro_Code/d' {} +; find build/notifier/ -type f -exec sed -i '' '/==Notifier_Free_Code/d' {} +;",
-    "strip-free-code": "export LC_ALL=C; find build/notifier-pro/ -type f -exec sed -i '' '/==Notifier_Free_Code_Start==/,/==Notifier_Free_Code_End==/d' {} +; find build/notifier-pro/ -type f -exec sed -i '' '/==Notifier_Pro_Code/d' {} +; find build/notifier-pro/ -type f -exec sed -i '' '/==Notifier_Free_Code/d' {} +;",
-    "zip": "(cd build && zip -r notifier.zip notifier); (cd build && zip -r notifier-pro.zip notifier-pro)",
-    "copy-to-free-site": "rm -r ../wanotifier/app/public/wp-content/plugins/notifier/; cp -r build/notifier ../wanotifier/app/public/wp-content/plugins/notifier/;",
-    "copy-to-pro-site": "rm -r ../wanotifier-pro/app/public/wp-content/plugins/notifier-pro/; cp -r build/notifier-pro ../wanotifier-pro/app/public/wp-content/plugins/notifier-pro/",
-    "deploy": "yarn build; rm -r build/*; yarn generate-pro-plugin; yarn generate-free-plugin; yarn strip-pro-code; yarn strip-free-code; yarn zip; yarn copy-to-free-site; yarn copy-to-pro-site;"
+    "test": "npm run -s lint"
   },
   "engines": {
     "node": "^16.0.0"
