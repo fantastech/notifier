@@ -45,7 +45,6 @@ class Notifier_Notification_Triggers {
 				'label' 		=> 'New post is published',
 				'description'	=> 'Trigger notification when a new blog post is published.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') ),
-
 				'action'		=> array (
 					'hook'		=> 'transition_post_status',
 					'args_num'	=> 3,
@@ -59,7 +58,8 @@ class Notifier_Notification_Triggers {
 								'object_type' 	=> 'post',
 								'object_id'		=> $post->ID
 							);
-							Notifier_Notifications::send_triggered_notification($nid, $args);
+							$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') );
+							self::send_trigger_request($args, $merge_tags);
 						}
 					}
 				)
@@ -69,23 +69,17 @@ class Notifier_Notification_Triggers {
 				'label' 		=> 'New comment is added',
 				'description'	=> 'Trigger notification when a new comment is added.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Comment') ),
-
 				'action'		=> array (
 					'hook'		=> 'comment_post',
 					'args_num'	=> 3,
 					'callback' 	=> function ( $comment_id, $comment_approved, $commentdata ) {
-						$notif_ids = self::is_enabled_trigger('new_comment');
-						if (empty($notif_ids)) {
-							return;
-						}
 						if ( 'spam' != $comment_approved) {
-							foreach ($notif_ids as $nid) {
-								$args = array (
-									'object_type' 	=> 'comment',
-									'object_id'		=> $comment_id
-								);
-								Notifier_Notifications::send_triggered_notification($nid, $args);
-							}
+							$args = array (
+								'object_type' 	=> 'comment',
+								'object_id'		=> $comment_id
+							);
+							$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') );
+							self::send_trigger_request($args, $merge_tags);
 						}
 					}
 				)
@@ -95,22 +89,15 @@ class Notifier_Notification_Triggers {
 				'label' 		=> 'New user is registered',
 				'description'	=> 'Trigger notification when a new user is created.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User') ),
-
 				'action'		=> array (
 					'hook'		=> 'user_register',
 					'callback' 	=> function ( $user_id ) {
-						$notif_ids = self::is_enabled_trigger('new_user');
-						if (empty($notif_ids)) {
-							return;
-						}
-
-						foreach ($notif_ids as $nid) {
-							$args = array (
-								'object_type' 	=> 'user',
-								'object_id'		=> $user_id
-							);
-							Notifier_Notifications::send_triggered_notification($nid, $args);
-						}
+						$args = array (
+							'object_type' 	=> 'user',
+							'object_id'		=> $user_id
+						);
+						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') );
+						self::send_trigger_request($args, $merge_tags);
 					}
 				)
 			)
@@ -145,6 +132,37 @@ class Notifier_Notification_Triggers {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Send triggered notifications
+	 */
+	public static function send_trigger_request ($context_args, $merge_tags) {
+		if(empty($context_args) || empty($merge_tags)){
+			return false;
+		}
+
+		$data = array();
+
+		foreach($merge_tags as $group_name => $group_tags){
+			foreach($group_tags as $tag){
+				$data[$tag['id']] = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($tag['id'], $context_args);
+			}
+		}
+
+		$params = array(
+			'action'	=> 'fire_notification',
+			'site_url'	=> site_url(),
+			'source'	=> 'wp',
+			'merge_tags'=> $data
+    	);
+
+		$response = Notifier::send_api_request( $params, 'POST' );
+
+		if($response->error){
+			error_log($response->message);
+		}
 
 	}
+
 }
