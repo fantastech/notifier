@@ -21,6 +21,10 @@
 	}
 }
 
+.wrap.notifier {
+	margin-top: 20px;
+}
+
 /* Meta Fields */
 .meta-fields {
 	.form-field {
@@ -153,4 +157,9 @@
 
 .notifier-media-preview {
 	display: block;
+}
+
+.notifier-notice {
+    margin-top: 20px;
+    margin-left: 0px;
 }

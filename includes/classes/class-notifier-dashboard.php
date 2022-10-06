@@ -11,8 +11,8 @@ class Notifier_Dashboard {
 	 */
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
-        add_action( 'admin_init', array( __CLASS__ , 'handle_disclaimer_form' ) );
-        add_action( 'admin_init', array( __CLASS__ , 'handle_validation_form' ) );
+        add_action( 'admin_init', array( __CLASS__ , 'handle_webhook_validation_form' ) );
+        add_action( 'admin_init', array( __CLASS__ , 'handle_save_triggers_form' ) );
 	}
 
 	/**
@@ -30,131 +30,118 @@ class Notifier_Dashboard {
 	}
 
 	/**
-	 * Handle displaimer forms
+	 * Handle displaimer form
 	 */
-	public static function handle_disclaimer_form () {
-		if ( ! self::is_dashboard_page() ) {
-			return;
-		}
-		if ( ! isset( $_POST['disclaimer'] ) ) {
-			return;
-		}
-		//phpcs:ignore
-		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-disclaimer' ) ) {
+	public static function handle_webhook_validation_form () {
+		if ( ! isset( $_POST['webhook_validation'] ) ) {
 			return;
 		}
 
-		update_option(NOTIFIER_PREFIX . 'disclaimer', 'accepted');
+		//phpcs:ignore
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-webhook-validation' ) ) {
+			return;
+		}
+
+		$api_key = (isset($_POST['notifier_api_key'])) ? sanitize_text_field(wp_unslash($_POST['notifier_api_key'])) : '';
+
+		if('' == trim($api_key)) {
+			$notices[] = array(
+				'message' => 'Please enter API key.',
+				'type' => 'error'
+			);
+			new Notifier_Admin_Notices($notices, true);
+			wp_redirect(admin_url('admin.php?page=notifier'));
+			die;
+		}
+
+		update_option('notifier_api_key', $api_key);
+		delete_option('notifier_enabled_triggers');
+
+		$params = array(
+			'action'    => 'verify_api',
+			'site_url'	=> site_url(),
+			'source'	=> 'wp'
+    	);
+
+		$response = Notifier::send_api_request( $params, 'POST' );
+
+		if($response->error){
+			$notices[] = array(
+				'message' => $response->message,
+				'type' => 'error'
+			);
+			new Notifier_Admin_Notices($notices, true);
+			wp_redirect(admin_url('admin.php?page=notifier'));
+			die;
+		}
+
+		update_option('notifier_api_activated', 'yes');
+
+		$notices[] = array(
+			'message' => $response->data,
+			'type' => 'success'
+		);
+		new Notifier_Admin_Notices($notices, true);
+		wp_redirect(admin_url('admin.php?page=notifier'));
+		die;
+
 	}
 
 	/**
-	 * Handle validation forms
+	 * Handle save triggers form
 	 */
-	public static function handle_validation_form () {
-		if ( ! self::is_dashboard_page() ) {
+	public static function handle_save_triggers_form () {
+		if ( ! isset( $_POST['notifier_save_triggers'] ) ) {
 			return;
 		}
-		if ( ! isset( $_POST['validate'] ) ) {
-			return;
-		}
+
 		//phpcs:ignore
-		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-validate' ) ) {
+		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-save-triggers' ) ) {
 			return;
 		}
 
-		$phone_number_id = get_option( NOTIFIER_PREFIX . 'phone_number_id' );
-		$business_account_id = get_option( NOTIFIER_PREFIX . 'business_account_id' );
-		$permanent_access_token = get_option( NOTIFIER_PREFIX . 'permanent_access_token' );
-
-		if ('' == $phone_number_id || '' == $business_account_id || '' == $permanent_access_token) {
-			$notices[] = array(
-				'message' => 'Setup not complete. Please follow the steps shown below to create <b>Phone number ID</b> , <b>Business Account ID</b> and <b>Permanent Access Token</b>. Then add these details on the <a href="admin.php?page=' . NOTIFIER_NAME . '-settings">Settings</a> page before proceeding for validation.',
-				'type' => 'error'
-			);
-			new Notifier_Admin_Notices($notices);
-			return;
-		}
-
-		// Fetch phone number details
-		$response = Notifier::wa_cloud_api_request('', array(), 'GET');
-		if ($response->error) {
-			$notices[] = array(
-				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
-				'type' => 'error'
-			);
-			new Notifier_Admin_Notices($notices);
-			return;
-		} else {
-			$phone_number_details[$phone_number_id] = array (
-				'display_num'		=> $response->display_phone_number,
-				'display_name'		=> $response->verified_name,
-				'phone_num_status'	=> $response->code_verification_status,
-				'quality_rating'	=> $response->quality_rating
-			);
-			update_option( NOTIFIER_PREFIX . 'phone_number_details', $phone_number_details );
-		}
-
-		$response = ''; // reset
-
-		// Fetch message templates
-		$response = Notifier::wa_business_api_request('message_templates', array(), 'GET');
-		if ($response->error) {
-			$notices[] = array(
-				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
-				'type' => 'error'
-			);
-			new Notifier_Admin_Notices($notices);
-			return;
-		} else {
-			$message_templates = $response->data;
-			foreach ($message_templates as $template) {
-				if ('hello_world' != $template->name) {
+		$notifier_triggers = (!empty($_POST['notifier_triggers'])) ? notifier_sanitize_array($_POST['notifier_triggers']) : array();
+		$all_triggers = Notifier_Notification_Triggers::get_notification_triggers();
+		$selected_triggers = array();
+		foreach ($all_triggers as $key => $triggers) {
+			foreach ($triggers as $trigger){
+				if( ! in_array($trigger['id'], $notifier_triggers) ){
 					continue;
 				}
-
-				$post_id = wp_insert_post ( array (
-					'post_title' 	=> 'Hello World!',
-					'post_status' 	=> 'publish',
-					'post_type' 	=> 'wa_message_template'
-				) );
-
-				update_post_meta ( $post_id, NOTIFIER_PREFIX . 'template_name', $template->name);
-				update_post_meta ( $post_id, NOTIFIER_PREFIX . 'category', $template->category);
-				update_post_meta ( $post_id, NOTIFIER_PREFIX . 'status', $template->status);
-				update_post_meta ( $post_id, NOTIFIER_PREFIX . 'template_id', $template->id);
-				update_post_meta ( $post_id, NOTIFIER_PREFIX . 'language', $template->language);
-
-				foreach ($template->components as $component) {
-					switch ($component->type) {
-						case 'HEADER':
-							update_post_meta ( $post_id, NOTIFIER_PREFIX . 'header_type', 'text');
-							update_post_meta ( $post_id, NOTIFIER_PREFIX . 'header_text', $component->text);
-							break;
-
-						case 'BODY':
-							update_post_meta ( $post_id, NOTIFIER_PREFIX . 'body_text', $component->text);
-							break;
-
-						case 'FOOTER':
-							update_post_meta ( $post_id, NOTIFIER_PREFIX . 'footer_text', $component->text);
-					}
-				}
+				unset($trigger['action']);
+				$selected_triggers[$key][] = $trigger;
 			}
-			update_option( NOTIFIER_PREFIX . 'api_credentials_validated', 'yes');
-			wp_redirect( admin_url( '/admin.php?page=' . NOTIFIER_NAME ) );
-        	exit;
 		}
-	}
 
-	/**
-	 * Check if on dashboard page
-	 */
-	public static function is_dashboard_page() {
-		$current_page = isset($_GET['page']) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
-		if (NOTIFIER_NAME === $current_page) {
-			return true;
+		$params = array(
+			'action'	=> 'update_triggers',
+			'site_url'	=> site_url(),
+			'source'	=> 'wp',
+			'triggers'	=> $selected_triggers
+    	);
+
+		$response = Notifier::send_api_request( $params, 'POST' );
+
+		if($response->error){
+			$notices[] = array(
+				'message' => $response->message,
+				'type' => 'error'
+			);
+			new Notifier_Admin_Notices($notices, true);
+			wp_redirect(admin_url('admin.php?page=notifier'));
+			die;
 		}
-		return false;
+
+		update_option('notifier_enabled_triggers', $notifier_triggers);
+
+		$notices[] = array(
+			'message' => $response->data,
+			'type' => 'success'
+		);
+		new Notifier_Admin_Notices($notices, true);
+		wp_redirect(admin_url('admin.php?page=notifier'));
+		die;
+
 	}
 
 }

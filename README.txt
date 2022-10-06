@@ -19,13 +19,13 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 
 = About WANotifier.com =
 
-WANotifier.com is the world's first and only FREE SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
+WANotifier.com is one of the world's first and only FREE SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
 
-WhatsApp recently launched it's Cloud API to let businesses send WhatsApp messages to customer using their official API. Before this if you had to send bulk WhatsApp messages or notifications, there were only two ways to do it:
+WhatsApp recently launched its Cloud API to let businesses send WhatsApp messages to customer using their official API. Before this if you had to send bulk WhatsApp messages or notifications, there were only two ways to do it:
 
 1. You either used **hack-y browser extensions or desktop / mobile apps** that would work on top of WhatsApp Web or your WhatsApp phone app to send the messages in a *shady* and [unauthorized](https://faq.whatsapp.com/1104252539917581/) way. This was a good way to get your phone number **banned** by WhatsApp!
 
-2. Or, you had to sign up with one of the WhatsApp approved **Business Service Providers** and pay them high monthly fees to use their software to send messages. Not only you had to give up privacy of your messages to these 3rd party providers, they charged a premium of 10% – 15% on top of WhatsApp's [conversation-based pricing](https://developers.facebook.com/docs/whatsapp/pricing/).
+2. Or, you had to sign up with one of the WhatsApp approved **Business Service Providers** and pay them high monthly fees to use their software to send messages. Not only you had to pay high monthly fees, they even charged you a premium of 10–15% on top of WhatsApp API's [conversation-based pricing](https://developers.facebook.com/docs/whatsapp/pricing/).
 
 But that changes with WANotifier.com!
 
@@ -59,7 +59,6 @@ Here's everything that you can do with you FREE account at WANotifier.com
 * Media templates with an image, video or PDF
 * Add call-to-action buttons to your templates
 * Dynamic message templates with variables
-* Fetch existing templates from WhatsApp manager
 
 **Contacts Management**
 

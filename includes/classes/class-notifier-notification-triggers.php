@@ -4,7 +4,7 @@
  *
  * @package    Wa_Notifier
  */
-class Notifier_Notification_Triggers extends Notifier_Notifications {
+class Notifier_Notification_Triggers {
 
 	/**
 	 * Init.
@@ -27,7 +27,9 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 				if ('' == $hook || '' == $callback) {
 					continue;
 				}
-				add_action($hook, $callback, $priority, $args_num);
+				if(self::is_enabled_trigger($trigger['id'])){
+					add_action($hook, $callback, $priority, $args_num);
+				}
 			}
 		}
 	}
@@ -41,31 +43,23 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 			 array(
 			 	'id'			=> 'new_post',
 				'label' 		=> 'New post is published',
-				'description'	=> 'Send notification when a new post is published.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when a new blog post is published.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') ),
-				/* ==Notifier_Pro_Code_End== */
+
 				'action'		=> array (
 					'hook'		=> 'transition_post_status',
 					'args_num'	=> 3,
 					'callback' 	=> function ( $new_status, $old_status, $post ) {
-						$notif_ids = self::trigger_has_active_notification('new_post');
-						if (empty($notif_ids)) {
-							return;
-						}
-
 						if ('post' !== get_post_type($post)) {
 							return;
 						}
 
 						if ( 'publish' === $new_status && 'publish' !== $old_status ) {
-							foreach ($notif_ids as $nid) {
-								$args = array (
-									'object_type' 	=> 'post',
-									'object_id'		=> $post->ID
-								);
-								Notifier_Notifications::send_triggered_notification($nid, $args);
-							}
+							$args = array (
+								'object_type' 	=> 'post',
+								'object_id'		=> $post->ID
+							);
+							Notifier_Notifications::send_triggered_notification($nid, $args);
 						}
 					}
 				)
@@ -73,15 +67,14 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 			array(
 			 	'id'			=> 'new_comment',
 				'label' 		=> 'New comment is added',
-				'description'	=> 'Send notification when a new comment is added.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when a new comment is added.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Comment') ),
-				/* ==Notifier_Pro_Code_End== */
+
 				'action'		=> array (
 					'hook'		=> 'comment_post',
 					'args_num'	=> 3,
 					'callback' 	=> function ( $comment_id, $comment_approved, $commentdata ) {
-						$notif_ids = self::trigger_has_active_notification('new_comment');
+						$notif_ids = self::is_enabled_trigger('new_comment');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -100,14 +93,13 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 			array(
 			 	'id'			=> 'new_user',
 				'label' 		=> 'New user is registered',
-				'description'	=> 'Send notification when a new user is created.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when a new user is created.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User') ),
-				/* ==Notifier_Pro_Code_End== */
+
 				'action'		=> array (
 					'hook'		=> 'user_register',
 					'callback' 	=> function ( $user_id ) {
-						$notif_ids = self::trigger_has_active_notification('new_user');
+						$notif_ids = self::is_enabled_trigger('new_user');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -139,17 +131,20 @@ class Notifier_Notification_Triggers extends Notifier_Notifications {
 	}
 
 	/**
-	 * Check whether current trigger has active notification
+	 * Check whether current trigger is enabled
 	 */
-	public static function trigger_has_active_notification($trigger) {
-		$active_triggers = get_option('notifier_active_triggers');
+	public static function is_enabled_trigger($trigger) {
+		$enabled_triggers = get_option('notifier_enabled_triggers');
 
-		$has_active_notification = false;
-
-		if ( !empty($active_triggers) && !empty($active_triggers[$trigger])) {
-			$has_active_notification = $active_triggers[$trigger];
+		if(empty($enabled_triggers)){
+			return false;
 		}
 
-		return $has_active_notification;
+		if(in_array($trigger, $enabled_triggers)){
+			return true;
+		}
+
+		return false;
+
 	}
 }

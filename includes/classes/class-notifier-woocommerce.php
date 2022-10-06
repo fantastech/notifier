@@ -13,9 +13,7 @@ class Notifier_Woocommerce {
 		add_filter( 'notifier_notification_triggers', array( __CLASS__ , 'add_notification_triggers'), 10 );
 		add_filter( 'notifier_notification_send_to_types', array( __CLASS__ , 'add_notification_send_to_type'), 10, 3 );
 		add_action( 'notifier_notification_after_send_to_reciever_fields', array( __CLASS__, 'send_to_customer_description' ), 10, 1 );
-		/* ==Notifier_Pro_Code_Start== */
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'woocommerce_merge_tags') );
-		/* ==Notifier_Pro_Code_End== */
 	}
 
 	/**
@@ -27,14 +25,12 @@ class Notifier_Woocommerce {
 			array(
 				'id'			=> 'new_order',
 				'label' 		=> 'New order is placed',
-				'description'	=> 'When a new order is placed.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when a new order is placed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array(
 					'hook'		=> 'woocommerce_new_order',
 					'callback' 	=> function ( $order_id ) {
-						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('new_order');
+						$notif_ids = Notifier_Notification_Triggers::is_enabled_trigger('new_order');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -52,14 +48,13 @@ class Notifier_Woocommerce {
 			array(
 				'id'			=> 'processing_order',
 				'label' 		=> 'Order status changes to processing',
-				'description'	=> 'When status of the order changes to Processing.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when status of an order changes to Processing.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				/* ==Notifier_Pro_Code_End== */
+
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_processing',
 					'callback' 	=> function ( $order_id ) {
-						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('processing_order');
+						$notif_ids = Notifier_Notification_Triggers::is_enabled_trigger('processing_order');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -77,14 +72,13 @@ class Notifier_Woocommerce {
 			array(
 				'id'			=> 'completed_order',
 				'label' 		=> 'Order is completed',
-				'description'	=> 'When status of the order changes to Completed.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when status of an order changes to Completed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				/* ==Notifier_Pro_Code_End== */
+
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_completed',
 					'callback' 	=> function ( $order_id ) {
-						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('completed_order');
+						$notif_ids = Notifier_Notification_Triggers::is_enabled_trigger('completed_order');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -102,14 +96,13 @@ class Notifier_Woocommerce {
 			array(
 				'id'			=> 'cancelled_order',
 				'label' 		=> 'Order is cancelled',
-				'description'	=> 'When status of the order changes to Cancelled.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when status of an order changes to Cancelled.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				/* ==Notifier_Pro_Code_End== */
+
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_cancelled',
 					'callback' 	=> function ( $order_id ) {
-						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('cancelled_order');
+						$notif_ids = Notifier_Notification_Triggers::is_enabled_trigger('cancelled_order');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -126,14 +119,12 @@ class Notifier_Woocommerce {
 			array(
 				'id'			=> 'failed_order',
 				'label' 		=> 'Order gets failed',
-				'description'	=> 'When status of an order changes to Failed.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when status of an order changes to Failed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_failed',
 					'callback' 	=> function ( $order_id ) {
-						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('failed_order');
+						$notif_ids = Notifier_Notification_Triggers::is_enabled_trigger('failed_order');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -150,14 +141,12 @@ class Notifier_Woocommerce {
 			array(
 				'id'			=> 'on_hold_order',
 				'label' 		=> 'Order is on-hold',
-				'description'	=> 'When status of an order changes to On-hold.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when status of an order changes to On-hold.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_on-hold',
 					'callback' 	=> function ( $order_id ) {
-						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('on_hold_order');
+						$notif_ids = Notifier_Notification_Triggers::is_enabled_trigger('on_hold_order');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -174,14 +163,12 @@ class Notifier_Woocommerce {
 			array(
 				'id'			=> 'refunded_order',
 				'label' 		=> 'Order is refunded',
-				'description'	=> 'When status of an order changes to Refunded.',
-				/* ==Notifier_Pro_Code_Start== */
+				'description'	=> 'Trigger notification when status of an order changes to Refunded.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				/* ==Notifier_Pro_Code_End== */
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_refunded',
 					'callback' 	=> function ( $order_id ) {
-						$notif_ids = Notifier_Notification_Triggers::trigger_has_active_notification('refunded_order');
+						$notif_ids = Notifier_Notification_Triggers::is_enabled_trigger('refunded_order');
 						if (empty($notif_ids)) {
 							return;
 						}
@@ -220,7 +207,7 @@ class Notifier_Woocommerce {
 
 		return $send_to_types;
 	}
-	/* ==Notifier_Pro_Code_Start== */
+
 	/**
 	 * Get Woocommerce merge tags
 	 */
@@ -414,7 +401,6 @@ class Notifier_Woocommerce {
 
 		return $merge_tags;
 	}
-	/* ==Notifier_Pro_Code_End== */
 
 	/**
 	 * Add the description text under Reciever

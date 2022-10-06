@@ -33,9 +33,7 @@ class Notifier_Settings {
 	 */
 	private static function get_settings_tabs() {
 		$tabs = array(
-			'profile' 		=> 'WhatsApp Profile',
-			'general'		=> 'General',
-			'api' 			=> 'API Configuration',
+			'general'		=> 'General'
 		);
 		return $tabs;
 	}
@@ -52,98 +50,15 @@ class Notifier_Settings {
 	 * Settings fields
 	 */
 	private static function settings_fields($tab) {
+		$activated = get_option(NOTIFIER_PREFIX . 'api_activated');
+		if('yes' == $activated) {
+			$description = 'You are successfully connected to WANotifier.com.';
+		}
+		else{
+			$description = 'You are not connected to WANotifier.com yet. Please enter valid API key and save the settings.';
+		}
 		$settings = array();
 		switch ($tab) {
-			case 'profile':
-				$settings = array(
-					array(
-						'title'			=> 'WhatsApp Profile',
-						'description'	=> 'Update your WhatsApp Business profile details. These details will be visible to contacts when they open your profile on WhatsApp.',
-						'type'			=> 'title',
-					),
-					array(
-						'id' 			=> 'wa_profile_picture',
-						'title'			=> 'Profile Picture',
-						'description'	=> 'Recommended profile image size: 640px X 640px.',
-						'type'			=> 'file',
-						'default'		=> '',
-						'placeholder'	=> '',
-						'uploader_title'	=> 'WhatsApp profile image',
-						'uploader_button_text'	=> 'Select',
-						'uploader_supported_file_types'	=> 'image'
-					),
-					array(
-						'id' 			=> 'wa_profile_description',
-						'title'			=> 'Description',
-						'description'	=> '',
-						'type'			=> 'text',
-						'default'		=> '',
-						'placeholder'	=> ''
-					),
-					array(
-						'id' 			=> 'wa_profile_address',
-						'title'			=> 'Address',
-						'description'	=> '',
-						'type'			=> 'text',
-						'default'		=> '',
-						'placeholder'	=> ''
-					),
-					array(
-						'id' 			=> 'wa_profile_category',
-						'title'			=> 'Category',
-						'description'	=> '',
-						'type'			=> 'select',
-						'options'		=> array(
-							'UNDEFINED'	=> 'Select your business industry',
-							'NOT_A_BIZ'	=> 'Not a business',
-							'AUTO'		=> 'Automotive',
-							'BEAUTY'	=> 'Beauty, Spa & Salon',
-							'APPAREL'	=> 'Clothing & Apparel',
-							'EDU'		=> 'Education',
-							'ENTERTAIN'	=> 'Entertainment',
-							'EVENT_PLAN'=> 'Event Planning & Service',
-							'FINANCE'	=> 'Finance & Banking',
-							'GROCERY'	=> 'Grocery & Supermarket',
-							'GOVT'		=> 'Public & Government Service',
-							'HOTEL'		=> 'Hotel & Lodging',
-							'HEALTH'	=> 'Medical & Health',
-							'NONPROFIT'	=> 'Non-profit',
-							'PROF_SERVICES'	=> 'Professional Services',
-							'RETAIL'	=> 'Shopping & Retail',
-							'TRAVEL'	=> 'Travel & Transportation',
-							'RESTAURANT'=> 'Restaurant',
-							'OTHER'		=> 'Other'
-						),
-						'default'		=> '',
-						'placeholder'	=> ''
-					),
-					array(
-						'id' 			=> 'wa_profile_email',
-						'title'			=> 'Email (optional)',
-						'description'	=> '',
-						'type'			=> 'text',
-						'default'		=> '',
-						'placeholder'	=> ''
-					),
-					array(
-						'id' 			=> 'wa_profile_website_1',
-						'title'			=> 'Website URL 1',
-						'description'	=> '',
-						'type'			=> 'text',
-						'default'		=> '',
-						'placeholder'	=> 'https://'
-					),
-					array(
-						'id' 			=> 'wa_profile_website_2',
-						'title'			=> 'Website URL 2',
-						'description'	=> '',
-						'type'			=> 'text',
-						'default'		=> '',
-						'placeholder'	=> 'https://'
-					)
-				);
-				break;
-
 			case 'general':
 				$settings = array(
 					array(
@@ -152,46 +67,12 @@ class Notifier_Settings {
 						'type'			=> 'title',
 					),
 					array(
-						'id' 			=> 'bulk_message_batch_limit',
-						'title'			=> 'Bulk message batch limit',
-						'description'	=> 'Enter the number of messages you want to send in each batch when sending bulk messages. Default value is <code>50</code>. If you want send more number of messages in each batch and have good server resources you can increase the limit here.',
-						'type'			=> 'number',
-						'default'		=> 50,
-						'placeholder'	=> ''
-					),
-				);
-				break;
-
-			case 'api':
-				$settings = array(
-					array(
-						'title'			=> 'WhastApp API Configuration',
-						'description'	=> 'Enter the API details below to setup WhatsApp.',
-						'type'			=> 'title',
-					),
-					array(
-						'id' 			=> 'phone_number_id',
-						'title'			=> 'Phone Number ID',
-						'description'	=> '',
+						'id' 			=> 'api_key',
+						'title'			=> 'WANotifier.com API key',
 						'type'			=> 'text',
+						'placeholder'	=> 'Enter your WANotifier.com API key here',
 						'default'		=> '',
-						'placeholder'	=> ''
-					),
-					array(
-						'id' 			=> 'business_account_id',
-						'title'			=> 'Business Account ID',
-						'description'	=> '',
-						'type'			=> 'text',
-						'default'		=> '',
-						'placeholder'	=> ''
-					),
-					array(
-						'id' 			=> 'permanent_access_token',
-						'title'			=> 'Permanent Access Token',
-						'description'	=> '',
-						'type'			=> 'textarea',
-						'default'		=> '',
-						'placeholder'	=> ''
+						'description'	=> $description
 					),
 				);
 				break;
@@ -204,7 +85,6 @@ class Notifier_Settings {
 	 * Generate HTML for displaying individual fields
 	 */
 	public static function display_field( $field ) {
-
 		$html = '';
 
 		if (isset($field['id'])) {
@@ -386,7 +266,7 @@ class Notifier_Settings {
 			return;
 		}
 
-		$tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'profile';
+		$tab = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'general';
 
 		$settings_fields = self::settings_fields($tab);
 		$data = $_POST;
@@ -438,166 +318,56 @@ class Notifier_Settings {
 			}
 		}
 
-		if ('api' == $tab) {
-			$phone_number_id = isset($update_options[ NOTIFIER_PREFIX . 'phone_number_id' ]) ? $update_options[ NOTIFIER_PREFIX . 'phone_number_id' ] : '';
-			$business_account_id = isset($update_options[ NOTIFIER_PREFIX . 'business_account_id' ]) ? $update_options[ NOTIFIER_PREFIX . 'business_account_id' ] : '';
-			$permanent_access_token = isset($update_options[ NOTIFIER_PREFIX . 'permanent_access_token' ]) ? $update_options[ NOTIFIER_PREFIX . 'permanent_access_token' ] : '';
+		// Save all options in our array.
+		foreach ( $update_options as $name => $value ) {
+			if('notifier_api_key' == $name){
+				$current_api_key = get_option($name);
+				update_option('notifier_api_key', $value);
+				delete_option('notifier_enabled_triggers');
+				delete_option('notifier_api_activated');
 
-			if ('' == $phone_number_id || '' == $business_account_id || '' == $permanent_access_token) {
-				$notices[] = array(
-					'message' => 'Phone number ID, Business Account ID and Permanent Access Token are mandatory fields.',
-					'type' => 'error'
-				);
-				new Notifier_Admin_Notices($notices);
-				return;
+				$params = array(
+					'action'    => 'verify_api',
+					'site_url'	=> site_url(),
+					'source'	=> 'wp'
+		    	);
+
+				$response = Notifier::send_api_request( $params, 'POST' );
+
+				if($response->error){
+					$notices[] = array(
+						'message' => 'There was an error validating API key. Error: ' . $response->message,
+						'type' => 'error'
+					);
+				}
+				else{
+					update_option('notifier_api_activated', 'yes');
+					$params = array(
+						'action'	=> 'update_triggers',
+						'site_url'	=> site_url(),
+						'source'	=> 'wp',
+						'triggers'	=> array()
+			    	);
+					Notifier::send_api_request( $params, 'POST' );
+					$notices[] = array(
+						'message' => 'API key validated and saved successfully. Your triggers have been reset. Please enable and save your triggers again from the <a href="'.admin_url('admin.php?page=notifier').'">WA Notifier</a> page.',
+						'type' => 'success'
+					);
+				}
+			}
+			else{
+				update_option( $name, $value, 'yes' );
 			}
 		}
 
-		// Save all options in our array.
-		foreach ( $update_options as $name => $value ) {
-			update_option( $name, $value, 'yes' );
-		}
-
-		// Do other things after updating settings
-
-		switch ($tab) {
-			case 'profile':
-				$notices = self::save_whatsapp_profile_details($update_options);
-				break;
-
-			case 'api':
-				$notices = self::fetch_and_save_whatsapp_details($phone_number_id);
-				break;
-
-			default:
-				$notices[] = array(
-					'message' => 'Settings saved.',
-					'type' => 'success'
-				);
+		if(empty($notices)){
+			$notices[] = array(
+				'message' => 'Settings updated successfully.',
+				'type' => 'success'
+			);
 		}
 
 		new Notifier_Admin_Notices($notices);
 	}
 
-	/**
-	 * Save WhatsApp profile details
-	 */
-	public static function save_whatsapp_profile_details($profile_fields) {
-		$args = array (
-			'messaging_product'	=> 'whatsapp',
-			'description' =>  isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_description']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_description' ] : '',
-			'address'	=> isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_address']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_address' ] : '',
-			'vertical' 	=> isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_category']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_category' ] : '',
-			'email' 	=> isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_email']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_email' ] : '',
-		);
-
-		if (isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1' ]) && '' != $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1' ]) {
-			$args['websites'][] = $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_1'];
-		}
-
-		if (isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ]) && '' != $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ]) {
-			$args['websites'][] = $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_website_2' ];
-		}
-
-		$profile_picture_id = isset($profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture']) ? $profile_fields[ NOTIFIER_PREFIX . 'wa_profile_picture' ] : '';
-
-		$profile_picture_handle = Notifier::wa_cloud_api_upload_media($profile_picture_id);
-
-		if ($profile_picture_handle) {
-			$args['profile_picture_handle'] = $profile_picture_handle;
-		}
-
-		$response = Notifier::wa_cloud_api_request( 'whatsapp_business_profile', $args );
-
-		if (isset($response->error)) {
-			$notices[] = array(
-				'message' => 'Error Code ' . $response->error->code . ': ' . $response->error->message ,
-				'type' => 'error'
-			);
-			return $notices;
-		} else {
-			$notices[] = array(
-				'message' => 'Profile updated successfully.',
-				'type' => 'success'
-			);
-		}
-		return $notices;
-	}
-
-	/**
-	 * Fetch and save WhatsApp details
-	 */
-	public static function fetch_and_save_whatsapp_details($phone_number_id) {
-		$response = Notifier::wa_cloud_api_request('', array(), 'GET');
-		if (isset($response->error)) {
-			$notices[] = array(
-				'message' => 'API request can not be validated. Error Code ' . $response->error->code . ': ' . $response->error->message ,
-				'type' => 'error'
-			);
-			return $notices;
-		} else {
-			$phone_number_details[$phone_number_id] = array (
-				'display_num'		=> $response->display_phone_number,
-				'display_name'		=> $response->verified_name,
-				'phone_num_status'	=> $response->code_verification_status,
-				'quality_rating'	=> $response->quality_rating
-			);
-			update_option( NOTIFIER_PREFIX . 'phone_number_details', $phone_number_details );
-		}
-
-		$response_profile = Notifier::wa_cloud_api_request('whatsapp_business_profile', array(
-			'fields' => 'about,address,description,email,profile_picture_url,websites,vertical'
-		), 'GET');
-
-		if (isset($response_profile->error)) {
-			$notices[] = array(
-				'message' => 'WhatsApp Error Code: ' . $response_profile->error->code . ': ' . $response_profile->error->message ,
-				'type' => 'error'
-			);
-			return $notices;
-		} else {
-			if (isset($response_profile->data)) {
-				$data = $response_profile->data[0];
-				update_option( NOTIFIER_PREFIX . 'wa_profile_address', isset($data->address) ? $data->address : '' );
-				update_option( NOTIFIER_PREFIX . 'wa_profile_description', isset($data->description) ? $data->description : '');
-				update_option( NOTIFIER_PREFIX . 'wa_profile_email', isset($data->email) ? $data->email : '');
-				update_option( NOTIFIER_PREFIX . 'wa_profile_category', isset($data->vertical) ? $data->vertical : '');
-
-				if (isset($data->websites)) {
-					update_option( NOTIFIER_PREFIX . 'wa_profile_website_1', isset($data->websites[0]) ? $data->websites[0] : '');
-					update_option( NOTIFIER_PREFIX . 'wa_profile_website_2', isset($data->websites[1]) ? $data->websites[1] : '');
-				}
-
-				if (isset($data->profile_picture_url)) {
-					$profile_id = notifier_upload_file_by_url($data->profile_picture_url);
-					update_option( NOTIFIER_PREFIX . 'wa_profile_picture', $profile_id);
-				}
-			}
-			$notices[] = array(
-				'message' => 'Settings saved.',
-				'type' => 'success'
-			);
-			return $notices;
-		}
-	}
-
-	/**
-	 * Show WA profile screenshot on Profile tab
-	 */
-	public static function show_wa_profile_screenshot_start($tab) {
-		if ('profile' != $tab) {
-			return;
-		}
-		echo '<div class="notifier-profile-fields-left">';
-	}
-
-	/**
-	 * Show WA profile screenshot on Profile tab
-	 */
-	public static function show_wa_profile_screenshot_end($tab) {
-		if ('profile' != $tab) {
-			return;
-		}
-		echo '</div><div class="notifier-profile-fields-right"><img src="' . esc_url(NOTIFIER_URL) . 'assets/images/wa-profile.jpg" /></div>';
-	}
 }

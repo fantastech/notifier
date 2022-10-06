@@ -20,7 +20,13 @@
 	}
 
 	.onboarding-body {
-		padding: 15px 20px;
+		padding: 20px;
+
+		h1,
+		h2,
+		h3 {
+			margin-top: 0;
+		}
 	}
 
 	.onboarding-footer {
@@ -54,7 +60,7 @@
 		background-color: #fff;
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		margin-bottom: 20px;
 
 		&.dashboard-box-top {
 			height: auto;
@@ -91,26 +97,24 @@
 				padding: 12px;
 			}
 
-			p:first-child {
+			& *:first-child {
 				margin-top: 0;
+			}
+
+			h3 {
+				font-size: 1.2em;
 			}
 
 			table {
 				width: 100%;
 
-				th {
-					padding-bottom: 10px;
+				th, td {
 					text-align: left;
-
-					&:last-child {
-						text-align: right;
-					}
+					vertical-align: top;
 				}
 
-				td {
-					&:last-child {
-						text-align: right;
-					}
+				th:first-child, td:first-child {
+					width: 20%;
 				}
 			}
 
@@ -126,7 +130,6 @@
 		.dashboard-box-footer {
 			margin-top: auto;
 			padding: 15px 20px;
-			border-top: 1px solid #eee;
 
 			.dashboard-box-buttons-wrap {
 				text-align: right;
@@ -139,29 +142,74 @@
 	}
 }
 
-#notifier-api-key {
+#wa-notifier-api-key {
 	width: 100%;
 	margin-bottom: 10px;
 }
 
-.quantity-rating {
-	display: inline-block;
-	width: 12px;
-	height: 12px;
-	border-radius: 50%;
-	vertical-align: middle;
-	margin-left: 10px;
-	background: #cacaca;
+.notifier-triggers-group-wrap{
+	margin-bottom: 30px;
 
-	&.quantity-rating-red {
-		background: red;
+	.notifier-trigger-wrap {
+		margin-bottom: 20px;
+
+		.notifier-trigger-label {
+			font-size: 16px;
+
+			input[type="checkbox"] {
+				-webkit-appearance: none;
+				appearance: none;
+				margin: 0;
+				font: inherit;
+				color: #697a8d;
+				width: 20px;
+				height: 20px;
+				border: 2px solid #697a8d;
+				border-radius: 3px;
+				background-color: transparent;
+				outline: none !important;
+				margin-right: 10px;
+			}
+
+			input[type="checkbox"]::before {
+				content: "";
+			}
+
+			input[type="checkbox"]:checked{
+			    color: white;
+			    background: $primary;
+			    border-color: $primary;
+			    box-shadow: none;
+			}
+
+			input[type="checkbox"]:checked::before {
+				content: "\f147";
+				font-family: "dashicons";
+				font-size: 20px;
+				display: block;
+				position: absolute;
+				height: 18px;
+				width: 18px;
+				margin-top: -1px;
+				margin-left: -3px;
+			}
+
+			.notifier-show-trigger-info {
+			    border: 0px;
+			    background: none;
+			    padding: 0px;
+			    cursor: pointer;
+			    color: #aaa;
+			}
+		}
+
+		.notifier-trigger-info {
+		    background: #f7f7f7;
+		    padding: 10px;
+		    margin-top: 10px;
+		    border: 1px solid #eeeeee;
+		    border-radius: 10px;
+		}
 	}
 
-	&.quantity-rating-green {
-		background: green;
-	}
-
-	&.quantity-rating-yellow {
-		background: #f8f13a;
-	}
 }

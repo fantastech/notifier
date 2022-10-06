@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap notifier">
     <div class="notifier-wrapper">
     	<?php
-    		$current_tab = isset($_GET['tab']) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'profile';
+    		$current_tab = isset($_GET['tab']) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
     		$settings_tabs = Notifier_Settings::get_settings_tabs();
 		 	echo '<h2 class="nav-tab-wrapper">';
 		foreach ( $settings_tabs as $tab_key => $name ) {

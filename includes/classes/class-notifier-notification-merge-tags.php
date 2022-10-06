@@ -4,7 +4,7 @@
  *
  * @package    Wa_Notifier
  */
-class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
+class Notifier_Notification_Merge_Tags {
 
 	public $merge_tags = array();
 
@@ -131,7 +131,7 @@ class Notifier_Notification_Merge_Tags extends Notifier_Notifications {
 			array(
 				'id' 			=> 'post_permalink',
 				'label' 		=> 'Post permalink',
-				'preview_value' => site_url() . 'hello-world/',
+				'preview_value' => site_url() . '/hello-world/',
 				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					$post = get_post($args['object_id']);

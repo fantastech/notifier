@@ -19,6 +19,14 @@
 	justify-content: flex-end;
 }
 
+.align-content-center {
+	align-content: center;
+}
+
+.align-items-center {
+	align-items: center;
+}
+
 .col {
 	flex: 1 0 0%;
 	box-sizing: border-box;
@@ -102,6 +110,10 @@
 
 .text-uppercase {
 	text-transform: uppercase;
+}
+
+.ms-auto {
+	margin-left: auto;
 }
 
 .loader {
