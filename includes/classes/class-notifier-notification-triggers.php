@@ -151,10 +151,10 @@ class Notifier_Notification_Triggers {
 		}
 
 		$params = array(
-			'action'	=> 'fire_notification',
-			'site_url'	=> site_url(),
-			'source'	=> 'wp',
-			'merge_tags'=> $data
+			'action'			=> 'fire_notification',
+			'site_url'			=> site_url(),
+			'source'			=> 'wp',
+			'merge_tags_data'	=> $data
     	);
 
 		$response = Notifier::send_api_request( $params, 'POST' );
