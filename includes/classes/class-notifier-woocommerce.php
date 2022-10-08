@@ -11,7 +11,6 @@ class Notifier_Woocommerce {
 	 */
 	public static function init() {
 		add_filter( 'notifier_notification_triggers', array( __CLASS__, 'add_notification_triggers'), 10 );
-		add_action( 'notifier_notification_after_send_to_reciever_fields', array( __CLASS__, 'send_to_customer_description' ), 10, 1 );
 		add_filter( 'notifier_notification_merge_tags', array( __CLASS__, 'woocommerce_merge_tags') );
 		add_filter( 'notifier_notification_recipient_fields', array( __CLASS__, 'woocommerce_recipient_fields') );
 	}
@@ -359,21 +358,6 @@ class Notifier_Woocommerce {
 		}
 
 		return $merge_tags;
-	}
-
-	/**
-	 * Add the description text under Reciever
-	 * column for customer Send to field
-	 */
-	public static function send_to_customer_description($num) {
-		$conditional_logic = array (
-			array (
-				'field'		=> NOTIFIER_PREFIX . 'notification_send_to_' . $num . '_type',
-				'operator'	=> '==',
-				'value'		=> 'customer'
-			)
-		);
-		echo '<div class="form-field" data-conditions="' . esc_attr ( json_encode( $conditional_logic ) ) . '">Notification will be sent to customer\'s <b>billing phone number</b>, if they set it during checkout.</div>';
 	}
 
 	/*
