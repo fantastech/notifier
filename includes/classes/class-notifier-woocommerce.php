@@ -10,10 +10,10 @@ class Notifier_Woocommerce {
 	 * Init.
 	 */
 	public static function init() {
-		add_filter( 'notifier_notification_triggers', array( __CLASS__ , 'add_notification_triggers'), 10 );
-		add_filter( 'notifier_notification_send_to_types', array( __CLASS__ , 'add_notification_send_to_type'), 10, 3 );
+		add_filter( 'notifier_notification_triggers', array( __CLASS__, 'add_notification_triggers'), 10 );
 		add_action( 'notifier_notification_after_send_to_reciever_fields', array( __CLASS__, 'send_to_customer_description' ), 10, 1 );
-		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'woocommerce_merge_tags') );
+		add_filter( 'notifier_notification_merge_tags', array( __CLASS__, 'woocommerce_merge_tags') );
+		add_filter( 'notifier_notification_recipient_fields', array( __CLASS__, 'woocommerce_recipient_fields') );
 	}
 
 	/**
@@ -27,6 +27,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'New order is placed',
 				'description'	=> 'Trigger notification when a new order is placed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_new_order',
 					'callback' 	=> function ( $order_id ) {
@@ -35,7 +36,8 @@ class Notifier_Woocommerce {
 							'object_id'		=> $order_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags);
+						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
+						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -44,7 +46,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'Order status changes to processing',
 				'description'	=> 'Trigger notification when status of an order changes to Processing.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-
+				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_processing',
 					'callback' 	=> function ( $order_id ) {
@@ -53,7 +55,8 @@ class Notifier_Woocommerce {
 							'object_id'		=> $order_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags);
+						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
+						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -62,7 +65,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'Order is completed',
 				'description'	=> 'Trigger notification when status of an order changes to Completed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-
+				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_completed',
 					'callback' 	=> function ( $order_id ) {
@@ -71,7 +74,8 @@ class Notifier_Woocommerce {
 							'object_id'		=> $order_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags);
+						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
+						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -80,7 +84,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'Order is cancelled',
 				'description'	=> 'Trigger notification when status of an order changes to Cancelled.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-
+				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_cancelled',
 					'callback' 	=> function ( $order_id ) {
@@ -89,7 +93,8 @@ class Notifier_Woocommerce {
 							'object_id'		=> $order_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags);
+						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
+						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -98,6 +103,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'Order gets failed',
 				'description'	=> 'Trigger notification when status of an order changes to Failed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_failed',
 					'callback' 	=> function ( $order_id ) {
@@ -106,7 +112,8 @@ class Notifier_Woocommerce {
 							'object_id'		=> $order_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags);
+						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
+						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -115,6 +122,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'Order is on-hold',
 				'description'	=> 'Trigger notification when status of an order changes to On-hold.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_on-hold',
 					'callback' 	=> function ( $order_id ) {
@@ -123,7 +131,8 @@ class Notifier_Woocommerce {
 							'object_id'		=> $order_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags);
+						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
+						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -132,6 +141,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'Order is refunded',
 				'description'	=> 'Trigger notification when status of an order changes to Refunded.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_refunded',
 					'callback' 	=> function ( $order_id ) {
@@ -140,7 +150,8 @@ class Notifier_Woocommerce {
 							'object_id'		=> $order_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags);
+						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
+						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
 					}
 				)
 			)
@@ -156,19 +167,6 @@ class Notifier_Woocommerce {
 		return $triggers;
 	}
 
-	/**
-	 * Add notification send to type
-	 */
-	public static function add_notification_send_to_type ($send_to_types, $post_id, $trigger) {
-		$woo_triggers = self::get_woo_notification_triggers();
-		$woo_triggers = wp_list_pluck( $woo_triggers, 'id' );
-
-		if (in_array($trigger, $woo_triggers)) {
-			$send_to_types = array('customer' => 'WooCommerce Customer') + $send_to_types;
-		}
-
-		return $send_to_types;
-	}
 
 	/**
 	 * Get Woocommerce merge tags
@@ -330,8 +328,7 @@ class Notifier_Woocommerce {
 				'value'		=> function ($order, $field_function) {
 					return str_replace('<br/>', ', ', $order->$field_function());
 				}
-			),
-
+			)
 		);
 
 		foreach ($woo_fields as $woo_field_key => $woo_field) {
@@ -377,5 +374,57 @@ class Notifier_Woocommerce {
 			)
 		);
 		echo '<div class="form-field" data-conditions="' . esc_attr ( json_encode( $conditional_logic ) ) . '">Notification will be sent to customer\'s <b>billing phone number</b>, if they set it during checkout.</div>';
+	}
+
+	/*
+	 * Add recipient fields for WooCommerce
+	 */
+	public static function woocommerce_recipient_fields(){
+		$recipient_fields = array();
+		$recipient_fields['WooCommerce'] = array(
+			array(
+				'id'			=> 'billing_phone',
+				'label'			=> 'Billing phone number',
+				'value'			=> function ($args) {
+					$order = wc_get_order( $args['object_id'] );
+					$phone_number = $order->get_billing_phone();
+					$country_code = $order->get_billing_country();
+					$phone_number = self::get_formatted_phone_number($phone_number, $country_code);
+					return html_entity_decode(sanitize_text_field($phone_number));
+				}
+			),
+			array(
+				'id'			=> 'shipping_phone',
+				'label'			=> 'Shipping phone number',
+				'value'			=> function ($args) {
+					$order = wc_get_order( $args['object_id'] );
+					$phone_number = $order->get_shipping_phone();
+					$country_code = $order->get_shipping_country();
+					$phone_number = self::get_formatted_phone_number($phone_number, $country_code);
+					return html_entity_decode(sanitize_text_field($phone_number));
+				}
+			)
+		);
+		return $recipient_fields;
+	}
+
+	/**
+	 * Get phone number with country extension code
+	 */
+	public static function get_formatted_phone_number( $phone_number, $country_code ) {
+		$phone_number = self::sanitize_phone_number( $phone_number );
+		$phone_number = ltrim($phone_number, '0');
+		if ( in_array( $country_code, array( 'US', 'CA' ), true ) ) {
+			$phone_number = ltrim( $phone_number, '+1' );
+		} else {
+			$calling_code = WC()->countries->get_country_calling_code( $country_code );
+			$calling_code = is_array( $calling_code ) ? $calling_code[0] : $calling_code;
+
+			if ( $calling_code ) {
+				$phone_number = str_replace( $calling_code, '', preg_replace( '/^0/', '', $phone_number ) );
+			}
+		}
+		$phone_number = ltrim($phone_number, '0');
+		return $calling_code . $phone_number;
 	}
 }

@@ -400,7 +400,7 @@ class Notifier_Notification_Merge_Tags {
 	/**
 	 * Return notification merge tags for supplied trigger
 	 */
-	public static function get_notification_merge_tags($trigger, $merge_tag_type = 'text') {
+	public static function get_trigger_merge_tags($trigger, $merge_tag_type = 'text') {
 		$tags = array();
 		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
 		foreach ($main_triggers as $key => $triggers) {
@@ -439,7 +439,7 @@ class Notifier_Notification_Merge_Tags {
 	/**
 	 * Return notification merge tag value for supplied trigger and object
 	 */
-	public static function get_notification_merge_tag_value($tag_id, $context_args) {
+	public static function get_trigger_merge_tag_value($tag_id, $context_args) {
 		$merge_tags = self::get_merge_tags();
 		foreach ($merge_tags as $tags) {
 			foreach ($tags as $tag) {

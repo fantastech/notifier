@@ -48,7 +48,8 @@ $activated = get_option(NOTIFIER_PREFIX . 'api_activated');
 										<h3><?php echo $group_name; ?></h3>
 										<?php
 										foreach($group_triggers as $trigger){
-											$merge_tags = Notifier_Notification_Merge_Tags::get_notification_merge_tags($trigger['id']);
+											$merge_tags = Notifier_Notification_Merge_Tags::get_trigger_merge_tags($trigger['id']);
+											$recipient_fields = Notifier_Notification_Triggers::get_trigger_recipient_fields($trigger['id']);
 											?>
 											<div class="notifier-trigger-wrap">
 												<label for="notifier_trigger_<?php echo $trigger['id']; ?>" class="notifier-trigger-label d-flex align-items-center">
@@ -63,12 +64,28 @@ $activated = get_option(NOTIFIER_PREFIX . 'api_activated');
 															<td><?php echo $trigger['description'] ?></td>
 														</tr>
 														<tr>
-															<th>Associated data sent:</th>
+															<th>Available data fields:</th>
 															<td>
 																<?php foreach($merge_tags as $tag_group_name => $group_tags): ?>
 																	<b><?php echo $tag_group_name; ?>: </b>
 																	<?php echo implode(', ', $group_tags); ?><br />
 																<?php endforeach; ?>
+															</td>
+														</tr>
+														<tr>
+															<th>Available recipient fields:</th>
+															<td>
+																<?php
+																if(!empty($recipient_fields)){
+																	foreach($recipient_fields as $recipient_group_name => $recipient_group_fields):
+																		echo '<b>' . $recipient_group_name . ': </b>';
+																		echo implode(', ', $recipient_group_fields);
+																	endforeach;
+																}
+																else{
+																	echo 'No fields';
+																}
+																?>
 															</td>
 														</tr>
 													</table>
@@ -104,7 +121,7 @@ $activated = get_option(NOTIFIER_PREFIX . 'api_activated');
 							<p>On this page, you'll find all the available triggers that you can use to trigger a notification on <a href="https://wanotifier.com/" target="_blank">WANotifier.com</a>.</p>
 							<p>The triggers you enable and save here will be available to use on WANotifier.com when you create a <a href="https://app.wanotifier.com/notifications/add/">new Notification</a>.</p>
 							<p>To learn more about a trigger, click on the <span class="dashicons dashicons-info-outline" style="color: #aaa;"></span> icon next to it.</p>
-							<p>By enabling a trigger you accept and agree that the associated data will be sent to our server for use with the message template when sending notifications. We do not store any data other that what is required for sending a notification, all other data received is discarded.</p>
+							<p>By enabling a trigger you accept and agree that the associated data fields and recipient fields will be sent to our server for use with the message template when sending notifications. We do not store any data other that what is required for sending a notification, all other data received is discarded.</p>
 							<p>Currently we only support the shown <b>WordPress</b> and <b>Woocommerce</b> triggers. To request new triggers drop us a message on <a href="https://wanotifier.com/support/">our website</a>.</p>
 						</div>
 					</div>

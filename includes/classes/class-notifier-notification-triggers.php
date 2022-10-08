@@ -27,7 +27,7 @@ class Notifier_Notification_Triggers {
 				if ('' == $hook || '' == $callback) {
 					continue;
 				}
-				if(self::is_enabled_trigger($trigger['id'])){
+				if(self::is_trigger_enabled($trigger['id'])){
 					add_action($hook, $callback, $priority, $args_num);
 				}
 			}
@@ -45,6 +45,7 @@ class Notifier_Notification_Triggers {
 				'label' 		=> 'New post is published',
 				'description'	=> 'Trigger notification when a new blog post is published.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') ),
+				'recipient_fields'	=> array(),
 				'action'		=> array (
 					'hook'		=> 'transition_post_status',
 					'args_num'	=> 3,
@@ -69,6 +70,7 @@ class Notifier_Notification_Triggers {
 				'label' 		=> 'New comment is added',
 				'description'	=> 'Trigger notification when a new comment is added.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Comment') ),
+				'recipient_fields'	=> array(),
 				'action'		=> array (
 					'hook'		=> 'comment_post',
 					'args_num'	=> 3,
@@ -89,6 +91,7 @@ class Notifier_Notification_Triggers {
 				'label' 		=> 'New user is registered',
 				'description'	=> 'Trigger notification when a new user is created.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User') ),
+				'recipient_fields'	=> array(),
 				'action'		=> array (
 					'hook'		=> 'user_register',
 					'callback' 	=> function ( $user_id ) {
@@ -120,7 +123,7 @@ class Notifier_Notification_Triggers {
 	/**
 	 * Check whether current trigger is enabled
 	 */
-	public static function is_enabled_trigger($trigger) {
+	public static function is_trigger_enabled($trigger) {
 		$enabled_triggers = get_option('notifier_enabled_triggers');
 
 		if(empty($enabled_triggers)){
@@ -137,24 +140,30 @@ class Notifier_Notification_Triggers {
 	/**
 	 * Send triggered notifications
 	 */
-	public static function send_trigger_request ($context_args, $merge_tags) {
+	public static function send_trigger_request($context_args, $merge_tags, $recipient_fields = array()) {
 		if(empty($context_args) || empty($merge_tags)){
 			return false;
 		}
 
 		$data = array();
+		$recipient_data = array();
 
 		foreach($merge_tags as $group_name => $group_tags){
 			foreach($group_tags as $tag){
-				$data[$tag['id']] = Notifier_Notification_Merge_Tags::get_notification_merge_tag_value($tag['id'], $context_args);
+				$data[$tag['id']] = Notifier_Notification_Merge_Tags::get_trigger_merge_tag_value($tag['id'], $context_args);
 			}
+		}
+
+		foreach($recipient_fields as $field){
+			$recipient_data[$field['id']] = self::get_recipient_field_value($field['id'], $context_args);
 		}
 
 		$params = array(
 			'action'			=> 'fire_notification',
 			'site_url'			=> site_url(),
 			'source'			=> 'wp',
-			'merge_tags_data'	=> $data
+			'merge_tags_data'	=> $data,
+			'recipient_fields'	=> $recipient_data
     	);
 
 		$response = Notifier::send_api_request( $params, 'POST' );
@@ -162,6 +171,59 @@ class Notifier_Notification_Triggers {
 		if($response->error){
 			error_log($response->message);
 		}
+
+	}
+
+	/*
+	 * Get recipient fields
+	 */
+	public static function get_recipient_fields($types = array()){
+		$recipient_fields = array();
+		$recipient_fields = apply_filters('notifier_notification_recipient_fields', $recipient_fields);
+
+		$final_recipient_fields = array();
+
+		if (empty($types)) {
+			$final_recipient_fields = $recipient_fields;
+		} else {
+			foreach ($types as $type) {
+				$final_recipient_fields[$type] = $recipient_fields[$type];
+			}
+		}
+
+		return $recipient_fields;
+	}
+
+	/*
+	 * Get trigger recipient fields
+	 */
+	public static function get_trigger_recipient_fields($trigger){
+		$recipient_fields = array();
+		$main_triggers = self::get_notification_triggers();
+		foreach ($main_triggers as $key => $triggers) {
+			foreach ($triggers as $t) {
+				if ( $trigger == $t['id'] ) {
+					$recipient_fields = $t['recipient_fields'];
+					break 2;
+				}
+			}
+		}
+
+		$final_fields = array();
+
+		foreach ($recipient_fields as $field_key => $recipient_fields_list) {
+			foreach($recipient_fields_list as $field) {
+				$final_fields[$field_key][$field['id']] = $field['label'];
+			}
+		}
+
+		return $final_fields;
+	}
+
+	/**
+	 * Get recipient_field value
+	 */
+	public static function get_trigger_recipient_field_value($recipient_field, $context_args) {
 
 	}
 
