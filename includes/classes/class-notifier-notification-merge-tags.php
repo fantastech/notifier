@@ -15,7 +15,6 @@ class Notifier_Notification_Merge_Tags {
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'post_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'comment_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'user_merge_tags') );
-		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'media_merge_tags') );
 	}
 
 	/**
@@ -49,6 +48,16 @@ class Notifier_Notification_Merge_Tags {
 				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					return get_bloginfo('url');
+				}
+			),
+		 	array(
+				'id' 			=> 'site_logo_image',
+				'label' 		=> 'Site logo image',
+				'preview_value' => get_custom_logo(),
+				'return_type'	=> 'image',
+				'value'			=> function ($args) {
+				 	$custom_logo_id = get_theme_mod( 'custom_logo' );
+				 	return wp_get_attachment_image_url( $custom_logo_id, 'full' );
 				}
 			),
 			array(
@@ -196,6 +205,16 @@ class Notifier_Notification_Merge_Tags {
 				'value'			=> function ($args) {
 					$post = get_post($args['object_id']);
 					return $post->post_modified;
+				}
+			),
+			array(
+				'id' 			=> 'post_featured_image',
+				'label' 		=> 'Post featured image',
+				'preview_value' => get_custom_logo(),
+				'return_type'	=> 'image',
+				'value'			=> function ($args) {
+					$post = get_post($args['object_id']);
+				 	return get_the_post_thumbnail_url($post, 'full');
 				}
 			)
 		);
@@ -379,28 +398,9 @@ class Notifier_Notification_Merge_Tags {
 	}
 
 	/**
-	 * Site media merge tags
-	 */
-	public static function media_merge_tags($merge_tags) {
-		$merge_tags['Media'] = array(
-			array(
-				'id' 			=> 'site_logo_image',
-				'label' 		=> 'Site logo image',
-				'preview_value' => get_custom_logo(),
-				'return_type'	=> 'media',
-				'value'			=> function ($args) {
-				 	$custom_logo_id = get_theme_mod( 'custom_logo' );
-				 	return wp_get_attachment_image_url( $custom_logo_id, 'full' );
-				}
-			),
-		);
-		return $merge_tags;
-	}
-
-	/**
 	 * Return notification merge tags for supplied trigger
 	 */
-	public static function get_trigger_merge_tags($trigger, $merge_tag_type = 'text') {
+	public static function get_trigger_merge_tags($trigger) {
 		$tags = array();
 		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
 		foreach ($main_triggers as $key => $triggers) {
@@ -413,22 +413,14 @@ class Notifier_Notification_Merge_Tags {
 		}
 
 		// Default merge tags
-		if('media' == $merge_tag_type) {
-			$default_tags = self::get_merge_tags(array('WordPress', 'Media'));
-		}
-		else{
-			$default_tags = self::get_merge_tags(array('WordPress'));
-		}
+		$default_tags = self::get_merge_tags(array('WordPress'));
 
-		$tags = $tags + $default_tags;
+		$tags = $default_tags + $tags;
 
 		$merge_tags = array();
 
 		foreach ($tags as $tag_key => $merge_tags_list) {
 			foreach($merge_tags_list as $tag) {
-				if($merge_tag_type != $tag['return_type']){
-					continue;
-				}
 				$merge_tags[$tag_key][$tag['id']] = $tag['label'];
 			}
 		}

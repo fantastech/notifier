@@ -253,8 +253,8 @@ class Notifier_Woocommerce {
 			),
 			'first_product_image' => array(
 				'preview'	=> '',
-				'label' 	=> 'Order product image (first image)',
-				'return_type'	=> 'media',
+				'label' 	=> 'Order product image (first product)',
+				'return_type'	=> 'image',
 				'value'		=> function ($order, $field_function) {
 					foreach($order->get_items() as $item){
 						$first_product_id = $item->get_product_id();
