@@ -8,7 +8,10 @@
     "lint": "npm run -s lint:scripts && npm run -s lint:styles",
     "lint:scripts": "eslint resources/scripts",
     "lint:styles": "stylelint \"resources/**/*.{css,scss}\"",
-    "test": "npm run -s lint"
+    "test": "npm run -s lint",
+    "generate-build-folder": "rsync -av --exclude='build' --exclude='*.git*' --exclude='node_modules' --exclude='vendor' --exclude='resources' --exclude='.*' --exclude='composer.*' --exclude='package*' --exclude='yarn*' --exclude='webpack*' --exclude='phpcs.xml' --exclude='*.DS_Store' * build/notifier",
+    "zip": "(cd build && zip -r notifier.zip notifier)",
+    "deploy": "yarn build; rm -r build/*; yarn generate-build-folder; yarn zip;"
   },
   "engines": {
     "node": "^16.0.0"
