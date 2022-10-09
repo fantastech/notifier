@@ -20,7 +20,7 @@ $activated = get_option(NOTIFIER_PREFIX . 'api_activated');
 			<div class="onboarding">
 				<div class="onboarding-body">
 					<h3>Enter your WANotifier.com API Key</h3>
-					<p>You can find your <b>WANotifier.com API key</b> on your <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings</a> page. If you do have an account yet you can create one for FREE at <a href="https://wanotifier.com/" target="_blank">WANotifier.com</a>.</p>
+					<p>You can find your <b>WANotifier.com API key</b> on your <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings</a> page. If you do not have an account yet you can create one for FREE at <a href="https://wanotifier.com/" target="_blank">WANotifier.com</a>.</p>
 					<form method="POST" action="" enctype="multipart/form-data">
 						<input type="text" name="notifier_api_key" id="wa-notifier-api-key" placeholder="Enter your API key here" value="<?php echo $api_key; ?>" />
 						<button name="webhook_validation" class="button-primary" type="submit" value="">Submit and validate</button>

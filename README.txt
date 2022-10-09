@@ -103,7 +103,7 @@ Here's what you get when you upgrade to **Pro version**:
 * Order is on-hold
 * Order is refunded
 
-Want more triggers for your favorite plugins? Request us (here)[https://wanotifier.com/support/] or contact your developer create custom triggers using filter hooks.
+Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
 
 == Installation ==
 
@@ -114,6 +114,9 @@ Want more triggers for your favorite plugins? Request us (here)[https://wanotifi
 
 == Changelog ==
 
+= 1.0.0 - 2022-10-09 =
+* Converted the plugin to provide integration with WANotifier.com
+
 = 0.1.1 - 2022-08-04 =
 * Fix - Minor bug fixes and code cleanup
 
@@ -122,8 +125,8 @@ Want more triggers for your favorite plugins? Request us (here)[https://wanotifi
 
 == Upgrade Notice ==
 
-= 1.0.0 - 2022-10-03 =
-* Converted the plugin to provide integration for the SaaS tool at WANotifier.com
+= 1.0.0 - 2022-10-09 =
+* Converted the plugin to provide integration with WANotifier.com
 
 = 0.1.1 - 2022-08-04 =
 * Fix - Minor bug fixes and code cleanup
