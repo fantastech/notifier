@@ -27,7 +27,7 @@ class Notifier {
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
-		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.local/api/' );
+		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/' );
 	}
 
 	/**
