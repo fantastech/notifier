@@ -118,11 +118,10 @@ $activated = get_option(NOTIFIER_PREFIX . 'api_activated');
 							<h3>How to?</h3>
 						</div>
 						<div class="dashboard-box-body">
-							<p>On this page, you'll find all the available triggers that you can use to trigger a notification on <a href="https://wanotifier.com/" target="_blank">WANotifier.com</a>.</p>
-							<p>The triggers you enable and save here will be available to use on WANotifier.com when you create a <a href="https://app.wanotifier.com/notifications/add/">new Notification</a>.</p>
-							<p>To learn more about a trigger, click on the <span class="dashicons dashicons-info-outline" style="color: #aaa;"></span> icon next to it.</p>
-							<p>By enabling a trigger you accept and agree that the associated data fields and recipient fields will be sent to our server for use with the message template when sending notifications. We do not store any data other that what is required for sending a notification, all other data received is discarded.</p>
-							<p>Currently we only support the shown <b>WordPress</b> and <b>Woocommerce</b> triggers. To request new triggers, drop us a message on <a href="https://wanotifier.com/support/">our website</a>.</p>
+							<p>On this page, you'll find all the available triggers on this website that you can use to trigger a notification from your <a href="https://wanotifier.com/" target="_blank">WANotifier.com</a> account.</p>
+							<p>The triggers you <b>enable and save</b> here will be available to use on your account when you create a <a href="https://app.wanotifier.com/notifications/add/">new Notification</a>.</p>
+							<p>Currently we only support the shown <b>WordPress</b> and <b>Woocommerce</b> triggers. If you want more triggers, your can request us <a href="https://wanotifier.com/support/">here</a> or contact your developer to add custom triggers using our filter hooks.</p>
+							<p><em><b>Disclaimer:</b> By enabling the triggers you accept and agree that the associated data and recipient fields will be sent to our server for use with the message template when sending notifications. We do not store any data other than what is required for sending a notification.</em></p>
 						</div>
 					</div>
 				</div>

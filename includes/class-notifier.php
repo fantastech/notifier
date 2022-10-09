@@ -168,7 +168,7 @@ class Notifier {
 					<h2><?php echo esc_attr(get_admin_page_title()); ?></h2>
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">
-					<span class="header-version">Version: <?php echo esc_html(NOTIFIER_VERSION); ?> (beta)</span>
+					<span class="header-version">Version: <?php echo esc_html(NOTIFIER_VERSION); ?></span>
 					<a href="https://wanotifier.com/support/" target="_blank">Help</a>
 				</div>
 			</div>

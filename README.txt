@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, bulk messaging, cloud api, notification, notifier, marketing, bulk message, woocommerce
 Requires at least: 5.0
 Tested up to: 6.0.1
-Stable tag: 0.1.1
+Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +84,26 @@ Here's what you get when you upgrade to **Pro version**:
 * Everything in free version
 * Remove our branding from message template footer
 * Fetch your existing message templates from WhatsApp
+
+= Available Triggers =
+
+**WordPress**
+
+* New post is published
+* New comment is added
+* New user is registered
+
+**WooCommerce**
+
+* New order is placed
+* Order status changes to processing
+* Order is completed
+* Order is cancelled
+* Order gets failed
+* Order is on-hold
+* Order is refunded
+
+Want more triggers for your favorite plugins? Request us (here)[https://wanotifier.com/support/] or contact your developer create custom triggers using filter hooks.
 
 == Installation ==
 
