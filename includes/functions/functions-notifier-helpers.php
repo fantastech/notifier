@@ -160,3 +160,10 @@ function notifier_upload_file_by_url( $image_url ) {
 	return $attachment_id;
 
 }
+
+/**
+ * Sanitize phone number
+ */
+function notifier_sanitize_phone_number( $phone_number ) {
+	return preg_replace( '/[^\d+]/', '', $phone_number );
+}

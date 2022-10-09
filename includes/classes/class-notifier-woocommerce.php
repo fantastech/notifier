@@ -29,7 +29,7 @@ class Notifier_Woocommerce {
 				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_new_order',
-					'callback' 	=> function ( $order_id ) {
+					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -48,7 +48,7 @@ class Notifier_Woocommerce {
 				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_processing',
-					'callback' 	=> function ( $order_id ) {
+					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -67,7 +67,7 @@ class Notifier_Woocommerce {
 				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_completed',
-					'callback' 	=> function ( $order_id ) {
+					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -86,7 +86,7 @@ class Notifier_Woocommerce {
 				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_cancelled',
-					'callback' 	=> function ( $order_id ) {
+					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -105,7 +105,7 @@ class Notifier_Woocommerce {
 				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_failed',
-					'callback' 	=> function ( $order_id ) {
+					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -124,7 +124,7 @@ class Notifier_Woocommerce {
 				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_on-hold',
-					'callback' 	=> function ( $order_id ) {
+					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -143,7 +143,7 @@ class Notifier_Woocommerce {
 				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_refunded',
-					'callback' 	=> function ( $order_id ) {
+					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -396,7 +396,7 @@ class Notifier_Woocommerce {
 	 * Get phone number with country extension code
 	 */
 	public static function get_formatted_phone_number( $phone_number, $country_code ) {
-		$phone_number = self::sanitize_phone_number( $phone_number );
+		$phone_number = notifier_sanitize_phone_number( $phone_number );
 		$phone_number = ltrim($phone_number, '0');
 		if ( in_array( $country_code, array( 'US', 'CA' ), true ) ) {
 			$phone_number = ltrim( $phone_number, '+1' );

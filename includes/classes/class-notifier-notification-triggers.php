@@ -80,7 +80,7 @@ class Notifier_Notification_Triggers {
 								'object_type' 	=> 'comment',
 								'object_id'		=> $comment_id
 							);
-							$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') );
+							$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Comment') );
 							self::send_trigger_request($args, $merge_tags);
 						}
 					}
@@ -99,7 +99,7 @@ class Notifier_Notification_Triggers {
 							'object_type' 	=> 'user',
 							'object_id'		=> $user_id
 						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') );
+						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('User') );
 						self::send_trigger_request($args, $merge_tags);
 					}
 				)
@@ -154,8 +154,10 @@ class Notifier_Notification_Triggers {
 			}
 		}
 
-		foreach($recipient_fields as $field){
-			$recipient_data[$field['id']] = self::get_recipient_field_value($field['id'], $context_args);
+		foreach($recipient_fields as $recipient_field){
+			foreach($recipient_field as $field){
+				$recipient_data[$field['id']] = self::get_trigger_recipient_field_value($field['id'], $context_args);
+			}
 		}
 
 		$params = array(
@@ -224,7 +226,25 @@ class Notifier_Notification_Triggers {
 	 * Get recipient_field value
 	 */
 	public static function get_trigger_recipient_field_value($recipient_field, $context_args) {
-
+		$value = '';
+		$main_triggers = self::get_notification_triggers();
+		foreach ($main_triggers as $key => $triggers) {
+			foreach ($triggers as $t) {
+				$recipient_fields = (!empty($t['recipient_fields'])) ? $t['recipient_fields'] : array();
+				if(empty($recipient_fields)){
+					continue;
+				}
+				foreach($recipient_fields as $fields){
+					foreach($fields as $field){
+						if ( isset($field['id']) && $recipient_field == $field['id'] ) {
+							$value = $field['value']($context_args);
+							break 2;
+						}
+					}
+				}
+			}
+		}
+		return $value;
 	}
 
 }
