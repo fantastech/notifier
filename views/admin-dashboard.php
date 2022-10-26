@@ -12,9 +12,6 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 $activated = get_option(NOTIFIER_PREFIX . 'api_activated');
 ?>
 <div class="wrap notifier">
-
-
-
 	<div class="notifier-wrapper">
 		<?php if ('' == $activated) : ?>
 			<div class="onboarding">

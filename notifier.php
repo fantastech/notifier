@@ -3,7 +3,7 @@
  * Plugin Name: WANotifier.com Integration for WordPress and WooCommerce
  * Plugin URI: https://wordpress.org/plugins/notifier/
  * Description: Send bulk WhatsApp messages to your contacts and Woocommerce customers using WhatsApp Cloud API with WANotifier.com.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: WANotifier.com
  * Author URI: https://wanotifier.com
  * Text Domain: notifier
