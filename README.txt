@@ -114,6 +114,12 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 
 == Changelog ==
 
+= 1.0.2 - 2022-10-28 =
+* Fix: firing multiple notifications at the same time
+
+= 1.0.1 - 2022-10-27 =
+* Tested upto WP 6.1
+
 = 1.0.0 - 2022-10-09 =
 * Converted the plugin to provide integration with WANotifier.com
 
@@ -124,6 +130,12 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 1.0.2 - 2022-10-28 =
+* Fix: firing multiple notifications at the same time
+
+= 1.0.1 - 2022-10-27 =
+* Tested upto WP 6.1
 
 = 1.0.0 - 2022-10-09 =
 * Converted the plugin to provide integration with WANotifier.com
