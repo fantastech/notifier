@@ -36,7 +36,7 @@ class Notifier_Woocommerce {
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
 						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('new_order', $args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -55,7 +55,7 @@ class Notifier_Woocommerce {
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
 						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('processing_order', $args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -74,7 +74,7 @@ class Notifier_Woocommerce {
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
 						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('completed_order', $args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -93,7 +93,7 @@ class Notifier_Woocommerce {
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
 						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('cancelled_order', $args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -112,7 +112,7 @@ class Notifier_Woocommerce {
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
 						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('failed_order', $args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -131,7 +131,7 @@ class Notifier_Woocommerce {
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
 						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('on_hold_order', $args, $merge_tags, $recipient_fields);
 					}
 				)
 			),
@@ -150,7 +150,7 @@ class Notifier_Woocommerce {
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
 						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request($args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('refunded_order', $args, $merge_tags, $recipient_fields);
 					}
 				)
 			)

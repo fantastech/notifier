@@ -60,7 +60,7 @@ class Notifier_Notification_Triggers {
 								'object_id'		=> $post->ID
 							);
 							$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Post') );
-							self::send_trigger_request($args, $merge_tags);
+							self::send_trigger_request('new_post', $args, $merge_tags);
 						}
 					}
 				)
@@ -81,7 +81,7 @@ class Notifier_Notification_Triggers {
 								'object_id'		=> $comment_id
 							);
 							$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('Comment') );
-							self::send_trigger_request($args, $merge_tags);
+							self::send_trigger_request('new_comment', $args, $merge_tags);
 						}
 					}
 				)
@@ -100,7 +100,7 @@ class Notifier_Notification_Triggers {
 							'object_id'		=> $user_id
 						);
 						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags( array('User') );
-						self::send_trigger_request($args, $merge_tags);
+						self::send_trigger_request('new_user', $args, $merge_tags);
 					}
 				)
 			)
@@ -140,7 +140,7 @@ class Notifier_Notification_Triggers {
 	/**
 	 * Send triggered notifications
 	 */
-	public static function send_trigger_request($context_args, $merge_tags, $recipient_fields = array()) {
+	public static function send_trigger_request($trigger, $context_args, $merge_tags, $recipient_fields = array()) {
 		if(empty($context_args) || empty($merge_tags)){
 			return false;
 		}
@@ -164,6 +164,7 @@ class Notifier_Notification_Triggers {
 			'action'			=> 'fire_notification',
 			'site_url'			=> site_url(),
 			'source'			=> 'wp',
+			'trigger'			=> $trigger,
 			'merge_tags_data'	=> $data,
 			'recipient_fields'	=> $recipient_data
     	);

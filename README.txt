@@ -1,10 +1,10 @@
-=== WANotifier.com Integration for WordPress and WooCommerce ===
+=== WANotifier - Send Bulk Marketing & Transactional Message Notifications ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, bulk messaging, cloud api, notification, notifier, marketing, bulk message, woocommerce
 Requires at least: 5.0
 Tested up to: 6.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
