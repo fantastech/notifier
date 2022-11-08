@@ -253,15 +253,26 @@ class Notifier_Woocommerce {
 			),
 			'first_product_image' => array(
 				'preview'	=> '',
-				'label' 	=> 'Order product image (first product)',
+				'label' 	=> 'Order product image',
 				'return_type'	=> 'image',
 				'value'		=> function ($order, $field_function) {
+					$image_id = false;
+					$image_url = '';
 					foreach($order->get_items() as $item){
 						$first_product_id = $item->get_product_id();
-						break;
+						$product = wc_get_product( $first_product_id );
+						$image_id = $product->get_image_id();
+						if($image_id){
+							break;
+						}
 					}
-					$product = wc_get_product( $first_product_id );
-	                return wp_get_attachment_url( $product->get_image_id() );
+					if($image_id){
+						$image_url = wp_get_attachment_url( $product->get_image_id() );
+					}
+					else{
+						$image_url = wc_placeholder_img_src();
+					}
+	                return $image_url;
 				}
 			),
 		);
