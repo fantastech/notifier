@@ -27,7 +27,7 @@ class Notifier {
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
-		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
+		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.local/api/v1/' );
 	}
 
 	/**
@@ -186,16 +186,24 @@ class Notifier {
 			return false;
 		}
 
+		if(empty($headers)){
+			$headers = array(
+				'Content-Type' => 'application/json; charset=utf-8'
+			);
+		}
+
 		$request_url = NOTIFIER_APP_API_URL . $endpoint . '?key=' . $api_key;
 		$request_args = array(
 		    'method' 	=> $method,
 		    'headers' 	=> $headers,
 		    'timeout'   => 120,
-		    'body' 		=> $args,
+		    'body' 		=> json_encode($args),
 		    'sslverify'	=> false
 	    );
 
 		$response = wp_remote_request( $request_url, $request_args);
+
+		$response_body = wp_remote_retrieve_body( $response );
 
 		if ( is_wp_error( $response ) ) {
 			error_log( $response->get_error_message() );
