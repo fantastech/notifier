@@ -58,12 +58,11 @@ class Notifier_Dashboard {
 		delete_option('notifier_enabled_triggers');
 
 		$params = array(
-			'action'    => 'verify_api',
 			'site_url'	=> site_url(),
 			'source'	=> 'wp'
     	);
 
-		$response = Notifier::send_api_request( $params, 'POST' );
+		$response = Notifier::send_api_request( 'verify_api', $params, 'POST' );
 
 		if($response->error){
 			$notices[] = array(
@@ -114,13 +113,12 @@ class Notifier_Dashboard {
 		}
 
 		$params = array(
-			'action'	=> 'update_triggers',
 			'site_url'	=> site_url(),
 			'source'	=> 'wp',
 			'triggers'	=> $selected_triggers
     	);
 
-		$response = Notifier::send_api_request( $params, 'POST' );
+		$response = Notifier::send_api_request( 'update_triggers', $params, 'POST' );
 
 		if($response->error){
 			$notices[] = array(

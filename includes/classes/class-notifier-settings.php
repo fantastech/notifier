@@ -327,12 +327,11 @@ class Notifier_Settings {
 				delete_option('notifier_api_activated');
 
 				$params = array(
-					'action'    => 'verify_api',
 					'site_url'	=> site_url(),
 					'source'	=> 'wp'
 		    	);
 
-				$response = Notifier::send_api_request( $params, 'POST' );
+				$response = Notifier::send_api_request( 'verify_api', $params, 'POST' );
 
 				if($response->error){
 					$notices[] = array(

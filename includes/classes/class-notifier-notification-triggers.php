@@ -161,7 +161,6 @@ class Notifier_Notification_Triggers {
 		}
 
 		$params = array(
-			'action'			=> 'fire_notification',
 			'site_url'			=> site_url(),
 			'source'			=> 'wp',
 			'trigger'			=> $trigger,
@@ -169,7 +168,7 @@ class Notifier_Notification_Triggers {
 			'recipient_fields'	=> $recipient_data
     	);
 
-		$response = Notifier::send_api_request( $params, 'POST' );
+		$response = Notifier::send_api_request( 'fire_notification', $params, 'POST' );
 
 		if($response->error){
 			error_log($response->message);

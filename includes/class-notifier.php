@@ -23,11 +23,11 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '1.0.3' );
+		$this->define( 'NOTIFIER_VERSION', '1.0.4' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
-		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/' );
+		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
 	}
 
 	/**
@@ -179,14 +179,14 @@ class Notifier {
 	/**
 	 * For sending API requests
 	 */
-	public static function send_api_request ( $args, $method, $headers = array() ) {
+	public static function send_api_request ( $endpoint, $args, $method = 'POST', $headers = array() ) {
 		$api_key = get_option('notifier_api_key');
 		$api_key = trim($api_key);
 		if('' == $api_key) {
 			return false;
 		}
 
-		$request_url = NOTIFIER_APP_API_URL . $api_key . '/';
+		$request_url = NOTIFIER_APP_API_URL . $endpoint . '?key=' . $api_key;
 		$request_args = array(
 		    'method' 	=> $method,
 		    'headers' 	=> $headers,

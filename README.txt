@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, bulk messaging, cloud api, notification, notifier, marketing, bulk message, woocommerce
 Requires at least: 5.0
 Tested up to: 6.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -114,6 +114,9 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 
 == Changelog ==
 
+= 1.0.4 - 2022-11-10 =
+* New: api enpoint upgrade
+
 = 1.0.3 - 2022-11-08 =
 * Fix: checkout not happening error
 
@@ -133,6 +136,9 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 1.0.4 - 2022-11-10 =
+* New: api enpoint upgrade
 
 = 1.0.3 - 2022-11-08 =
 * Fix: checkout not happening error
