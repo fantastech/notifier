@@ -1,27 +1,31 @@
-=== WANotifier - Send Bulk Marketing & Transactional Message Notifications ===
+=== WANotifier - Send Message Notifications Using Cloud API for WordPress and Woocommerce ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
-Tags: whatsapp, whatsapp cloud api, bulk messaging, cloud api, notification, notifier, marketing, bulk message, woocommerce
+Tags: whatsapp, whatsapp cloud api, cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, whatsapp message, click to chat
 Requires at least: 5.0
-Tested up to: 6.1
-Stable tag: 1.0.4
+Tested up to: 6.1.1
+Stable tag: 1.0.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send bulk WhatsApp messages and transactional notifications to your contacts and Woocommerce customers using WhatsApp's official Cloud API.
+Send WhatsApp message notifications to your contacts and Woocommerce WhatsApp order notifications using WhatsApp Cloud API.
 
 == Description ==
 
-This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you trigger WhatsApp notifications from your website when some action is performed like new user registration, WooCommerce order related actions and much more!
+Send WhatsApp message notifications to your contacts and Woocommerce WhatsApp order notifications using WhatsApp Cloud API.
 
-**Important Note: This plugin requires you to have an account at WANotifier.com to be able to trigger WhatsApp notifications. You can create a *FREE forever account* with us [by clicking here](https://app.wanotifier.com/create-account/).**
+This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you send WhatsApp notifications when some action is performed on your website like new user registration, WooCommerce order related actions and much more!
+
+**Important Note: This plugin requires you to have an account at WANotifier.com to be able to trigger WhatsApp notifications. You can create a *FREE account* with us [by clicking here](https://app.wanotifier.com/create-account/).**
 
 = About WANotifier.com =
 
-WANotifier.com is one of the world's first and only FREE SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using WhatsApp's official [Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
+WANotifier.com is one of the world's first SaaS tools that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using [WhatsApp's official Cloud APIs](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
 
-WhatsApp recently launched its Cloud API to let businesses send WhatsApp messages to customer using their official API. Before this if you had to send bulk WhatsApp messages or notifications, there were only two ways to do it:
+WhatsApp provides Cloud APIs to let businesses send WhatsApp messages to their customers using the APIs.
+
+Earlier, if you had to send WhatsApp messages or notifications, there were only two ways to do it:
 
 1. You either used **hack-y browser extensions or desktop / mobile apps** that would work on top of WhatsApp Web or your WhatsApp phone app to send the messages in a *shady* and [unauthorized](https://faq.whatsapp.com/1104252539917581/) way. This was a good way to get your phone number **banned** by WhatsApp!
 
@@ -29,7 +33,9 @@ WhatsApp recently launched its Cloud API to let businesses send WhatsApp message
 
 But that changes with WANotifier.com!
 
-Now you can send the bulk broadcast messages and transactional notifications using the **official WhatsApp way** but without needing to pay for a costly middle-ware SaaS tools. WANotifier.com uses **WhatsApp's official Cloud API** and acts as a FREE bridge between you and WhatsApp to send messages without limitation or charging you a premium on top of their per conversation cost. You settle your billing directly with them!
+Now you can send the bulk broadcast messages and transactional notifications using the **official WhatsApp way** but without needing to pay a fortune to middle-ware SaaS tools.
+
+WANotifier.com uses **WhatsApp's official Cloud API** and acts as a simple bridge between you and WhatsApp to send messages without limitation or charging you a premium on top of their per conversation cost. You settle your API usage billing directly with them!
 
 *Note:* WhatsApp Cloud API allows you to **send upto 1,000 messages for FREE per month**. After that WhatsApp charges you a small fees per conversation as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/).
 
@@ -43,14 +49,14 @@ If you're looking for a **safe, cost friendly and robust** solution for sending 
 * [Pricing](https://wanotifier.com/pricing/)
 * [Create your FREE account](https://app.wanotifier.com/create-account/)
 
-= WANotifier.com Free Account Features =
+= WANotifier.com Features =
 
-Here's everything that you can do with you FREE account at WANotifier.com
+Here's everything that you can do with WANotifier's SaaS tool:
 
 **General**
 
-* Send unlimited messages (1-way only)
-* Import unlimited contacts
+* Send and receive unlimited messages and replies
+* Add/import unlimited contacts
 * Create and send unlimited notifications
 
 **Create & Manage Message Templates**
@@ -59,33 +65,26 @@ Here's everything that you can do with you FREE account at WANotifier.com
 * Media templates with an image, video or PDF
 * Add call-to-action buttons to your templates
 * Dynamic message templates with variables
+* Fetch your existing message templates from WhatsApp
 
 **Contacts Management**
 
 * Add unlimited contacts
 * Import contacts using CSV
-* Import contacts from 3rd party apps using webhooks (Coming soon)
+* Import contacts from 3rd party apps using webhooks
 
 **Notifications**
 
 * Send unlimited one-way marketing messages
-* Send action-based transactional message notifications (Coming soon)
-* Trigger notifications from 3rd party apps using webhooks (Coming soon)
+* Send action-based transactional message notifications
+* Trigger notifications from 3rd party apps using webhooks
 
 **Inbox**
 
-* Inbox for sending & receiving messages (Coming soon)
+* Inbox for sending & receiving messages
 * Multi-agent support for chat (Coming soon)
 
-**UPGRADE TO PRO VERSION FOR MORE!**
-
-Here's what you get when you upgrade to **Pro version**:
-
-* Everything in free version
-* Remove our branding from message template footer
-* Fetch your existing message templates from WhatsApp
-
-= Available Triggers =
+= Currently Available Triggers =
 
 **WordPress**
 
@@ -114,6 +113,9 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 
 == Changelog ==
 
+= 1.0.5 - 2022-12-26 =
+* New: Improved on-boarding and How to? instructions
+
 = 1.0.4 - 2022-11-10 =
 * New: api enpoint upgrade
 
@@ -136,6 +138,9 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 1.0.5 - 2022-12-26 =
+* New: Improved on-boarding and How to? instructions
 
 = 1.0.4 - 2022-11-10 =
 * New: api enpoint upgrade

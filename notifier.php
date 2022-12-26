@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: WANotifier - Send Bulk Marketing & Transactional Message Notifications
+ * Plugin Name: WANotifier - Send Transactional Notifications Using Cloud API | Chat Button
  * Plugin URI: https://wordpress.org/plugins/notifier/
- * Description: Send bulk WhatsApp messages to your contacts and Woocommerce customers using WhatsApp Cloud API with WANotifier.com.
- * Version: 1.0.4
+ * Description: Send WhatsApp transactional notifications to your contacts and Woocommerce customers using WhatsApp Cloud API.
+ * Version: 1.0.5
  * Author: WANotifier.com
  * Author URI: https://wanotifier.com
  * Text Domain: notifier
