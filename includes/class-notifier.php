@@ -23,11 +23,11 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '1.0.5' );
+		$this->define( 'NOTIFIER_VERSION', '2.0.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
-		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
+		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.local/api/v1/' );
 	}
 
 	/**
@@ -137,7 +137,7 @@ class Notifier {
     	);
     	wp_localize_script(
     		NOTIFIER_NAME . '-admin-js',
-    		'waNotifier',
+    		'notifierObj',
     		apply_filters( 'notifier_js_variables', array('ajaxurl' => admin_url( 'admin-ajax.php' ) ) )
     	);
 
@@ -221,6 +221,23 @@ class Notifier {
 		if ( class_exists( 'WooCommerce' ) ) {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-woocommerce.php';
 			Notifier_Woocommerce::init();
+		}
+
+		if ( ! class_exists( 'WC_Session' ) ) {
+		    include_once( WP_PLUGIN_DIR . '/woocommerce/includes/abstracts/abstract-wc-session.php' );
+		}
+	}
+
+	/**
+	 * Is connection to WANotifier.com active?
+	 */
+	public static function is_api_active () {
+		$activated = get_option(NOTIFIER_PREFIX . 'api_activated');
+		if('yes' == $activated) {
+			return true;
+		}
+		else{
+			return false;
 		}
 	}
 

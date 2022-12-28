@@ -9,11 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
-$activated = get_option(NOTIFIER_PREFIX . 'api_activated');
 ?>
 <div class="wrap notifier">
 	<div class="notifier-wrapper">
-		<?php if ('' == $activated) : ?>
+		<?php if (!Notifier::is_api_active()) : ?>
 			<div class="onboarding">
 				<div class="onboarding-body">
 					<h3>Let's Get Started</h3>

@@ -2,6 +2,10 @@
 	display: none !important;
 }
 
+.small {
+	font-size: 85%;
+}
+
 .d-block {
 	display: block !important;
 }
@@ -83,6 +87,10 @@
 
 .w-100 {
 	flex: 1 0 100%;
+}
+
+.w-auto {
+	width: auto !important;
 }
 
 .rounded {

@@ -30,11 +30,12 @@
 	.form-field {
 		position: relative;
 
-		label,
-		legend {
+		label.form-label,
+    	legend {
+    		font-size: 14px;
+    		font-weight: 500;
 			display: block;
 			margin-bottom: 5px;
-			width: calc(100% - 20px);
 		}
 
 		label .limit-text {
@@ -46,7 +47,7 @@
 		input[type="password"],
 		textarea,
 		select {
-			width: calc(100% - 20px);
+			width: 100%;
 			max-width: 100%;
 
 			@include media-down(mobile) {
@@ -162,4 +163,67 @@
 .notifier-notice {
     margin-top: 20px;
     margin-left: 0px;
+}
+
+table.wp-list-table {
+	border: 1px solid #eee;
+	box-shadow: none;
+	border-radius: 8px;
+
+	thead td,
+	thead th {
+	    padding-top: 5px !important;
+	    padding-bottom: 5px !important;
+    	border-bottom: 1px solid #eee;
+	}
+
+	tfoot td,
+	tfoot th {
+	    padding-top: 5px !important;
+	    padding-bottom: 5px !important;
+    	border-top: 1px solid #eee;
+	}
+}
+
+.notifier-toggle-switch {
+  	input[type="checkbox"] {
+	    position: relative;
+	    appearance: none;
+	    width: 32px;
+	    height: 16px;
+	    background: #ccc;
+	    border-radius: 40px;
+	    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+	    cursor: pointer;
+	    transition: 0.2s;
+	    border: none;
+	    outline: none;
+	}
+
+	input:checked[type="checkbox"] {
+		appearance: none;
+	    background: #00c417;
+	}
+
+	input[type="checkbox"]::before {
+		content: none;
+	}
+
+	input[type="checkbox"]::after {
+	    position: absolute;
+	    content: "";
+	    width: 16px;
+	    height: 16px;
+	    top: 0;
+	    left: 0;
+	    background: #fff;
+	    border-radius: 50%;
+	    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+	    transform: scale(1.1);
+	    transition: 0.2s;
+	}
+
+	input:checked[type="checkbox"]::after {
+	    left: 50%;
+	}
 }

@@ -1,0 +1,56 @@
+.post-type-wa_notifier_trigger{
+	#minor-publishing-actions #save-action,
+	#misc-publishing-actions {
+		display: none;
+	}
+
+	#minor-publishing-actions {
+	  padding: 15px 10px;
+	  text-align: left;
+	}
+
+	.trigger-fields-wrap {
+    	margin: 1em 0;
+	}
+
+	.notifier-trigger-merge-tags {
+	    margin-bottom: 5px;
+
+		.notifier-merge-tags-wrap {
+			background: #f7f7f7;
+			padding: 10px;
+			border: 1px solid #eeeeee;
+			border-radius: 10px;
+
+			.notifier-merge-tags {
+				flex-wrap: nowrap;
+				margin-bottom: 5px;
+
+				@include media-down(mobile) {
+					flex-wrap: wrap;
+				}
+
+				legend.form-label {
+					font-size: 13px;
+					min-width: 120px;
+					max-width: 120px;
+					font-weight: 500;
+					margin-bottom: 10px;
+				}
+
+				.multi-checkbox-wrapper {
+					flex-grow: 1;
+					.form-check {
+						display: inline-block;
+						margin-right: 10px;
+						margin-bottom: 5px;
+
+						.form-check-label {
+							width: auto;
+						}
+					}
+				}
+			}
+		}
+	}
+}

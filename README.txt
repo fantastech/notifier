@@ -4,16 +4,16 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, whatsapp message, click to chat
 Requires at least: 5.0
 Tested up to: 6.1.1
-Stable tag: 1.0.5
+Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send WhatsApp message notifications and Woocommerce WhatsApp order notifications using WhatsApp Cloud API.
+Send WhatsApp message notifications and Woocommerce WhatsApp order notifications using the official WhatsApp Cloud APIs.
 
 == Description ==
 
-Send WhatsApp message notifications and Woocommerce WhatsApp order notifications using WhatsApp Cloud API.
+Send WhatsApp message notifications and Woocommerce WhatsApp order notifications using the official WhatsApp Cloud APIs.
 
 This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you send WhatsApp notifications when some action is performed on your website like new user registration, WooCommerce order related actions and much more!
 
@@ -113,6 +113,9 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 
 == Changelog ==
 
+= 2.0.0 - 2022-12-28 =
+* Major UI/UX upgrade with breaking changes
+
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions
 
@@ -138,6 +141,9 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.0.0 - 2022-12-28 =
+* Major UI/UX upgrade with breaking changes
 
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions

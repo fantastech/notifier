@@ -12,12 +12,17 @@ class Notifier_Settings {
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'admin_init', array( __CLASS__ , 'save_settings_fields' ) );
+        add_action( 'admin_init', array( __CLASS__ , 'disconnect_notifier' ) );
 	}
 
 	/**
 	 * Add settings page to men
 	 */
 	public static function setup_admin_page () {
+		if (!Notifier::is_api_active()){
+			return;
+		}
+
 		add_submenu_page( NOTIFIER_NAME, 'Settings', 'Settings', 'manage_options', NOTIFIER_NAME . '-settings', array( __CLASS__, 'output' ) );
 	}
 
@@ -50,12 +55,14 @@ class Notifier_Settings {
 	 * Settings fields
 	 */
 	private static function settings_fields($tab) {
-		$activated = get_option(NOTIFIER_PREFIX . 'api_activated');
-		if('yes' == $activated) {
-			$description = 'You are successfully connected to WANotifier.com.';
+		$api_key = get_option(NOTIFIER_PREFIX . 'api_key');
+		if(Notifier::is_api_active() && '' != $api_key) {
+			$disabled = true;
+			$description = 'You are successfully connected to WANotifier.com. <a href="?notifier_disconnect=1">Disconnect</a>.';
 		}
 		else{
-			$description = 'You are not connected to WANotifier.com yet. Please enter valid API key and save the settings.';
+			$disabled = false;
+			$description = 'You are not connected to WANotifier.com yet. Please enter valid API key and save the settings. You can get your WANotifier.com API Key from <a href="https://app.wanotifier.com/settings/api/" target="_blank">here</a>.';
 		}
 		$settings = array();
 		switch ($tab) {
@@ -72,7 +79,8 @@ class Notifier_Settings {
 						'type'			=> 'text',
 						'placeholder'	=> 'Enter your WANotifier.com API key here',
 						'default'		=> '',
-						'description'	=> $description
+						'description'	=> $description,
+						'disabled'		=> $disabled
 					),
 				);
 				break;
@@ -100,6 +108,23 @@ class Notifier_Settings {
 			}
 		}
 
+		$custom_attributes = array();
+		if ( ! empty( $field['custom_attributes'] ) && is_array( $field['custom_attributes'] ) ) {
+			foreach ( $field['custom_attributes'] as $attribute => $value ) {
+				$custom_attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $value ) . '"';
+			}
+		}
+
+		if ( isset($field['required']) && $field['required'] ) {
+			$custom_attributes[] = 'required="required"';
+		}
+
+		if ( isset($field['disabled']) && $field['disabled'] ) {
+			$custom_attributes[] = 'disabled="disabled"';
+		}
+
+		$custom_attributes_string = implode( ' ', $custom_attributes );
+
 		if ( 'title' === $field['type']) {
 			$html .= '<tr><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
 			$html .= '<p>' . $field['description'] . '</p></th></tr>';
@@ -113,11 +138,11 @@ class Notifier_Settings {
 				case 'text':
 				case 'password':
 				case 'number':
-					$html .= '<input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '"/>';
+					$html .= '<input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '" '.$custom_attributes_string.'/>';
 				    break;
 
 				case 'textarea':
-					$html .= '<textarea id="' . esc_attr( $option_name ) . '" rows="5" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '">' . $data . '</textarea><br/>';
+					$html .= '<textarea id="' . esc_attr( $option_name ) . '" rows="5" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" '.$custom_attributes_string.'>' . $data . '</textarea><br/>';
 				    break;
 
 				case 'checkbox':
@@ -125,7 +150,7 @@ class Notifier_Settings {
 					if ( $option && 'on' == $option ) {
 						$checked = 'checked="checked"';
 					}
-					$html .= '<label><input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" ' . $checked . '/>' . $field['label'] . '</label>';
+					$html .= '<label><input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" ' . $checked . ' '.$custom_attributes_string.'/>' . $field['label'] . '</label>';
 				    break;
 
 				case 'checkbox_multi':
@@ -134,7 +159,7 @@ class Notifier_Settings {
 						if ( in_array( $k, $data ) ) {
 							$checked = true;
 						}
-						$html .= '<p><label for="' . esc_attr( $field['id'] . '_' . $k ) . '"><input type="checkbox" ' . checked( $checked, true, false ) . ' name="' . esc_attr( $option_name ) . '[]" value="' . esc_attr( $k ) . '" id="' . esc_attr( $option_name . '_' . $k ) . '" /> ' . $v . '</label></p>';
+						$html .= '<p><label for="' . esc_attr( $field['id'] . '_' . $k ) . '"><input type="checkbox" ' . checked( $checked, true, false ) . ' name="' . esc_attr( $option_name ) . '[]" value="' . esc_attr( $k ) . '" id="' . esc_attr( $option_name . '_' . $k ) . '" '.$custom_attributes_string.'/> ' . $v . '</label></p>';
 					}
 				    break;
 
@@ -144,12 +169,12 @@ class Notifier_Settings {
 						if ( $k == $data ) {
 							$checked = true;
 						}
-						$html .= '<p><label for="' . esc_attr( $field['id'] . '_' . $k ) . '"><input type="radio" ' . checked( $checked, true, false ) . ' name="' . esc_attr( $option_name ) . '" value="' . esc_attr( $k ) . '" id="' . esc_attr( $option_name . '_' . $k ) . '" /> ' . $v . '</label></p>';
+						$html .= '<p><label for="' . esc_attr( $field['id'] . '_' . $k ) . '"><input type="radio" ' . checked( $checked, true, false ) . ' name="' . esc_attr( $option_name ) . '" value="' . esc_attr( $k ) . '" id="' . esc_attr( $option_name . '_' . $k ) . '" '.$custom_attributes_string.'/> ' . $v . '</label></p>';
 					}
 				    break;
 
 				case 'select':
-					$html .= '<select name="' . esc_attr( $option_name ) . '" id="' . esc_attr( $field['id'] ) . '">';
+					$html .= '<select name="' . esc_attr( $option_name ) . '" id="' . esc_attr( $field['id'] ) . '" '.$custom_attributes_string.'>';
 					foreach ( $field['options'] as $k => $v ) {
 						$selected = false;
 						if ( $k == $data ) {
@@ -161,7 +186,7 @@ class Notifier_Settings {
 				    break;
 
 				case 'select_multi':
-					$html .= '<select name="' . esc_attr( $option_name ) . '[]" id="' . esc_attr( $field['id'] ) . '" multiple="multiple">';
+					$html .= '<select name="' . esc_attr( $option_name ) . '[]" id="' . esc_attr( $field['id'] ) . '" multiple="multiple" '.$custom_attributes_string.'>';
 					foreach ( $field['options'] as $k => $v ) {
 						$selected = false;
 						if ( in_array( $k, $data ) ) {
@@ -227,7 +252,7 @@ class Notifier_Settings {
 			}
 
 			if ( '' != $field['description'] ) {
-				$html .= '<p class="description">' . esc_html($field['description']) . '</p>';
+				$html .= '<p class="description">' . wp_kses_post($field['description']) . '</p>';
 			}
 		}
 
@@ -278,6 +303,10 @@ class Notifier_Settings {
 				continue;
 			}
 
+			if ( isset( $option['disabled'] ) && $option['disabled'] ) {
+				continue;
+			}
+
 			$option_name  = NOTIFIER_PREFIX . $option['id'];
 			$setting_name = '';
 			$raw_value    = isset( $data[ $option_name ] ) ? wp_unslash( $data[ $option_name ] ) : null;
@@ -322,9 +351,13 @@ class Notifier_Settings {
 		foreach ( $update_options as $name => $value ) {
 			if('notifier_api_key' == $name){
 				$current_api_key = get_option($name);
-				update_option('notifier_api_key', $value);
-				delete_option('notifier_enabled_triggers');
-				delete_option('notifier_api_activated');
+				if($current_api_key == $value){
+					continue;
+				}
+
+				update_option( NOTIFIER_PREFIX . 'api_key', $value);
+				delete_option( NOTIFIER_PREFIX . 'enabled_triggers' );
+				delete_option( NOTIFIER_PREFIX . 'api_activated' );
 
 				$params = array(
 					'site_url'	=> site_url(),
@@ -360,6 +393,23 @@ class Notifier_Settings {
 		}
 
 		new Notifier_Admin_Notices($notices);
+	}
+
+	/**
+	 * Disconnect WANotifier.com connection
+	 */
+	public static function disconnect_notifier(){
+		if(isset($_GET['notifier_disconnect']) && '1' == $_GET['notifier_disconnect']){
+			delete_option( NOTIFIER_PREFIX . 'api_key' );
+			delete_option( NOTIFIER_PREFIX . 'enabled_triggers' );
+			delete_option( NOTIFIER_PREFIX . 'api_activated' );
+			$notices[] = array(
+				'message' => 'Disconnected successfully. To re-connect with WANotifier.com, enter API key below and click on <b>Save and validate</b>.',
+				'type' => 'success'
+			);
+			new Notifier_Admin_Notices($notices, true);
+			wp_redirect(admin_url('admin.php?page=notifier'));
+		}
 	}
 
 }
