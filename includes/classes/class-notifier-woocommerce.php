@@ -34,7 +34,7 @@ class Notifier_Woocommerce {
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
 						);
-						Notifier_Notification_Triggers::send_trigger_request('new_order', $args);
+						Notifier_Notification_Triggers::send_trigger_request('woo_order_new', $args);
 					}
 				)
 			)
