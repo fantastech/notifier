@@ -1,7 +1,7 @@
 === WANotifier - Send Message Notifications Using Cloud API ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
-Tags: whatsapp, whatsapp cloud api, cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, whatsapp message, click to chat
+Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, gravity forms whatsapp, contact form 7 whatsapp, click to chat
 Requires at least: 5.0
 Tested up to: 6.1.1
 Stable tag: 2.0.0
@@ -9,19 +9,48 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send WhatsApp message notifications and Woocommerce WhatsApp order notifications using the official WhatsApp Cloud APIs.
+Send WhatsApp message notifications for Woocommerce orders, Gravity Forms and Contact Form 7 subsmissions using the official WhatsApp Cloud APIs.
 
 == Description ==
 
-Send WhatsApp message notifications and Woocommerce WhatsApp order notifications using the official WhatsApp Cloud APIs.
+**Send WhatsApp message notifications** for _Woocommerce_ orders, _Gravity Forms_ and _Contact Form 7_ subsmissions using the official **WhatsApp Cloud APIs**.
 
-This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you send WhatsApp notifications when some action is performed on your website like new user registration, WooCommerce order related actions and much more!
+This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you send WhatsApp notifications when some action is performed on your website like new user registration, WooCommerce order related actions, form submissions and much more!
 
 **Important Note: This plugin requires you to have an account at WANotifier.com to be able to trigger WhatsApp notifications. You can create a *FREE account* with us [by clicking here](https://app.wanotifier.com/create-account/).**
 
+= What you can do with this plugin? =
+
+**WordPress**
+
+* Send WhatsApp notification when a **new post is published**
+* Send WhatsApp notification when a **new comment is added**
+* Send WhatsApp notification when a **new user is registered**
+
+**WooCommerce**
+
+* Send WhatsApp notification when a **new WooCommerce order is placed**
+* Send WhatsApp notification when **order status changes to processing**
+* Send WhatsApp notification when **order status changes to completed**
+* Send WhatsApp notification when **order status changes to cancelled**
+* Send WhatsApp notification when **order status changes to failed**
+* Send WhatsApp notification when **order status changes to on-hold**
+* Send WhatsApp notification when **order status changes to refunded**
+* Send WhatsApp notification for any custom added order status
+
+**Gravity Forms**
+
+* Send WhatsApp notifications when a **Gravity Forms form is submitted**
+
+**Contact Form 7**
+
+* Send WhatsApp notifications when a **Contact Form 7 form is submitted**
+
+Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
+
 = About WANotifier.com =
 
-WANotifier.com is one of the world's first SaaS tools that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using [WhatsApp's official Cloud APIs](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
+WANotifier.com is one of it's kind SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using [WhatsApp's official Cloud APIs](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
 
 WhatsApp provides Cloud APIs to let businesses send WhatsApp messages to their customers using the APIs.
 
@@ -84,31 +113,6 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Inbox for sending & receiving messages
 * Multi-agent support for chat (Coming soon)
 
-= Currently Available Triggers =
-
-**WordPress**
-
-* Send WhatsApp notification when a *new post is published*
-* Send WhatsApp notification when a *new comment is added*
-* Send WhatsApp notification when a *new user is registered*
-
-**WooCommerce**
-
-* Send WhatsApp notification when a *new WooCommerce order is placed*
-* Send WhatsApp notification when *WooCommerce order status changes to processing*
-* Send WhatsApp notification when *WooCommerce order status changes to completed*
-* Send WhatsApp notification when *WooCommerce order status changes to cancelled*
-* Send WhatsApp notification when *WooCommerce order status changes to failed*
-* Send WhatsApp notification when *WooCommerce order status changes to on-hold
-* Send WhatsApp notification when *WooCommerce order status changes to refunded*
-* Send WhatsApp notification for any custom added order status
-
-**Gravity Forms**
-
-* Send WhatsApp notifications on ***Gravity Forms** form submission*
-
-Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
-
 == Installation ==
 
 1. Download the plugin zip, upload it to the `/wp-content/plugins/` directory and unzip. Or install the plugin via 'Plugins' page in your WordPress backend.
@@ -118,10 +122,11 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 
 == Changelog ==
 
-= 2.0.0 - 2022-12-28 =
-* Major plugin upgrade with new way to manage triggers
+= 2.0.0 - 2022-12-30 =
+* Major upgrade with new way to manage triggers
 * Added ability to use custom Woocommerce order statuses.
 * Send WhatsApp notifications on Gravity Forms form submission.
+* Send WhatsApp notifications on Contact Form 7 form submission.
 
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions
@@ -149,10 +154,11 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 
 == Upgrade Notice ==
 
-= 2.0.0 - 2022-12-28 =
-* Major plugin upgrade with new way to manage triggers
+= 2.0.0 - 2022-12-30 =
+* Major upgrade with new way to manage triggers
 * Added ability to use custom Woocommerce order statuses.
 * Send WhatsApp notifications on Gravity Forms form submission.
+* Send WhatsApp notifications on Contact Form 7 form submission.
 
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions
