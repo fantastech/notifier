@@ -85,10 +85,12 @@ class Notifier {
 		add_action( 'plugins_loaded', array( 'Notifier_Notification_Triggers', 'init' ) );
 		add_action( 'plugins_loaded', array( 'Notifier_Settings', 'init' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_include_woocoomerce_class' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_include_integrations' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
+
+		add_action( 'in_plugin_update_message-notifier/notifier.php', array( $this , 'plugin_upgrade_message' ) );
 	}
 
 	/**
@@ -217,7 +219,7 @@ class Notifier {
 	/**
 	 * Load Woocommerce class if it's present is activated
 	 */
-	public static function maybe_include_woocoomerce_class () {
+	public static function maybe_include_integrations () {
 		if ( class_exists( 'WooCommerce' ) ) {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-woocommerce.php';
 			Notifier_Woocommerce::init();
@@ -225,6 +227,11 @@ class Notifier {
 
 		if ( ! class_exists( 'WC_Session' ) ) {
 		    include_once( WP_PLUGIN_DIR . '/woocommerce/includes/abstracts/abstract-wc-session.php' );
+		}
+
+		if ( class_exists( 'GFCommon' ) ) {
+			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-gravityforms.php';
+			Notifier_GravityForms::init();
 		}
 	}
 
@@ -238,6 +245,15 @@ class Notifier {
 		}
 		else{
 			return false;
+		}
+	}
+
+	/**
+	 * Plugin upgrade notice on Plugins page
+	 */
+	public static function plugin_upgrade_message () {
+		if(version_compare(NOTIFIER_VERSION,'1.0.5', '<=') ){
+			echo '<br><br><b>HEADS UP! Major update ahead.</b><br><br>v2.0.0 introduces major plugin updates. You\'ll need to <b>re-configure your triggers</b> after you upgrade to make sure the notifications are fired correctly.';
 		}
 	}
 

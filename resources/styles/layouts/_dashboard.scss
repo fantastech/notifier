@@ -2,6 +2,7 @@
 	max-width: 600px;
 	margin: 0 auto;
 	background: #fff;
+	border-radius: 10px;
 	box-shadow: 0 8px 8px 0 rgb(85 93 102 / 10%);
 
 	.onboarding-head {
@@ -11,7 +12,7 @@
 		h1,
 		h2,
 		h3 {
-			margin-top: 0;
+			margin: 0;
 		}
 
 		p {
@@ -24,8 +25,13 @@
 
 		h1,
 		h2,
-		h3 {
+		h3,
+		p:first-child {
 			margin-top: 0;
+		}
+
+		p:last-child {
+			margin-bottom: 0;
 		}
 	}
 
@@ -43,7 +49,6 @@
 
 	.col {
 		padding: 0 10px;
-		margin-bottom: 20px;
 	}
 
 	& > .col:not(.w-100) {
@@ -212,4 +217,23 @@
 		}
 	}
 
+}
+
+.notifier-overview-image {
+	float: right;
+	display: inline-block;
+
+	img {
+		width: 100%;
+		height: auto;
+		max-width: 200px;
+	}
+
+	@include media-down (mobile) {
+		float: none;
+
+		img {
+			max-width: none;
+		}
+	}
 }

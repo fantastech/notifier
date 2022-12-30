@@ -22,139 +22,50 @@ class Notifier_Woocommerce {
 		$merge_tag_types = array('WooCommerce', 'WooCommerce Order', 'WooCommerce Customer');
 		$triggers = array (
 			array(
-				'id'			=> 'new_order',
+				'id'			=> 'woo_order_new',
 				'label' 		=> 'New order is placed',
 				'description'	=> 'Trigger notification when a new order is placed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
+				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_new_order',
-					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
+					'callback' 	=> function ( $order_id ){
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
 						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request('new_order', $args, $merge_tags, $recipient_fields);
-					}
-				)
-			),
-			array(
-				'id'			=> 'processing_order',
-				'label' 		=> 'Order status changes to processing',
-				'description'	=> 'Trigger notification when status of an order changes to Processing.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
-				'action'		=> array(
-					'hook'		=> 'woocommerce_order_status_processing',
-					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
-						$args = array (
-							'object_type' 	=> 'order',
-							'object_id'		=> $order_id
-						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request('processing_order', $args, $merge_tags, $recipient_fields);
-					}
-				)
-			),
-			array(
-				'id'			=> 'completed_order',
-				'label' 		=> 'Order is completed',
-				'description'	=> 'Trigger notification when status of an order changes to Completed.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
-				'action'		=> array(
-					'hook'		=> 'woocommerce_order_status_completed',
-					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
-						$args = array (
-							'object_type' 	=> 'order',
-							'object_id'		=> $order_id
-						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request('completed_order', $args, $merge_tags, $recipient_fields);
-					}
-				)
-			),
-			array(
-				'id'			=> 'cancelled_order',
-				'label' 		=> 'Order is cancelled',
-				'description'	=> 'Trigger notification when status of an order changes to Cancelled.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
-				'action'		=> array(
-					'hook'		=> 'woocommerce_order_status_cancelled',
-					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
-						$args = array (
-							'object_type' 	=> 'order',
-							'object_id'		=> $order_id
-						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request('cancelled_order', $args, $merge_tags, $recipient_fields);
-					}
-				)
-			),
-			array(
-				'id'			=> 'failed_order',
-				'label' 		=> 'Order gets failed',
-				'description'	=> 'Trigger notification when status of an order changes to Failed.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
-				'action'		=> array(
-					'hook'		=> 'woocommerce_order_status_failed',
-					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
-						$args = array (
-							'object_type' 	=> 'order',
-							'object_id'		=> $order_id
-						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request('failed_order', $args, $merge_tags, $recipient_fields);
-					}
-				)
-			),
-			array(
-				'id'			=> 'on_hold_order',
-				'label' 		=> 'Order is on-hold',
-				'description'	=> 'Trigger notification when status of an order changes to On-hold.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
-				'action'		=> array(
-					'hook'		=> 'woocommerce_order_status_on-hold',
-					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
-						$args = array (
-							'object_type' 	=> 'order',
-							'object_id'		=> $order_id
-						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request('on_hold_order', $args, $merge_tags, $recipient_fields);
-					}
-				)
-			),
-			array(
-				'id'			=> 'refunded_order',
-				'label' 		=> 'Order is refunded',
-				'description'	=> 'Trigger notification when status of an order changes to Refunded.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce')),
-				'action'		=> array(
-					'hook'		=> 'woocommerce_order_status_refunded',
-					'callback' 	=> function ( $order_id ) use ($merge_tag_types) {
-						$args = array (
-							'object_type' 	=> 'order',
-							'object_id'		=> $order_id
-						);
-						$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types);
-						$recipient_fields = Notifier_Notification_Triggers::get_recipient_fields(array('WooCommerce'));
-						Notifier_Notification_Triggers::send_trigger_request('refunded_order', $args, $merge_tags, $recipient_fields);
+						Notifier_Notification_Triggers::send_trigger_request('new_order', $args);
 					}
 				)
 			)
 		);
+
+		$statuses = wc_get_order_statuses();
+		foreach($statuses as $key => $status){
+			$status_slug = str_replace('wc-','', $key);
+			if(in_array($status_slug, array('checkout-draft'))){
+				continue;
+			}
+			$trigger_id = 'woo_order_' . $status_slug;
+			$triggers[] = array(
+				'id'			=> $trigger_id,
+				'label' 		=> 'Order status changes to ' . $status,
+				'description'	=> 'Trigger notification when status of an order changes to ' . $status . '.',
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
+				'action'		=> array(
+					'hook'		=> 'woocommerce_order_status_' . $status_slug,
+					'callback' 	=> function ( $order_id ) use ($trigger_id) {
+						$args = array (
+							'object_type' 	=> 'order',
+							'object_id'		=> $order_id
+						);
+						Notifier_Notification_Triggers::send_trigger_request($trigger_id, $args);
+					}
+				)
+			);
+		}
+
 		return $triggers;
 	}
 

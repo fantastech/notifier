@@ -105,7 +105,7 @@
 	padding: 20px;
 }
 
-.truncate-string {
+.text-truncate {
 	display: block;
 	white-space: nowrap;
 	overflow: hidden;
@@ -126,6 +126,14 @@
 
 .ms-auto {
 	margin-left: auto;
+}
+
+.mt-0 {
+	margin-top: 0px;
+}
+
+.mb-0 {
+	margin-bottom: 0px;
 }
 
 .loader {

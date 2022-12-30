@@ -187,10 +187,12 @@
 
 		// Highlight menu items
 		const wan_menu_elem = $('#toplevel_page_notifier');
+		const wan_menu_elem_a = $('#toplevel_page_notifier > a');
 		const notifier_cpts = ['wa_notifier_trigger'];
 		const current_cpt = $('#notifier-admin-header').data('post-type') || '';
 		if (notifier_cpts.includes(current_cpt)) {
-			wan_menu_elem.removeClass('wp-not-current-submenu').addClass('wp-has-current-submenu');
+			wan_menu_elem.removeClass('wp-not-current-submenu').addClass('wp-has-current-submenu wp-menu-open');
+			wan_menu_elem_a.removeClass('wp-not-current-submenu').addClass('wp-has-current-submenu wp-menu-open');
 		}
 
 		// Toggle trigger info

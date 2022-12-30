@@ -88,19 +88,20 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 **WordPress**
 
-* New post is published
-* New comment is added
-* New user is registered
+* Send WhatsApp notification when a *new post is published*
+* Send WhatsApp notification when a *new comment is added*
+* Send WhatsApp notification when a *new user is registered*
 
 **WooCommerce**
 
-* New order is placed
-* Order status changes to processing
-* Order is completed
-* Order is cancelled
-* Order gets failed
-* Order is on-hold
-* Order is refunded
+* Send WhatsApp notification when a *new WooCommerce order is placed*
+* Send WhatsApp notification when *WooCommerce order status changes to processing*
+* Send WhatsApp notification when *WooCommerce order status changes to completed*
+* Send WhatsApp notification when *WooCommerce order status changes to cancelled*
+* Send WhatsApp notification when *WooCommerce order status changes to failed*
+* Send WhatsApp notification when *WooCommerce order status changes to on-hold
+* Send WhatsApp notification when *WooCommerce order status changes to refunded*
+* Send WhatsApp notification for any custom added order status
 
 Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
 
@@ -114,7 +115,8 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 == Changelog ==
 
 = 2.0.0 - 2022-12-28 =
-* Major UI/UX upgrade with breaking changes
+* Major plugin upgrade with new way to manage triggers
+* Added ability to use custom Woocommerce order statuses.
 
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions
@@ -143,7 +145,8 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 == Upgrade Notice ==
 
 = 2.0.0 - 2022-12-28 =
-* Major UI/UX upgrade with breaking changes
+* Major plugin upgrade with new way to manage triggers
+* Added ability to use custom Woocommerce order statuses.
 
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions

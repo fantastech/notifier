@@ -22,7 +22,10 @@ class Notifier_Notification_Merge_Tags {
 	 */
 	public static function get_merge_tags($types = array()) {
 		$merge_tags = array();
-		$merge_tags['WordPress'] = array(
+		$merge_tags = apply_filters('notifier_notification_merge_tags', $merge_tags);
+
+		$final_merge_tags = array();
+		$final_merge_tags['WordPress'] = array(
 			array(
 				'id' 			=> 'site_title',
 				'label' 		=> 'Site title',
@@ -98,16 +101,11 @@ class Notifier_Notification_Merge_Tags {
 			)
 		);
 
-		$merge_tags = apply_filters('notifier_notification_merge_tags', $merge_tags);
-
-		$final_merge_tags = array();
-
-		if (empty($types)) {
-			$final_merge_tags = $merge_tags;
-		} else {
-			foreach ($types as $type) {
-				$final_merge_tags[$type] = $merge_tags[$type];
+		foreach ($types as $type) {
+			if( 'WordPress' == $type) {
+				continue;
 			}
+			$final_merge_tags[$type] = $merge_tags[$type];
 		}
 
 		return $final_merge_tags;
@@ -412,11 +410,6 @@ class Notifier_Notification_Merge_Tags {
 			}
 		}
 
-		// Default merge tags
-		$default_tags = self::get_merge_tags(array('WordPress'));
-
-		$tags = $default_tags + $tags;
-
 		$merge_tags = array();
 
 		foreach ($tags as $tag_key => $merge_tags_list) {
@@ -432,18 +425,94 @@ class Notifier_Notification_Merge_Tags {
 	 * Return notification merge tag value for supplied trigger and object
 	 */
 	public static function get_trigger_merge_tag_value($tag_id, $context_args) {
-		$merge_tags = self::get_merge_tags();
-		foreach ($merge_tags as $tags) {
-			foreach ($tags as $tag) {
-				if ($tag['id'] == $tag_id) {
-					$the_tag = $tag;
+		$value = '';
+		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
+		foreach ($main_triggers as $key => $triggers) {
+			foreach ($triggers as $t) {
+				$merge_tags = (!empty($t['merge_tags'])) ? $t['merge_tags'] : array();
+				if(empty($merge_tags)){
+					continue;
+				}
+				foreach($merge_tags as $tags){
+					foreach($tags as $tag){
+						if ( isset($tag['id']) && $tag_id == $tag['id'] ) {
+							$value = $tag['value']($context_args);
+							break 2;
+						}
+					}
+				}
+			}
+		}
+		return $value;
+	}
+
+	/*
+	 * Get recipient fields
+	 */
+	public static function get_recipient_fields($types = array()){
+		$recipient_fields = array();
+		$recipient_fields = apply_filters('notifier_notification_recipient_fields', $recipient_fields);
+
+		$final_recipient_fields = array();
+
+		if (empty($types)) {
+			$final_recipient_fields = $recipient_fields;
+		} else {
+			foreach ($types as $type) {
+				$final_recipient_fields[$type] = $recipient_fields[$type];
+			}
+		}
+
+		return $recipient_fields;
+	}
+
+	/*
+	 * Get trigger recipient fields
+	 */
+	public static function get_trigger_recipient_fields($trigger){
+		$recipient_fields = array();
+		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
+		foreach ($main_triggers as $key => $triggers) {
+			foreach ($triggers as $t) {
+				if ( $trigger == $t['id'] ) {
+					$recipient_fields = $t['recipient_fields'];
 					break 2;
 				}
 			}
 		}
-		$value = trim($the_tag['value']($context_args));
-		if ('' == $value) {
-			$value = ' ';
+
+		$final_fields = array();
+
+		foreach ($recipient_fields as $field_key => $recipient_fields_list) {
+			foreach($recipient_fields_list as $field) {
+				$final_fields[$field_key][$field['id']] = $field['label'];
+			}
+		}
+
+		return $final_fields;
+	}
+
+	/**
+	 * Get recipient_field value
+	 */
+	public static function get_trigger_recipient_field_value($recipient_field, $context_args) {
+		$value = '';
+		$main_triggers = Notifier_Notification_Triggers::get_notification_triggers();
+		foreach ($main_triggers as $key => $triggers) {
+			foreach ($triggers as $t) {
+				$recipient_fields = (!empty($t['recipient_fields'])) ? $t['recipient_fields'] : array();
+				if(empty($recipient_fields)){
+					continue;
+				}
+				foreach($recipient_fields as $fields){
+					foreach($fields as $field){
+						if ( isset($field['id']) && $recipient_field == $field['id'] ) {
+							$value = notifier_sanitize_phone_number($field['value']($context_args));
+							break 2;
+						}
+					}
+				}
+			}
 		}
 		return $value;
 	}
