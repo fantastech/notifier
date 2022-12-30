@@ -103,6 +103,10 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Send WhatsApp notification when *WooCommerce order status changes to refunded*
 * Send WhatsApp notification for any custom added order status
 
+**Gravity Forms**
+
+* Send WhatsApp notifications on ***Gravity Forms** form submission*
+
 Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
 
 == Installation ==
@@ -117,6 +121,7 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 = 2.0.0 - 2022-12-28 =
 * Major plugin upgrade with new way to manage triggers
 * Added ability to use custom Woocommerce order statuses.
+* Send WhatsApp notifications on Gravity Forms form submission.
 
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions
@@ -147,6 +152,7 @@ Want more triggers for your favorite plugins? Request us [here](https://wanotifi
 = 2.0.0 - 2022-12-28 =
 * Major plugin upgrade with new way to manage triggers
 * Added ability to use custom Woocommerce order statuses.
+* Send WhatsApp notifications on Gravity Forms form submission.
 
 = 1.0.5 - 2022-12-26 =
 * New: Improved on-boarding and How to? instructions

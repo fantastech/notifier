@@ -27,7 +27,7 @@ class Notifier {
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
-		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.local/api/v1/' );
+		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
 	}
 
 	/**
@@ -220,18 +220,25 @@ class Notifier {
 	 * Load Woocommerce class if it's present is activated
 	 */
 	public static function maybe_include_integrations () {
+		// Woocommerce
 		if ( class_exists( 'WooCommerce' ) ) {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-woocommerce.php';
 			Notifier_Woocommerce::init();
 		}
-
 		if ( ! class_exists( 'WC_Session' ) ) {
 		    include_once( WP_PLUGIN_DIR . '/woocommerce/includes/abstracts/abstract-wc-session.php' );
 		}
 
+		// Gravity Forms
 		if ( class_exists( 'GFCommon' ) ) {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-gravityforms.php';
 			Notifier_GravityForms::init();
+		}
+
+		// Contact Form 7
+		if ( class_exists( 'WPCF7' ) ) {
+			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-cf7.php';
+			Notifier_ContactForm7::init();
 		}
 	}
 

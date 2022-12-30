@@ -11,8 +11,6 @@ class Notifier_GravityForms {
 	 */
 	public static function init() {
 		add_filter( 'notifier_notification_triggers', array( __CLASS__, 'add_triggers'), 10 );
-		//add_filter( 'notifier_notification_merge_tags', array( __CLASS__, 'add_merge_tags') );
-		//add_filter( 'notifier_notification_recipient_fields', array( __CLASS__, 'add_recipient_fields') );
 	}
 
 	/**
@@ -21,12 +19,12 @@ class Notifier_GravityForms {
 	public static function add_triggers($existing_triggers) {
 		$triggers = array();
 		$forms = GFAPI::get_forms(true);
-		foreach($forms as $key => $form){
+		foreach($forms as $form){
 			$trigger_id = 'gravityforms_' . $form['id'];
 			$triggers[] = array(
 				'id'			=> $trigger_id,
 				'label' 		=> 'Form "' . $form['title'] . '" is submitted',
-				'description'	=> 'Trigger notification when <b>'.$form['name'].'</b> form is submitted.',
+				'description'	=> 'Trigger notification when <b>'.$form['title'].'</b> form is submitted.',
 				'merge_tags' 	=> self::get_merge_tags($form),
 				'recipient_fields'	=> self::get_recipient_fields($form),
 				'action'		=> array(
