@@ -65,7 +65,7 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 							<ol start="4">
 								<li>Create a new <b>Message Template</b> by <a href="https://app.wanotifier.com/templates/add/" target="_blank">clicking here</a>. This is the template that will be sent when a notification is triggered. You can create templates with variables (aka merge tags) and map those variables with the <b>Data fields</b> you enabled in step #3.</li>
 								<li>Then <a href="https://app.wanotifier.com/notifications/add/" target="_blank">create a new Notification</a>. In the <b>Trigger</b> dropdown, you will see the trigger that you created in step #1. Select that.</li>
-								<li>Then add <b>Recipients</b> to whom you want to send this notificaiton. You will find the <b>Recipient fields</b> here that you enabled in step #3.</li>
+								<li>Then add <b>Recipients</b> to whom you want to send this notification. You will find the <b>Recipient fields</b> here that you enabled in step #3.</li>
 								<li>Then select the <b>Message Template</b> you created in step #4. If you created this message template with variables, you can map those variables with the available <b>Data fields</b> that you enabled in step #3 from the <b>Assign values to template variables</b> section.</li>
 								<li>Click on the <b>Save</b> button to save this notification.</li>
 							</ol>

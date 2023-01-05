@@ -108,6 +108,10 @@ class Notifier_Notification_Triggers {
 			return;
 		}
 
+		if ( 'trash' == get_post_status( $post_id ) ){
+			return;
+		}
+
 		$trigger = isset($_POST[NOTIFIER_PREFIX . 'trigger']) ? sanitize_text_field( wp_unslash( $_POST[NOTIFIER_PREFIX . 'trigger'] ) ) : '';
 		$in_use_post_id = self::is_trigger_in_use($trigger, array($post_id));
 		if($in_use_post_id){
