@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.0.2' );
+		$this->define( 'NOTIFIER_VERSION', '2.0.3' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -85,12 +85,10 @@ class Notifier {
 		add_action( 'plugins_loaded', array( 'Notifier_Notification_Triggers', 'init' ) );
 		add_action( 'plugins_loaded', array( 'Notifier_Settings', 'init' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_include_integrations' ) );
-
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 
-		add_action( 'in_plugin_update_message-notifier/notifier.php', array( $this , 'plugin_upgrade_message' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_include_integrations' ) );
 	}
 
 	/**
@@ -252,15 +250,6 @@ class Notifier {
 		}
 		else{
 			return false;
-		}
-	}
-
-	/**
-	 * Plugin upgrade notice on Plugins page
-	 */
-	public static function plugin_upgrade_message () {
-		if(version_compare(NOTIFIER_VERSION,'1.0.5', '<=') ){
-			echo '<br><br><b>HEADS UP! Major update ahead.</b><br><br>v2.0.0 introduces major plugin updates. You\'ll need to <b>re-configure your triggers</b> after you upgrade to make sure the notifications are fired correctly.';
 		}
 	}
 

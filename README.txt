@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, gravity forms whatsapp, contact form 7 whatsapp, click to chat
 Requires at least: 5.0
 Tested up to: 6.1.1
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -122,6 +122,9 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 == Changelog ==
 
+= 2.0.3 - 2022-01-06 =
+* Fix: Added missing WordPress fields to Contact Form 7
+
 = 2.0.2 - 2022-01-04 =
 * Fix: Trigger sync message showing on deletiong of triggers
 * Fix: Few typos
@@ -160,6 +163,9 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.0.3 - 2022-01-06 =
+* Fix: Added missing WordPress fields to Contact Form 7
 
 = 2.0.2 - 2022-01-04 =
 * Fix: Trigger sync message showing on deletiong of triggers

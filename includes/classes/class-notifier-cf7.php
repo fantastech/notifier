@@ -65,7 +65,7 @@ class Notifier_ContactForm7 {
 		$ContactForm = WPCF7_ContactForm::get_instance( $form_id );
 		$form_fields = $ContactForm->scan_form_tags();
 
-		$merge_tags = array();
+		$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags();
 
 		$excluded_field_types = array('submit');
 		foreach($form_fields as $field){

@@ -108,7 +108,7 @@ class Notifier_Notification_Triggers {
 			return;
 		}
 
-		if ( 'trash' == get_post_status( $post_id ) ){
+		if ( 'trash' == get_post_status( $post_id ) || 'auto-draft' == get_post_status( $post_id ) ){
 			return;
 		}
 
