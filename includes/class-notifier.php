@@ -238,6 +238,12 @@ class Notifier {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-cf7.php';
 			Notifier_ContactForm7::init();
 		}
+
+		// WPForms
+		if ( class_exists( 'WPForms' ) ) {
+			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-wpforms.php';
+			Notifier_WPForms::init();
+		}
 	}
 
 	/**
