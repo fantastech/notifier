@@ -55,7 +55,7 @@ class Notifier_WPForms {
 		$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags();
 		$wpforms = wpforms()->get( 'form' )->get( $form_id, [ 'content_only' => true ] );
 		$form_fields = $wpforms['fields'];
-		$excluded_field_types = array('html', 'content', 'captcha_recaptcha', 'pagebreak', 'divider');
+		$excluded_field_types = array('html', 'captcha_recaptcha', 'pagebreak', 'divider');
 		foreach($form_fields as $field){
 
 			if(in_array($field['type'], $excluded_field_types)){
@@ -64,9 +64,7 @@ class Notifier_WPForms {
 
 			$field_name = $field['label'];
 			$field_id = $field['id'];
-			$field_type = $field['type'];
-			$return_type = $field_type;
-
+			$return_type = 'text';
 
 			$merge_tags['WPForms'][] = array(
 				'id' 			=> 'wpf_' . $form_id . '_' . $field_id,
