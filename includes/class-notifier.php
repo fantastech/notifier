@@ -244,6 +244,12 @@ class Notifier {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-wpforms.php';
 			Notifier_WPForms::init();
 		}
+
+		// Ninja Forms
+		if ( class_exists( 'Ninja_Forms' ) ) {
+			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-ninjaforms.php';
+			Notifier_ninjaforms::init();
+		}
 	}
 
 	/**
