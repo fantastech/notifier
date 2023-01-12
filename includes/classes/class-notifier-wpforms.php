@@ -54,28 +54,32 @@ class Notifier_WPForms {
 
 		$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags();
 		$wpforms = wpforms()->get( 'form' )->get( $form_id, [ 'content_only' => true ] );
-		$form_fields = $wpforms['fields'];
+
 		$excluded_field_types = array('html', 'captcha_recaptcha', 'pagebreak', 'divider');
-		foreach($form_fields as $field){
+		$form_fields = $wpforms['fields'];
 
-			if(in_array($field['type'], $excluded_field_types)){
-				continue;
-			}
+		if(is_array($form_fields)){
+			foreach($form_fields as $field){
 
-			$field_name = $field['label'];
-			$field_id = $field['id'];
-			$return_type = 'text';
-
-			$merge_tags['WPForms'][] = array(
-				'id' 			=> 'wpf_' . $form_id . '_' . $field_id,
-				'label' 		=> $field_name,
-				'preview_value' => '',
-				'return_type'	=> $return_type,
-				'value'			=> function ( $fields ) use ( $field_id ) {
-					$value = isset($fields[$field_id][ 'value' ]) ? $fields[$field_id][ 'value' ] : '';
-					return html_entity_decode(sanitize_text_field($value));
+				if(in_array($field['type'], $excluded_field_types)){
+					continue;
 				}
-			);
+
+				$field_name = $field['label'];
+				$field_id = $field['id'];
+				$return_type = 'text';
+
+				$merge_tags['WPForms'][] = array(
+					'id' 			=> 'wpf_' . $form_id . '_' . $field_id,
+					'label' 		=> $field_name,
+					'preview_value' => '',
+					'return_type'	=> $return_type,
+					'value'			=> function ( $fields ) use ( $field_id ) {
+						$value = isset($fields[$field_id][ 'value' ]) ? $fields[$field_id][ 'value' ] : '';
+						return html_entity_decode(sanitize_text_field($value));
+					}
+				);
+			}
 		}
 		return $merge_tags;
 	}
@@ -88,22 +92,25 @@ class Notifier_WPForms {
 		$form_fields = $wpforms['fields'];
 
 		$recipient_fields = array();
-		foreach($form_fields as $field){
-			if('phone' != $field['type']){
-				continue;
-			}
 
-			$field_name = $field['label'];
-			$field_id = $field['id'];
-
-			$recipient_fields['WPForms'][] = array(
-				'id' 			=> 'wpf_' . $form_id . '_' . $field_id,
-				'label' 		=> $field_name,
-				'value'			=> function ( $entry ) use ( $field_id ) {
-					$value = isset($entry[$field_id][ 'value' ]) ? $entry[$field_id][ 'value' ] : '';
-					return html_entity_decode(sanitize_text_field($value));
+		if(is_array($form_fields)){
+			foreach($form_fields as $field){
+				if('phone' != $field['type']){
+					continue;
 				}
-			);
+
+				$field_name = $field['label'];
+				$field_id = $field['id'];
+
+				$recipient_fields['WPForms'][] = array(
+					'id' 			=> 'wpf_' . $form_id . '_' . $field_id,
+					'label' 		=> $field_name,
+					'value'			=> function ( $fields ) use ( $field_id ) {
+						$value = isset($fields[$field_id][ 'value' ]) ? $fields[$field_id][ 'value' ] : '';
+						return html_entity_decode(sanitize_text_field($value));
+					}
+				);
+			}
 		}
 		return $recipient_fields;
 	}
