@@ -66,7 +66,6 @@ class Notifier_NinjaForms {
 
 				$field_name = $field->get_setting('label');
 				$field_id  = $field->get_id();
-				// $field_key = $field->get_setting('key');
 				$return_type = 'text';
 
 				$merge_tags['Ninja Forms'][] = array(
