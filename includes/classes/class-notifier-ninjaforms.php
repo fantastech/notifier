@@ -1,6 +1,6 @@
 <?php
 /**
- * Ninja Form notifications
+ * Ninja Forms notifications
  *
  * @package    Wa_Notifier
  */

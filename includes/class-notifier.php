@@ -248,7 +248,7 @@ class Notifier {
 		// Ninja Forms
 		if ( class_exists( 'Ninja_Forms' ) ) {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-ninjaforms.php';
-			Notifier_ninjaforms::init();
+			Notifier_NinjaForms::init();
 		}
 	}
 
