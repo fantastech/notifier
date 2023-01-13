@@ -250,6 +250,12 @@ class Notifier {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-ninjaforms.php';
 			Notifier_NinjaForms::init();
 		}
+
+		//FrmForm
+		if ( class_exists( 'FrmForm' ) ) {
+			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-formidable.php';
+			Notifier_Formidable::init();
+		}
 	}
 
 	/**
