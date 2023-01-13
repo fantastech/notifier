@@ -76,6 +76,9 @@ class Notifier_WPForms {
 					'return_type'	=> $return_type,
 					'value'			=> function ( $fields ) use ( $field_id ) {
 						$value = isset($fields[$field_id][ 'value' ]) ? $fields[$field_id][ 'value' ] : '';
+						if(is_array($value)){
+							$value = implode(', ', $value);
+						}
 						return html_entity_decode(sanitize_text_field($value));
 					}
 				);
