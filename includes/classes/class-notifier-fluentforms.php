@@ -91,7 +91,7 @@ class Notifier_FluentForms {
 						foreach($value['columns'] as $col_key => $col_value){
 							foreach($col_value['fields'] as $ckey => $cval){
 								$field_type = $cval['attributes']['type'];
-								$field_lbl = $cval['settings']['label'];
+								$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
 								$field_name = $cval['attributes']['name'];
 
 								$fields_data[$field_name] = [
@@ -226,7 +226,7 @@ class Notifier_FluentForms {
 						foreach($value['columns'] as $col_key => $col_value){
 							foreach($col_value['fields'] as $ckey => $cval){
 								$field_type = $cval['attributes']['type'];
-								$field_lbl = $cval['settings']['label'];
+								$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
 								$field_name = $cval['attributes']['name'];
 
 								$fields_data[$field_name] = [
@@ -286,7 +286,8 @@ class Notifier_FluentForms {
 						'label' => $field_lbl,
 						'type' => $field_type,
 					];
-				}else {
+				}
+				else {
 					$field_type = !empty($value['attributes']['type'])?$value['attributes']['type']:'text';
 					$field_lbl = !empty($value['settings']['label']) ? $value['settings']['label'] :'lbl_'.$value['attributes']['name'];
 					$field_name = $value['attributes']['name'];
