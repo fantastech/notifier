@@ -59,7 +59,6 @@ class Notifier_FluentForms {
 	 * Get merge tags for the current form
 	 */
 	public static function get_merge_tags( $form_id ) {
-
 		$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags();
 
 		$fields_data = array();
@@ -90,6 +89,11 @@ class Notifier_FluentForms {
 					if(!empty($value['columns']) && is_array($value['columns'])){
 						foreach($value['columns'] as $col_key => $col_value){
 							foreach($col_value['fields'] as $ckey => $cval){
+
+								if(in_array($cval['element'], $excluded_field_types)){
+									continue;
+								}
+
 								$field_type = $cval['attributes']['type'];
 								$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
 								$field_name = $cval['attributes']['name'];
@@ -225,6 +229,11 @@ class Notifier_FluentForms {
 					if(!empty($value['columns']) && is_array($value['columns'])){
 						foreach($value['columns'] as $col_key => $col_value){
 							foreach($col_value['fields'] as $ckey => $cval){
+
+								if(in_array($cval['element'], $excluded_field_types)){
+									continue;
+								}
+
 								$field_type = $cval['attributes']['type'];
 								$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
 								$field_name = $cval['attributes']['name'];
