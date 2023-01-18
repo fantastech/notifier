@@ -62,11 +62,10 @@ class Notifier_FluentForms {
 
 		$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags();
 
-		$excluded_field_types = array('custom_submit_button', 'section_break', 'custom_html','tabular_grid','repeater_field','terms_and_condition','action_hook','form_step','chained_select','save_progress_button');
-
 		$fields_data = array();
 		$formApi = fluentFormApi('forms')->form($form_id);
 		$form_fields = $formApi->fields();
+		$excluded_field_types = array('custom_submit_button', 'section_break', 'custom_html','tabular_grid','repeater_field','terms_and_condition','action_hook','form_step','chained_select','save_progress_button', 'cpt_selection','shortcode');
 
 		if(is_array($form_fields)){
 			foreach($form_fields['fields'] as $key => $value){
@@ -142,9 +141,20 @@ class Notifier_FluentForms {
 						'label' => $field_lbl,
 						'type' => $field_type,
 					];
-				} else {
-					$field_type = $value['attributes']['type'];
-					$field_lbl = $value['settings']['label'];
+				}else if('input_hidden' === $value['element']){
+					$field_type = 'text';
+					$field_lbl  = !empty($value['settings']['admin_field_label'])? $value['settings']['admin_field_label'] :'Field_'.$value['attributes']['name'];
+					$field_name = $value['attributes']['name'];
+
+					$fields_data[$field_name]['type'] = $field_type;
+					$fields_data[$field_name] = [
+						'label' => $field_lbl,
+						'type' => $field_type,
+					];
+				}
+				else {
+					$field_type = !empty($value['attributes']['type'])?$value['attributes']['type']:'text';
+					$field_lbl = !empty($value['settings']['label']) ? $value['settings']['label'] :'lbl_'.$value['attributes']['name'];
 					$field_name = $value['attributes']['name'];
 
 					$fields_data[$field_name] = [
@@ -154,7 +164,6 @@ class Notifier_FluentForms {
 				}
 			}
 		}
-
 
 		if(is_array($fields_data) && !empty($fields_data)){
 			foreach($fields_data as $field_key => $field_value){
@@ -179,22 +188,20 @@ class Notifier_FluentForms {
 				);
 			}
 		}
+
 		return $merge_tags;
 	}
 
 	/*
 	 * Get recipient fields
 	 */
-	public static function get_recipient_fields($form_id){
-		$formApi = fluentFormApi('forms')->form($form_id);
-		$fluentForm = $formApi->fields();
-
+	public static function get_recipient_fields( $form_id ){
 		$recipient_fields = array();
 		$fields_data = array();
 		$formApi = fluentFormApi('forms')->form($form_id);
 		$form_fields = $formApi->fields();
+		$excluded_field_types = array('custom_submit_button', 'section_break', 'custom_html','tabular_grid','repeater_field','terms_and_condition','action_hook','form_step','chained_select','save_progress_button', 'cpt_selection', 'shortcode');
 
-		$excluded_field_types = array('custom_submit_button', 'section_break', 'custom_html','tabular_grid','repeater_field','terms_and_condition','action_hook','form_step','chained_select','save_progress_button');
 		if(is_array($form_fields)){
 			foreach($form_fields['fields'] as $key => $value){
 				if(in_array($value['element'], $excluded_field_types)){
@@ -220,7 +227,6 @@ class Notifier_FluentForms {
 							foreach($col_value['fields'] as $ckey => $cval){
 								$field_type = $cval['attributes']['type'];
 								$field_lbl = $cval['settings']['label'];
-								$field_id = $cval['uniqElKey'];
 								$field_name = $cval['attributes']['name'];
 
 								$fields_data[$field_name] = [
@@ -233,32 +239,57 @@ class Notifier_FluentForms {
 				}else if('ratings' === $value['element']){
 					$field_type = 'text';
 					$field_lbl = $sub_fvalue['settings']['label'];
-					$field_id = $value['uniqElKey'];
 					$field_name = $sub_fvalue['attributes']['name'];
 
 					$fields_data[$field_name]['type'] = $field_type;
-
 					$fields_data[$field_name] = [
 						'label' => $field_lbl
 					];
 
-				} else if('rich_text_input' === $value['element'] || 'textarea' === $value['element']){
+				}else if('input_image' === $value['element']){
+					$field_type = 'image';
+					$field_lbl = $value['settings']['label'];
+					$field_name = $value['attributes']['name'];
+
+					$fields_data[$field_name]['type'] = $field_type;
+					$fields_data[$field_name] = [
+						'label' => $field_lbl
+					];
+
+				}else if('input_file' === $value['element']){
+					$field_type = 'document';
+					$field_lbl = $value['settings']['label'];
+					$field_name = $value['attributes']['name'];
+
+					$fields_data[$field_name]['type'] = $field_type;
+					$fields_data[$field_name] = [
+						'label' => $field_lbl
+					];
+
+				}else if('rich_text_input' === $value['element'] || 'textarea' === $value['element']){
 					$field_type = 'text';
 					$field_lbl = $value['settings']['label'];
 					$field_name = $value['attributes']['name'];
-					$field_id = $value['uniqElKey'];
 
 					$fields_data[$field_name]['type'] = $field_type;
-
 					$fields_data[$field_name] = [
 						'label' => $field_lbl,
 						'type' => $field_type,
 					];
-				} else {
-					$field_type = $value['attributes']['type'];
-					$field_lbl = $value['settings']['label'];
+				}else if('input_hidden' === $value['element']){
+					$field_type = 'text';
+					$field_lbl  = !empty($value['settings']['admin_field_label'])? $value['settings']['admin_field_label'] :'Field_'.$value['attributes']['name'];
 					$field_name = $value['attributes']['name'];
-					$field_id = $value['uniqElKey'];
+
+					$fields_data[$field_name]['type'] = $field_type;
+					$fields_data[$field_name] = [
+						'label' => $field_lbl,
+						'type' => $field_type,
+					];
+				}else {
+					$field_type = !empty($value['attributes']['type'])?$value['attributes']['type']:'text';
+					$field_lbl = !empty($value['settings']['label']) ? $value['settings']['label'] :'lbl_'.$value['attributes']['name'];
+					$field_name = $value['attributes']['name'];
 
 					$fields_data[$field_name] = [
 						'label' => $field_lbl,
@@ -287,6 +318,7 @@ class Notifier_FluentForms {
 				);
 			}
 		}
+
 		return $recipient_fields;
 	}
 }
