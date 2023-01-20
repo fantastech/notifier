@@ -76,7 +76,6 @@ class Notifier_FluentForms {
 					foreach($value['fields'] as $sub_fkey => $sub_fvalue){
 						$field_type = $sub_fvalue['attributes']['type'];
 						$field_lbl = $sub_fvalue['settings']['label'];
-						$field_id = $value['uniqElKey'];
 						$field_name = $sub_fvalue['attributes']['name'];
 
 						$fields_data[$value['attributes']['name']]['type'] = $field_type;
@@ -97,69 +96,58 @@ class Notifier_FluentForms {
 								$field_type = $cval['attributes']['type'];
 								$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
 								$field_name = $cval['attributes']['name'];
+								if('input_image' == $cval['element']){
+									$field_type = 'image';
+								}
 
-								$fields_data[$field_name] = [
-									'label' => $field_lbl,
-									'type' => $field_type,
-								];
+								if($field_name == 'names') {
+									foreach($cval['fields'] as $field_key => $field_val){
+										$field_type = $field_val['attributes']['type'];
+										$field_name = $field_val['attributes']['name'];
+										$field_lbl = $field_val['settings']['label'];
+
+										$fields_data[$cval['attributes']['name']]['type'] = $field_type;
+										$fields_data[$cval['attributes']['name']]['label'] = $cval['settings']['admin_field_label'];
+										$fields_data[$cval['attributes']['name']][$field_key] = [
+											'label' => $field_lbl
+										];
+									}
+								}else{
+									$fields_data[$field_name] = [
+										'label' => $field_lbl,
+										'type' => $field_type,
+									];
+								}
 							}
 						}
 					}
-				}else if('ratings' === $value['element']){
-					$field_type = 'text';
-					$field_lbl = $sub_fvalue['settings']['label'];
-					$field_name = $sub_fvalue['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl
-					];
-
-				}else if('input_image' === $value['element']){
+				}else if('input_image' === $value['element']) {
 					$field_type = 'image';
-					$field_lbl = $value['settings']['label'];
 					$field_name = $value['attributes']['name'];
 
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl
-					];
+					if(!empty($value['settings']['label'])){
+						$field_lbl = $value['settings']['label'];
+					}else if(!empty($value['settings']['admin_field_label'])){
+						$field_lbl = $value['settings']['admin_field_label'];
+					}else{
+						$field_lbl = 'Field_'.$value['attributes']['name'];
+					}
 
-				}else if('input_file' === $value['element']){
-					$field_type = 'document';
-					$field_lbl = $value['settings']['label'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl
-					];
-
-				}else if('rich_text_input' === $value['element'] || 'textarea' === $value['element']){
-					$field_type = 'text';
-					$field_lbl = $value['settings']['label'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
 					$fields_data[$field_name] = [
 						'label' => $field_lbl,
 						'type' => $field_type,
 					];
-				}else if('input_hidden' === $value['element']){
-					$field_type = 'text';
-					$field_lbl  = !empty($value['settings']['admin_field_label'])? $value['settings']['admin_field_label'] :'Field_'.$value['attributes']['name'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl,
-						'type' => $field_type,
-					];
-				}
-				else {
+				}else {
 					$field_type = !empty($value['attributes']['type'])?$value['attributes']['type']:'text';
-					$field_lbl = !empty($value['settings']['label']) ? $value['settings']['label'] :'lbl_'.$value['attributes']['name'];
 					$field_name = $value['attributes']['name'];
+
+					if(!empty($value['settings']['label'])){
+						$field_lbl = $value['settings']['label'];
+					}else if(!empty($value['settings']['admin_field_label'])){
+						$field_lbl = $value['settings']['admin_field_label'];
+					}else{
+						$field_lbl = 'lbl_'.$value['attributes']['name'];
+					}
 
 					$fields_data[$field_name] = [
 						'label' => $field_lbl,
@@ -175,7 +163,12 @@ class Notifier_FluentForms {
 				$field_name = $field_value['name'];
 				$field_label = $field_value['label'];
 				$field_type = $field_value['type'];
-				$return_type = 'text';
+				if($field_type == 'image'){
+					$return_type = 'image';
+				}else{
+					$return_type = 'text';
+				}
+
 
 				$merge_tags['Fluent Forms'][] = array(
 					'id' 			=> 'fluentforms_' . $form_id . '_' . $field_key,
@@ -212,20 +205,7 @@ class Notifier_FluentForms {
 					continue;
 				}
 
-				if('input_name' === $value['element']){
-					foreach($value['fields'] as $sub_fkey => $sub_fvalue){
-						$field_type = $sub_fvalue['attributes']['type'];
-						$field_lbl = $sub_fvalue['settings']['label'];
-						$field_id = $value['uniqElKey'];
-						$field_name = $sub_fvalue['attributes']['name'];
-
-						$fields_data[$value['attributes']['name']]['type'] = $field_type;
-						$fields_data[$value['attributes']['name']]['label'] = $value['settings']['admin_field_label'];
-						$fields_data[$value['attributes']['name']][$sub_fkey] = [
-							'label' => $field_lbl
-						];
-					}
-				}else if('container' === $value['element']){
+				if('container' === $value['element']){
 					if(!empty($value['columns']) && is_array($value['columns'])){
 						foreach($value['columns'] as $col_key => $col_value){
 							foreach($col_value['fields'] as $ckey => $cval){
@@ -235,76 +215,36 @@ class Notifier_FluentForms {
 								}
 
 								$field_type = $cval['attributes']['type'];
-								$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
-								$field_name = $cval['attributes']['name'];
+								if('tel' == $field_type){
+									$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
+									$field_name = $cval['attributes']['name'];
 
-								$fields_data[$field_name] = [
-									'label' => $field_lbl,
-									'type' => $field_type,
-								];
+									$fields_data[$field_name] = [
+										'label' => $field_lbl,
+										'type' => $field_type,
+									];
+								}
 							}
 						}
 					}
-				}else if('ratings' === $value['element']){
-					$field_type = 'text';
-					$field_lbl = $sub_fvalue['settings']['label'];
-					$field_name = $sub_fvalue['attributes']['name'];
+				}else {
+					$field_type = $value['attributes']['type'];
+					if('tel' == $field_type){
+						$field_name = $value['attributes']['name'];
 
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl
-					];
+						if(!empty($value['settings']['label'])){
+							$field_lbl = $value['settings']['label'];
+						}else if(!empty($value['settings']['admin_field_label'])){
+							$field_lbl = $value['settings']['admin_field_label'];
+						}else{
+							$field_lbl = 'lbl_'.$value['attributes']['name'];
+						}
 
-				}else if('input_image' === $value['element']){
-					$field_type = 'image';
-					$field_lbl = $value['settings']['label'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl
-					];
-
-				}else if('input_file' === $value['element']){
-					$field_type = 'document';
-					$field_lbl = $value['settings']['label'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl
-					];
-
-				}else if('rich_text_input' === $value['element'] || 'textarea' === $value['element']){
-					$field_type = 'text';
-					$field_lbl = $value['settings']['label'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl,
-						'type' => $field_type,
-					];
-				}else if('input_hidden' === $value['element']){
-					$field_type = 'text';
-					$field_lbl  = !empty($value['settings']['admin_field_label'])? $value['settings']['admin_field_label'] :'Field_'.$value['attributes']['name'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name]['type'] = $field_type;
-					$fields_data[$field_name] = [
-						'label' => $field_lbl,
-						'type' => $field_type,
-					];
-				}
-				else {
-					$field_type = !empty($value['attributes']['type'])?$value['attributes']['type']:'text';
-					$field_lbl = !empty($value['settings']['label']) ? $value['settings']['label'] :'lbl_'.$value['attributes']['name'];
-					$field_name = $value['attributes']['name'];
-
-					$fields_data[$field_name] = [
-						'label' => $field_lbl,
-						'type' => $field_type,
-					];
+						$fields_data[$field_name] = [
+							'label' => $field_lbl,
+							'type' => $field_type,
+						];
+					}
 				}
 			}
 		}
