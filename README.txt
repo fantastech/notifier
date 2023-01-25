@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, gravity forms whatsapp, contact form 7 whatsapp, click to chat
 Requires at least: 5.0
 Tested up to: 6.1.1
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -57,6 +57,10 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 **Formidable Forms**
 
 * Send WhatsApp notifications when a **Formidable Forms form is submitted**
+
+**Fluent Forms**
+
+* Send WhatsApp notifications when a **Fluent Forms form is submitted**
 
 Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
 
@@ -134,6 +138,9 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 == Changelog ==
 
+= 2.0.8 - 2022-01-25 =
+* Added Fluent Forms integration
+
 = 2.0.7 - 2022-01-18 =
 * Added Formidable Forms integration
 
@@ -187,6 +194,9 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.0.8 - 2022-01-25 =
+* Added Fluent Forms integration
 
 = 2.0.7 - 2022-01-18 =
 * Added Formidable Forms integration

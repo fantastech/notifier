@@ -94,8 +94,10 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 						</div>
 						<div class="dashboard-box-body">
 							<ul>
-								<li><a href="https://app.wanotifier.com/inbox/" target="_blank">Inbox</a> - See customer replies to your notifications and message them back.</li>
+								<li><a href="https://app.wanotifier.com/template/" target="_blank">Message Templates</a> - Create / edit message templates.</li>
+								<li><a href="https://app.wanotifier.com/contacts/" target="_blank">Contacts</a> - Manage your contacts.</li>
 								<li><a href="https://app.wanotifier.com/notifications/" target="_blank">Notifications</a> - See the notification delivery stats and much more.</li>
+								<li><a href="https://app.wanotifier.com/inbox/" target="_blank">Inbox</a> - See customer replies to your notifications and message them back.</li>
 							</ul>
 						</div>
 					</div>
