@@ -58,9 +58,6 @@ class Notifier {
 	 * Include required core files used in admin and on the frontend.
 	 */
 	private function includes() {
-		// Libraries
-		require_once NOTIFIER_PATH . 'libraries/action-scheduler/action-scheduler.php';
-
 		// Functions
 		require_once NOTIFIER_PATH . 'includes/functions/functions-notifier-helpers.php';
 		require_once NOTIFIER_PATH . 'includes/functions/functions-notifier-meta-box-fields.php';
