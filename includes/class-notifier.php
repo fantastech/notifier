@@ -256,6 +256,12 @@ class Notifier {
 			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-formidable.php';
 			Notifier_Formidable::init();
 		}
+
+		//WPFluentForm
+		if ( function_exists( 'fluentFormApi' ) ) {
+			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-fluentforms.php';
+			Notifier_FluentForms::init();
+		}
 	}
 
 	/**
