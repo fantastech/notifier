@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, gravity forms whatsapp, contact form 7 whatsapp, click to chat
 Requires at least: 5.0
 Tested up to: 6.1.1
-Stable tag: 2.0.9
+Stable tag: 2.0.10
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -138,28 +138,31 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 == Changelog ==
 
-= 2.0.9 - 2022-01-26 =
+= 2.0.10 - 2023-01-29 =
+* fix: error on saving triggers
+
+= 2.0.9 - 2023-01-26 =
 * Updated onboarding instructions & added testimonials
 
-= 2.0.8 - 2022-01-25 =
+= 2.0.8 - 2023-01-25 =
 * Added Fluent Forms integration
 
-= 2.0.7 - 2022-01-18 =
+= 2.0.7 - 2023-01-18 =
 * Added Formidable Forms integration
 
-= 2.0.6 - 2022-01-13 =
+= 2.0.6 - 2023-01-13 =
 * Added Ninja Forms integration
 
-= 2.0.5 - 2022-01-12 =
+= 2.0.5 - 2023-01-12 =
 * Fix: Recipient fields related bug in WPForms integration
 
-= 2.0.4 - 2022-01-11 =
+= 2.0.4 - 2023-01-11 =
 * Added WPForms integration
 
-= 2.0.3 - 2022-01-06 =
+= 2.0.3 - 2023-01-06 =
 * Fix: Added missing WordPress fields to Contact Form 7
 
-= 2.0.2 - 2022-01-04 =
+= 2.0.2 - 2023-01-04 =
 * Fix: Trigger sync message showing on deletiong of triggers
 * Fix: Few typos
 
@@ -198,28 +201,31 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 == Upgrade Notice ==
 
-= 2.0.9 - 2022-01-26 =
+= 2.0.10 - 2023-01-29 =
+* fix: error on saving triggers
+
+= 2.0.9 - 2023-01-26 =
 * Updated onboarding instructions & added testimonials
 
-= 2.0.8 - 2022-01-25 =
+= 2.0.8 - 2023-01-25 =
 * Added Fluent Forms integration
 
-= 2.0.7 - 2022-01-18 =
+= 2.0.7 - 2023-01-18 =
 * Added Formidable Forms integration
 
-= 2.0.6 - 2022-01-13 =
+= 2.0.6 - 2023-01-13 =
 * Added Ninja Forms integration
 
-= 2.0.5 - 2022-01-12 =
+= 2.0.5 - 2023-01-12 =
 * Fix: Recipient fields related bug in WPForms integration
 
-= 2.0.4 - 2022-01-11 =
+= 2.0.4 - 2023-01-11 =
 * Added WPForms integration
 
-= 2.0.3 - 2022-01-06 =
+= 2.0.3 - 2023-01-06 =
 * Fix: Added missing WordPress fields to Contact Form 7
 
-= 2.0.2 - 2022-01-04 =
+= 2.0.2 - 2023-01-04 =
 * Fix: Trigger sync message showing on deletiong of triggers
 * Fix: Few typos
 
