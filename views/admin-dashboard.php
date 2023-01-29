@@ -13,32 +13,54 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 <div class="wrap notifier">
 	<div class="notifier-wrapper">
 		<?php if (!Notifier::is_api_active()) : ?>
-			<div class="onboarding">
-				<div class="onboarding-head">
-					<h3>Let's Get Started</h3>
+			<div class="dashboard-boxes">
+				<div class="col w-70">
+					<div class="dashboard-box">
+						<div class="dashboard-box-head">
+							<h3>Let's get started</h3>
+						</div>
+						<div class="dashboard-box-body">
+							<p><a href="https://wanotifier.com/" target="_blank">WA Notifier</a> is a SaaS tool that allows you to send bulk WhatsApp marketing and transactional messages to your customers using the <b>WhatsApp's official Cloud APIs</b>.</p>
+							<p>This plugin is an extension to our SaaS platform that allows you to <b>trigger WhatsApp message notifications</b> from your WordPress website.</p>
+							<p>To use this plugin you'll need to <b>create an account with us</b> and connect it with this plugin.</p>
+							<p>Following are the instructions to do the setup.</p>
+							<ol>
+								<li>Create a <b>FREE account</b> on WANotifier.com by <a href="https://app.wanotifier.com/create-account/" target="_blank">clicking here</a>.</li>
+								<li>After you create your account, go through the on-boarding steps to the setup up of your <b>WhatsApp Cloud API account</b>.</li>
+								<li>After your account is setup and you come to the Dashboard, go to the <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings > API</a> and scroll to the bottom to get your <b>WANotifier.com API Key</b>.</li>
+								<li>Copy and paste that key in the text box below and click on <b>Save and Validate</b> to continue.</li>
+							</ol>
+							<p>The whole process might take <b>15 - 30 min</b> depending on your pace.</p>
+							<hr>
+							<p><b>Need help?</b> We can help you setup your account and this plugin for FREE. Just <a href="https://wanotifier.com/support/" target="_blank">get in touch</a> with us and we'll do it for you.</p>
+							<hr style="margin-bottom: 20px;">
+							<form method="POST" action="" enctype="multipart/form-data">
+								<input type="text" name="notifier_api_key" id="wa-notifier-api-key" placeholder="Enter your API key here" value="<?php echo $api_key; ?>" />
+								<button name="webhook_validation" class="button-primary" type="submit" value="">Submit and validate</button>
+		            			<?php wp_nonce_field( NOTIFIER_NAME . '-webhook-validation' ); ?>
+							</form>
+						</div>
+					</div>
 				</div>
-				<div class="onboarding-body">
-					<p><a href="https://wanotifier.com/" target="_blank">WA Notifier</a> is a SaaS tool that allows you to send bulk WhatsApp marketing and transactional messages to your customers using the <b>WhatsApp's official Cloud APIs</b>.</p>
-					<p>This plugin is an extension to our SaaS platform that allows you to <b>trigger WhatsApp message notifications</b> from your WordPress website.</p>
-					<p>To use this plugin you'll need to <b>create an account with us</b> and connect it with this plugin.</p>
-					<p>Following are the instructions to do the setup.</p>
-					<ol>
-						<li>Create a <b>FREE account</b> on WANotifier.com by <a href="https://app.wanotifier.com/create-account/" target="_blank">clicking here</a>.</li>
-						<li>After you create your account, go through the on-boarding steps to the setup up of your <b>test WhatsApp Cloud API account</b>.</li>
-						<li>Once the test account is ready, follow further instructions on our website to set up <b>your own phone number</b> with the Cloud API (and get out of <b>Test Mode</b>).</li>
-						<li>After that is done, go to the <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings > API</a> and scroll to the bottom to get your <b>WANotifier.com API Key</b>.</li>
-						<li>Copy and paste that key in the text box below and click on <b>Save and Validate</b> to continue.</li>
-					</ol>
-					<p><b>Setup time:</b> 15 - 30 min (depending on your pace)</p>
-					<hr>
-					<p><b>Feeling overwhelmed?</b> Don't worry, we can help you setup your account and this plugin for FREE. Just submit a support request <a href="https://wanotifier.com/support/" target="_blank">here</a> or start a chat with us on our <a href="https://wanotifier.com/" target="_blank">website</a> and we'll help you with the setup.</p>
-				</div>
-				<div class="onboarding-footer">
-					<form method="POST" action="" enctype="multipart/form-data">
-						<input type="text" name="notifier_api_key" id="wa-notifier-api-key" placeholder="Enter your API key here" value="<?php echo $api_key; ?>" />
-						<button name="webhook_validation" class="button-primary" type="submit" value="">Submit and validate</button>
-            			<?php wp_nonce_field( NOTIFIER_NAME . '-webhook-validation' ); ?>
-					</form>
+				<div class="col w-30">
+					<div class="dashboard-box">
+						<div class="dashboard-box-head">
+							<h3>Customer testimonials</h3>
+						</div>
+						<div class="dashboard-box-body">
+							<em><p>I have been <strong>using WANotifier for the past 1 month</strong> for my eCommerce store. I am able to add/import/manage contacts, create message templates, segment users, connect with third party APIs, reply to messages all within the same dashboard. The UI is <strong>simple and friendly</strong>. The instructions are clear. <strong>Definitely recommended</strong>!</p></em>
+							<p><strong>Gopi Kanna<br>
+							</strong>Co-founder, <a href="https://domaincoasters.com/" target="_blank" rel="noopener nofollow">Domain Coasters</a></p>
+							<hr>
+							<em><p>We have been using WANotifier for past two months. <strong>Nice product</strong>! A quick and automated response brings in a feeling of completeness to online purchase experience for our customers. We have processed multiple orders after installing this utility and <strong>it just works perfectly every time</strong>.</p></em>
+							<p><strong>Avinash Pendse<br>
+							</strong>Founder, <a href="https://grahakshahi.com/" target="_blank" rel="noopener nofollow">Grahak Shahi</a></p>
+							<hr>
+							<em><p>Very good plugin for <b>WhatsApp Woocommerce integration for free</b>. Easily work without any issues. Simple to use.Tutorials also found on YouTube. Thanks to the WANotifier team.</p></em>
+							<strong>hashimsamnan</strong><br>
+							<a href="https://wordpress.org/support/topic/best-plugin-for-whatsapp-woocommerce-integration/" target="_blank" rel="noopener nofollow">Woocommerce user</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		<?php

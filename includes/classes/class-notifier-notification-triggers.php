@@ -204,7 +204,7 @@ class Notifier_Notification_Triggers {
 					if(!empty($trigger['merge_tags'])){
 						foreach($trigger['merge_tags'] as $merge_tags_group => $merge_tags){
 							foreach($merge_tags as $merge_tag){
-								if( in_array($merge_tag['id'], $final_trigger['data_fields']) ){
+								if( !empty($final_trigger['data_fields']) && in_array($merge_tag['id'], $final_trigger['data_fields']) ){
 									$final_trigger_merge_tags[$merge_tags_group][] = array(
 										'id'			=> $merge_tag['id'],
 										'label'			=> $merge_tag['label'],
@@ -221,7 +221,7 @@ class Notifier_Notification_Triggers {
 					if(!empty($trigger['recipient_fields'])){
 						foreach($trigger['recipient_fields'] as $recipient_tags_group => $recipient_tags){
 							foreach($recipient_tags as $recipient_tag){
-								if( in_array($recipient_tag['id'], $final_trigger['recipient_fields']) ){
+								if( ! empty($final_trigger['recipient_fields']) && in_array($recipient_tag['id'], $final_trigger['recipient_fields']) ){
 									$final_trigger_recipient_fields[$recipient_tags_group][] = array(
 										'id'		=> $recipient_tag['id'],
 										'label'		=> $recipient_tag['label']
