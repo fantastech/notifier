@@ -6,6 +6,7 @@ mix
 
 mix
   .sass('resources/styles/admin.scss', 'css')
+  .sass('resources/styles/frontend.scss', 'css')
   .options({ processCssUrls: false });
 
 mix

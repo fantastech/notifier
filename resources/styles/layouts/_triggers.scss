@@ -1,20 +1,20 @@
-.post-type-wa_notifier_trigger{
+.post-type-wa_notifier_trigger {
 	#minor-publishing-actions #save-action,
 	#misc-publishing-actions {
 		display: none;
 	}
 
 	#minor-publishing-actions {
-	  padding: 15px 10px;
-	  text-align: left;
+		padding: 15px 10px;
+		text-align: left;
 	}
 
 	.trigger-fields-wrap {
-    	margin: 1em 0;
+		margin: 1em 0;
 	}
 
 	.notifier-trigger-merge-tags {
-	    margin-bottom: 5px;
+		margin-bottom: 5px;
 
 		.notifier-merge-tags-wrap {
 			padding: 10px 10px 5px 10px;
@@ -26,7 +26,7 @@
 				margin-bottom: 10px;
 
 				&:last-child {
-					margin-bottom: 0px;
+					margin-bottom: 0;
 				}
 
 				@include media-down(mobile) {
@@ -44,6 +44,7 @@
 
 				.multi-checkbox-wrapper {
 					flex-grow: 1;
+
 					.form-check {
 						display: inline-block;
 						margin-bottom: 5px;

@@ -31,9 +31,9 @@
 		position: relative;
 
 		label.form-label,
-    	legend {
-    		font-size: 14px;
-    		font-weight: 500;
+		legend {
+			font-size: 14px;
+			font-weight: 500;
 			display: block;
 			margin-bottom: 5px;
 		}
@@ -161,8 +161,8 @@
 }
 
 .notifier-notice {
-    margin-top: 20px;
-    margin-left: 0px;
+	margin-top: 20px;
+	margin-left: 0;
 }
 
 table.wp-list-table {
@@ -172,37 +172,37 @@ table.wp-list-table {
 
 	thead td,
 	thead th {
-	    padding-top: 5px !important;
-	    padding-bottom: 5px !important;
-    	border-bottom: 1px solid #eee;
+		padding-top: 5px !important;
+		padding-bottom: 5px !important;
+		border-bottom: 1px solid #eee;
 	}
 
 	tfoot td,
 	tfoot th {
-	    padding-top: 5px !important;
-	    padding-bottom: 5px !important;
-    	border-top: 1px solid #eee;
+		padding-top: 5px !important;
+		padding-bottom: 5px !important;
+		border-top: 1px solid #eee;
 	}
 }
 
 .notifier-toggle-switch {
-  	input[type="checkbox"] {
-	    position: relative;
-	    appearance: none;
-	    width: 32px;
-	    height: 16px;
-	    background: #ccc;
-	    border-radius: 40px;
-	    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-	    cursor: pointer;
-	    transition: 0.2s;
-	    border: none;
-	    outline: none;
+	input[type="checkbox"] {
+		position: relative;
+		appearance: none;
+		width: 32px;
+		height: 16px;
+		background: #ccc;
+		border-radius: 40px;
+		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		cursor: pointer;
+		transition: 0.2s;
+		border: none;
+		outline: none;
 	}
 
 	input:checked[type="checkbox"] {
 		appearance: none;
-	    background: #00c417;
+		background: #00c417;
 	}
 
 	input[type="checkbox"]::before {
@@ -210,20 +210,20 @@ table.wp-list-table {
 	}
 
 	input[type="checkbox"]::after {
-	    position: absolute;
-	    content: "";
-	    width: 16px;
-	    height: 16px;
-	    top: 0;
-	    left: 0;
-	    background: #fff;
-	    border-radius: 50%;
-	    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-	    transform: scale(1.1);
-	    transition: 0.2s;
+		position: absolute;
+		content: "";
+		width: 16px;
+		height: 16px;
+		top: 0;
+		left: 0;
+		background: #fff;
+		border-radius: 50%;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+		transform: scale(1.1);
+		transition: 0.2s;
 	}
 
 	input:checked[type="checkbox"]::after {
-	    left: 50%;
+		left: 50%;
 	}
 }

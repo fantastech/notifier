@@ -38,6 +38,20 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php do_action('notifier_after_settings_fields', $current_tab); ?>
 
         </form>
+        <?php if($current_tab === 'click_to_chat'): ?>
+			<?php $btn_style = get_option('notifier_click_chat_button_style');?>
+        	<div class="btn-preview-wrap">
+        		<?php if(!empty($btn_style) || NULL !== $btn_style){
+        			if($btn_style == 'custom-image'){
+        				echo '<style>.notifier-fields-table  #notifier_custom_chat_button_image{display:block;}</style>';
+        			}
+
+        			if($btn_style !== 'default'){
+        				include_once NOTIFIER_PATH.'templates/buttons/'.$btn_style.'.php';
+        			}
+        		}?>
+        	</div>
+        <?php endif; ?>
 
         <?php do_action('notifier_after_settings_fields_form', $current_tab); ?>
 
