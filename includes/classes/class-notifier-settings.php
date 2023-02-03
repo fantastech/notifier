@@ -106,7 +106,7 @@ class Notifier_Settings {
 						'type'			=> 'text',
 						'placeholder'	=> 'Enter your WhatsApp number',
 						'name'          => 'ctc_whatsapp_number',
-						'description'		=> 'Enter your WhatsApp number with country code. Eg. +919876543210',
+						'description'	=> 'Enter your WhatsApp number with country code. Eg. +919876543210',
 					),
 					array(
 						'id' 			=> 'ctc_greeting_text',
