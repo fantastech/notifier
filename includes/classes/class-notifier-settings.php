@@ -90,7 +90,7 @@ class Notifier_Settings {
 				$settings = array(
 					array(
 						'title'			=> 'Click to Chat',
-						'description'	=> 'Show click to chat button on your website to let your website visitors start WhatsApp chat with you.',
+						'description'	=> 'Show click to chat button on your website to let your visitors start WhatsApp chat with you.',
 						'type'			=> 'title',
 					),
 					array(
