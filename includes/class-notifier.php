@@ -77,17 +77,17 @@ class Notifier {
 	private function init_hooks() {
 		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
 
-		add_action( 'plugins_loaded', array( 'Notifier_Admin_Notices', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Dashboard', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Notification_Merge_Tags', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Notification_Triggers', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Settings', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_frontend', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Admin_Notices', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Dashboard', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Notification_Merge_Tags', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Notification_Triggers', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Settings', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_frontend', 'init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'wp_enqueue_scripts', array( $this , 'frontend_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_include_integrations' ) );
+		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 	}
 
 	/**
