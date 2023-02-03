@@ -42,8 +42,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php $btn_style = get_option('notifier_click_chat_button_style');?>
         	<div class="btn-preview-wrap">
         		<?php if(!empty($btn_style) || NULL !== $btn_style){
-        			if($btn_style == 'custom-image'){
-        				echo '<style>.notifier-fields-table  #notifier_custom_chat_button_image{display:block;}</style>';
+        			if($btn_style == 'btn-custom-image'){
+        				echo '<style>.notifier-fields-table  .wanotifier-chat-btn-image-url{display:table-row;}</style>';
         			}
 
         			if($btn_style !== 'default'){

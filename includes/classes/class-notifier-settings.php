@@ -133,11 +133,12 @@ class Notifier_Settings {
 					),
 					array(
 						'id' 			=> 'custom_chat_button_image',
-						'title'			=> '',
+						'title'			=> 'Enter your own media url',
 						'type'			=> 'text',
 						'placeholder'	=> 'Enter your own media url here',
 						'name'          => 'custom_chat_button_image',
 						'default'		=> '',
+						'tr_class'      => 'wanotifier-chat-btn-image-url',
 					),
 				);
 				break;
@@ -180,13 +181,19 @@ class Notifier_Settings {
 			$custom_attributes[] = 'disabled="disabled"';
 		}
 
+		if(isset($field['tr_class'])){
+			$tr_class = $field['tr_class'];
+		}else{
+			$tr_class = '';
+		}
+
 		$custom_attributes_string = implode( ' ', $custom_attributes );
 
 		if ( 'title' === $field['type']) {
-			$html .= '<tr><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
+			$html .= '<tr class="'.esc_attr($tr_class).'"><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
 			$html .= '<p>' . $field['description'] . '</p></th></tr>';
 		} else {
-			$html .= '<tr>';
+			$html .= '<tr class="'.esc_attr($tr_class).'">';
 			$html .= '<th>' . $field['title'] . '</th>';
 			$html .= '<td>';
 

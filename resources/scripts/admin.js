@@ -244,13 +244,13 @@
 	    		return false;
 	    	}
 
-	    	if(btn_style == 'custom-image'){
-	    		$('#notifier_custom_chat_button_image').show();
+	    	if(btn_style == 'btn-custom-image'){
+	    		$('.wanotifier-chat-btn-image-url').show();
 	    		$('.btn-preview-wrap').hide();
 	    	}else{
 	    		$('<span class="loader_text">Loding preview...</span>').insertAfter($this);
 	    		$('.btn-preview-wrap').show();
-	    		$('#notifier_custom_chat_button_image').hide();
+	    		$('.wanotifier-chat-btn-image-url').hide();
 	    		$this.addClass('disabled-field');
 
 		    	data = {

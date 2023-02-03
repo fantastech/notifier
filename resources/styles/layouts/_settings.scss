@@ -54,14 +54,14 @@
 		max-width: none;
 	}
 
-	#notifier_custom_chat_button_image {
-		display: none;
-	}
-
 	#notifier_enable_click_to_chat {
 		max-width: 16px;
 		height: 16px;
 	}
+}
+
+.wanotifier-chat-btn-image-url {
+	display: none;
 }
 
 .wrap-click-to-chat-btn {
