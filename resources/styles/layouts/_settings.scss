@@ -1,7 +1,7 @@
 .notifier-settings-form-profile {
 	.notifier-profile-fields-right {
 		margin-left: 50px;
-    	margin-top: 100px;
+		margin-top: 100px;
 
 		@include media-down(mobile) {
 			display: none;
@@ -53,4 +53,53 @@
 		width: 100%;
 		max-width: none;
 	}
+
+	#notifier_enable_click_to_chat {
+		max-width: 16px;
+		height: 16px;
+	}
+}
+
+.wanotifier-chat-btn-image-url {
+	display: none;
+}
+
+.wrap-click-to-chat-btn {
+	a {
+		display: inline-block;
+		text-decoration: none !important;
+
+		&:focus,
+		&:hover {
+			text-decoration: none !important;
+		}
+	}
+}
+
+#click-to-chat-style-3 {
+	a {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #e4e4e4;
+		color: #7f7d7d;
+		padding: 0 12px;
+		border-radius: 25px;
+		font-size: 13px;
+		line-height: 32px;
+	}
+}
+
+.btn-preview-wrap {
+	position: fixed;
+	bottom: 15px;
+	right: 15px;
+	cursor: pointer;
+	z-index: 99999999;
+}
+
+.disabled-field {
+	background: $white !important;
+	opacity: 0.5;
+	pointer-events: none;
 }

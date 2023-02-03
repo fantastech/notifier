@@ -113,12 +113,14 @@
 			table {
 				width: 100%;
 
-				th, td {
+				th,
+				td {
 					text-align: left;
 					vertical-align: top;
 				}
 
-				th:first-child, td:first-child {
+				th:first-child,
+				td:first-child {
 					width: 20%;
 				}
 			}
@@ -152,7 +154,7 @@
 	margin-bottom: 10px;
 }
 
-.notifier-triggers-group-wrap{
+.notifier-triggers-group-wrap {
 	margin-bottom: 30px;
 
 	.notifier-trigger-wrap {
@@ -180,11 +182,11 @@
 				content: "";
 			}
 
-			input[type="checkbox"]:checked{
-			    color: white;
-			    background: $primary;
-			    border-color: $primary;
-			    box-shadow: none;
+			input[type="checkbox"]:checked {
+				color: white;
+				background: $primary;
+				border-color: $primary;
+				box-shadow: none;
 			}
 
 			input[type="checkbox"]:checked::before {
@@ -200,23 +202,22 @@
 			}
 
 			.notifier-show-trigger-info {
-			    border: 0px;
-			    background: none;
-			    padding: 0px;
-			    cursor: pointer;
-			    color: #aaa;
+				border: 0;
+				background: none;
+				padding: 0;
+				cursor: pointer;
+				color: #aaa;
 			}
 		}
 
 		.notifier-trigger-info {
-		    background: #f7f7f7;
-		    padding: 10px;
-		    margin-top: 10px;
-		    border: 1px solid #eeeeee;
-		    border-radius: 10px;
+			background: #f7f7f7;
+			padding: 10px;
+			margin-top: 10px;
+			border: 1px solid #eee;
+			border-radius: 10px;
 		}
 	}
-
 }
 
 .notifier-overview-image {

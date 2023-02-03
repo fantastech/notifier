@@ -100,7 +100,7 @@ class Notifier_Woocommerce {
 				'value'			=> function ($args) {
 					return get_permalink( wc_get_page_id( 'myaccount' ) );
 				}
-			)
+			),
 		);
 
 		$woo_fields = array ();
@@ -117,7 +117,7 @@ class Notifier_Woocommerce {
 				'preview'	=> 'OFF50',
 				'label' 	=> 'Order coupon codes',
 				'value'		=> function ($order, $field_function) {
-					return implode(',', $order->$field_function());
+					return implode(', ', $order->$field_function());
 				}
 			),
 			'discount_to_display'	=> array(
@@ -135,7 +135,7 @@ class Notifier_Woocommerce {
 					return wc_price( $order->$field_function(), array( 'currency' => $order->get_currency() ) );
 				}
 			),
-			'total_tax'				=> array(
+			'total_tax'		=> array(
 				'preview'	=> '$5.00',
 				'label' 	=> 'Order tax amount',
 				'value'		=> function ($order, $field_function) {
@@ -177,6 +177,7 @@ class Notifier_Woocommerce {
 							break;
 						}
 					}
+
 					if($image_id){
 						$image_url = wp_get_attachment_url( $product->get_image_id() );
 					}
@@ -184,6 +185,19 @@ class Notifier_Woocommerce {
 						$image_url = wc_placeholder_img_src();
 					}
 	                return $image_url;
+				}
+			),
+			'products_list' => array(
+				'preview'	=> '',
+				'label' 	=> 'Order products list',
+				'return_type'	=> 'text',
+				'value'		=> function ($order, $field_function) {
+					$order_item_data = array();
+					foreach ($order->get_items() as $item ) {
+						$order_item = $item->get_name().' x '.$item->get_quantity().' ('.wc_price( $item->get_total() ).')';
+						$order_item_data[] = sanitize_textarea_field($order_item);
+					}
+	                return implode(', ',$order_item_data);
 				}
 			),
 		);

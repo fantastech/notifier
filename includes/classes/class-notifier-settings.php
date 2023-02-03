@@ -13,6 +13,7 @@ class Notifier_Settings {
 		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'admin_init', array( __CLASS__ , 'save_settings_fields' ) );
         add_action( 'admin_init', array( __CLASS__ , 'disconnect_notifier' ) );
+		add_action( 'wp_ajax_notifier_preview_btn_style', array(__CLASS__, 'notifier_preview_btn_style'));
 	}
 
 	/**
@@ -38,7 +39,8 @@ class Notifier_Settings {
 	 */
 	private static function get_settings_tabs() {
 		$tabs = array(
-			'general'		=> 'General'
+			'general'		=> 'General',
+			'click_to_chat' => 'Click To Chat',
 		);
 		return $tabs;
 	}
@@ -84,6 +86,62 @@ class Notifier_Settings {
 					),
 				);
 				break;
+			case 'click_to_chat':
+				$settings = array(
+					array(
+						'title'			=> 'Click to chat',
+						'description'	=> '',
+						'type'			=> 'title',
+					),
+					array(
+						'id' 			=> 'enable_click_to_chat',
+						'title'			=> 'Enable Click to chat',
+						'type'			=> 'checkbox',
+						'default'		=> '',
+						'name'          => 'enable_click_to_chat',
+					),
+					array(
+						'id' 			=> 'user_whatsapp_number',
+						'title'			=> 'Whatsapp Number',
+						'type'			=> 'text',
+						'placeholder'	=> 'Enter your whatsapp number here with country code',
+						'name'          => 'user_whatsapp_number',
+						'default'		=> '',
+					),
+					array(
+						'id' 			=> 'greeting_text',
+						'title'			=> 'Greeting Text',
+						'type'			=> 'textarea',
+						'name'          => 'greeting_text',
+						'placeholder'	=> 'Enter your greeting message here',
+						'default'		=> '',
+					),
+					array(
+						'id' 			=> 'click_chat_button_style',
+						'title'			=> 'Button Style',
+						'name'          => 'click_chat_button_style',
+						'class'         => 'chat-button-style',
+						'type'			=> 'select',
+						'default'		=> '',
+						'options'       => ['default' => 'Choose button style',
+											'btn-style-1' => 'Style 1' ,
+											'btn-style-2' => 'Style 2',
+											'btn-style-3' => 'Style 3',
+											'btn-style-4' => 'Style 4',
+											'btn-custom-image' => 'Add your own image'],
+						'description'	=> 'Select a style of button to show on the frontend. You can see preview of the selected style on right bottom of the screen.',
+					),
+					array(
+						'id' 			=> 'custom_chat_button_image',
+						'title'			=> 'Enter your own media url',
+						'type'			=> 'text',
+						'placeholder'	=> 'Enter your own media url here',
+						'name'          => 'custom_chat_button_image',
+						'default'		=> '',
+						'tr_class'      => 'wanotifier-chat-btn-image-url',
+					),
+				);
+				break;
 		}
 		$settings = apply_filters( 'notifier_$tab_settings_fields', $settings );
 		return $settings;
@@ -123,13 +181,19 @@ class Notifier_Settings {
 			$custom_attributes[] = 'disabled="disabled"';
 		}
 
+		if(isset($field['tr_class'])){
+			$tr_class = $field['tr_class'];
+		}else{
+			$tr_class = '';
+		}
+
 		$custom_attributes_string = implode( ' ', $custom_attributes );
 
 		if ( 'title' === $field['type']) {
-			$html .= '<tr><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
+			$html .= '<tr class="'.esc_attr($tr_class).'"><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
 			$html .= '<p>' . $field['description'] . '</p></th></tr>';
 		} else {
-			$html .= '<tr>';
+			$html .= '<tr class="'.esc_attr($tr_class).'">';
 			$html .= '<th>' . $field['title'] . '</th>';
 			$html .= '<td>';
 
@@ -147,10 +211,10 @@ class Notifier_Settings {
 
 				case 'checkbox':
 					$checked = '';
-					if ( $option && 'on' == $option ) {
+					if ( $option && 'yes' == $option ) {
 						$checked = 'checked="checked"';
 					}
-					$html .= '<label><input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" ' . $checked . ' '.$custom_attributes_string.'/>' . $field['label'] . '</label>';
+					$html .= '<label><input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" ' . $checked . ' '.$custom_attributes_string.' value="yes"/>' . $field['label'] . '</label>';
 				    break;
 
 				case 'checkbox_multi':
@@ -412,4 +476,17 @@ class Notifier_Settings {
 		}
 	}
 
+	/**
+	 * Show Chat Button Preview
+	 */
+	public static function notifier_preview_btn_style(){
+		$btn_style = isset($_POST['btn_style']) ? $_POST['btn_style'] : '';
+		ob_start();
+		include_once NOTIFIER_PATH.'templates/buttons/'.$btn_style.'.php';
+		$btn_output = ob_get_contents();
+		ob_end_clean();
+		wp_send_json( array(
+			'preview'  => $btn_output
+		) );
+	}
 }

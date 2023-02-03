@@ -15,6 +15,7 @@ class Notifier_Notification_Merge_Tags {
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'post_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'comment_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'user_merge_tags') );
+		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'attachment_merge_tags') );
 	}
 
 	/**
@@ -23,8 +24,8 @@ class Notifier_Notification_Merge_Tags {
 	public static function get_merge_tags($types = array()) {
 		$merge_tags = array();
 		$merge_tags = apply_filters('notifier_notification_merge_tags', $merge_tags);
-
 		$final_merge_tags = array();
+
 		$final_merge_tags['WordPress'] = array(
 			array(
 				'id' 			=> 'site_title',
@@ -115,107 +116,127 @@ class Notifier_Notification_Merge_Tags {
 	 * Post merge tags
 	 */
 	public static function post_merge_tags($merge_tags) {
-		$merge_tags['Post'] = array(
-			array(
-				'id' 			=> 'post_ID',
-				'label' 		=> 'Post ID',
+		$args = array(
+	 		'public' => true,
+		);
+
+		$output = 'objects';
+		$post_types = get_post_types( $args, $output);
+		unset($post_types['attachment']);
+
+		foreach($post_types as $post){
+			$merge_tags[$post->labels->singular_name][] = array(
+				'id' 			=> $post->name.'_ID',
+				'label' 		=> $post->labels->singular_name.' ID',
 				'preview_value' => '123',
 				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					return $args['object_id'];
 				}
-			),
-			array(
-				'id' 			=> 'post_title',
-				'label' 		=> 'Post title',
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+				'id' 			=> $post->name.'_title',
+				'label' 		=> $post->labels->singular_name.' title',
 				'preview_value' => 'Hello World!',
 				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					$post = get_post($args['object_id']);
 					return $post->post_title;
 				}
-			),
-			array(
-				'id' 			=> 'post_permalink',
-				'label' 		=> 'Post permalink',
-				'preview_value' => site_url() . '/hello-world/',
-				'return_type'	=> 'text',
-				'value'			=> function ($args) {
-					$post = get_post($args['object_id']);
-					return get_permalink( $post->ID );
-				}
-			),
-			array(
-				'id' 			=> 'post_author',
-				'label' 		=> 'Post author',
-				'preview_value' => 'John Doe',
-				'return_type'	=> 'text',
-				'value'			=> function ($args) {
-					$post = get_post($args['object_id']);
-					return $post->post_author;
-				}
-			),
-			array(
-				'id' 			=> 'post_content',
-				'label' 		=> 'Post content',
-				'preview_value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-				'return_type'	=> 'text',
-				'value'			=> function ($args) {
-					$post = get_post($args['object_id']);
-					return sanitize_text_field($post->post_content);
-				}
-			),
-			array(
-				'id' 			=> 'post_excerpt',
-				'label' 		=> 'Post excerpt',
-				'preview_value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-				'return_type'	=> 'text',
-				'value'			=> function ($args) {
-					$post = get_post($args['object_id']);
-					return sanitize_text_field($post->post_excerpt);
-				}
-			),
-			array(
-				'id' 			=> 'post_status',
-				'label' 		=> 'Post status',
-				'preview_value' => 'publish',
-				'return_type'	=> 'text',
-				'value'			=> function ($args) {
-					$post = get_post($args['object_id']);
-					return $post->post_status;
-				}
-			),
-			array(
-				'id' 			=> 'post_publish_date',
-				'label' 		=> 'Post publish date',
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+					'id' 			=> $post->name.'_permalink',
+					'label' 		=> $post->labels->singular_name.' permalink',
+					'preview_value' => site_url() . '/hello-world/',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) {
+						$post = get_post($args['object_id']);
+						return get_permalink( $post->ID );
+					}
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+					'id' 			=> $post->name.'_author',
+					'label' 		=> $post->labels->singular_name.' author',
+					'preview_value' => 'John Doe',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) {
+						$post = get_post($args['object_id']);
+						return $post->post_author;
+					}
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+				'id' 			=> $post->name.'_publish_date',
+				'label' 		=> $post->labels->singular_name.' publish date',
 				'preview_value' => date(get_option('date_format')),
 				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					$post = get_post($args['object_id']);
 					return $post->post_date;
 				}
-			),
-			array(
-				'id' 			=> 'post_modified_date',
-				'label' 		=> 'Post modified date',
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+				'id' 			=> $post->name.'_content',
+				'label' 		=> $post->labels->singular_name.' content',
+				'preview_value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+				'return_type'	=> 'text',
+				'value'			=> function ($args) {
+					$post = get_post($args['object_id']);
+					return sanitize_text_field($post->post_content);
+				}
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+				'id' 			=> $post->name.'_status',
+				'label' 		=> $post->labels->singular_name.' status',
+				'preview_value' => 'publish',
+				'return_type'	=> 'text',
+				'value'			=> function ($args) {
+					$post = get_post($args['object_id']);
+					return $post->post_status;
+				}
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+				'id' 			=> $post->name.'_modified_date',
+				'label' 		=> $post->labels->singular_name.' modified date',
 				'preview_value' => date(get_option('date_format')),
 				'return_type'	=> 'text',
 				'value'			=> function ($args) {
 					$post = get_post($args['object_id']);
 					return $post->post_modified;
 				}
-			),
-			array(
-				'id' 			=> 'post_featured_image',
-				'label' 		=> 'Post featured image',
+			);
+
+			$merge_tags[$post->labels->singular_name][]	= array(
+				'id' 			=> $post->name.'_featured_image',
+				'label' 		=> $post->labels->singular_name.' featured image',
 				'preview_value' => get_custom_logo(),
 				'return_type'	=> 'image',
 				'value'			=> function ($args) {
 					$post = get_post($args['object_id']);
 				 	return get_the_post_thumbnail_url($post, 'full');
 				}
-			)
-		);
+			);
+
+			if($post->name == 'post'){
+				$merge_tags[$post->labels->singular_name][] = array(
+					'id' 			=> 'post_excerpt',
+					'label' 		=> 'Post excerpt',
+					'preview_value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) {
+						$post = get_post($args['object_id']);
+						return sanitize_text_field($post->post_excerpt);
+					}
+				);
+			}
+		}
+
 		return $merge_tags;
 	}
 
@@ -396,6 +417,79 @@ class Notifier_Notification_Merge_Tags {
 	}
 
 	/**
+	 * Attachement merge tags
+	 */
+	public static function attachment_merge_tags($merge_tags) {
+
+		$merge_tags['Attachment'][] = array(
+			'id' 			=> 'attachment_ID',
+			'label' 		=> 'Attachment ID',
+			'preview_value' => '123',
+			'return_type'	=> 'text',
+			'value'			=> function ($args) {
+				return $args['object_id'];
+			}
+		);
+
+		$merge_tags['Attachment'][]	= array(
+			'id' 			=> 'attachment_title',
+			'label' 		=> 'Attachment title',
+			'preview_value' => 'Hello World!',
+			'return_type'	=> 'text',
+			'value'			=> function ($args) {
+				$post = get_post($args['object_id']);
+				return $post->post_title;
+			}
+		);
+
+		$merge_tags['Attachment'][]	= array(
+				'id' 			=> 'attachment_permalink',
+				'label' 		=> 'Attachment permalink',
+				'preview_value' => site_url() . '/hello-world/',
+				'return_type'	=> 'text',
+				'value'			=> function ($args) {
+					$post = get_post($args['object_id']);
+					return get_permalink( $post->ID );
+				}
+		);
+
+		$merge_tags['Attachment'][]	= array(
+				'id' 			=> 'attachment_author',
+				'label' 		=> 'Attachment author',
+				'preview_value' => 'John Doe',
+				'return_type'	=> 'text',
+				'value'			=> function ($args) {
+					$post = get_post($args['object_id']);
+					return $post->post_author;
+				}
+		);
+
+		$merge_tags['Attachment'][]	= array(
+			'id' 			=> 'attachment_publish_date',
+			'label' 		=> 'Attachment publish date',
+			'preview_value' => date(get_option('date_format')),
+			'return_type'	=> 'text',
+			'value'			=> function ($args) {
+				$post = get_post($args['object_id']);
+				return $post->post_date;
+			}
+		);
+
+		$merge_tags['Attachment'][]	= array(
+			'id' 			=> 'attachment_file_url',
+			'label' 		=> 'Attachment File URL',
+			'preview_value' => site_url() . '/hello-world/',
+			'return_type'	=> 'text',
+			'value'			=> function ($args) {
+				$post = get_post($args['object_id']);
+				return wp_get_attachment_url( $post->ID );
+			}
+		);
+
+		return $merge_tags;
+	}
+
+	/**
 	 * Return notification merge tags for supplied trigger
 	 */
 	public static function get_trigger_merge_tags($trigger) {
@@ -437,12 +531,13 @@ class Notifier_Notification_Merge_Tags {
 					foreach($tags as $tag){
 						if ( isset($tag['id']) && $tag_id == $tag['id'] ) {
 							$value = $tag['value']($context_args);
-							break 2;
+							goto end;
 						}
 					}
 				}
 			}
 		}
+		end:
 		return $value;
 	}
 

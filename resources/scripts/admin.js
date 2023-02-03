@@ -236,6 +236,36 @@
 	        return false;
 	    });
 
+	    $(document).on('change', '#click_chat_button_style', function(){
+	    	var btn_style = $(this).val();
+	    	var $this = $(this);
+	    	if(btn_style == 'default'){
+	    		$('.btn-preview-wrap').html('');
+	    		return false;
+	    	}
+
+	    	if(btn_style == 'btn-custom-image'){
+	    		$('.wanotifier-chat-btn-image-url').show();
+	    		$('.btn-preview-wrap').hide();
+	    	}else{
+	    		$('<span class="loader_text">Loding preview...</span>').insertAfter($this);
+	    		$('.btn-preview-wrap').show();
+	    		$('.wanotifier-chat-btn-image-url').hide();
+	    		$this.addClass('disabled-field');
+
+		    	data = {
+		    		action: 'notifier_preview_btn_style',
+		    		btn_style: btn_style,
+		    	}
+
+		    	notifierAjax(data, function(response){
+		    		$this.parents('td').find('.loader_text').remove();
+		    		$this.removeClass('disabled-field');
+		    		$('.btn-preview-wrap').html(response.preview);
+		    	});
+	    	}
+	  	});
+
 		/*****************
 		 * Triggers page
 		 ****************/

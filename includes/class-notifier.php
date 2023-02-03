@@ -68,6 +68,7 @@ class Notifier {
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-merge-tags.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-triggers.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-settings.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-frontend.php';
 	}
 
 	/**
@@ -76,16 +77,17 @@ class Notifier {
 	private function init_hooks() {
 		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
 
-		add_action( 'plugins_loaded', array( 'Notifier_Admin_Notices', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Dashboard', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Notification_Merge_Tags', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Notification_Triggers', 'init' ) );
-		add_action( 'plugins_loaded', array( 'Notifier_Settings', 'init' ) );
-
+		add_action( 'after_setup_theme', array( 'Notifier_Admin_Notices', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Dashboard', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Notification_Merge_Tags', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Notification_Triggers', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Settings', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Frontend', 'init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
+		add_action( 'wp_enqueue_scripts', array( $this , 'frontend_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'maybe_include_integrations' ) );
+		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 	}
 
 	/**
@@ -145,6 +147,21 @@ class Notifier {
 	    	null,
 	    	NOTIFIER_VERSION
 	    );
+	}
+
+	/**
+	 * Add frontend scripts and styles
+	 */
+	public function frontend_scripts () {
+		if('yes' === get_option('notifier_enable_click_to_chat')){
+	    	// Styles
+		    wp_enqueue_style(
+		    	NOTIFIER_NAME . '-frontend-css',
+		    	NOTIFIER_URL . 'assets/css/frontend.css',
+		    	null,
+		    	NOTIFIER_VERSION
+		    );
+		}
 	}
 
 	/**
