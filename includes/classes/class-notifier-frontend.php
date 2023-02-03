@@ -3,7 +3,7 @@
  *
  * @package    Wa_Notifier
  */
-class Notifier_frontend {
+class Notifier_Frontend {
 	/**
 	 * Init
 	 */

@@ -82,7 +82,7 @@ class Notifier {
 		add_action( 'after_setup_theme', array( 'Notifier_Notification_Merge_Tags', 'init' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Notification_Triggers', 'init' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Settings', 'init' ) );
-		add_action( 'after_setup_theme', array( 'Notifier_frontend', 'init' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Frontend', 'init' ) );
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'wp_enqueue_scripts', array( $this , 'frontend_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
