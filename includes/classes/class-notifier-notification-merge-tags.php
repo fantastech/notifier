@@ -240,7 +240,7 @@ class Notifier_Notification_Merge_Tags {
 
 			if(!empty($taxonomies)){
 				foreach($taxonomies as $taxonomy){
-					if($taxonomy == 'product_visibility' || $taxonomy == 'product_shipping_class') {
+					if($taxonomy == 'product_visibility' || $taxonomy == 'product_shipping_class' || $taxonomy == 'post_format') {
 						continue;
 					}
 
