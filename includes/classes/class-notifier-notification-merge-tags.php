@@ -235,27 +235,6 @@ class Notifier_Notification_Merge_Tags {
 					}
 				);
 			}
-
-			$taxonomies = get_object_taxonomies( $post->name );
-
-			if(!empty($taxonomies)){
-				foreach($taxonomies as $taxonomy){
-					if($taxonomy == 'product_visibility' || $taxonomy == 'product_shipping_class' || $taxonomy == 'post_format') {
-						continue;
-					}
-					$tax_name = $taxonomy;
-					$merge_tags[$post->labels->singular_name][] = array(
-						'id' 			=> $post->name . '_' . $taxonomy,
-						'label' 		=> ucfirst(str_replace('_',' ',$tax_name)),
-						'preview_value' => 'Uncategorized',
-						'return_type'	=> 'text',
-						'value'			=> function ($args) use ($taxonomy) {
-							$post_terms = wp_get_post_terms($args['object_id'] , $taxonomy, array( 'fields' => 'names'));
-							return implode(', ',$post_terms);
-						}
-					);
-				}
-			}
 		}
 
 		return $merge_tags;
