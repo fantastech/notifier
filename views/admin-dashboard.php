@@ -26,8 +26,8 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 							<p>Following are the instructions to do the setup.</p>
 							<ol>
 								<li>Create a <b>FREE account</b> on WANotifier.com by <a href="https://app.wanotifier.com/create-account/" target="_blank">clicking here</a>.</li>
-								<li>After you create your account, go through the on-boarding steps to the setup up of your <b>WhatsApp Cloud API account</b>.</li>
-								<li>After your account is setup and you come to the Dashboard, go to the <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings > API</a> and scroll to the bottom to get your <b>WANotifier.com API Key</b>.</li>
+								<li>Go through the on-boarding steps to setup your <b>WhatsApp Cloud API account</b> and integrate that with WANotifier.</li>
+								<li>After setup is done, you'll land on the <b>Dashboard</b> page. From there, go to the <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings > API</a> page and scroll to the bottom to get your <b>WANotifier.com API Key</b>.</li>
 								<li>Copy and paste that key in the text box below and click on <b>Save and Validate</b> to continue.</li>
 							</ol>
 							<p>The whole process might take <b>15 - 30 min</b> depending on your pace.</p>

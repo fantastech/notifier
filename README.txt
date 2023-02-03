@@ -1,7 +1,7 @@
 === WANotifier - Send Message Notifications Using Cloud API ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
-Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, woocommerce whatsapp order, gravity forms whatsapp, contact form 7 whatsapp, click to chat
+Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, gravity forms whatsapp, contact form 7 whatsapp, click to chat, whatsapp chat
 Requires at least: 5.0
 Tested up to: 6.1.1
 Stable tag: 2.1.0
