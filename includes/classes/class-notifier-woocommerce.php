@@ -117,7 +117,7 @@ class Notifier_Woocommerce {
 				'preview'	=> 'OFF50',
 				'label' 	=> 'Order coupon codes',
 				'value'		=> function ($order, $field_function) {
-					return implode(',', $order->$field_function());
+					return implode(', ', $order->$field_function());
 				}
 			),
 			'discount_to_display'	=> array(

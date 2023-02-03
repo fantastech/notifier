@@ -611,7 +611,6 @@ class Notifier_Notification_Triggers {
 					'compare' => '='
 				)
 			),
-			'post__not_in'	=> $excluded_ids
 		) );
 
 		if(!empty($trigger_ids)){
@@ -635,12 +634,16 @@ class Notifier_Notification_Triggers {
 		$data = array();
 		$recipient_data = array();
 
-		foreach($merge_tags as $tag){
-			$data[$tag] = Notifier_Notification_Merge_Tags::get_trigger_merge_tag_value($tag, $context_args);
+		if(!empty($merge_tags)){
+			foreach($merge_tags as $tag){
+				$data[$tag] = Notifier_Notification_Merge_Tags::get_trigger_merge_tag_value($tag, $context_args);
+			}
 		}
 
-		foreach($recipient_fields as $field){
-			$recipient_data[$field] = Notifier_Notification_Merge_Tags::get_trigger_recipient_field_value($field, $context_args);
+		if(!empty($recipient_fields)){
+			foreach($recipient_fields as $field){
+				$recipient_data[$field] = Notifier_Notification_Merge_Tags::get_trigger_recipient_field_value($field, $context_args);
+			}
 		}
 
 		$params = array(
