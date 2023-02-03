@@ -422,9 +422,9 @@ class Notifier_Notification_Triggers {
 
 		$triggers['WordPress'][] = array(
 		 	'id'			=> 'new_attachment',
-			'label' 		=> 'New Media is added',
-			'description'	=> 'Trigger notification when a new attachement is added.',
-			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('attachment') ),
+			'label' 		=> 'New Media is uploded',
+			'description'	=> 'Trigger notification when a new attachement is uploded.',
+			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Attachment') ),
 			'recipient_fields'	=> array(),
 			'action'		=> array (
 				'hook'		=> 'add_attachment',

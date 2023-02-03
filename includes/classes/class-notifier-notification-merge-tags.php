@@ -421,7 +421,7 @@ class Notifier_Notification_Merge_Tags {
 	 */
 	public static function attachment_merge_tags($merge_tags) {
 
-		$merge_tags['attachment'][] = array(
+		$merge_tags['Attachment'][] = array(
 			'id' 			=> 'attachment_ID',
 			'label' 		=> 'Attachment ID',
 			'preview_value' => '123',
@@ -431,7 +431,7 @@ class Notifier_Notification_Merge_Tags {
 			}
 		);
 
-		$merge_tags['attachment'][]	= array(
+		$merge_tags['Attachment'][]	= array(
 			'id' 			=> 'attachment_title',
 			'label' 		=> 'Attachment title',
 			'preview_value' => 'Hello World!',
@@ -442,7 +442,7 @@ class Notifier_Notification_Merge_Tags {
 			}
 		);
 
-		$merge_tags['attachment'][]	= array(
+		$merge_tags['Attachment'][]	= array(
 				'id' 			=> 'attachment_permalink',
 				'label' 		=> 'Attachment permalink',
 				'preview_value' => site_url() . '/hello-world/',
@@ -453,7 +453,7 @@ class Notifier_Notification_Merge_Tags {
 				}
 		);
 
-		$merge_tags['attachment'][]	= array(
+		$merge_tags['Attachment'][]	= array(
 				'id' 			=> 'attachment_author',
 				'label' 		=> 'Attachment author',
 				'preview_value' => 'John Doe',
@@ -464,7 +464,7 @@ class Notifier_Notification_Merge_Tags {
 				}
 		);
 
-		$merge_tags['attachment'][]	= array(
+		$merge_tags['Attachment'][]	= array(
 			'id' 			=> 'attachment_publish_date',
 			'label' 		=> 'Attachment publish date',
 			'preview_value' => date(get_option('date_format')),
@@ -475,7 +475,7 @@ class Notifier_Notification_Merge_Tags {
 			}
 		);
 
-		$merge_tags['attachment'][]	= array(
+		$merge_tags['Attachment'][]	= array(
 			'id' 			=> 'attachment_file_url',
 			'label' 		=> 'Attachment File URL',
 			'preview_value' => site_url() . '/hello-world/',
