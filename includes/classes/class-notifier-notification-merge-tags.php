@@ -258,6 +258,8 @@ class Notifier_Notification_Merge_Tags {
 				}
 			}
 		}
+
+		return $merge_tags;
 	}
 
 	/**
