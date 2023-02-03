@@ -5,16 +5,18 @@
  * @package Notifier
  */
 
-$whatsapp_number = !empty(get_option('notifier_user_whatsapp_number')) ? get_option('notifier_user_whatsapp_number') : '';
-$greeting_text = !empty(get_option('notifier_greeting_text')) ? get_option('notifier_greeting_text') : '';
+$whatsapp_number = get_option('notifier_ctc_whatsapp_number');
+$ctc_greeting_text = get_option('notifier_ctc_greeting_text');
+$ctc_greeting_text = wp_encode_emoji($ctc_greeting_text);
+$url = 'https://wa.me/'.urlencode($whatsapp_number).'?text='.urlencode($ctc_greeting_text);
 
-$custom_chat_button_image  = !empty(get_option('notifier_custom_chat_button_image')) ? get_option('notifier_custom_chat_button_image'): '';
-
-$url = 'https://wa.me/'.$whatsapp_number.'?text='.$greeting_text;
-
-?>
-<div class="wrap-click-to-chat-btn" id="click-to-chat-style-custom">
-	<a href="<?php echo esc_url($url); ?>" target="_blank">
-		<span> <img src="<?php echo $custom_chat_button_image; ?>" alt="Whatsapp"></span>
-	</a>
-</div>
+$ctc_custom_button_image_url  = get_option('notifier_ctc_custom_button_image_url');
+if(!empty($ctc_custom_button_image_url)){
+	?>
+	<div class="notifier-click-to-chat-btn notifier-click-to-chat-style-custom">
+		<a href="<?php echo esc_url($url); ?>" target="_blank">
+			<img src="<?php echo $ctc_custom_button_image_url; ?>" alt="Whatsapp">
+		</a>
+	</div>
+	<?php
+}

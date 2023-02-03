@@ -13,7 +13,7 @@ class Notifier_Settings {
 		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'admin_init', array( __CLASS__ , 'save_settings_fields' ) );
         add_action( 'admin_init', array( __CLASS__ , 'disconnect_notifier' ) );
-		add_action( 'wp_ajax_notifier_preview_btn_style', array(__CLASS__, 'notifier_preview_btn_style'));
+		add_action( 'wp_ajax_notifier_preview_btn_style', array(__CLASS__, 'preview_btn_style'));
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Notifier_Settings {
 	private static function get_settings_tabs() {
 		$tabs = array(
 			'general'		=> 'General',
-			'click_to_chat' => 'Click To Chat',
+			'click_to_chat' => 'Click to Chat',
 		);
 		return $tabs;
 	}
@@ -89,56 +89,58 @@ class Notifier_Settings {
 			case 'click_to_chat':
 				$settings = array(
 					array(
-						'title'			=> 'Click to chat',
-						'description'	=> '',
+						'title'			=> 'Click to Chat',
+						'description'	=> 'Show click to chat button on your website to let your website visitors start WhatsApp chat with you.',
 						'type'			=> 'title',
 					),
 					array(
-						'id' 			=> 'enable_click_to_chat',
-						'title'			=> 'Enable Click to chat',
+						'id' 			=> 'ctc_enable',
+						'title'			=> 'Enable',
 						'type'			=> 'checkbox',
 						'default'		=> '',
-						'name'          => 'enable_click_to_chat',
+						'name'          => 'ctc_enable',
 					),
 					array(
-						'id' 			=> 'user_whatsapp_number',
+						'id' 			=> 'ctc_whatsapp_number',
 						'title'			=> 'Whatsapp Number',
 						'type'			=> 'text',
-						'placeholder'	=> 'Enter your whatsapp number here with country code',
-						'name'          => 'user_whatsapp_number',
-						'default'		=> '',
+						'placeholder'	=> 'Enter your WhatsApp number',
+						'name'          => 'ctc_whatsapp_number',
+						'description'		=> 'Enter your WhatsApp number with country code. Eg. +919876543210',
 					),
 					array(
-						'id' 			=> 'greeting_text',
-						'title'			=> 'Greeting Text',
-						'type'			=> 'textarea',
-						'name'          => 'greeting_text',
+						'id' 			=> 'ctc_greeting_text',
+						'title'			=> 'Greeting Message',
+						'type'			=> 'text',
+						'name'          => 'ctc_greeting_text',
 						'placeholder'	=> 'Enter your greeting message here',
-						'default'		=> '',
+						'description'		=> 'This text will be added to user\'s WhatsApp chat text field when they click on the button.' ,
 					),
 					array(
-						'id' 			=> 'click_chat_button_style',
+						'id' 			=> 'ctc_button_style',
 						'title'			=> 'Button Style',
-						'name'          => 'click_chat_button_style',
+						'name'          => 'ctc_button_style',
 						'class'         => 'chat-button-style',
 						'type'			=> 'select',
 						'default'		=> '',
-						'options'       => ['default' => 'Choose button style',
+						'options'       => array(
+											'default' => 'Select button style',
 											'btn-style-1' => 'Style 1' ,
 											'btn-style-2' => 'Style 2',
 											'btn-style-3' => 'Style 3',
 											'btn-style-4' => 'Style 4',
-											'btn-custom-image' => 'Add your own image'],
-						'description'	=> 'Select a style of button to show on the frontend. You can see preview of the selected style on right bottom of the screen.',
+											'btn-custom-image' => 'Add your own image'
+										),
+						'description'	=> 'Select a button style. Preview will be shown on bottom right of this screen. You can update button style by writing custom CSS in your theme.',
 					),
 					array(
-						'id' 			=> 'custom_chat_button_image',
-						'title'			=> 'Enter your own media url',
+						'id' 			=> 'ctc_custom_button_image_url',
+						'title'			=> 'Button image url',
 						'type'			=> 'text',
-						'placeholder'	=> 'Enter your own media url here',
-						'name'          => 'custom_chat_button_image',
-						'default'		=> '',
-						'tr_class'      => 'wanotifier-chat-btn-image-url',
+						'placeholder'	=> 'https://',
+						'name'          => 'ctc_custom_button_image_url',
+						'description'	=> 'Enter button image url here.',
+						'tr_class'      => 'notifier-chat-btn-image-url',
 					),
 				);
 				break;
@@ -158,12 +160,9 @@ class Notifier_Settings {
 			$option = get_option( $option_name );
 		}
 
-		$data = '';
-		if ( isset( $field['default'] ) ) {
+		$data = $option;
+		if ( isset( $field['default'] ) && empty($option) ) {
 			$data = $field['default'];
-			if ( isset( $option ) && '' != $option) {
-				$data = $option;
-			}
 		}
 
 		$custom_attributes = array();
@@ -191,7 +190,7 @@ class Notifier_Settings {
 
 		if ( 'title' === $field['type']) {
 			$html .= '<tr class="'.esc_attr($tr_class).'"><th class="section-title" colspan="2"><h3>' . $field['title'] . '</h3>';
-			$html .= '<p>' . $field['description'] . '</p></th></tr>';
+			$html .= '<p class="description">' . $field['description'] . '</p></th></tr>';
 		} else {
 			$html .= '<tr class="'.esc_attr($tr_class).'">';
 			$html .= '<th>' . $field['title'] . '</th>';
@@ -202,11 +201,11 @@ class Notifier_Settings {
 				case 'text':
 				case 'password':
 				case 'number':
-					$html .= '<input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $data . '" '.$custom_attributes_string.'/>';
+					$html .= '<input id="' . esc_attr( $option_name ) . '" type="' . $field['type'] . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . esc_attr($data) . '" '.$custom_attributes_string.'/>';
 				    break;
 
 				case 'textarea':
-					$html .= '<textarea id="' . esc_attr( $option_name ) . '" rows="5" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" '.$custom_attributes_string.'>' . $data . '</textarea><br/>';
+					$html .= '<textarea id="' . esc_attr( $option_name ) . '" rows="5" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" '.$custom_attributes_string.'>' . esc_textarea($data) . '</textarea><br/>';
 				    break;
 
 				case 'checkbox':
@@ -444,6 +443,12 @@ class Notifier_Settings {
 					);
 				}
 			}
+			elseif('notifier_ctc_whatsapp_number' == $name && !notifier_validate_phone_number($value)){
+				$notices[] = array(
+					'message' => 'Please enter a valid WhatsApp phone number with country code.',
+					'type' => 'error'
+				);
+			}
 			else{
 				update_option( $name, $value, 'yes' );
 			}
@@ -479,12 +484,13 @@ class Notifier_Settings {
 	/**
 	 * Show Chat Button Preview
 	 */
-	public static function notifier_preview_btn_style(){
-		$btn_style = isset($_POST['btn_style']) ? $_POST['btn_style'] : '';
+	public static function preview_btn_style(){
+		$btn_style = isset($_POST['btn_style']) ? sanitize_text_field($_POST['btn_style']) : '';
+
 		ob_start();
 		include_once NOTIFIER_PATH.'templates/buttons/'.$btn_style.'.php';
-		$btn_output = ob_get_contents();
-		ob_end_clean();
+		$btn_output = ob_get_clean();
+
 		wp_send_json( array(
 			'preview'  => $btn_output
 		) );

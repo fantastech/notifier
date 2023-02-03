@@ -5,12 +5,12 @@
  * @package Notifier
  */
 
-$whatsapp_number = !empty(get_option('notifier_user_whatsapp_number')) ? get_option('notifier_user_whatsapp_number') : '';
-$greeting_text = !empty(get_option('notifier_greeting_text')) ? get_option('notifier_greeting_text') : '';
-
-$url = 'https://wa.me/'.$whatsapp_number.'?text='.$greeting_text;
+$whatsapp_number = get_option('notifier_ctc_whatsapp_number');
+$ctc_greeting_text = get_option('notifier_ctc_greeting_text');
+$ctc_greeting_text = wp_encode_emoji($ctc_greeting_text);
+$url = 'https://wa.me/'.urlencode($whatsapp_number).'?text='.urlencode($ctc_greeting_text);
 ?>
-<div class="wrap-click-to-chat-btn" id="click-to-chat-style-3">
+<div class="notifier-click-to-chat-btn notifier-click-to-chat-style-3">
 	<a href="<?php echo esc_url($url); ?>" target="_blank">
 		<span style="margin:0 8px 0 -12px;order:0;">
 			<svg style="pointer-events:none; display: block; height:32px; width:32px;" width="32px" height="32px" viewBox="0 0 1219.547 1225.016">
@@ -25,6 +25,6 @@ $url = 'https://wa.me/'.$whatsapp_number.'?text='.$greeting_text;
 				<path style="fill: #FFFFFF;" fill="#FFF" d="M1036.898 176.091C923.562 62.677 772.859.185 612.297.114 281.43.114 12.172 269.286 12.039 600.137 12 705.896 39.633 809.13 92.156 900.13L7 1211.067l318.203-83.438c87.672 47.812 186.383 73.008 286.836 73.047h.255.003c330.812 0 600.109-269.219 600.25-600.055.055-160.343-62.328-311.108-175.649-424.53zm-424.601 923.242h-.195c-89.539-.047-177.344-24.086-253.93-69.531l-18.227-10.805-188.828 49.508 50.414-184.039-11.875-18.867c-49.945-79.414-76.312-171.188-76.273-265.422.109-274.992 223.906-498.711 499.102-498.711 133.266.055 258.516 52 352.719 146.266 94.195 94.266 146.031 219.578 145.992 352.852-.118 274.999-223.923 498.749-498.899 498.749z"></path>
 			</svg>
 		</span>
-		<span class="ctc_cta">WhatsApp us</span>
+		<span>WhatsApp us</span>
 	</a>
 </div>

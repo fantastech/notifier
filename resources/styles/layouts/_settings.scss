@@ -45,6 +45,14 @@
 				padding: 0;
 			}
 		}
+
+		h3 {
+	    	margin-bottom: 0px;
+		}
+
+		.description {
+			font-weight: normal;
+		}
 	}
 
 	input:not([type='button']),
@@ -54,48 +62,14 @@
 		max-width: none;
 	}
 
-	#notifier_enable_click_to_chat {
+	#notifier_ctc_enable {
 		max-width: 16px;
 		height: 16px;
 	}
 }
 
-.wanotifier-chat-btn-image-url {
+.notifier-chat-btn-image-url {
 	display: none;
-}
-
-.wrap-click-to-chat-btn {
-	a {
-		display: inline-block;
-		text-decoration: none !important;
-
-		&:focus,
-		&:hover {
-			text-decoration: none !important;
-		}
-	}
-}
-
-#click-to-chat-style-3 {
-	a {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: #e4e4e4;
-		color: #7f7d7d;
-		padding: 0 12px;
-		border-radius: 25px;
-		font-size: 13px;
-		line-height: 32px;
-	}
-}
-
-.btn-preview-wrap {
-	position: fixed;
-	bottom: 15px;
-	right: 15px;
-	cursor: pointer;
-	z-index: 99999999;
 }
 
 .disabled-field {

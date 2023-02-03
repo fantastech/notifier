@@ -13,16 +13,19 @@ class Notifier_Frontend {
 
 	/**
 	 * Display Whatsapp chat button.
-	 *
 	 */
 	public static function display_whatsapp_chat_button() {
-		$enable_click_chat = get_option('notifier_enable_click_to_chat');
-		$btn_style = get_option('notifier_click_chat_button_style');
-		$click_chat_number = get_option('notifier_user_whatsapp_number');
+		$enable_click_chat = get_option('notifier_ctc_enable');
+		$btn_style = get_option('notifier_ctc_button_style');
+		$click_chat_number = get_option('notifier_ctc_whatsapp_number');
+
+		if(!$btn_style){
+			return;
+		}
 
 		if($enable_click_chat === 'yes' &&  !empty($click_chat_number)){
 			if($btn_style !== 'default'){
-				include_once NOTIFIER_PATH.'templates/buttons/'.$btn_style.'.php';
+				include_once NOTIFIER_PATH . 'templates/buttons/'.$btn_style.'.php';
 			}
 		}
 	}

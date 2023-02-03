@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.0.10' );
+		$this->define( 'NOTIFIER_VERSION', '2.1.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -153,7 +153,7 @@ class Notifier {
 	 * Add frontend scripts and styles
 	 */
 	public function frontend_scripts () {
-		if('yes' === get_option('notifier_enable_click_to_chat')){
+		if('yes' === get_option('notifier_ctc_enable')){
 	    	// Styles
 		    wp_enqueue_style(
 		    	NOTIFIER_NAME . '-frontend-css',

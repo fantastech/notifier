@@ -167,3 +167,10 @@ function notifier_upload_file_by_url( $image_url ) {
 function notifier_sanitize_phone_number( $phone_number ) {
 	return preg_replace( '/[^\d+]/', '', $phone_number );
 }
+
+/**
+ * Validate phone number
+ */
+function notifier_validate_phone_number( $phone_number ) {
+    return preg_match( '/^\+[1-9]\d{8,15}$/', $phone_number );
+}

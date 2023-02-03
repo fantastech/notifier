@@ -5,12 +5,12 @@
  * @package Notifier
  */
 
-$whatsapp_number = !empty(get_option('notifier_user_whatsapp_number')) ? get_option('notifier_user_whatsapp_number') : '';
-$greeting_text = !empty(get_option('notifier_greeting_text')) ? get_option('notifier_greeting_text') : '';
-
-$url = 'https://wa.me/'.$whatsapp_number.'?text='.$greeting_text;
+$whatsapp_number = get_option('notifier_ctc_whatsapp_number');
+$ctc_greeting_text = get_option('notifier_ctc_greeting_text');
+$ctc_greeting_text = wp_encode_emoji($ctc_greeting_text);
+$url = 'https://wa.me/'.urlencode($whatsapp_number).'?text='.urlencode($ctc_greeting_text);
 ?>
-<div class="wrap-click-to-chat-btn" id="click-to-chat-style-2">
+<div class="notifier-click-to-chat-btn notifier-click-to-chat-style-2">
 	<a href="<?php echo esc_url($url); ?>" target="_blank">
 		<svg style="pointer-events:none; display:block; height:50px; width:50px;" width="50px" height="50px" viewBox="0 0 1024 1024">
 			<defs>

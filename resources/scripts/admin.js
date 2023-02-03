@@ -236,21 +236,21 @@
 	        return false;
 	    });
 
-	    $(document).on('change', '#click_chat_button_style', function(){
+	    $(document).on('change', '#ctc_button_style', function(){
 	    	var btn_style = $(this).val();
 	    	var $this = $(this);
 	    	if(btn_style == 'default'){
-	    		$('.btn-preview-wrap').html('');
+	    		$('.notifier-btn-preview-wrap').html('');
 	    		return false;
 	    	}
 
 	    	if(btn_style == 'btn-custom-image'){
-	    		$('.wanotifier-chat-btn-image-url').show();
-	    		$('.btn-preview-wrap').hide();
-	    	}else{
-	    		$('<span class="loader_text">Loding preview...</span>').insertAfter($this);
-	    		$('.btn-preview-wrap').show();
-	    		$('.wanotifier-chat-btn-image-url').hide();
+	    		$('.notifier-chat-btn-image-url').show();
+	    		$('.notifier-btn-preview-wrap').hide();
+	    	}
+	    	else{
+	    		$('.notifier-btn-preview-wrap').show();
+	    		$('.notifier-chat-btn-image-url').hide();
 	    		$this.addClass('disabled-field');
 
 		    	data = {
@@ -259,9 +259,8 @@
 		    	}
 
 		    	notifierAjax(data, function(response){
-		    		$this.parents('td').find('.loader_text').remove();
 		    		$this.removeClass('disabled-field');
-		    		$('.btn-preview-wrap').html(response.preview);
+		    		$('.notifier-btn-preview-wrap').html(response.preview);
 		    	});
 	    	}
 	  	});
