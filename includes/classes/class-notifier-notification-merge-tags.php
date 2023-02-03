@@ -245,14 +245,13 @@ class Notifier_Notification_Merge_Tags {
 					}
 
 					$merge_tags[$post->labels->singular_name][] = array(
-						'id' 			=> $taxonomy,
+						'id' 			=> $post->name . '_' . $taxonomy,
 						'label' 		=> ucfirst(str_replace('_',' ',$taxonomy)),
 						'preview_value' => 'Uncategorized',
 						'return_type'	=> 'text',
 						'value'			=> function ($args) use($taxonomy) {
-							$post = get_post($args['object_id']);
-							$post_terms = wp_get_post_terms($post->ID, $taxonomy, array( 'fields' => 'names'));
-							return implode(",",$post_terms);
+							$post_terms = wp_get_post_terms($args['object_id'] , $taxonomy, array( 'fields' => 'names'));
+							return implode(", ",$post_terms);
 						}
 					);
 				}
