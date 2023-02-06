@@ -24,6 +24,7 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 **WordPress**
 
 * Send WhatsApp notification when a **new post is published**
+* Send WhatsApp notification when a **new custom post type is published**
 * Send WhatsApp notification when a **new comment is added**
 * Send WhatsApp notification when a **new user is registered**
 
