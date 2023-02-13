@@ -28,7 +28,7 @@ class Notifier_Woocommerce {
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
 				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
-					'hook'		=> 'woocommerce_new_order',
+					'hook'		=> 'woocommerce_thankyou',
 					'callback' 	=> function ( $order_id ){
 						$args = array (
 							'object_type' 	=> 'order',
@@ -197,6 +197,7 @@ class Notifier_Woocommerce {
 						$order_item = $item->get_name().' x '.$item->get_quantity().' ('.wc_price( $item->get_total() ).')';
 						$order_item_data[] = sanitize_textarea_field($order_item);
 					}
+
 	                return implode(', ',$order_item_data);
 				}
 			),
