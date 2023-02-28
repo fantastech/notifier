@@ -62,8 +62,11 @@ class Notifier_ContactForm7 {
 	 * Get merge tags for the current form
 	 */
 	public static function get_merge_tags( $form_id ) {
-		$ContactForm = WPCF7_ContactForm::get_instance( $form_id );
-		$form_fields = $ContactForm->scan_form_tags();
+		$fieldsArray   = get_post_meta($form_id);
+		$meta          = $fieldsArray['_form'][0];
+		$TagsManager   = WPCF7_FormTagsManager::get_instance();
+		$tags   = $TagsManager->scan( $meta );
+		$form_fields   = $TagsManager->filter( $meta, $data );
 
 		$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags();
 
@@ -89,6 +92,7 @@ class Notifier_ContactForm7 {
 				}
 			);
 		}
+
 		return $merge_tags;
 	}
 
@@ -96,12 +100,16 @@ class Notifier_ContactForm7 {
 	 * Get recipient fields
 	 */
 	public static function get_recipient_fields($form_id){
-		$ContactForm = WPCF7_ContactForm::get_instance( $form_id );
-		$form_fields = $ContactForm->scan_form_tags();
+		$fieldsArray   = get_post_meta( $form_id );
+		$meta          = $fieldsArray['_form'][0];
+		$TagsManager   = WPCF7_FormTagsManager::get_instance();
+		$tags   = $TagsManager->scan( $meta );
+		$form_fields   = $TagsManager->filter( $meta, $data );
 
 		$recipient_fields = array();
 		foreach($form_fields as $field){
-			if('tel' != $field->type){
+
+			if('tel' != $field->basetype){
 				continue;
 			}
 
