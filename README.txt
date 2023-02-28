@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, gravity forms whatsapp, contact form 7 whatsapp, click to chat, whatsapp chat
 Requires at least: 5.0
 Tested up to: 6.1.1
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -139,6 +139,10 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 == Changelog ==
 
+= 2.1.2 - 2023-02-28 =
+* fix: Contact Form 7 forms not visible
+* fix: tel* fields not showing in Recipient Fields for Contact Form 7
+
 = 2.1.1 - 2023-02-13 =
 * fix: Order product items field was sending empty data
 
@@ -209,6 +213,10 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.1.2 - 2023-02-28 =
+* fix: Contact Form 7 forms not visible
+* fix: tel* fields not showing in Recipient Fields for Contact Form 7
 
 = 2.1.1 - 2023-02-13 =
 * fix: Order product items field was sending empty data
