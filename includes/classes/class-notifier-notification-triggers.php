@@ -137,6 +137,16 @@ class Notifier_Notification_Triggers {
 			}
 		}
 
+		// Delete data fields meta if not added in current request
+		if(!isset($trigger_data[NOTIFIER_PREFIX . 'data_fields'])){
+			delete_post_meta( $post_id, NOTIFIER_PREFIX . 'data_fields');
+		}
+
+		// Delete recipient fields meta if not added in current request
+		if(!isset($trigger_data[NOTIFIER_PREFIX . 'recipient_fields'])){
+			delete_post_meta( $post_id, NOTIFIER_PREFIX . 'recipient_fields');
+		}
+
 		$triggers_array = self::build_final_triggers_array();
 
 		$params = array(
