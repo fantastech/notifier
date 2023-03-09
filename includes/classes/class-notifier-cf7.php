@@ -65,8 +65,7 @@ class Notifier_ContactForm7 {
 		$fieldsArray   = get_post_meta($form_id);
 		$meta          = $fieldsArray['_form'][0];
 		$TagsManager   = WPCF7_FormTagsManager::get_instance();
-		$tags   = $TagsManager->scan( $meta );
-		$form_fields   = $TagsManager->filter( $meta, $data );
+		$form_fields   = $TagsManager->filter( $meta, array() );
 
 		$merge_tags = Notifier_Notification_Merge_Tags::get_merge_tags();
 
@@ -103,8 +102,7 @@ class Notifier_ContactForm7 {
 		$fieldsArray   = get_post_meta( $form_id );
 		$meta          = $fieldsArray['_form'][0];
 		$TagsManager   = WPCF7_FormTagsManager::get_instance();
-		$tags   = $TagsManager->scan( $meta );
-		$form_fields   = $TagsManager->filter( $meta, $data );
+		$form_fields   = $TagsManager->filter( $meta, array() );
 
 		$recipient_fields = array();
 		foreach($form_fields as $field){
