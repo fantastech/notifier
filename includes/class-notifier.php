@@ -178,7 +178,8 @@ class Notifier {
 		?>
 		<div id="notifier-admin-header" data-post-type="<?php echo esc_attr($cpt); ?>">
 			<div class="notifier-admin-header-content">
-				<div class="header-page-title w-30">
+				<div class="header-page-title w-30 d-flex align-content-center">
+					<a class="header-logo" href="admin.php?page=notifier"><img src="<?php echo NOTIFIER_URL; ?>assets/images/favicon.svg"></a>
 					<h2><?php echo esc_attr(get_admin_page_title()); ?></h2>
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">

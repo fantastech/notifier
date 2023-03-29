@@ -17,22 +17,21 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 				<div class="col w-70">
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
-							<h3>Let's get started</h3>
+							<h3>Let's get started 🚀</h3>
 						</div>
 						<div class="dashboard-box-body">
-							<p><a href="https://wanotifier.com/" target="_blank">WA Notifier</a> is a SaaS tool that allows you to send bulk WhatsApp marketing and transactional messages to your customers using the <b>WhatsApp's official Cloud APIs</b>.</p>
-							<p>This plugin is an extension to our SaaS platform that allows you to <b>trigger WhatsApp message notifications</b> from your WordPress website.</p>
-							<p>To use this plugin you'll need to <b>create an account with us</b> and connect it with this plugin.</p>
+							<p><a href="https://wanotifier.com/" target="_blank">WANotifier</a> is a free SaaS tool that allows you to send bulk WhatsApp marketing and transactional messages to your customers using the <b>WhatsApp's official Cloud APIs</b>.</p>
+							<p>This plugin is an <b>extension to our SaaS platform</b> that allows you to <b>trigger WhatsApp message notifications</b> from your WordPress website. To use this plugin you'll need to <b>create an account with us</b> and connect it with this plugin.</p>
 							<p>Following are the instructions to do the setup.</p>
 							<ol>
-								<li>Create a <b>FREE account</b> on WANotifier.com by <a href="https://app.wanotifier.com/create-account/" target="_blank">clicking here</a>.</li>
-								<li>Go through the on-boarding steps to setup your <b>WhatsApp Cloud API account</b> and integrate that with WANotifier.</li>
+								<li>Create a <b>FREE</b> <a href="https://app.wanotifier.com/create-account/" target="_blank">WANotifier</a> account.</li>
+								<li>Go through the on-boarding steps to setup your <b>WhatsApp Cloud API account</b> with WANotifier.</li>
 								<li>After setup is done, you'll land on the <b>Dashboard</b> page. From there, go to the <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings > API</a> page and scroll to the bottom to get your <b>WANotifier.com API Key</b>.</li>
 								<li>Copy and paste that key in the text box below and click on <b>Save and Validate</b> to continue.</li>
 							</ol>
-							<p>The whole process might take <b>15 - 30 min</b> depending on your pace.</p>
+							<p>The whole process is one-time and might take <b>15 - 20 min</b> depending on your pace.</p>
 							<hr>
-							<p><b>Need help?</b> We can help you setup your account and this plugin for FREE. Just <a href="https://wanotifier.com/support/" target="_blank">get in touch</a> with us and we'll do it for you.</p>
+							<p><b>Need help?</b> Just <a href="https://wanotifier.com/support/" target="_blank">get in touch</a> with us and we'll help you setup your account and this plugin for FREE.</p>
 							<hr style="margin-bottom: 20px;">
 							<form method="POST" action="" enctype="multipart/form-data">
 								<input type="text" name="notifier_api_key" id="wa-notifier-api-key" placeholder="Enter your API key here" value="<?php echo $api_key; ?>" />
@@ -45,20 +44,23 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 				<div class="col w-30">
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
-							<h3>Customer testimonials</h3>
+							<h3>Customer testimonials ❤️</h3>
 						</div>
 						<div class="dashboard-box-body">
+							⭐⭐⭐⭐⭐
 							<em><p>I have been <strong>using WANotifier for the past 1 month</strong> for my eCommerce store. I am able to add/import/manage contacts, create message templates, segment users, connect with third party APIs, reply to messages all within the same dashboard. The UI is <strong>simple and friendly</strong>. The instructions are clear. <strong>Definitely recommended</strong>!</p></em>
-							<p><strong>Gopi Kanna<br>
-							</strong>Co-founder, <a href="https://domaincoasters.com/" target="_blank" rel="noopener nofollow">Domain Coasters</a></p>
+							<p><strong>Gopi Kanna</strong><br>
+							Co-founder, DomainCoasters.com</p>
 							<hr>
+							⭐⭐⭐⭐⭐
 							<em><p>We have been using WANotifier for past two months. <strong>Nice product</strong>! A quick and automated response brings in a feeling of completeness to online purchase experience for our customers. We have processed multiple orders after installing this utility and <strong>it just works perfectly every time</strong>.</p></em>
-							<p><strong>Avinash Pendse<br>
-							</strong>Founder, <a href="https://grahakshahi.com/" target="_blank" rel="noopener nofollow">Grahak Shahi</a></p>
+							<p><strong>Avinash Pendse</strong>
+							<br>Founder, GrahakShahi.com</p>
 							<hr>
+							⭐⭐⭐⭐⭐
 							<em><p>Very good plugin for <b>WhatsApp Woocommerce integration for free</b>. Easily work without any issues. Simple to use.Tutorials also found on YouTube. Thanks to the WANotifier team.</p></em>
-							<strong>hashimsamnan</strong><br>
-							<a href="https://wordpress.org/support/topic/best-plugin-for-whatsapp-woocommerce-integration/" target="_blank" rel="noopener nofollow">Woocommerce user</a>
+							<strong>hashimsamnan</strong>
+							<br>Woocommerce user
 						</div>
 					</div>
 				</div>
@@ -73,36 +75,41 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 				<div class="col w-70">
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
-							<h3>How to use this plugin?</h3>
+							<h3>How to use this plugin? 🤔</h3>
 						</div>
-						<div class="dashboard-box-body">
+						<div class="dashboard-box-body how-to">
+							<img class="notifier-overview-image" src="<?php echo NOTIFIER_URL; ?>assets/images/notifier-plugin-overview.svg">
 							<p>Follow the instructions below to setup your <b>Triggers</b> that'll fire WhatsApp notification messages:</p>
-							<p><b>On this site</b></p>
-							<ol>
-								<li><a href="<?php echo admin_url('post-new.php?post_type=wa_notifier_trigger'); ?>" target="_blank">Click here</a> to add a new Trigger and select the <b>Trigger</b> from the dropdown when you want the notification to be fired.</li>
-								<li>Enable the <b>Data fields</b> and <b>Recipient fields</b> that you want to send to WANotifier when notification is fired. The fields you enable here will be available for you to use when you create a notification.</li>
-								<li>Then save and enable this trigger.</li>
-							</ol>
-							<p><b>On WANotifier portal</b></p>
-							<ol start="4">
-								<li>Create a new <b>Message Template</b> by <a href="https://app.wanotifier.com/templates/add/" target="_blank">clicking here</a>. This is the template that will be sent when a notification is triggered. You can create templates with variables (aka merge tags) and map those variables with the <b>Data fields</b> you enabled in step #3.</li>
-								<li>Then <a href="https://app.wanotifier.com/notifications/add/" target="_blank">create a new Notification</a>. In the <b>Trigger</b> dropdown, you will see the trigger that you created in step #1. Select that.</li>
-								<li>Then add <b>Recipients</b> to whom you want to send this notification. You will find the <b>Recipient fields</b> here that you enabled in step #3.</li>
-								<li>Then select the <b>Message Template</b> you created in step #4. If you created this message template with variables, you can map those variables with the available <b>Data fields</b> that you enabled in step #3 from the <b>Assign values to template variables</b> section.</li>
+							<p><b>STEP 1 - Create a Trigger on this site</b></p>
+							<ul>
+								<li><a href="<?php echo admin_url('post-new.php?post_type=wa_notifier_trigger'); ?>" target="_blank">Click here</a> to add a new Trigger.</li>
+								<li>Select a <b>Trigger</b> from the dropdown when you want the notification to be fired.</li>
+								<li>Enable the <b>Data fields</b> and <b>Recipient fields</b> that you want to send to WANotifier when notification is fired.</li>
+								<li>Then save this trigger and <b>Enable</b> it.</li>
+							</ul>
+							<p><b>STEP 2 - Create a Message Template on WANotifier</b></p>
+							<ul>
+								<li>Now go to the WANotifier portal and <a href="https://app.wanotifier.com/templates/add/" target="_blank">create a new Message Template</a>. </li>
+								<li>You can either keep the template simple or add variable placeholders like <code>{{1}}</code>, <code>{{2}}</code> and so on. We will map these variables with <b>Data fields</b> in the next step below.</li>
+							</ul>
+							<p><b>STEP 3 - Create a Notification on WANotifier</b></p>
+							<ul>
+								<li>Now <a href="https://app.wanotifier.com/notifications/add/" target="_blank">create a new Notification</a> and select <b>Notification Type</b> as <b>Transactional</b>.</li>
+								<li>Then from the <b>Trigger</b> dropdown, select the trigger that you created in Step 1.</li>
+								<li>Add <b>Recipients</b> to whom you want to send this notification. Select the <b>Recipient fields</b> that you enabled above or select custom contacts.</li>
+								<li>Select the <b>Message Template</b> you created in Step 2.</li>
+								<li>If you created this message template with variables (<code>{{1}}</code>, <code>{{2}}</code> and so on), you will see option to map these variables with the <b>Data fields</b> you enabled during Step 1.</li>
 								<li>Click on the <b>Save</b> button to save this notification.</li>
-							</ol>
-							<p>That's it. Your notification will be sent when it gets triggered from this website!</p>
+							</ul>
+							<p>That's it. Your notification will be sent each time it gets triggered from this website!</p>
 							<p><em><b>Disclaimer:</b> By enabling the triggers you accept and agree that the associated data and recipient fields will be sent to our server for use with the message template when sending notifications. We do not store any data other than what is required for sending a notification.</em></p>
-							<!--<a class="notifier-overview-image" href="<?php echo NOTIFIER_URL; ?>assets/images/notifier-plugin-overview.svg" target="_blank">
-								<img src="<?php echo NOTIFIER_URL; ?>assets/images/notifier-plugin-overview.svg">
-							</a>-->
 						</div>
 					</div>
 				</div>
 				<div class="col w-30">
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
-							<h3>Want more control?</h3>
+							<h3>Want more control? 💪</h3>
 						</div>
 						<div class="dashboard-box-body">
 							<p>This plugin provides you with simple triggers with a basic set of data fields to trigger notifications. If want more control over triggering your notifications, we suggest using <b>Webhooks</b> instead.</p>
@@ -112,7 +119,7 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 					</div>
 					<div class="dashboard-box">
 						<div class="dashboard-box-head">
-							<h3>Quick links</h3>
+							<h3>Quick links 🔗</h3>
 						</div>
 						<div class="dashboard-box-body">
 							<ul>

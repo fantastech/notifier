@@ -438,7 +438,7 @@ class Notifier_Settings {
 				else{
 					update_option('notifier_api_activated', 'yes');
 					$notices[] = array(
-						'message' => 'API key validated and saved successfully. Your triggers have been reset. Please enable and save your triggers again from the <a href="'.admin_url('admin.php?page=notifier').'">WA Notifier</a> page.',
+						'message' => 'API key validated and saved successfully. Your triggers have been reset. Please enable and save your triggers again from the <a href="'.admin_url('admin.php?page=notifier').'">WANotifier</a> page.',
 						'type' => 'success'
 					);
 				}

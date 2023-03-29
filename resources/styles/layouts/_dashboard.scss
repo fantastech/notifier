@@ -125,6 +125,14 @@
 				}
 			}
 
+			&.how-to{
+				ul{
+				    list-style: inherit;
+	    			padding-left: 20px;
+	    			margin-bottom: 10px;
+	    		}
+			}
+
 			.dashicons-marker {
 				color: #ccc;
 			}
@@ -223,12 +231,10 @@
 .notifier-overview-image {
 	float: right;
 	display: inline-block;
-
-	img {
-		width: 100%;
-		height: auto;
-		max-width: 200px;
-	}
+	width: 100%;
+	height: auto;
+	max-width: 250px;
+	margin-left: 30px;
 
 	@include media-down (mobile) {
 		float: none;
