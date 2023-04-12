@@ -174,3 +174,16 @@ function notifier_sanitize_phone_number( $phone_number ) {
 function notifier_validate_phone_number( $phone_number ) {
     return preg_match( '/^\+[1-9]\d{8,15}$/', $phone_number );
 }
+
+/*
+ * Generate API key.
+ */
+function notifier_generate_random_key( $length = 25 ) {
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$charactersLength = strlen($characters);
+	$randomString = '';
+	for ( $i = 0; $i < $length; $i++ ) {
+		$randomString .= $characters[rand(0, $charactersLength - 1)];
+	}
+	return $randomString;
+}

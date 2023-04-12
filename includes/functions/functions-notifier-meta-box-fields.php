@@ -483,7 +483,13 @@ function notifier_wp_select( $field ) {
 			$opt_group_options = $value;
 			echo '<optgroup label="' . esc_attr($key) . '">';
 			foreach ( $opt_group_options as $opt_key => $opt_val ) {
-				echo '<option value="' . esc_attr( $opt_key ) . '"' . selected( $opt_key, $field['value'], false) . '>' . esc_html( $opt_val ) . '</option>';
+				if(is_array($field['value'])){
+					$selected = in_array($opt_key, $field['value']) ? 'selected' : '';
+				}
+				else{
+					$selected = selected( $opt_key, $field['value'], false);
+				}
+				echo '<option value="' . esc_attr( $opt_key ) . '"' . $selected . '>' . esc_html( $opt_val ) . '</option>';
 			}
 			echo '</optgroup>';
 		} else {

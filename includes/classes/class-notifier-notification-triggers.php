@@ -116,7 +116,7 @@ class Notifier_Notification_Triggers {
 		$in_use_post_id = self::is_trigger_in_use($trigger, array($post_id));
 		if($in_use_post_id){
 			$notices[] = array(
-				'message' => '<b>ERROR: Trigger not Saved.</b> The selected trigger is already in use with <a href="'. admin_url( 'post.php?post='.$in_use_post_id.'&action=edit' ) .'">' . get_the_title( $in_use_post_id ) . '</a>. Please select a different trigger.',
+				'message' => '<b>ERROR: Trigger not Saved.</b> The selected trigger is already in use with another trigger: <a href="'. admin_url( 'post.php?post='.$in_use_post_id.'&action=edit' ) .'">' . get_the_title( $in_use_post_id ) . '</a>. Please select a different trigger or delete that trigger to save this one.',
 				'type' => 'error'
 			);
 			new Notifier_Admin_Notices($notices, true);
@@ -190,6 +190,7 @@ class Notifier_Notification_Triggers {
 				$trigger_name = get_post_meta($trigger_post_id, NOTIFIER_PREFIX . 'trigger', true);
 				$data_fields = get_post_meta($trigger_post_id, NOTIFIER_PREFIX . 'data_fields', true);
 				$recipient_fields = get_post_meta($trigger_post_id, NOTIFIER_PREFIX . 'recipient_fields', true);
+				$trigger_name = self::get_trigger_id_with_site_key($trigger_name);
 				$final_triggers[] = array(
 					'id'				=> $trigger_name,
 					'data_fields'		=> isset($data_fields) ? $data_fields : array(),
@@ -320,7 +321,7 @@ class Notifier_Notification_Triggers {
 	 */
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'trigger' === $column ) {
-			$trigger = get_post_meta( $post_id, NOTIFIER_PREFIX . 'trigger' , true);
+			$trigger = self::get_post_trigger_id( $post_id );
 			echo self::get_notification_trigger_display_name($trigger);
 		}
 		if ( 'trigger_enabled' === $column ) {
@@ -373,7 +374,8 @@ class Notifier_Notification_Triggers {
 			 	'id'			=> 'new_'.$post->name,
 				'label' 		=> 'New '.$post->labels->singular_name.' is published',
 				'description'	=> 'Trigger notification when a new '.$post->name.' is published.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array($post->labels->singular_name) ),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array($post->labels->singular_name, $post->labels->singular_name . ' Meta') ),
+				'customer_fields'	=> array(),
 				'recipient_fields'	=> array(),
 				'action'		=> array (
 					'hook'		=> 'publish_'.$post->name,
@@ -416,7 +418,7 @@ class Notifier_Notification_Triggers {
 		 	'id'			=> 'new_user',
 			'label' 		=> 'New User is registered',
 			'description'	=> 'Trigger notification when a new user is created.',
-			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User') ),
+			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User', 'User Meta') ),
 			'recipient_fields'	=> array(),
 			'action'		=> array (
 				'hook'		=> 'user_register',
@@ -426,7 +428,8 @@ class Notifier_Notification_Triggers {
 						'object_id'		=> $user_id
 					);
 					self::send_trigger_request('new_user', $args);
-				}
+				},
+				'priority'	=> 999
 			)
 		);
 
@@ -434,7 +437,7 @@ class Notifier_Notification_Triggers {
 		 	'id'			=> 'new_attachment',
 			'label' 		=> 'New Media is uploded',
 			'description'	=> 'Trigger notification when a new attachement is uploded.',
-			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Attachment') ),
+			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Attachment', 'Attachment Meta') ),
 			'recipient_fields'	=> array(),
 			'action'		=> array (
 				'hook'		=> 'add_attachment',
@@ -448,7 +451,31 @@ class Notifier_Notification_Triggers {
 			)
 		);
 
-		return apply_filters('notifier_notification_triggers', $triggers);
+		$triggers = apply_filters('notifier_notification_triggers', $triggers);
+
+		// Add site key to trigger IDs
+		$site_key = self::get_notification_trigger_site_key();
+
+		foreach ($triggers as $trigs_key => $trigs) {
+			foreach($trigs as $trig_key => $trig){
+				$triggers[$trigs_key][$trig_key]['id'] = $site_key . $trig['id'];
+			}
+		}
+
+		return $triggers;
+	}
+
+	/**
+	 * Get notification trigger site key
+	 */
+	public static function get_notification_trigger_site_key(){
+		$site_key = get_option(NOTIFIER_PREFIX . 'site_key');
+		if(!$site_key){
+			$site_key = notifier_generate_random_key(5);
+			update_option(NOTIFIER_PREFIX . 'site_key', $site_key, true);
+		}
+		$site_key = 'wp_' . $site_key . '_';
+		return $site_key;
 	}
 
 	/**
@@ -467,6 +494,7 @@ class Notifier_Notification_Triggers {
 	 * Get notification trigger
 	 */
 	public static function get_notification_trigger($trigger) {
+		$trigger = self::get_trigger_id_with_site_key($trigger);
 		$found_trigger = array();
 		$main_triggers = self::get_notification_triggers();
 		foreach ($main_triggers as $key => $triggers) {
@@ -497,27 +525,6 @@ class Notifier_Notification_Triggers {
 	}
 
 	/**
-	 * Get other notification triggers
-	 */
-	public static function get_other_notification_triggers($post_id) {
-		$other_triggers = array();
-		$other_post_ids = get_posts(array (
-			'post_type' 	=> 'wa_notifier_trigger',
-			'post_status' 	=> 'publish',
-			'numberposts' 	=> -1,
-			'fields' 		=> 'ids',
-			'post__not_in'	=> array($post_id)
-		));
-		if(! empty($other_post_ids)){
-			foreach($other_post_ids as $other_post_id){
-				 $trigger_name = get_post_meta($other_post_id, NOTIFIER_PREFIX . 'trigger', true);
-				 $other_triggers[] = self::get_notification_trigger($trigger_name);
-			}
-		}
-		return $other_triggers;
-	}
-
-	/**
 	 * Get enabled notification triggers
 	 */
 	public static function get_enabled_notification_triggers() {
@@ -544,37 +551,6 @@ class Notifier_Notification_Triggers {
 		}
 
 		return $enabled_triggers;
-	}
-
-	/**
-	 * Check whether current trigger is enabled
-	 */
-	public static function is_trigger_enabled($trigger) {
-		$enabled = false;
-		$enabled_post_id = get_posts( array (
-			'post_type' 	=> 'wa_notifier_trigger',
-			'post_status' 	=> 'publish',
-			'numberposts' 	=> -1,
-			'fields' 		=> 'ids',
-			'meta_query' => array(
-				array(
-					'key' => NOTIFIER_PREFIX . 'trigger_enabled',
-					'value' => 'yes',
-					'compare' => '='
-				),
-				array(
-					'key' => NOTIFIER_PREFIX . 'trigger',
-					'value' => $trigger,
-					'compare' => '='
-				)
-			)
-		) );
-
-		if(!empty($enabled_post_id)){
-			$enabled = true;
-		}
-
-		return $enabled;
 	}
 
 	/**
@@ -615,9 +591,15 @@ class Notifier_Notification_Triggers {
 			'numberposts' 	=> -1,
 			'fields' 		=> 'ids',
 			'meta_query' => array(
+				'relation'	=> 'OR',
 				array(
 					'key' => NOTIFIER_PREFIX . 'trigger',
 					'value' => $trigger,
+					'compare' => '='
+				),
+				array( // Backward compatibility
+					'key' => NOTIFIER_PREFIX . 'trigger',
+					'value' => self::get_trigger_id_without_site_key($trigger),
 					'compare' => '='
 				)
 			),
@@ -637,6 +619,9 @@ class Notifier_Notification_Triggers {
 		if(empty($context_args)){
 			return false;
 		}
+
+		$trigger_old = $trigger;
+		$trigger = self::get_trigger_id_with_site_key($trigger);
 
 		$merge_tags = self::get_trigger_post_meta($trigger, NOTIFIER_PREFIX . 'data_fields');
 		$recipient_fields = self::get_trigger_post_meta($trigger, NOTIFIER_PREFIX . 'recipient_fields');
@@ -660,6 +645,7 @@ class Notifier_Notification_Triggers {
 			'site_url'			=> site_url(),
 			'source'			=> 'wp',
 			'trigger'			=> $trigger,
+			'trigger_old'		=> $trigger_old,
 			'merge_tags_data'	=> $data,
 			'recipient_fields'	=> $recipient_data
     	);
@@ -701,46 +687,50 @@ class Notifier_Notification_Triggers {
 		$data_fields = get_post_meta( $post_id, NOTIFIER_PREFIX . 'data_fields', true);
 		$recipient_fields = get_post_meta( $post_id, NOTIFIER_PREFIX . 'recipient_fields', true);
 
+		// Backward compatibility for Woo recipient fields not starting with woo_order_
+		if(!empty($recipient_fields)){
+			if ( strpos($trigger, 'woo_order') !== false){
+				foreach($recipient_fields as $key => $recipient_field){
+					if ( strpos($recipient_field, 'woo_order_') === false){
+						$recipient_fields[$key] = 'woo_order_' . $recipient_field;
+					}
+				}
+			}
+		}
+
 		$merge_tags = Notifier_Notification_Merge_Tags::get_trigger_merge_tags($trigger);
 		$recipient_tags = Notifier_Notification_Merge_Tags::get_trigger_recipient_fields($trigger);
 
 		ob_start();
-
 		echo '<div class="trigger-fields-wrap"><div class="d-flex justify-content-between"><label class="form-label w-auto">Data fields</label><div class="small"><a href="#" class="notifier-select-all-checkboxes">select all</a> / <a href="#" class="notifier-unselect-all-checkboxes">unselect all</a></div></div>';
-		echo '<div class="notifier-merge-tags-wrap">';
-		foreach($merge_tags as $merge_tag_group => $merge_tag){
-			echo '<div class="notifier-merge-tags d-flex">';
-			notifier_wp_multi_checkboxes( array(
-				'id'                => NOTIFIER_PREFIX . 'data_fields',
-	            'name'              => NOTIFIER_PREFIX . 'data_fields[]',
-				'value'             => $data_fields,
-				'label'             => $merge_tag_group,
-				'description'       => '',
-				'options'           => $merge_tag,
-				'show_wrapper'		=> false
-	        ) );
-	        echo '</div>';
-		}
-		echo '</div>';
-		echo '<span class="description">Select the data fields that you want to send to WANotifier.com when this is triggered. The fields you select here will be available to map with message templates variables when you create a <a href="https://app.wanotifier.com/notifications/add/" target="_blank">new notification</a>.</span></div>';
+
+		notifier_wp_select( array(
+			'id'                => NOTIFIER_PREFIX . 'data_fields',
+            'name'              => NOTIFIER_PREFIX . 'data_fields[]',
+			'value'             => $data_fields,
+			'label'             => '',
+			'description'       => '',
+			'options'           => $merge_tags,
+			'show_wrapper'		=> false,
+			'custom_attributes'	=> array('multiple' => 'multiple')
+        ) );
+
+		echo '<span class="description">Select the data fields that you want to send to WANotifier.com when this is triggered. The fields you select here will be available to map with message template variables like <code>{{1}}</code>, <code>{{2}}</code> etc when you create a <a href="https://app.wanotifier.com/notifications/add/" target="_blank">new notification</a>.</span></div>';
 
 		if(!empty($recipient_tags)){
 			echo '<div class="trigger-fields-wrap"><div class="d-flex justify-content-between"><label class="form-label w-auto">Recipient fields</label><div class="small"><a href="#" class="notifier-select-all-checkboxes">select all</a> / <a href="#" class="notifier-unselect-all-checkboxes">unselect all</a></div></div>';
-			echo '<div class="notifier-merge-tags-wrap">';
-			foreach($recipient_tags as $recipient_group_name => $recipient_group_fields){
-				echo '<div class="notifier-merge-tags d-flex">';
-				notifier_wp_multi_checkboxes( array(
-					'id'                => NOTIFIER_PREFIX . 'recipient_fields',
-		            'name'              => NOTIFIER_PREFIX . 'recipient_fields[]',
-					'value'             => $recipient_fields,
-					'label'             => $recipient_group_name,
-					'description'       => '',
-					'options'           => $recipient_group_fields,
-					'show_wrapper'		=> false
-		        ) );
-		        echo '</div>';
-			}
-			echo '</div>';
+
+			notifier_wp_select( array(
+				'id'                => NOTIFIER_PREFIX . 'recipient_fields',
+	            'name'              => NOTIFIER_PREFIX . 'recipient_fields[]',
+				'value'             => $recipient_fields,
+				'label'             => '',
+				'description'       => '',
+				'options'           => $recipient_tags,
+				'show_wrapper'		=> false,
+				'custom_attributes'	=> array('multiple' => 'multiple')
+	        ) );
+
 			echo '<span class="description">Select the phone number fields that you want to send to WANotifier.com when this is triggered. The fields you select here will be available under <b>Recipients</b> when you create a notification. <b>IMPORTANT NOTE:</b> The phone numbers must start with coutnry code or the message will not be sent. Eg. +919876543210.</span></div>';
 		}
 
@@ -750,6 +740,38 @@ class Notifier_Notification_Triggers {
 			'status' 	=> 'success',
 			'html'		=> $html
 		) );
+	}
+
+	/**
+	 * Get post trigger ID
+	 */
+	public static function get_post_trigger_id($post_id){
+		$site_key = self::get_notification_trigger_site_key();
+		$selected_trigger = get_post_meta( $post_id, NOTIFIER_PREFIX . 'trigger', true);
+		if($selected_trigger && strpos($selected_trigger, $site_key) === false ){
+			$selected_trigger = $site_key . $selected_trigger;
+		}
+		return $selected_trigger;
+	}
+
+	/**
+	 * Get trigger ID with site key
+	 */
+	public static function get_trigger_id_with_site_key($trigger_id){
+		$site_key = self::get_notification_trigger_site_key();
+		if( strpos($trigger_id, $site_key) === false ){
+			$trigger_id = $site_key . $trigger_id;
+		}
+		return $trigger_id;
+	}
+
+	/**
+	 * Get trigger ID without site key
+	 */
+	public static function get_trigger_id_without_site_key($trigger_id){
+		$site_key = self::get_notification_trigger_site_key();
+		$trigger_id = str_replace($site_key, '', $trigger_id);
+		return $trigger_id;
 	}
 
 }

@@ -258,6 +258,7 @@ class Notifier_Woocommerce {
 					return WC()->countries->countries[$order->$field_function()];
 				}
 			),
+			'shipping_phone'				=> array('preview'	=> '987 654 321'),
 			'formatted_shipping_address'	=> array(
 				'preview'	=> '',
 				'label'		=> 'Complete shipping address',
@@ -304,7 +305,7 @@ class Notifier_Woocommerce {
 		$recipient_fields = array();
 		$recipient_fields['WooCommerce'] = array(
 			array(
-				'id'			=> 'billing_phone',
+				'id'			=> 'woo_order_billing_phone',
 				'label'			=> 'Billing phone number',
 				'value'			=> function ($args) {
 					$order = wc_get_order( $args['object_id'] );
@@ -315,7 +316,7 @@ class Notifier_Woocommerce {
 				}
 			),
 			array(
-				'id'			=> 'shipping_phone',
+				'id'			=> 'woo_order_shipping_phone',
 				'label'			=> 'Shipping phone number',
 				'value'			=> function ($args) {
 					$order = wc_get_order( $args['object_id'] );

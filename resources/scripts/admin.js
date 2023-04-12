@@ -125,6 +125,9 @@
 			if (response.status == 'success') {
 				$('.notifier-trigger-merge-tags').html(response.html);
 				conditionallyShowFields();
+				$('.trigger-fields-wrap select').select2({
+					closeOnSelect: false
+				});
 			}
 		});
 
@@ -294,13 +297,15 @@
 		// Select all checkbox fields
 		$(document).on('click', '.notifier-select-all-checkboxes', function(e){
 			e.preventDefault();
-			$(this).closest('.trigger-fields-wrap').find('input[type="checkbox"]').prop('checked', true);
+			$(this).closest('.trigger-fields-wrap').find('option').prop('selected', true);
+			$(this).closest('.trigger-fields-wrap').find('select').trigger('change');
 		});
 
 		// Unselect all checkbox fields
 		$(document).on('click', '.notifier-unselect-all-checkboxes', function(e){
 			e.preventDefault();
-			$(this).closest('.trigger-fields-wrap').find('input[type="checkbox"]').prop('checked', false);
+			$(this).closest('.trigger-fields-wrap').find('option').prop('selected', false);
+			$(this).closest('.trigger-fields-wrap').find('select').trigger('change');
 		});
 
 	});

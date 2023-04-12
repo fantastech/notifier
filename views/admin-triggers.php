@@ -17,7 +17,7 @@ global $post_id;
 			notifier_wp_select(
 				array(
 					'id'                => NOTIFIER_PREFIX . 'trigger',
-					'value'             => get_post_meta( $post_id, NOTIFIER_PREFIX . 'trigger', true),
+					'value'             => Notifier_Notification_Triggers::get_post_trigger_id($post_id),
 					'label'             => 'Select Trigger',
 					'description'       => 'Select the trigger when you want to fire a Natification from WANotifier.com.',
 					'options'           => Notifier_Notification_Triggers::get_notification_triggers_dropdown()

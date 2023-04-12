@@ -23,11 +23,11 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.1.3' );
+		$this->define( 'NOTIFIER_VERSION', '2.2.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
-		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
+		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.local/api/v1/' );
 	}
 
 	/**
