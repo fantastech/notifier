@@ -28,7 +28,7 @@ class Notifier_Woocommerce {
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
 				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
 				'action'		=> array(
-					'hook'		=> 'woocommerce_thankyou',
+					'hook'		=> 'woocommerce_new_order',
 					'callback' 	=> function ( $order_id ){
 						$args = array (
 							'object_type' 	=> 'order',

@@ -1,7 +1,7 @@
 === WANotifier - Send Message Notifications Using Cloud API ===
 Contributors: ramshengale, fantastech
 Donate link: https://wanotifier.com
-Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, gravity forms whatsapp, contact form 7 whatsapp, click to chat, whatsapp chat
+Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, whatsapp integration, gravity forms whatsapp, contact form 7 whatsapp, click to chat
 Requires at least: 5.0
 Tested up to: 6.2
 Stable tag: 2.2.0
@@ -9,11 +9,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send WhatsApp message notifications for Woocommerce orders, Gravity Forms and Contact Form 7 subsmissions using the official WhatsApp Cloud APIs.
+Send WhatsApp message notifications using the official WhatsApp Cloud APIs for Woocommerce orders and form sumissions for Gravity Forms, Contact Form 7 & more.
 
 == Description ==
 
-**Send WhatsApp message notifications** for _Woocommerce_ orders, _Gravity Forms_ and _Contact Form 7_ subsmissions using the official **WhatsApp Cloud APIs**.
+**Send WhatsApp message notifications** for _Woocommerce_ orders and form submissions for form plugins like _Gravity Forms_, _Contact Form 7_ and so on using the official **WhatsApp Cloud APIs**.
 
 This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you send WhatsApp notifications when some action is performed on your website like new user registration, WooCommerce order related actions, form submissions and much more!
 
@@ -101,27 +101,27 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 **General**
 
-* Send and receive unlimited messages and replies
-* Add/import unlimited contacts
-* Create and send unlimited notifications
+* Send and receive WhatsApp messages
+* Full integration with WhatsApp Cloud APIs
+* No coding knowledge required
 
 **Create & Manage Message Templates**
 
-* Text-only message templates
-* Media templates with an image, video or PDF
+* Create text message templates
+* Create media templates with an image, video or PDF
 * Add call-to-action buttons to your templates
-* Dynamic message templates with variables
+* Create dynamic message templates with variables
 * Fetch your existing message templates from WhatsApp
 
 **Contacts Management**
 
-* Add unlimited contacts
+* Add and manage contacts with our mini-CRM
 * Import contacts using CSV
 * Import contacts from 3rd party apps using webhooks
 
 **Notifications**
 
-* Send unlimited one-way marketing messages
+* Send bulk marketing messages
 * Send action-based transactional message notifications
 * Trigger notifications from 3rd party apps using webhooks
 
@@ -139,11 +139,12 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 == Changelog ==
 
-= 2.2.0 - 2023-04-12 =
+= 2.2.0 - 2023-04-13 =
 * fix: made triggers more unique with site key
 * add: UI and content updates
 * add: replaced direct firing of actions with action scheduler to drastically improve performance
 * add: custom meta fields for post types
+* mod: changed WooCommerce new order hook from woocommerce_thankyou to woocommerce_new_order
 
 = 2.1.3 - 2023-03-09 =
 * fix: Contact Form 7 error in logs
@@ -222,6 +223,13 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.2.0 - 2023-04-13 =
+* fix: made triggers more unique with site key
+* add: UI and content updates
+* add: replaced direct firing of actions with action scheduler to drastically improve performance
+* add: custom meta fields for post types
+* mod: changed WooCommerce new order hook from woocommerce_thankyou to woocommerce_new_order
 
 = 2.1.3 - 2023-03-09 =
 * fix: Contact Form 7 error in logs

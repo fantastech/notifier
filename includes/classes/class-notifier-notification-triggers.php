@@ -25,6 +25,7 @@ class Notifier_Notification_Triggers {
 		add_action( 'wp_ajax_notifier_fetch_trigger_fields', array(__CLASS__, 'notifier_fetch_trigger_fields'));
 		add_filter( 'manage_wa_notifier_trigger_posts_columns', array( __CLASS__ , 'add_columns' ) );
 		add_action( 'manage_wa_notifier_trigger_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
+		add_action( 'notifier_send_trigger_request', array( __CLASS__, 'notifier_send_trigger_request' ), 10, 2 );
 	}
 
 	/**
@@ -620,6 +621,18 @@ class Notifier_Notification_Triggers {
 			return false;
 		}
 
+		as_enqueue_async_action(
+			'notifier_send_trigger_request',
+			array('trigger' => $trigger, 'context_args' => $context_args),
+			'notifier'
+		);
+
+	}
+
+	/**
+	 * Send async trigger request
+	 */
+	public static function notifier_send_trigger_request($trigger, $context_args){
 		$trigger_old = $trigger;
 		$trigger = self::get_trigger_id_with_site_key($trigger);
 
@@ -655,7 +668,6 @@ class Notifier_Notification_Triggers {
 		if($response->error){
 			error_log($response->message);
 		}
-
 	}
 
 	/**
@@ -710,6 +722,7 @@ class Notifier_Notification_Triggers {
 			'value'             => $data_fields,
 			'label'             => '',
 			'description'       => '',
+			'placeholder'		=> 'Start typing here...',
 			'options'           => $merge_tags,
 			'show_wrapper'		=> false,
 			'custom_attributes'	=> array('multiple' => 'multiple')
@@ -726,6 +739,7 @@ class Notifier_Notification_Triggers {
 				'value'             => $recipient_fields,
 				'label'             => '',
 				'description'       => '',
+				'placeholder'		=> 'Start typing here...',
 				'options'           => $recipient_tags,
 				'show_wrapper'		=> false,
 				'custom_attributes'	=> array('multiple' => 'multiple')

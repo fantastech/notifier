@@ -61,6 +61,7 @@ class Notifier {
 		// Functions
 		require_once NOTIFIER_PATH . 'includes/functions/functions-notifier-helpers.php';
 		require_once NOTIFIER_PATH . 'includes/functions/functions-notifier-meta-box-fields.php';
+		require_once NOTIFIER_PATH . 'libraries/action-scheduler/action-scheduler.php';
 
 		// Classes
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-admin-notices.php';
