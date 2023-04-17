@@ -27,6 +27,9 @@ class Notifier_Admin_Notices {
 	 * Init
 	 */
 	public static function init() {
+		if(!is_admin()){
+			return;
+		}
 		$user_id = get_current_user_id();
 		$transient_notices = get_transient( 'notifier_notice_' . $user_id );
 		if ( isset($transient_notices) ) {

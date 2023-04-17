@@ -106,7 +106,9 @@ class Notifier_Notification_Merge_Tags {
 			if( 'WordPress' == $type) {
 				continue;
 			}
-			$final_merge_tags[$type] = $merge_tags[$type];
+			if(isset($merge_tags[$type])){
+				$final_merge_tags[$type] = $merge_tags[$type];
+			}
 		}
 
 		return $final_merge_tags;
@@ -526,23 +528,23 @@ class Notifier_Notification_Merge_Tags {
 		);
 
 		$post_meta_keys = self::get_custom_meta_keys('attachment');
-			if(!empty($post_meta_keys)){
-				foreach($post_meta_keys as $post_meta_key){
-					$merge_tags['Attachment Meta'][] = array(
-						'id' 			=> 'attachment_meta_' . $post_meta_key,
-						'label' 		=> $post_meta_key,
-						'preview_value' => '123',
-						'return_type'	=> 'text',
-						'value'			=> function ($args) use ($post_meta_key) {
-							$value = get_post_meta($args['object_id'], $post_meta_key, true);
-							if(is_array($value) || is_object($value)){
-								$value = json_encode($value);
-							}
-							return (string) $value;
+		if(!empty($post_meta_keys)){
+			foreach($post_meta_keys as $post_meta_key){
+				$merge_tags['Attachment Meta'][] = array(
+					'id' 			=> 'attachment_meta_' . $post_meta_key,
+					'label' 		=> $post_meta_key,
+					'preview_value' => '123',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) use ($post_meta_key) {
+						$value = get_post_meta($args['object_id'], $post_meta_key, true);
+						if(is_array($value) || is_object($value)){
+							$value = json_encode($value);
 						}
-					);
-				}
+						return (string) $value;
+					}
+				);
 			}
+		}
 
 		return $merge_tags;
 	}
@@ -683,15 +685,26 @@ class Notifier_Notification_Merge_Tags {
 	public static function get_custom_meta_keys($custom_post_type) {
 	    global $wpdb;
 
-	    $sql_query = "
-	        SELECT DISTINCT pm.meta_key
-	        FROM {$wpdb->postmeta} pm
-	        LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-	        WHERE p.post_type = '%s' AND pm.meta_key NOT LIKE '\_%'
-	    ";
+	    $custom_meta_keys = get_transient('_notifier_custom_meta_keys');
 
-	    $prepared_query = $wpdb->prepare($sql_query, $custom_post_type);
-	    $meta_keys = $wpdb->get_col($prepared_query);
+	    if(isset($custom_meta_keys[$custom_post_type])){
+	    	$meta_keys = $custom_meta_keys[$custom_post_type];
+	    }
+		else {
+	    	$sql_query = "
+		        SELECT DISTINCT pm.meta_key
+		        FROM {$wpdb->postmeta} pm
+		        LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+		        WHERE p.post_type = '%s' AND pm.meta_key NOT LIKE '\_%'
+		    ";
+
+		    $prepared_query = $wpdb->prepare($sql_query, $custom_post_type);
+		    $meta_keys = $wpdb->get_col($prepared_query);
+
+	    	$custom_meta_keys[$custom_post_type] = $meta_keys;
+
+			set_transient('_notifier_custom_meta_keys', $custom_meta_keys, 600); // set for 10 min.
+	    }
 
 	    return $meta_keys;
 	}
@@ -702,15 +715,21 @@ class Notifier_Notification_Merge_Tags {
 	public static function get_user_meta_keys() {
 	    global $wpdb;
 
-	    $sql_query = "
-	        SELECT DISTINCT pm.meta_key
-	        FROM {$wpdb->usermeta} pm
-	        LEFT JOIN {$wpdb->users} p ON p.ID = pm.user_id
-	        WHERE pm.meta_key NOT LIKE '\_%'
-	    ";
+	    $meta_keys = get_transient('_notifier_user_meta_keys');
 
-	    $prepared_query = $wpdb->prepare($sql_query);
-	    $meta_keys = $wpdb->get_col($prepared_query);
+	    if(false === $meta_keys){
+		    $sql_query = "
+		        SELECT DISTINCT pm.meta_key
+		        FROM {$wpdb->usermeta} pm
+		        LEFT JOIN {$wpdb->users} p ON p.ID = pm.user_id
+		        WHERE pm.meta_key NOT LIKE '\_%'
+		    ";
+
+		    $prepared_query = $wpdb->prepare($sql_query);
+		    $meta_keys = $wpdb->get_col($prepared_query);
+
+		    set_transient('_notifier_user_meta_keys', $meta_keys, 600); // set for 10 min.
+		}
 
 	    return $meta_keys;
 	}
