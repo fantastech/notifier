@@ -687,6 +687,10 @@ class Notifier_Notification_Merge_Tags {
 
 	    $custom_meta_keys = get_transient('_notifier_custom_meta_keys');
 
+	    if(false === $custom_meta_keys){
+	    	$custom_meta_keys = array();
+	    }
+
 	    if(isset($custom_meta_keys[$custom_post_type])){
 	    	$meta_keys = $custom_meta_keys[$custom_post_type];
 	    }
@@ -696,6 +700,7 @@ class Notifier_Notification_Merge_Tags {
 		        FROM {$wpdb->postmeta} pm
 		        LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
 		        WHERE p.post_type = '%s' AND pm.meta_key NOT LIKE '\_%'
+		        ORDER BY pm.meta_key ASC
 		    ";
 
 		    $prepared_query = $wpdb->prepare($sql_query, $custom_post_type);
@@ -723,6 +728,7 @@ class Notifier_Notification_Merge_Tags {
 		        FROM {$wpdb->usermeta} pm
 		        LEFT JOIN {$wpdb->users} p ON p.ID = pm.user_id
 		        WHERE pm.meta_key NOT LIKE '\_%'
+		        ORDER BY pm.meta_key ASC
 		    ";
 
 		    $prepared_query = $wpdb->prepare($sql_query);

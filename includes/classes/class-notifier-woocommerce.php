@@ -37,6 +37,28 @@ class Notifier_Woocommerce {
 						Notifier_Notification_Triggers::send_trigger_request('woo_order_new', $args);
 					}
 				)
+			),
+			array(
+				'id'			=> 'woo_order_new_cod',
+				'label' 		=> 'New order is placed with COD payment method',
+				'description'	=> 'Trigger notification when a new order is placed with Cash on Delivery payment method selected.',
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
+				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
+				'action'		=> array(
+					'hook'		=> 'woocommerce_new_order',
+					'callback' 	=> function ( $order_id ){
+						$args = array (
+							'object_type' 	=> 'order',
+							'object_id'		=> $order_id
+						);
+						$order = new WC_Order( $order_id );
+						$method = $order->get_payment_method();
+						if('cod' != $method){
+							return;
+						}
+						Notifier_Notification_Triggers::send_trigger_request('woo_order_new_cod', $args);
+					}
+				)
 			)
 		);
 
