@@ -272,6 +272,17 @@
 		 * Triggers page
 		 ****************/
 
+		if($('#notifier_trigger').length > 0){
+			$('#notifier_trigger').select2({
+		    	templateResult: function(option) {
+				    var $option = $(
+				      '<div><strong>' + option.text + '</strong></div><small>' + option.title + '</small>'
+				    );
+				    return $option;
+			  	}
+		  	});
+		}
+
 	    $(document).on('change', '.notifier-enable-trigger', function(){
 	    	var enabled = ($(this).prop('checked')) ? 'yes' : 'no';
 	    	var postId = $(this).data('post-id');
