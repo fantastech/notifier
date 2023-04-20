@@ -323,8 +323,7 @@ class Notifier_Woocommerce {
 	/*
 	 * Add recipient fields for WooCommerce
 	 */
-	public static function woocommerce_recipient_fields(){
-		$recipient_fields = array();
+	public static function woocommerce_recipient_fields($recipient_fields){
 		$recipient_fields['WooCommerce'] = array(
 			array(
 				'id'			=> 'woo_order_billing_phone',

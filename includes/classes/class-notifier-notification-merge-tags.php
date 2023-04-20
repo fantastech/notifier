@@ -16,6 +16,8 @@ class Notifier_Notification_Merge_Tags {
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'comment_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'user_merge_tags') );
 		add_filter( 'notifier_notification_merge_tags', array(__CLASS__, 'attachment_merge_tags') );
+		add_filter( 'notifier_notification_recipient_fields', array( __CLASS__, 'post_recipient_fields') );
+		add_filter( 'notifier_notification_recipient_fields', array( __CLASS__, 'user_recipient_fields') );
 	}
 
 	/**
@@ -122,15 +124,14 @@ class Notifier_Notification_Merge_Tags {
 	 		'public' => true,
 		);
 
-		$output = 'objects';
-		$post_types = get_post_types( $args, $output);
+		$post_types = get_post_types( $args, 'objects');
 		unset($post_types['attachment']);
 
 		foreach($post_types as $post){
 			$post_meta_keys = self::get_custom_meta_keys($post->name);
 			if(!empty($post_meta_keys)){
 				foreach($post_meta_keys as $post_meta_key){
-					$merge_tags[$post->labels->singular_name . ' Meta'][] = array(
+					$merge_tags[$post->labels->singular_name . ' Custom Meta'][] = array(
 						'id' 			=> $post->name . '_meta_' . $post_meta_key,
 						'label' 		=> $post_meta_key,
 						'preview_value' => '123',
@@ -438,7 +439,7 @@ class Notifier_Notification_Merge_Tags {
 		$user_meta_keys = self::get_user_meta_keys();
 		if(!empty($user_meta_keys)){
 			foreach($user_meta_keys as $user_meta_key){
-				$merge_tags['User Meta'][] = array(
+				$merge_tags['User Custom Meta'][] = array(
 					'id' 			=> 'user_meta_' . $user_meta_key,
 					'label' 		=> $user_meta_key,
 					'preview_value' => '123',
@@ -530,7 +531,7 @@ class Notifier_Notification_Merge_Tags {
 		$post_meta_keys = self::get_custom_meta_keys('attachment');
 		if(!empty($post_meta_keys)){
 			foreach($post_meta_keys as $post_meta_key){
-				$merge_tags['Attachment Meta'][] = array(
+				$merge_tags['Attachment Custom Meta'][] = array(
 					'id' 			=> 'attachment_meta_' . $post_meta_key,
 					'label' 		=> $post_meta_key,
 					'preview_value' => '123',
@@ -617,10 +618,65 @@ class Notifier_Notification_Merge_Tags {
 			$final_recipient_fields = $recipient_fields;
 		} else {
 			foreach ($types as $type) {
-				$final_recipient_fields[$type] = $recipient_fields[$type];
+				if(isset($recipient_fields[$type])){
+					$final_recipient_fields[$type] = $recipient_fields[$type];
+				}
 			}
 		}
 
+		return $final_recipient_fields;
+	}
+
+	/*
+	 * Post recipient fields
+	 */
+	public static function post_recipient_fields($recipient_fields){
+		$post_types = get_post_types( $args, 'objects');
+		foreach($post_types as $post){
+			$post_meta_keys = self::get_custom_meta_keys($post->name);
+			if(!empty($post_meta_keys)){
+				foreach($post_meta_keys as $post_meta_key){
+					$recipient_fields[$post->labels->singular_name . ' Custom Meta'][] = array(
+						'id' 			=> $post->name . '_meta_' . $post_meta_key,
+						'label' 		=> $post_meta_key,
+						'preview_value' => '123',
+						'return_type'	=> 'text',
+						'value'			=> function ($args) use ($post_meta_key) {
+							$value = get_post_meta($args['object_id'], $post_meta_key, true);
+							if(is_array($value) || is_object($value)){
+								$value = json_encode($value);
+							}
+							return (string) $value;
+						}
+					);
+				}
+			}
+		}
+		return $recipient_fields;
+	}
+
+	/*
+	 * User recipient fields
+	 */
+	public static function user_recipient_fields($recipient_fields){
+		$user_meta_keys = self::get_user_meta_keys();
+		if(!empty($user_meta_keys)){
+			foreach($user_meta_keys as $user_meta_key){
+				$recipient_fields['User Custom Meta'][] = array(
+					'id' 			=> 'user_meta_' . $user_meta_key,
+					'label' 		=> $user_meta_key,
+					'preview_value' => '123',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) use ($user_meta_key) {
+						$value = get_user_meta($args['object_id'], $user_meta_key, true);
+						if(is_array($value) || is_object($value)){
+							$value = json_encode($value);
+						}
+						return (string) $value;
+					}
+				);
+			}
+		}
 		return $recipient_fields;
 	}
 

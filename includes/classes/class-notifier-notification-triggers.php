@@ -363,8 +363,7 @@ class Notifier_Notification_Triggers {
 	 		'public' => true,
 		);
 
-		$output = 'objects';
-		$post_types = get_post_types( $args, $output);
+		$post_types = get_post_types( $args, 'objects');
 
 		$triggers = array ();
 		unset($post_types['attachment']);
@@ -375,9 +374,8 @@ class Notifier_Notification_Triggers {
 			 	'id'			=> 'new_'.$post->name,
 				'label' 		=> 'New '.$post->labels->singular_name.' is published',
 				'description'	=> 'Trigger notification when a new '.$post->name.' is published.',
-				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array($post->labels->singular_name, $post->labels->singular_name . ' Meta') ),
-				'customer_fields'	=> array(),
-				'recipient_fields'	=> array(),
+				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array($post->labels->singular_name, $post->labels->singular_name . ' Custom Meta') ),
+				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields( array($post->labels->singular_name . ' Custom Meta') ),
 				'action'		=> array (
 					'hook'		=> 'publish_'.$post->name,
 					'args_num'	=> 3,
@@ -419,8 +417,8 @@ class Notifier_Notification_Triggers {
 		 	'id'			=> 'new_user',
 			'label' 		=> 'New User is registered',
 			'description'	=> 'Trigger notification when a new user is created.',
-			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User', 'User Meta') ),
-			'recipient_fields'	=> array(),
+			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('User', 'User Custom Meta') ),
+			'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields( array('User Custom Meta') ),
 			'action'		=> array (
 				'hook'		=> 'user_register',
 				'callback' 	=> function ( $user_id ) {
@@ -438,8 +436,8 @@ class Notifier_Notification_Triggers {
 		 	'id'			=> 'new_attachment',
 			'label' 		=> 'New Media is uploded',
 			'description'	=> 'Trigger notification when a new attachement is uploded.',
-			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Attachment', 'Attachment Meta') ),
-			'recipient_fields'	=> array(),
+			'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags( array('Attachment', 'Attachment Custom Meta') ),
+			'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields( array('Attachment Custom Meta') ),
 			'action'		=> array (
 				'hook'		=> 'add_attachment',
 				'callback' 	=> function ( $attachement_id ) {
@@ -728,7 +726,7 @@ class Notifier_Notification_Triggers {
 			'custom_attributes'	=> array('multiple' => 'multiple')
         ) );
 
-		echo '<span class="description">Select the data fields that you want to send to WANotifier.com when this is triggered. The fields you select here will be available to map with message template variables like <code>{{1}}</code>, <code>{{2}}</code> etc when you create a <a href="https://app.wanotifier.com/notifications/add/" target="_blank">new notification</a>.</span></div>';
+		echo '<span class="description">Select the data fields that will be sent to WANotifier.com when the trigger happens. These fields will be available to map with message template variables like <code>{{1}}</code>, <code>{{2}}</code> etc when you <a href="https://app.wanotifier.com/notifications/add/" target="_blank">create a Notification</a>.</span></div>';
 
 		if(!empty($recipient_tags)){
 			echo '<div class="trigger-fields-wrap"><div class="d-flex justify-content-between"><label class="form-label w-auto">Recipient fields</label><div class="small"><a href="#" class="notifier-select-all-checkboxes">select all</a> / <a href="#" class="notifier-unselect-all-checkboxes">unselect all</a></div></div>';
@@ -745,7 +743,7 @@ class Notifier_Notification_Triggers {
 				'custom_attributes'	=> array('multiple' => 'multiple')
 	        ) );
 
-			echo '<span class="description">Select the phone number fields that you want to send to WANotifier.com when this is triggered. The fields you select here will be available under <b>Recipients</b> when you create a notification. <b>IMPORTANT NOTE:</b> The phone numbers must start with coutnry code or the message will not be sent. Eg. +919876543210.</span></div>';
+			echo '<span class="description">Select the recipient fields that will be sent to WANotifier.com when this trigger happens. These fields will be available under <b>Recipients</b> section when you create a Notification. Note that the selected recipient fields <b>must return a phone number</b> with a coutnry code (e.g. +919876543210) or the message wll not be sent.</span></div>';
 		}
 
 		$html = ob_get_clean();

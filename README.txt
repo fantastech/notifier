@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, whatsapp integration, gravity forms whatsapp, contact form 7 whatsapp, click to chat
 Requires at least: 5.0
 Tested up to: 6.2
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -31,6 +31,7 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 **WooCommerce**
 
 * Send WhatsApp notification when a **new WooCommerce order is placed**
+* Send WhatsApp notification when a **new WooCommerce order is placed with COD payment method**
 * Send WhatsApp notification when **order status changes to processing**
 * Send WhatsApp notification when **order status changes to completed**
 * Send WhatsApp notification when **order status changes to cancelled**
@@ -139,6 +140,11 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 == Changelog ==
 
+= 2.2.2 - 2023-04-19 =
+* add: new trigger - new order placed with COD payment method
+* add: added trigger description to the Trigger dropdown
+* add: custom fields support in Recipient Fields (experimental)
+
 = 2.2.1 - 2023-04-17 =
 * add: further speed boost - optimized code for fewer db queries
 
@@ -226,6 +232,11 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.2.2 - 2023-04-19 =
+* add: new trigger - new order placed with COD payment method
+* add: added trigger description to the Trigger dropdown
+* add: custom fields support in Recipient Fields (experimental)
 
 = 2.2.1 - 2023-04-17 =
 * add: further speed boost - optimized code for fewer db queries
