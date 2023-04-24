@@ -19,16 +19,16 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 
 **Important Note: This plugin requires you to have an account at WANotifier.com to be able to trigger WhatsApp notifications. You can create a *FREE account* with us [by clicking here](https://app.wanotifier.com/create-account/).**
 
-= What you can do with this plugin? =
+** What you can do with this plugin? **
 
-**WordPress**
+== WordPress WhatsApp Integration ==
 
 * Send WhatsApp notification when a **new post is published**
 * Send WhatsApp notification when a **new custom post type is published**
 * Send WhatsApp notification when a **new comment is added**
 * Send WhatsApp notification when a **new user is registered**
 
-**WooCommerce**
+== WooCommerce WhatsApp Integration ==
 
 * Send WhatsApp notification when a **new WooCommerce order is placed**
 * Send WhatsApp notification when a **new WooCommerce order is placed with COD payment method**
@@ -40,27 +40,27 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 * Send WhatsApp notification when **order status changes to refunded**
 * Send WhatsApp notification for any custom added order status
 
-**Gravity Forms**
+== Gravity Forms WhatsApp Integration ==
 
 * Send WhatsApp notifications when a **Gravity Forms form is submitted**
 
-**Contact Form 7**
+== Contact Form 7 WhatsApp Integration ==
 
 * Send WhatsApp notifications when a **Contact Form 7 form is submitted**
 
-**WPForms**
+== WPForms WhatsApp Integration ==
 
 * Send WhatsApp notifications when a **WPForms form is submitted**
 
-**Ninja Forms**
+== Ninja Forms WhatsApp Integration ==
 
 * Send WhatsApp notifications when a **Ninja Forms form is submitted**
 
-**Formidable Forms**
+== Formidable Forms WhatsApp Integration ==
 
 * Send WhatsApp notifications when a **Formidable Forms form is submitted**
 
-**Fluent Forms**
+== Fluent Forms WhatsApp Integration ==
 
 * Send WhatsApp notifications when a **Fluent Forms form is submitted**
 
