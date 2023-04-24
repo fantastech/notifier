@@ -123,7 +123,6 @@ class Notifier_Notification_Merge_Tags {
 		$args = array(
 	 		'public' => true,
 		);
-
 		$post_types = get_post_types( $args, 'objects');
 		unset($post_types['attachment']);
 
@@ -631,6 +630,9 @@ class Notifier_Notification_Merge_Tags {
 	 * Post recipient fields
 	 */
 	public static function post_recipient_fields($recipient_fields){
+		$args = array(
+	 		'public' => true
+		);
 		$post_types = get_post_types( $args, 'objects');
 		foreach($post_types as $post){
 			$post_meta_keys = self::get_custom_meta_keys($post->name);

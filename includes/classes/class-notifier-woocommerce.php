@@ -19,14 +19,15 @@ class Notifier_Woocommerce {
 	 * Add Woocommerce notification triggers
 	 */
 	public static function get_woo_notification_triggers() {
-		$merge_tag_types = array('WooCommerce', 'WooCommerce Order', 'WooCommerce Customer');
+		$merge_tag_types = array('WooCommerce', 'WooCommerce Order', 'WooCommerce Customer', 'WooCommerce Order Custom Meta', 'WooCommerce Customer User Meta');
+		$recipient_types = array('WooCommerce', 'WooCommerce Order Custom Meta', 'WooCommerce Customer User Meta');
 		$triggers = array (
 			array(
 				'id'			=> 'woo_order_new',
 				'label' 		=> 'New order is placed',
 				'description'	=> 'Trigger notification when a new order is placed.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
+				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields($recipient_types),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_new_order',
 					'callback' 	=> function ( $order_id ){
@@ -43,7 +44,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'New order is placed with COD payment method',
 				'description'	=> 'Trigger notification when a new order is placed with Cash on Delivery payment method selected.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
+				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields($recipient_types),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_new_order',
 					'callback' 	=> function ( $order_id ){
@@ -74,7 +75,7 @@ class Notifier_Woocommerce {
 				'label' 		=> 'Order status changes to ' . $status,
 				'description'	=> 'Trigger notification when status of an order changes to ' . $status . '.',
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
-				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields(array('WooCommerce')),
+				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields($recipient_types),
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_' . $status_slug,
 					'callback' 	=> function ( $order_id ) use ($trigger_id) {
@@ -171,6 +172,10 @@ class Notifier_Woocommerce {
 			'payment_method_title'	=> array(
 				'preview'	=> 'Cash on delivery',
 				'label' 	=> 'Order payment method'
+			),
+			'checkout_payment_url'	=> array(
+				'preview'	=> 'https://example.com/checkout/order-received/123/?key=wc_order_abcdef',
+				'label' 	=> 'Order checkout payment URL'
 			),
 			'checkout_order_received_url'	=> array(
 				'preview'	=> 'https://example.com/checkout/order-received/123/?key=wc_order_abcdef',
@@ -317,6 +322,52 @@ class Notifier_Woocommerce {
 			}
 		}
 
+		// Order meta keys
+		$order_meta_keys = Notifier_Notification_Merge_Tags::get_custom_meta_keys('shop_order');
+		if(!empty($order_meta_keys)){
+			foreach($order_meta_keys as $order_meta_key){
+				$merge_tags['WooCommerce Order Custom Meta'][] = array(
+					'id' 			=> 'woo_order_meta_' . $order_meta_key,
+					'label' 		=> $order_meta_key,
+					'preview_value' => '123',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) use ($order_meta_key) {
+						$value = get_post_meta($args['object_id'], $order_meta_key, true);
+						if(is_array($value) || is_object($value)){
+							$value = json_encode($value);
+						}
+						return (string) $value;
+					}
+				);
+			}
+		}
+
+		// WooCommerce customer user meta
+		$user_meta_keys = Notifier_Notification_Merge_Tags::get_user_meta_keys();
+		if(!empty($user_meta_keys)){
+			foreach($user_meta_keys as $user_meta_key){
+				$merge_tags['WooCommerce Customer User Meta'][] = array(
+					'id' 			=> 'woo_customer_meta_' . $user_meta_key,
+					'label' 		=> $user_meta_key,
+					'preview_value' => '123',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) use ($user_meta_key) {
+						$order = wc_get_order( $args['object_id'] );
+						$user_id = $order->get_user_id();
+						if(0 == $user_id){
+							return '';
+						}
+
+						$value = get_user_meta($user_id, $user_meta_key, true);
+						if(is_array($value) || is_object($value)){
+							$value = json_encode($value);
+						}
+						return (string) $value;
+					}
+				);
+			}
+		}
+
 		return $merge_tags;
 	}
 
@@ -348,6 +399,53 @@ class Notifier_Woocommerce {
 				}
 			)
 		);
+
+		// Order meta keys
+		$order_meta_keys = Notifier_Notification_Merge_Tags::get_custom_meta_keys('shop_order');
+		if(!empty($order_meta_keys)){
+			foreach($order_meta_keys as $order_meta_key){
+				$recipient_fields['WooCommerce Order Custom Meta'][] = array(
+					'id' 			=> 'woo_order_meta_' . $order_meta_key,
+					'label' 		=> $order_meta_key,
+					'preview_value' => '123',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) use ($order_meta_key) {
+						$value = get_post_meta($args['object_id'], $order_meta_key, true);
+						if(is_array($value) || is_object($value)){
+							$value = json_encode($value);
+						}
+						return (string) $value;
+					}
+				);
+			}
+		}
+
+		// WooCommerce customer user meta
+		$user_meta_keys = Notifier_Notification_Merge_Tags::get_user_meta_keys();
+		if(!empty($user_meta_keys)){
+			foreach($user_meta_keys as $user_meta_key){
+				$recipient_fields['WooCommerce Customer User Meta'][] = array(
+					'id' 			=> 'woo_customer_meta_' . $user_meta_key,
+					'label' 		=> $user_meta_key,
+					'preview_value' => '123',
+					'return_type'	=> 'text',
+					'value'			=> function ($args) use ($user_meta_key) {
+						$order = wc_get_order( $args['object_id'] );
+						$user_id = $order->get_user_id();
+						if(0 == $user_id){
+							return '';
+						}
+
+						$value = get_user_meta($user_id, $user_meta_key, true);
+						if(is_array($value) || is_object($value)){
+							$value = json_encode($value);
+						}
+						return (string) $value;
+					}
+				);
+			}
+		}
+
 		return $recipient_fields;
 	}
 

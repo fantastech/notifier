@@ -126,7 +126,8 @@
 				$('.notifier-trigger-merge-tags').html(response.html);
 				conditionallyShowFields();
 				$('.trigger-fields-wrap select').select2({
-					closeOnSelect: false
+					closeOnSelect: false,
+					placeholder: 'Click to select fields'
 				});
 			}
 		});
