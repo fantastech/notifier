@@ -142,7 +142,8 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 = 2.2.3 - 2023-04-24 =
 * add: WooCommerce order meta and customer user meta data fields and recipient fields
-* add: few styling fixes
+* add: new data field for Order payment URL
+* add: few style fixes
 
 = 2.2.2 - 2023-04-19 =
 * add: new trigger - new order placed with COD payment method
@@ -236,6 +237,11 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.2.3 - 2023-04-24 =
+* add: WooCommerce order meta and customer user meta data fields and recipient fields
+* add: new data field for Order payment URL
+* add: few style fixes
 
 = 2.2.2 - 2023-04-19 =
 * add: new trigger - new order placed with COD payment method
