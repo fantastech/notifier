@@ -19,7 +19,7 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 
 **Important Note: This plugin requires you to have an account at WANotifier.com to be able to trigger WhatsApp notifications. You can create a *FREE account* with us [by clicking here](https://app.wanotifier.com/create-account/).**
 
-** What you can do with this plugin? **
+**What you can do with this plugin?**
 
 == WordPress WhatsApp Integration ==
 
