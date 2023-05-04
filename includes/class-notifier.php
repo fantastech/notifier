@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.2.4' );
+		$this->define( 'NOTIFIER_VERSION', '2.3.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -217,7 +217,7 @@ class Notifier {
 		    'sslverify'	=> false
 	    );
 
-		$response = wp_remote_request( $request_url, $request_args);
+		$response = wp_remote_request( $request_url, $request_args );
 
 		$response_body = wp_remote_retrieve_body( $response );
 

@@ -175,6 +175,23 @@ function notifier_validate_phone_number( $phone_number ) {
     return preg_match( '/^\+[1-9]\d{8,15}$/', $phone_number );
 }
 
+/**
+ * Maybe add default country code
+ */
+function notifier_maybe_add_default_country_code( $phone_number ) {
+	if('+' === substr($phone_number, 0, 1) || '' == trim($phone_number)){
+		return $phone_number;
+	}
+
+	$defualt_code = get_option( NOTIFIER_PREFIX . 'default_country_code', '' );
+	if('' == trim($defualt_code)){
+		return $phone_number;
+	}
+
+	$phone_number = notifier_sanitize_phone_number($defualt_code) . $phone_number;
+	return $phone_number;
+}
+
 /*
  * Generate API key.
  */

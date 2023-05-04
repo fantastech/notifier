@@ -134,7 +134,7 @@ class Notifier_Notification_Merge_Tags {
 						'id' 			=> $post->name . '_meta_' . $post_meta_key,
 						'label' 		=> $post_meta_key,
 						'preview_value' => '123',
-						'return_type'	=> 'text',
+						'return_type'	=> 'all',
 						'value'			=> function ($args) use ($post_meta_key) {
 							$value = get_post_meta($args['object_id'], $post_meta_key, true);
 							if(is_array($value) || is_object($value)){
@@ -442,7 +442,7 @@ class Notifier_Notification_Merge_Tags {
 					'id' 			=> 'user_meta_' . $user_meta_key,
 					'label' 		=> $user_meta_key,
 					'preview_value' => '123',
-					'return_type'	=> 'text',
+					'return_type'	=> 'all',
 					'value'			=> function ($args) use ($user_meta_key) {
 						$value = get_user_meta($args['object_id'], $user_meta_key, true);
 						if(is_array($value) || is_object($value)){
@@ -534,7 +534,7 @@ class Notifier_Notification_Merge_Tags {
 					'id' 			=> 'attachment_meta_' . $post_meta_key,
 					'label' 		=> $post_meta_key,
 					'preview_value' => '123',
-					'return_type'	=> 'text',
+					'return_type'	=> 'all',
 					'value'			=> function ($args) use ($post_meta_key) {
 						$value = get_post_meta($args['object_id'], $post_meta_key, true);
 						if(is_array($value) || is_object($value)){
@@ -728,6 +728,7 @@ class Notifier_Notification_Merge_Tags {
 						}
 						if ( isset($field['id']) && $recipient_field == $field['id'] ) {
 							$value = notifier_sanitize_phone_number($field['value']($context_args));
+							$value = notifier_maybe_add_default_country_code($value);
 							break 2;
 						}
 					}
@@ -753,11 +754,19 @@ class Notifier_Notification_Merge_Tags {
 	    	$meta_keys = $custom_meta_keys[$custom_post_type];
 	    }
 		else {
+			$show_hidden_keys = get_option( NOTIFIER_PREFIX . 'hidden_custom_keys', 'no' );
+			if('yes' == $show_hidden_keys){
+				$hidden_key_filter = "";
+			}
+			else{
+				$hidden_key_filter = "AND pm.meta_key NOT LIKE '\_%'";
+			}
+
 	    	$sql_query = "
 		        SELECT DISTINCT pm.meta_key
 		        FROM {$wpdb->postmeta} pm
 		        LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-		        WHERE p.post_type = '%s' AND pm.meta_key NOT LIKE '\_%'
+		        WHERE p.post_type = '%s' {$hidden_key_filter}
 		        ORDER BY pm.meta_key ASC
 		    ";
 
@@ -781,11 +790,19 @@ class Notifier_Notification_Merge_Tags {
 	    $meta_keys = get_transient('_notifier_user_meta_keys');
 
 	    if(false === $meta_keys){
+	    	$show_hidden_keys = get_option( NOTIFIER_PREFIX . 'hidden_custom_keys', 'no' );
+	    	if('yes' == $show_hidden_keys){
+				$hidden_key_filter = "";
+			}
+			else{
+				$hidden_key_filter = "WHERE pm.meta_key NOT LIKE '\_%'";
+			}
+
 		    $sql_query = "
 		        SELECT DISTINCT pm.meta_key
 		        FROM {$wpdb->usermeta} pm
 		        LEFT JOIN {$wpdb->users} p ON p.ID = pm.user_id
-		        WHERE pm.meta_key NOT LIKE '\_%'
+		        {$hidden_key_filter}
 		        ORDER BY pm.meta_key ASC
 		    ";
 

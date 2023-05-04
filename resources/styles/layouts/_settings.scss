@@ -55,7 +55,7 @@
 		}
 	}
 
-	input:not([type='button']),
+	input:not([type='button']):not([type='radio']):not([type='checkbox']),
 	textarea,
 	select {
 		width: 100%;

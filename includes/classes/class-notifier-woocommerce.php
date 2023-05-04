@@ -330,7 +330,7 @@ class Notifier_Woocommerce {
 					'id' 			=> 'woo_order_meta_' . $order_meta_key,
 					'label' 		=> $order_meta_key,
 					'preview_value' => '123',
-					'return_type'	=> 'text',
+					'return_type'	=> 'all',
 					'value'			=> function ($args) use ($order_meta_key) {
 						$value = get_post_meta($args['object_id'], $order_meta_key, true);
 						if(is_array($value) || is_object($value)){
@@ -350,7 +350,7 @@ class Notifier_Woocommerce {
 					'id' 			=> 'woo_customer_meta_' . $user_meta_key,
 					'label' 		=> $user_meta_key,
 					'preview_value' => '123',
-					'return_type'	=> 'text',
+					'return_type'	=> 'all',
 					'value'			=> function ($args) use ($user_meta_key) {
 						$order = wc_get_order( $args['object_id'] );
 						$user_id = $order->get_user_id();
@@ -456,11 +456,11 @@ class Notifier_Woocommerce {
 		$phone_number = notifier_sanitize_phone_number( $phone_number );
 		$phone_number = ltrim($phone_number, '0');
 		if ( in_array( $country_code, array( 'US', 'CA' ), true ) ) {
+			$calling_code = '+1';
 			$phone_number = ltrim( $phone_number, '+1' );
 		} else {
 			$calling_code = WC()->countries->get_country_calling_code( $country_code );
 			$calling_code = is_array( $calling_code ) ? $calling_code[0] : $calling_code;
-
 			if ( $calling_code ) {
 				$phone_number = str_replace( $calling_code, '', preg_replace( '/^0/', '', $phone_number ) );
 			}

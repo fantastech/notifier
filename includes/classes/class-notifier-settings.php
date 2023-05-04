@@ -41,6 +41,8 @@ class Notifier_Settings {
 		$tabs = array(
 			'general'		=> 'General',
 			'click_to_chat' => 'Click to Chat',
+			'api'			=> 'API',
+			'advanced'		=> 'Advanced'
 		);
 		return $tabs;
 	}
@@ -72,17 +74,15 @@ class Notifier_Settings {
 				$settings = array(
 					array(
 						'title'			=> 'General',
-						'description'	=> '',
 						'type'			=> 'title',
 					),
 					array(
-						'id' 			=> 'api_key',
-						'title'			=> 'WANotifier.com API key',
+						'id' 			=> 'default_country_code',
+						'title'			=> 'Default Country Code (Optional)',
 						'type'			=> 'text',
-						'placeholder'	=> 'Enter your WANotifier.com API key here',
-						'default'		=> '',
-						'description'	=> $description,
-						'disabled'		=> $disabled
+						'placeholder'	=> 'Eg. +91',
+						'description'	=> 'Enter default country code that will be added to all recipient phone number fields before sending to WANotifier that do not start with a + sign.',
+						'default'		=> ''
 					),
 				);
 				break;
@@ -114,7 +114,7 @@ class Notifier_Settings {
 						'type'			=> 'text',
 						'name'          => 'ctc_greeting_text',
 						'placeholder'	=> 'Enter your greeting message here',
-						'description'		=> 'This text will be added to user\'s WhatsApp chat text field when they click on the button.' ,
+						'description'	=> 'This text will be added to user\'s WhatsApp chat text field when they click on the button.' ,
 					),
 					array(
 						'id' 			=> 'ctc_button_style',
@@ -124,13 +124,13 @@ class Notifier_Settings {
 						'type'			=> 'select',
 						'default'		=> '',
 						'options'       => array(
-											'default' => 'Select button style',
-											'btn-style-1' => 'Style 1' ,
-											'btn-style-2' => 'Style 2',
-											'btn-style-3' => 'Style 3',
-											'btn-style-4' => 'Style 4',
-											'btn-custom-image' => 'Add your own image'
-										),
+							'default' => 'Select button style',
+							'btn-style-1' => 'Style 1' ,
+							'btn-style-2' => 'Style 2',
+							'btn-style-3' => 'Style 3',
+							'btn-style-4' => 'Style 4',
+							'btn-custom-image' => 'Add your own image'
+						),
 						'description'	=> 'Select a button style. Preview will be shown on bottom right of this screen. You can update button style by writing custom CSS in your theme.',
 					),
 					array(
@@ -141,6 +141,40 @@ class Notifier_Settings {
 						'name'          => 'ctc_custom_button_image_url',
 						'description'	=> 'Enter button image url here.',
 						'tr_class'      => 'notifier-chat-btn-image-url',
+					),
+				);
+				break;
+			case 'api':
+				$settings = array(
+					array(
+						'title'			=> 'API Configuration',
+						'description'	=> '',
+						'type'			=> 'title',
+					),
+					array(
+						'id' 			=> 'api_key',
+						'title'			=> 'WANotifier.com API key',
+						'type'			=> 'text',
+						'placeholder'	=> 'Enter your WANotifier.com API key here',
+						'default'		=> '',
+						'description'	=> $description,
+						'disabled'		=> $disabled
+					),
+				);
+				break;
+			case 'advanced':
+				$settings = array(
+					array(
+						'title'			=> 'Advanced Settings',
+						'description'	=> '',
+						'type'			=> 'title',
+					),
+					array(
+						'id' 			=> 'hidden_custom_keys',
+						'title'			=> 'Enable hidden custom meta keys',
+						'type'			=> 'checkbox',
+						'description'	=> 'Enable hidden custom meta keys that start with underscores (e.g. _field_name) to be avaialbe in Data and Recipient Fields. Note that enabling this might impact your website performance slightly.',
+						'default'		=> ''
 					),
 				);
 				break;

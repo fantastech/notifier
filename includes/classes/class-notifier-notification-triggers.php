@@ -701,7 +701,7 @@ class Notifier_Notification_Triggers {
 		if(!empty($recipient_fields)){
 			if ( strpos($trigger, 'woo_order') !== false){
 				foreach($recipient_fields as $key => $recipient_field){
-					if ( strpos($recipient_field, 'woo_order_') === false){
+					if (in_array($recipient_field, array('billing_phone', 'shipping_phone'))){
 						$recipient_fields[$key] = 'woo_order_' . $recipient_field;
 					}
 				}
