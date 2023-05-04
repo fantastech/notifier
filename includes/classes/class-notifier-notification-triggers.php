@@ -743,7 +743,7 @@ class Notifier_Notification_Triggers {
 				'custom_attributes'	=> array('multiple' => 'multiple')
 	        ) );
 
-			echo '<span class="description">Select the recipient fields that will be sent to WANotifier.com when this trigger happens. These fields will be available under <b>Recipients</b> section when you create a Notification. Note that the selected recipient fields <b>must return a phone number</b> with a coutnry code (e.g. +919876543210) or the message wll not be sent.</span></div>';
+			echo '<span class="description">Select the recipient fields that will be sent to WANotifier.com when this trigger happens. These fields will be available under <b>Recipients</b> section when you create a Notification. Note that the selected recipient fields <b>must return a phone number</b> with a country code (e.g. +919876543210) or the message wll not be sent.</span></div>';
 		}
 
 		$html = ob_get_clean();

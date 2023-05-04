@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, whatsapp integration, gravity forms whatsapp, contact form 7 whatsapp, click to chat
 Requires at least: 5.0
 Tested up to: 6.2
-Stable tag: 2.2.3
+Stable tag: 2.2.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -13,13 +13,13 @@ Send WhatsApp message notifications using the official WhatsApp Cloud APIs for W
 
 == Description ==
 
-**Send WhatsApp message notifications** for _Woocommerce_ orders and form submissions for form plugins like _Gravity Forms_, _Contact Form 7_ and so on using the official **WhatsApp Cloud APIs**.
+**Send WhatsApp message notifications** for _Woocommerce_ orders and form submissions from plugins like _Gravity Forms_, _Contact Form 7_ and other popular form plugins using the official **WhatsApp Cloud APIs**.
 
 This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you send WhatsApp notifications when some action is performed on your website like new user registration, WooCommerce order related actions, form submissions and much more!
 
 **Important Note: This plugin requires you to have an account at WANotifier.com to be able to trigger WhatsApp notifications. You can create a *FREE account* with us [by clicking here](https://app.wanotifier.com/create-account/).**
 
-**What you can do with this plugin?**
+What you can do with this plugin?
 
 == WordPress WhatsApp Integration ==
 
@@ -38,7 +38,7 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 * Send WhatsApp notification when **order status changes to failed**
 * Send WhatsApp notification when **order status changes to on-hold**
 * Send WhatsApp notification when **order status changes to refunded**
-* Send WhatsApp notification for any custom added order status
+* Send WhatsApp notification for **all custom order statuses**
 
 == Gravity Forms WhatsApp Integration ==
 
@@ -66,7 +66,7 @@ This WordPress plugin allows you to integrate your WordPress website with your a
 
 Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
 
-= About WANotifier.com =
+== About WANotifier.com ==
 
 WANotifier.com is one of it's kind SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using [WhatsApp's official Cloud APIs](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
 
@@ -84,7 +84,7 @@ Now you can send the bulk broadcast messages and transactional notifications usi
 
 WANotifier.com uses **WhatsApp's official Cloud API** and acts as a simple bridge between you and WhatsApp to send messages without limitation or charging you a premium on top of their per conversation cost. You settle your API usage billing directly with them!
 
-*Note:* WhatsApp Cloud API allows you to **send upto 1,000 messages for FREE per month**. After that WhatsApp charges you a small fees per conversation as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/).
+**Note: WhatsApp Cloud API are paid APIs. They charge you a small fees per conversation as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/) that you need to settle with them directly on their portal.**
 
 If you're looking for a **safe, cost friendly and robust** solution for sending WhatsApp broadcasts or messages, this tool is for you!
 
@@ -96,7 +96,7 @@ If you're looking for a **safe, cost friendly and robust** solution for sending 
 * [Pricing](https://wanotifier.com/pricing/)
 * [Create your FREE account](https://app.wanotifier.com/create-account/)
 
-= WANotifier.com Features =
+== WANotifier.com Features ==
 
 Here's everything that you can do with WANotifier's SaaS tool:
 
@@ -126,10 +126,16 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Send action-based transactional message notifications
 * Trigger notifications from 3rd party apps using webhooks
 
+**Automations**
+
+* Automatically send greeting messages for incoming messages
+* Send delay in response message when you're not online to reply
+* Auto-unsubscribe system to unsubscribe users when they send a particular word like STOP
+* Custom auto-replies to send a pre-defined message when user send a particular word or phrase
+
 **Inbox**
 
 * Inbox for sending & receiving messages
-* Multi-agent support for chat (Coming soon)
 
 == Installation ==
 
@@ -139,6 +145,9 @@ Here's everything that you can do with WANotifier's SaaS tool:
 4. Follow the instructions on the screen to complete your setup.
 
 == Changelog ==
+
+= 2.2.4 - 2023-05-03 =
+* fix: Some minor typo fixes
 
 = 2.2.3 - 2023-04-24 =
 * add: WooCommerce order meta and customer user meta data fields and recipient fields
@@ -237,6 +246,9 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Launch of the beta version of the plugin.
 
 == Upgrade Notice ==
+
+= 2.2.4 - 2023-05-03 =
+* fix: Some minor typo fixes
 
 = 2.2.3 - 2023-04-24 =
 * add: WooCommerce order meta and customer user meta data fields and recipient fields

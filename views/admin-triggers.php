@@ -38,7 +38,7 @@ global $post_id;
 						}
 					?>
 				</select>
-				<span class="description">Select the trigger when you want to fire the Natification on WANotifier.com.</span>
+				<span class="description">Select the trigger when you want to fire the Notification on WANotifier.com.</span>
 			</p>
 		</div>
 		<?php
