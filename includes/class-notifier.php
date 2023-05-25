@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.3.0' );
+		$this->define( 'NOTIFIER_VERSION', '2.4.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -236,46 +236,52 @@ class Notifier {
 	public static function maybe_include_integrations () {
 		// Woocommerce
 		if ( class_exists( 'WooCommerce' ) ) {
-			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-woocommerce.php';
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-woocommerce.php';
 			Notifier_Woocommerce::init();
 		}
 		if ( ! class_exists( 'WC_Session' ) ) {
 		    include_once( WP_PLUGIN_DIR . '/woocommerce/includes/abstracts/abstract-wc-session.php' );
 		}
 
+		// WooCommerce Cart Abandonment Recovery by CartFlows
+		if ( class_exists( 'CARTFLOWS_CA_Loader' ) && defined('CARTFLOWS_CA_VER') && version_compare(CARTFLOWS_CA_VER, '1.2.25', '>=')) {
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-wcar.php';
+			Notifier_WCAR::init();
+		}
+
 		// Gravity Forms
 		if ( class_exists( 'GFCommon' ) ) {
-			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-gravityforms.php';
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-gravityforms.php';
 			Notifier_GravityForms::init();
 		}
 
 		// Contact Form 7
 		if ( class_exists( 'WPCF7' ) ) {
-			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-cf7.php';
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-cf7.php';
 			Notifier_ContactForm7::init();
 		}
 
 		// WPForms
 		if ( class_exists( 'WPForms' ) ) {
-			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-wpforms.php';
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-wpforms.php';
 			Notifier_WPForms::init();
 		}
 
 		// Ninja Forms
 		if ( class_exists( 'Ninja_Forms' ) ) {
-			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-ninjaforms.php';
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-ninjaforms.php';
 			Notifier_NinjaForms::init();
 		}
 
 		//FrmForm
 		if ( class_exists( 'FrmForm' ) ) {
-			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-formidable.php';
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-formidable.php';
 			Notifier_Formidable::init();
 		}
 
 		//WPFluentForm
 		if ( function_exists( 'fluentFormApi' ) ) {
-			require_once NOTIFIER_PATH . 'includes/classes/class-notifier-fluentforms.php';
+			require_once NOTIFIER_PATH . 'includes/classes/integrations/class-notifier-fluentforms.php';
 			Notifier_FluentForms::init();
 		}
 	}

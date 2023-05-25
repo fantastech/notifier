@@ -1,96 +1,79 @@
 === WANotifier - Send Message Notifications Using Cloud API ===
 Contributors: wanotifier
 Donate link: https://wanotifier.com
-Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, woocommerce whatsapp order notification, whatsapp for woocommerce, whatsapp integration, gravity forms whatsapp, contact form 7 whatsapp, click to chat
+Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, whatsapp for woocommerce, whatsapp integration, gravity forms whatsapp, contact form 7 whatsapp, abandoned cart
 Requires at least: 5.0
 Tested up to: 6.2
-Stable tag: 2.3.0
+Stable tag: 2.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send WhatsApp message notifications using the official WhatsApp Cloud APIs for Woocommerce orders and form sumissions for Gravity Forms, Contact Form 7 & more.
+Send WhatsApp notifications using the official WhatsApp Cloud APIs for Woocommerce orders and form sumissions for Gravity Forms, Contact Form 7 & more.
 
 == Description ==
 
-**Send WhatsApp message notifications** for _Woocommerce_ orders and form submissions from plugins like _Gravity Forms_, _Contact Form 7_ and other popular form plugins using the official **WhatsApp Cloud APIs**.
+**Send WhatsApp notifications** for Woocommerce orders, abadoned cart recovery, form submissions from _Contact Form 7_, _Gravity Forms_, _WPForms_ & other popular form plugins and for a lot of other such actions using the **official WhatsApp Cloud APIs**.
 
-This WordPress plugin allows you to integrate your WordPress website with your account at [WANotifier.com](https://wanotifier.com) to help you send WhatsApp notifications when some action is performed on your website like new user registration, WooCommerce order related actions, form submissions and much more!
+**NOTE:** This plugin requires you to have an account at [WANotifier.com](https://wanotifier.com/). Create you **FREE forever** account now by [clicking here](https://app.wanotifier.com/create-account/).
 
-**Important Note: This plugin requires you to have an account at WANotifier.com to be able to trigger WhatsApp notifications. You can create a *FREE account* with us [by clicking here](https://app.wanotifier.com/create-account/).**
+Here's everything that you can do with this plugin...
 
-What you can do with this plugin?
+== WhatsApp Integration with Core WordPress ==
 
-== WordPress WhatsApp Integration ==
-
-* Send WhatsApp notification when a **new post is published**
-* Send WhatsApp notification when a **new custom post type is published**
+* Send WhatsApp notification when a **new post or page is published**
+* Send WhatsApp notification when a post of any **custom post type is published**
 * Send WhatsApp notification when a **new comment is added**
 * Send WhatsApp notification when a **new user is registered**
 
-== WooCommerce WhatsApp Integration ==
+== WhatsApp Notifications for WooCommerce Orders ==
 
 * Send WhatsApp notification when a **new WooCommerce order is placed**
 * Send WhatsApp notification when a **new WooCommerce order is placed with COD payment method**
-* Send WhatsApp notification when **order status changes to processing**
-* Send WhatsApp notification when **order status changes to completed**
-* Send WhatsApp notification when **order status changes to cancelled**
-* Send WhatsApp notification when **order status changes to failed**
-* Send WhatsApp notification when **order status changes to on-hold**
-* Send WhatsApp notification when **order status changes to refunded**
-* Send WhatsApp notification for **all custom order statuses**
+* Send WhatsApp notification on all **order status changes**
 
-== Gravity Forms WhatsApp Integration ==
+== WhatsApp Integration with WooCommerce Addons ==
 
-* Send WhatsApp notifications when a **Gravity Forms form is submitted**
+* [WooCommerce Cart Abandonment Recovery](https://wordpress.org/plugins/woo-cart-abandonment-recovery/) (v1.2.25 or higher) - send WhatsApp notification for abondoned cart recovery
 
-== Contact Form 7 WhatsApp Integration ==
+== WhatsApp Integration with Form Plugins ==
 
-* Send WhatsApp notifications when a **Contact Form 7 form is submitted**
+Send WhatsApp notification when a form is submitted in any of the following form plugins:
 
-== WPForms WhatsApp Integration ==
+* [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
+* [Gravity Forms](https://www.gravityforms.com/)
+* [WPForms](https://wordpress.org/plugins/wpforms-lite/)
+* [Ninja Forms](https://wordpress.org/plugins/ninja-forms/)
+* [Formidable Forms](https://wordpress.org/plugins/formidable/)
+* [Fluent Forms](https://wordpress.org/plugins/fluentform/)
 
-* Send WhatsApp notifications when a **WPForms form is submitted**
-
-== Ninja Forms WhatsApp Integration ==
-
-* Send WhatsApp notifications when a **Ninja Forms form is submitted**
-
-== Formidable Forms WhatsApp Integration ==
-
-* Send WhatsApp notifications when a **Formidable Forms form is submitted**
-
-== Fluent Forms WhatsApp Integration ==
-
-* Send WhatsApp notifications when a **Fluent Forms form is submitted**
-
-Want more triggers for your favorite plugins? Request us [here](https://wanotifier.com/support/) or contact your developer create custom triggers using filter hooks.
+We keep adding more integrations with new plugin updates. If you want integration with your favorite plugins, you can request us [here](https://wanotifier.com/support/) or you can contact your developer create custom triggers using the filter hooks we provide.
 
 == About WANotifier.com ==
 
-WANotifier.com is one of it's kind SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** (like WooCommerce order notifications) using [WhatsApp's official Cloud APIs](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
+WANotifier.com is one of it's kind SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** from your website using [WhatsApp's official Cloud APIs](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
 
-WhatsApp provides Cloud APIs to let businesses send WhatsApp messages to their customers using the APIs.
+WhatsApp provides Cloud APIs to let businesses send WhatsApp messages to their customers using their APIs.
 
 Earlier, if you had to send WhatsApp messages or notifications, there were only two ways to do it:
 
 1. You either used **hack-y browser extensions or desktop / mobile apps** that would work on top of WhatsApp Web or your WhatsApp phone app to send the messages in a *shady* and [unauthorized](https://faq.whatsapp.com/1104252539917581/) way. This was a good way to get your phone number **banned** by WhatsApp!
 
-2. Or, you had to sign up with one of the WhatsApp approved **Business Service Providers** and pay them high monthly fees to use their software to send messages. Not only you had to pay high monthly fees, they even charged you a premium of 10–15% on top of WhatsApp API's [conversation-based pricing](https://developers.facebook.com/docs/whatsapp/pricing/).
+2. Or, you had to sign up with one of the WhatsApp approved **Business Service Providers (BSPs)**, who acted like brokers between you and WhatsApp, and you had to pay them high monthly fees to use APIs. Not only you had to pay high monthly fees, they even charged you a premium of 15–20% on top of WhatsApp API's [conversation-based pricing](https://developers.facebook.com/docs/whatsapp/pricing/).
 
-But that changes with WANotifier.com!
+**But that changes with WANotifier.com!**
 
-Now you can send the bulk broadcast messages and transactional notifications using the **official WhatsApp way** but without needing to pay a fortune to middle-ware SaaS tools.
+Now you can send the bulk broadcast messages and transactional notifications using the **official WhatsApp way** but without needing to pay a fortune to the middlemen BSPs.
 
 WANotifier.com uses **WhatsApp's official Cloud API** and acts as a simple bridge between you and WhatsApp to send messages without limitation or charging you a premium on top of their per conversation cost. You settle your API usage billing directly with them!
 
 **Note: WhatsApp Cloud API are paid APIs. They charge you a small fees per conversation as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/) that you need to settle with them directly on their portal.**
 
-If you're looking for a **safe, cost friendly and robust** solution for sending WhatsApp broadcasts or messages, this tool is for you!
+If you're looking for a **cost friendly and robust** solution for sending WhatsApp broadcasts or messages, this tool is for you!
 
 **You can learn more about WANotifier.com using the following links:**
 
-* [Website](https://wanotifier.com/)
+* [Visit website](https://wanotifier.com/)
 * [How it Works?](https://wanotifier.com/#how-it-works)
 * [Features](https://wanotifier.com/#features)
 * [Pricing](https://wanotifier.com/pricing/)
@@ -98,13 +81,7 @@ If you're looking for a **safe, cost friendly and robust** solution for sending 
 
 == WANotifier.com Features ==
 
-Here's everything that you can do with WANotifier's SaaS tool:
-
-**General**
-
-* Send and receive WhatsApp messages
-* Full integration with WhatsApp Cloud APIs
-* No coding knowledge required
+Here's everything that you can do with WANotifier.com, no coding knowledge required!
 
 **Create & Manage Message Templates**
 
@@ -119,12 +96,16 @@ Here's everything that you can do with WANotifier's SaaS tool:
 * Add and manage contacts with our mini-CRM
 * Import contacts using CSV
 * Import contacts from 3rd party apps using webhooks
+* Subscribe / unsubscribe contacts from your messages
+* Contact management with Contact Lists and Tags
+* Add custom attributes to contacts
 
 **Notifications**
 
-* Send bulk marketing messages
+* Send bulk marketing messages on WhatsApp
 * Send action-based transactional message notifications
 * Trigger notifications from 3rd party apps using webhooks
+* Get full analytics on the sent, delivered and read messages
 
 **Automations**
 
@@ -135,7 +116,9 @@ Here's everything that you can do with WANotifier's SaaS tool:
 
 **Inbox**
 
-* Inbox for sending & receiving messages
+* Send & receive messages from a full-fledged Inbox
+
+And a lot more. Visit [WANotifier.com](https://wanotifier.com) to learn more.
 
 == Installation ==
 
@@ -145,114 +128,6 @@ Here's everything that you can do with WANotifier's SaaS tool:
 4. Follow the instructions on the screen to complete your setup.
 
 == Changelog ==
-
-= 2.3.0 - 2023-05-04 =
-* add: default country code for recipient fields.
-* add: option to enable hidden custom meta keys that start with underscore.
-* mod: changed custom meta data fields type so it's available to map in both body and header.
-* fix: country code not getting added to billing and shipping phone numbers for US numbers in WooCommerce.
-* fix: woocommerce custom meta key not saving issue.
-
-= 2.2.4 - 2023-05-03 =
-* fix: Some minor typo fixes
-
-= 2.2.3 - 2023-04-24 =
-* add: WooCommerce order meta and customer user meta data fields and recipient fields
-* add: new data field for Order payment URL
-* add: few style fixes
-
-= 2.2.2 - 2023-04-19 =
-* add: new trigger - new order placed with COD payment method
-* add: added trigger description to the Trigger dropdown
-* add: custom fields support in Recipient Fields (experimental)
-
-= 2.2.1 - 2023-04-17 =
-* add: further speed boost - optimized code for fewer db queries
-
-= 2.2.0 - 2023-04-13 =
-* fix: made triggers more unique with site key
-* add: UI and content updates
-* add: replaced direct firing of actions with action scheduler to drastically improve performance
-* add: custom meta fields for post types
-* mod: changed WooCommerce new order hook from woocommerce_thankyou to woocommerce_new_order
-
-= 2.1.3 - 2023-03-09 =
-* fix: Contact Form 7 error in logs
-
-= 2.1.2 - 2023-02-28 =
-* fix: Contact Form 7 forms not visible
-* fix: tel* fields not showing in Recipient Fields for Contact Form 7
-
-= 2.1.1 - 2023-02-13 =
-* fix: Order product items field was sending empty data
-
-= 2.1.0 - 2023-02-03 =
-* add: Click to chat feature
-* add: support for custom post types
-* add: product names field for WooCommerce
-
-= 2.0.10 - 2023-01-29 =
-* fix: error on saving triggers
-
-= 2.0.9 - 2023-01-26 =
-* Updated onboarding instructions & added testimonials
-
-= 2.0.8 - 2023-01-25 =
-* Added Fluent Forms integration
-
-= 2.0.7 - 2023-01-18 =
-* Added Formidable Forms integration
-
-= 2.0.6 - 2023-01-13 =
-* Added Ninja Forms integration
-
-= 2.0.5 - 2023-01-12 =
-* Fix: Recipient fields related bug in WPForms integration
-
-= 2.0.4 - 2023-01-11 =
-* Added WPForms integration
-
-= 2.0.3 - 2023-01-06 =
-* Fix: Added missing WordPress fields to Contact Form 7
-
-= 2.0.2 - 2023-01-04 =
-* Fix: Trigger sync message showing on deletiong of triggers
-* Fix: Few typos
-
-= 2.0.1 - 2022-12-30 =
-* Fix: Woocommerce new order notification not sending
-
-= 2.0.0 - 2022-12-30 =
-* Major upgrade with new way to manage triggers
-* Added ability to use custom Woocommerce order statuses.
-* Send WhatsApp notifications on Gravity Forms form submission.
-* Send WhatsApp notifications on Contact Form 7 form submission.
-
-= 1.0.5 - 2022-12-26 =
-* New: Improved on-boarding and How to? instructions
-
-= 1.0.4 - 2022-11-10 =
-* New: api enpoint upgrade
-
-= 1.0.3 - 2022-11-08 =
-* Fix: checkout not happening error
-
-= 1.0.2 - 2022-10-28 =
-* Fix: firing multiple notifications at the same time
-
-= 1.0.1 - 2022-10-27 =
-* Tested upto WP 6.1
-
-= 1.0.0 - 2022-10-09 =
-* Converted the plugin to provide integration with WANotifier.com
-
-= 0.1.1 - 2022-08-04 =
-* Fix - Minor bug fixes and code cleanup
-
-= 0.1.0 - 2022-07-30 =
-* Launch of the beta version of the plugin.
-
-== Upgrade Notice ==
 
 = 2.3.0 - 2023-05-04 =
 * add: default country code for recipient fields.

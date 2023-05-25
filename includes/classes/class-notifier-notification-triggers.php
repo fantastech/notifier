@@ -323,7 +323,17 @@ class Notifier_Notification_Triggers {
 	public static function add_column_content ( $column, $post_id ) {
 		if ( 'trigger' === $column ) {
 			$trigger = self::get_post_trigger_id( $post_id );
-			echo self::get_notification_trigger_display_name($trigger);
+			$main_triggers = self::get_notification_triggers();
+			foreach ($main_triggers as $key => $triggers) {
+				foreach($triggers as $the_trigger){
+					if($the_trigger['id'] == $trigger){
+						$name = $the_trigger['label'];
+						$group_name = $key;
+						break 2;
+					}
+				}
+			}
+			echo '<small class="text-muted">' . $group_name . ' »</small><br>' . $name;
 		}
 		if ( 'trigger_enabled' === $column ) {
 		    $enabled = get_post_meta( $post_id, NOTIFIER_PREFIX . 'trigger_enabled' , true);

@@ -112,7 +112,7 @@ class Notifier_Woocommerce {
 				'preview_value' => 'https://example.com/shop/',
 				'return_type'	=> 'text',
 				'value'			=> function ($args) {
-					return get_permalink( wc_get_page_id( 'shop' ) );
+					return (string) get_permalink( wc_get_page_id( 'shop' ) );
 				}
 			),
 			array(
