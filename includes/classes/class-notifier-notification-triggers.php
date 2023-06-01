@@ -629,9 +629,12 @@ class Notifier_Notification_Triggers {
 			return false;
 		}
 
+		$option_name = 'notifier_'.notifier_generate_random_key(10);
+		update_option( $option_name, $context_args );
+
 		as_enqueue_async_action(
 			'notifier_send_trigger_request',
-			array('trigger' => $trigger, 'context_args' => $context_args),
+			array('trigger' => $trigger, 'option_name' => $option_name ),
 			'notifier'
 		);
 
@@ -640,7 +643,14 @@ class Notifier_Notification_Triggers {
 	/**
 	 * Send async trigger request
 	 */
-	public static function notifier_send_trigger_request($trigger, $context_args){
+	public static function notifier_send_trigger_request($trigger, $option_name){
+		if (is_array($option_name)){ // For backward compatibilty before 2.4.0
+			$context_args = $option_name;
+		}
+		else {
+			$context_args = get_option($option_name);
+		}
+
 		$trigger_old = $trigger;
 		$trigger = self::get_trigger_id_with_site_key($trigger);
 

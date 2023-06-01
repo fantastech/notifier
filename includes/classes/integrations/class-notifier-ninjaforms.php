@@ -34,7 +34,11 @@ class Notifier_NinjaForms {
 					'recipient_fields'	=> self::get_recipient_fields($form_id),
 					'action'		=> array(
 						'hook'		=> 'ninja_forms_after_submission',
-						'callback' 	=> function ( $form_data ) use ( $trigger_id ) {
+						'callback' 	=> function ( $form_data ) use ( $trigger_id, $form_id ) {
+							if( $form_id != $form_data['form_id'] ) {
+								return;
+							}
+
 							Notifier_Notification_Triggers::send_trigger_request( $trigger_id, $form_data );
 						},
 					)

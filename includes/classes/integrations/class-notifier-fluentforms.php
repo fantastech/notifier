@@ -33,6 +33,7 @@ class Notifier_FluentForms {
 		if(is_array($forms['data'])){
 			foreach($forms['data'] as $form){
 				$trigger_id = 'fluentforms_' . $form->id;
+				$form_id = $form->id;
 				$title = $form->title;
 				$triggers[] = array(
 					'id'			=> $trigger_id,
@@ -42,7 +43,10 @@ class Notifier_FluentForms {
 					'recipient_fields'	=> self::get_recipient_fields($form->id),
 					'action'		=> array(
 						'hook'		=> 'fluentform_submission_inserted',
-						'callback' 	=> function ( $entryId, $formData, $form ) use ( $trigger_id ) {
+						'callback' 	=> function ( $entryId, $formData, $form ) use ( $trigger_id, $form_id ) {
+							if($form->id != $form_id){
+								return;
+							}
 							Notifier_Notification_Triggers::send_trigger_request( $trigger_id, $formData );
 						},
 						'args_num'	=> 3,
