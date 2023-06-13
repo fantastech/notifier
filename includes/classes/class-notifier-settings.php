@@ -84,14 +84,6 @@ class Notifier_Settings {
 						'description'	=> 'Enter default country code that will be added to all recipient phone number fields before sending to WANotifier that do not start with a + sign.',
 						'default'		=> ''
 					),
-					array(
-						'id' 			=> 'enable_scheduler',
-						'title'			=> 'Enable Scheduler',
-						'type'			=> 'checkbox',
-						'default'		=> '',
-						'name'          => 'enable_scheduler',
-						'description'	=> 'Enable this option If you want to send messages after schedule time.' ,
-					),
 				);
 				break;
 			case 'click_to_chat':
@@ -183,6 +175,14 @@ class Notifier_Settings {
 						'type'			=> 'checkbox',
 						'description'	=> 'Enable hidden custom meta keys that start with underscores (e.g. _field_name) to be avaialbe in Data and Recipient Fields. Note that enabling this might impact your website performance slightly.',
 						'default'		=> ''
+					),
+					array(
+						'id' 			=> 'enable_async_triggers',
+						'title'			=> 'Enable async triggers',
+						'type'			=> 'checkbox',
+						'default'		=> '',
+						'name'          => 'enable_async_triggers',
+						'description'	=> 'Plugin slowing down checkout or form submission? Enable this option to send triggers asynchronously using Action Scheduler. Note that if you have a site with strong caching, this might not work as expected.' ,
 					),
 				);
 				break;

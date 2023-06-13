@@ -25,7 +25,7 @@ class Notifier_Notification_Triggers {
 		add_action( 'wp_ajax_notifier_fetch_trigger_fields', array(__CLASS__, 'notifier_fetch_trigger_fields'));
 		add_filter( 'manage_wa_notifier_trigger_posts_columns', array( __CLASS__ , 'add_columns' ) );
 		add_action( 'manage_wa_notifier_trigger_posts_custom_column', array( __CLASS__ , 'add_column_content' ) , 10, 2 );
-		add_action( 'notifier_send_trigger_request', array( __CLASS__, 'notifier_send_trigger_request' ), 10, 2 );
+		add_action( 'notifier_send_trigger_request', array( __CLASS__, 'send_scheduled_trigger_request' ), 10, 2 );
 	}
 
 	/**
@@ -629,32 +629,32 @@ class Notifier_Notification_Triggers {
 			return false;
 		}
 
-		$option_name = 'notifier_'.notifier_generate_random_key(10);
-		update_option( $option_name, $context_args );
-
 		if('yes' === get_option('enable_scheduler')){
-			fetch_trigger_request_data($trigger, $option_name);
+			$option_name = 'notifier_'.notifier_generate_random_key(10);
+			update_option( $option_name, $context_args );
+
+			as_enqueue_async_action(
+				'notifier_send_trigger_request',
+				array('trigger' => $trigger, 'option_name' => $option_name ),
+				'notifier'
+			);
 		}else {
-			notifier_send_trigger_request($trigger, $context_args);
+			self::notifier_send_trigger_request($trigger, $context_args);
 		}
 	}
 
 	/**
-	 * Fetch trigger request data
+	 * Send scheduled trigger request
 
 	 */
-	public static function fetch_trigger_request_data($trigger, $option_name) {
+	public static function send_scheduled_trigger_request($trigger, $option_name) {
 		if (is_array($option_name)){ // For backward compatibilty before 2.4.0
 			$context_args = $option_name;
 		}
 		else {
 			$context_args = get_option($option_name);
 		}
-		as_enqueue_async_action(
-			'notifier_send_trigger_request',
-			array('trigger' => $trigger, 'context_args' => $context_args ),
-			'notifier'
-		);
+		self::notifier_send_trigger_request($trigger, $context_args);
 	}
 
 	/**
