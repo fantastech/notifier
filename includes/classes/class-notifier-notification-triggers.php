@@ -632,13 +632,24 @@ class Notifier_Notification_Triggers {
 		$option_name = 'notifier_'.notifier_generate_random_key(10);
 		update_option( $option_name, $context_args );
 
-		as_enqueue_async_action(
-			'notifier_send_trigger_request',
-			array('trigger' => $trigger, 'option_name' => $option_name ),
-			'notifier'
-		);
-
+		if('yes' === get_option('enable_scheduler')){
+			as_enqueue_async_action(
+				'notifier_send_trigger_request',
+				array('trigger' => $trigger, 'option_name' => $option_name ),
+				'notifier'
+			);
+		}else {
+			notifier_send_trigger_request($trigger, $option_name);
+		}
 	}
+
+	/**
+	 * Fetch trigger request data
+
+	 */
+	// public static function fetch_trigger_request_data($option_name) {
+
+	// }
 
 	/**
 	 * Send async trigger request

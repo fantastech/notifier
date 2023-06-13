@@ -23,13 +23,13 @@
 
 			.notifier-merge-tags {
 				flex-wrap: nowrap;
-			    margin-bottom: 15px;
-    			padding-bottom: 10px;
-				border-bottom: 1px solid #dddddd;
+				margin-bottom: 15px;
+				padding-bottom: 10px;
+				border-bottom: 1px solid #ddd;
 
 				&:last-child {
 					margin-bottom: 0;
-					border-bottom: 0px;
+					border-bottom: 0;
 				}
 
 				@include media-down(mobile) {
@@ -48,11 +48,11 @@
 				.multi-checkbox-wrapper {
 					flex-grow: 1;
 					max-height: 105px;
-    				overflow: auto;
+					overflow: auto;
 
-    				@include media-down(mobile) {
+					@include media-down(mobile) {
 						max-height: 150px;
-    				}
+					}
 
 					.form-check {
 						display: inline-block;

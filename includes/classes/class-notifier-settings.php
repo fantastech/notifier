@@ -84,6 +84,13 @@ class Notifier_Settings {
 						'description'	=> 'Enter default country code that will be added to all recipient phone number fields before sending to WANotifier that do not start with a + sign.',
 						'default'		=> ''
 					),
+					array(
+						'id' 			=> 'enable_scheduler',
+						'title'			=> 'Enable Scheduler',
+						'type'			=> 'checkbox',
+						'default'		=> '',
+						'name'          => 'enable_scheduler',
+					),
 				);
 				break;
 			case 'click_to_chat':
