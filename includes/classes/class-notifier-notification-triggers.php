@@ -629,7 +629,7 @@ class Notifier_Notification_Triggers {
 			return false;
 		}
 
-		if('yes' === get_option('enable_async_triggers')){
+		if('yes' === get_option('notifier_enable_async_triggers')){
 			$option_name = 'notifier_'.notifier_generate_random_key(10);
 			update_option( $option_name, $context_args );
 
