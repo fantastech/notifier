@@ -633,13 +633,9 @@ class Notifier_Notification_Triggers {
 		update_option( $option_name, $context_args );
 
 		if('yes' === get_option('enable_scheduler')){
-			as_enqueue_async_action(
-				'notifier_send_trigger_request',
-				array('trigger' => $trigger, 'option_name' => $option_name ),
-				'notifier'
-			);
+			fetch_trigger_request_data($trigger, $option_name);
 		}else {
-			notifier_send_trigger_request($trigger, $option_name);
+			notifier_send_trigger_request($trigger, $context_args);
 		}
 	}
 
@@ -647,21 +643,24 @@ class Notifier_Notification_Triggers {
 	 * Fetch trigger request data
 
 	 */
-	// public static function fetch_trigger_request_data($trigger, $context_args) {
-
-	// }
-
-	/**
-	 * Send async trigger request
-	 */
-	public static function notifier_send_trigger_request($trigger, $option_name){
+	public static function fetch_trigger_request_data($trigger, $option_name) {
 		if (is_array($option_name)){ // For backward compatibilty before 2.4.0
 			$context_args = $option_name;
 		}
 		else {
 			$context_args = get_option($option_name);
 		}
+		as_enqueue_async_action(
+			'notifier_send_trigger_request',
+			array('trigger' => $trigger, 'context_args' => $context_args ),
+			'notifier'
+		);
+	}
 
+	/**
+	 * Send async trigger request
+	 */
+	public static function notifier_send_trigger_request($trigger, $context_args){
 		$trigger_old = $trigger;
 		$trigger = self::get_trigger_id_with_site_key($trigger);
 
