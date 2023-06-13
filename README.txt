@@ -15,7 +15,7 @@ Send WhatsApp notifications using the official WhatsApp Cloud APIs for Woocommer
 
 **Send WhatsApp notifications** for Woocommerce orders, abadoned cart recovery, form submissions from _Contact Form 7_, _Gravity Forms_, _WPForms_ & other popular form plugins and for a lot of other such actions using the **official WhatsApp Cloud APIs**.
 
-**NOTE:** This plugin requires you to have an account at [WANotifier.com](https://wanotifier.com/). Create you **FREE forever** account now by [clicking here](https://app.wanotifier.com/create-account/).
+**NOTE:** This plugin requires you to have an account at [WANotifier.com](https://wanotifier.com/). Create your **FREE forever** account now by [clicking here](https://app.wanotifier.com/create-account/).
 
 Here's everything that you can do with this plugin...
 
