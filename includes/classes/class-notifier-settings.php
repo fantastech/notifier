@@ -176,6 +176,14 @@ class Notifier_Settings {
 						'description'	=> 'Enable hidden custom meta keys that start with underscores (e.g. _field_name) to be avaialbe in Data and Recipient Fields. Note that enabling this might impact your website performance slightly.',
 						'default'		=> ''
 					),
+					array(
+						'id' 			=> 'enable_async_triggers',
+						'title'			=> 'Enable async triggers',
+						'type'			=> 'checkbox',
+						'default'		=> '',
+						'name'          => 'enable_async_triggers',
+						'description'	=> 'Plugin slowing down checkout or form submission? Enable this option to send triggers asynchronously using Action Scheduler. Note that if you have a site with strong caching, this might not work as expected.' ,
+					),
 				);
 				break;
 		}
