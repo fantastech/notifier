@@ -647,7 +647,7 @@ class Notifier_Notification_Triggers {
 	 * Fetch trigger request data
 
 	 */
-	// public static function fetch_trigger_request_data($option_name) {
+	// public static function fetch_trigger_request_data($trigger, $context_args) {
 
 	// }
 

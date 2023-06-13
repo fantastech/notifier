@@ -90,6 +90,7 @@ class Notifier_Settings {
 						'type'			=> 'checkbox',
 						'default'		=> '',
 						'name'          => 'enable_scheduler',
+						'description'	=> 'Enable this option If you want to send messages after schedule time.' ,
 					),
 				);
 				break;
