@@ -488,6 +488,10 @@ class Notifier_Settings {
 			}
 		}
 
+		if('advanced' == $tab){
+			delete_transient( '_notifier_custom_meta_keys' );
+		}
+
 		if(empty($notices)){
 			$notices[] = array(
 				'message' => 'Settings updated successfully.',
