@@ -30,6 +30,7 @@ class Notifier_WCAR {
 			'action'		=> array(
 				'hook'		=> 'wcf_ca_process_abandoned_order',
 				'callback' 	=> function ( $checkout_details ) {
+					$checkout_details = (array) $checkout_details;
 					Notifier_Notification_Triggers::send_trigger_request('woocommerce_cart_abandonment_recovery', $checkout_details);
 				}
 			)
