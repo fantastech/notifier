@@ -29,7 +29,7 @@ class Notifier_Woocommerce {
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
 				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields($recipient_types),
 				'action'		=> array(
-					'hook'		=> 'woocommerce_new_order',
+					'hook'		=> 'woocommerce_checkout_order_processed',
 					'callback' 	=> function ( $order_id ){
 						$args = array (
 							'object_type' 	=> 'order',
@@ -46,7 +46,7 @@ class Notifier_Woocommerce {
 				'merge_tags' 	=> Notifier_Notification_Merge_Tags::get_merge_tags($merge_tag_types),
 				'recipient_fields'	=> Notifier_Notification_Merge_Tags::get_recipient_fields($recipient_types),
 				'action'		=> array(
-					'hook'		=> 'woocommerce_new_order',
+					'hook'		=> 'woocommerce_checkout_order_processed',
 					'callback' 	=> function ( $order_id ){
 						$args = array (
 							'object_type' 	=> 'order',
@@ -220,12 +220,12 @@ class Notifier_Woocommerce {
 				'return_type'	=> 'text',
 				'value'		=> function ($order, $field_function) {
 					$order_item_data = array();
-					foreach ($order->get_items() as $item ) {
+					foreach ( $order->get_items() as $item ) {
 						$order_item = $item->get_name().' x '.$item->get_quantity().' ('.wc_price( $item->get_total() ).')';
 						$order_item_data[] = sanitize_textarea_field($order_item);
 					}
 
-	                return implode(', ',$order_item_data);
+					return implode(', ',$order_item_data);
 				}
 			),
 		);
