@@ -75,6 +75,7 @@ class Notifier_Settings {
 					array(
 						'title'			=> 'General',
 						'type'			=> 'title',
+						'description'	=> ''
 					),
 					array(
 						'id' 			=> 'default_country_code',
@@ -195,6 +196,12 @@ class Notifier_Settings {
 	 * Generate HTML for displaying individual fields
 	 */
 	public static function display_field( $field ) {
+		$field = wp_parse_args($field, array(
+			'title'			=> '',
+			'description'	=> '',
+			'label'			=> ''
+		));
+
 		$html = '';
 
 		if (isset($field['id'])) {
@@ -202,7 +209,7 @@ class Notifier_Settings {
 			$option = get_option( $option_name );
 		}
 
-		$data = $option;
+		$data = isset($option) ? $option : '';
 		if ( isset( $field['default'] ) && empty($option) ) {
 			$data = $field['default'];
 		}
