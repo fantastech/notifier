@@ -109,7 +109,7 @@ class Notifier_Tools {
             $csv_data[] = array(
                 get_user_meta( $customer->ID, 'billing_first_name', true ),
                 get_user_meta( $customer->ID, 'billing_last_name', true ),
-                $country_code . $billing_phone,
+                str_replace( '+','', Notifier_Woocommerce::get_formatted_phone_number($billing_phone, $country_code)),
                 'Subscribed',
                 'WooCommerce Customer',
                 '',
