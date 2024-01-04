@@ -1,0 +1,22 @@
+.notifier-tools-form{
+    table {
+        width: 100%;
+        background: #fff;
+
+        th {
+            text-align: left;
+            padding: 2em;
+
+            .description {
+                font-size: 13px;
+                margin: 2px 0 5px;
+                color: #646970;
+            }
+        }
+
+        td {
+            text-align: right;
+            padding: 2em;
+        }        
+    }
+}

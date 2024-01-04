@@ -70,6 +70,7 @@ class Notifier {
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-triggers.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-settings.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-frontend.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-tools.php';
 	}
 
 	/**
@@ -90,6 +91,7 @@ class Notifier {
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		// add_action( 'after_setup_theme', array( $this, 'show_data' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
 
 	}
 
