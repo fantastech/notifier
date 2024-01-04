@@ -89,6 +89,8 @@ class Notifier {
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
+		// add_action( 'after_setup_theme', array( $this, 'show_data' ) );
+
 	}
 
 	/**
@@ -184,6 +186,7 @@ class Notifier {
 					<h2><?php echo esc_attr(get_admin_page_title()); ?></h2>
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">
+					<span class="review-us-link">Review Us: <a href="https://wordpress.org/support/plugin/notifier/reviews/#new-post" target="_blank">⭐⭐⭐⭐⭐</a></span>
 					<span class="header-version">Version: <?php echo esc_html(NOTIFIER_VERSION); ?></span>
 					<a href="https://wanotifier.com/support/" target="_blank">Help</a>
 				</div>
@@ -299,4 +302,8 @@ class Notifier {
 		}
 	}
 
+	// public static function show_data () {
+	// 	$post_id = 325;
+	// 	$order = new WC_Order( $post_id );
+	// }
 }

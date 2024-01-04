@@ -83,8 +83,15 @@
 		}
 
 		.header-action-links {
+
+			.review-us-link a {
+				text-decoration: none;
+			}
+			
 			@include media-down(mobile) {
-				display: none !important;
+				& > *:not(.review-us-link) {
+					display: none !important;
+				}
 			}
 
 			& > * {
