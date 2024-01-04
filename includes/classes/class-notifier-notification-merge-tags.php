@@ -744,7 +744,7 @@ class Notifier_Notification_Merge_Tags {
 	public static function get_custom_meta_keys($custom_post_type) {
 	    global $wpdb;
 
-	    $custom_meta_keys = get_transient('_notifier_custom_meta_keys');
+	    $custom_meta_keys = get_transient('notifier_custom_meta_keys');
 
 	    if(false === $custom_meta_keys){
 	    	$custom_meta_keys = array();
@@ -775,7 +775,7 @@ class Notifier_Notification_Merge_Tags {
 
 	    	$custom_meta_keys[$custom_post_type] = $meta_keys;
 
-			set_transient('_notifier_custom_meta_keys', $custom_meta_keys, 600); // set for 10 min.
+			set_transient('notifier_custom_meta_keys', $custom_meta_keys, 600); // set for 10 min.
 	    }
 
 	    return $meta_keys;
