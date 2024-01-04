@@ -86,8 +86,7 @@ class Notifier_Tools {
             ORDER BY u.ID ASC
         ");
     
-    
-        error_log(json_encode($customers));
+
         // Prepare CSV data
         $csv_data = array();
         $csv_data[] = array(
