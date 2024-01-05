@@ -129,7 +129,7 @@ And a lot more. Visit [WANotifier.com](https://wanotifier.com) to learn more.
 
 == Changelog ==
 = 2.5.0 - 2023-11-03 =
-* add: Added new option of export woocommerce customers user under tools menu.
+* add: Added new option of export woocommerce customers under tools menu.
 
 = 2.4.6 - 2023-11-03 =
 * fix: error log warnings
