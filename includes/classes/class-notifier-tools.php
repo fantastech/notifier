@@ -95,28 +95,44 @@ class Notifier_Tools {
             'Status',
             'List Name',
             'Tags',
-            'Billing_Address_1',
-            'Billing_Address_2',
-            'Billing_City',
-            'Billing_State',
-            'Billing_Country',
+            'billing_address_1',
+            'billing_address_2',
+            'billing_city',
+            'billing_state',
+            'billing_country',
         );
     
         foreach ( $customers as $customer ) {
             $billing_phone = get_user_meta( $customer->ID, 'billing_phone', true );
-            $country_code = get_user_meta( $customer->ID, 'billing_country', true );
+            if(!$billing_phone || trim($billing_phone) == ''){
+            	continue;
+            }
+
+			$country_code = get_user_meta( $customer->ID, 'billing_country', true );
+            $state_code = get_user_meta( $customer->ID, 'billing_state', true );
+
+			$country = '';
+			$state = '';
+
+            if($country_code && $country_code != ''){
+				$country = WC()->countries->get_countries()[$country_code];
+				if($state_code && $state_code != ''){
+					$state = WC()->countries->get_states($country_code)[$state_code];
+				}
+            }
+
             $csv_data[] = array(
                 get_user_meta( $customer->ID, 'billing_first_name', true ),
                 get_user_meta( $customer->ID, 'billing_last_name', true ),
                 str_replace('+','',Notifier_Woocommerce::get_formatted_phone_number($billing_phone, $country_code)),
-                'Subscribed',
-                'WooCommerce Customer',
+                'subscribed',
+                'WooCommerce Customers',
                 '',
                 get_user_meta( $customer->ID, 'billing_address_1', true ) ?: '',
                 get_user_meta( $customer->ID, 'billing_address_2', true ) ?: '',
                 get_user_meta( $customer->ID, 'billing_city', true ) ?: '',
-                get_user_meta( $customer->ID, 'billing_state', true ) ?: '',
-                get_user_meta( $customer->ID, 'billing_country', true ) ?: '',
+                $state,
+                $country,
             );
         }
     
