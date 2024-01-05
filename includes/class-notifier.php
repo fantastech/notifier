@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.4.6' );
+		$this->define( 'NOTIFIER_VERSION', '2.5.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -70,6 +70,7 @@ class Notifier {
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-notification-triggers.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-settings.php';
 		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-frontend.php';
+		require_once NOTIFIER_PATH . 'includes/classes/class-notifier-tools.php';
 	}
 
 	/**
@@ -89,6 +90,8 @@ class Notifier {
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
+		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
+
 	}
 
 	/**
@@ -184,6 +187,7 @@ class Notifier {
 					<h2><?php echo esc_attr(get_admin_page_title()); ?></h2>
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">
+					<span class="review-us-link">Review us: <a href="https://wordpress.org/support/plugin/notifier/reviews/#new-post" target="_blank">⭐⭐⭐⭐⭐</a></span>
 					<span class="header-version">Version: <?php echo esc_html(NOTIFIER_VERSION); ?></span>
 					<a href="https://wanotifier.com/support/" target="_blank">Help</a>
 				</div>

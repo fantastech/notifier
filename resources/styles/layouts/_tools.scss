@@ -1,0 +1,17 @@
+.notifier-tool-wrap{
+    background: #fff;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+
+    .notifier-tool-name {
+    	margin-top: 0px;
+    	margin-bottom: 10px;
+    }
+
+    .notifier-tool-description {
+    	margin: 0px;
+    }
+}
