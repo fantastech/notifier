@@ -96,11 +96,11 @@ class Notifier_Tools {
             'Status',
             'List Name',
             'Tags',
-            'Billing Address 1',
-            'Billing Address 2',
-            'Billing City',
-            'Billing State',
-            'Billing Country',
+            'Billing_Address_1',
+            'Billing_Address_2',
+            'Billing_City',
+            'Billing_State',
+            'Billing_Country',
         );
     
         foreach ( $customers as $customer ) {
