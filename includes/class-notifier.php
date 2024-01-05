@@ -90,7 +90,6 @@ class Notifier {
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
-		// add_action( 'after_setup_theme', array( $this, 'show_data' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
 
 	}
@@ -304,8 +303,4 @@ class Notifier {
 		}
 	}
 
-	// public static function show_data () {
-	// 	$post_id = 325;
-	// 	$order = new WC_Order( $post_id );
-	// }
 }
