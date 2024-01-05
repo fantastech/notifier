@@ -25,22 +25,22 @@ class Notifier_Tools {
 		add_submenu_page( NOTIFIER_NAME, 'Tools', 'Tools', 'manage_options', NOTIFIER_NAME . '-tools', array( __CLASS__, 'output' ) );
 	}
 
-	/**
-	 * Output
-	 */
-	public static function output() {
-        include_once NOTIFIER_PATH . '/views/admin-tools.php';
-	}
+    public static function output() {
+        if (class_exists('WooCommerce') && in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+            include_once NOTIFIER_PATH . '/views/admin-tools.php';
+        } else {
+            echo '<div class="notice notice-error is-dismissible"><p>WooCommerce plugin is not installed or active. This feature requires WooCommerce to be installed and active. Please install or activate WooCommerce to use this feature.</p></div>';
+        }
+    }
 
-
 	/**
-	 * Check if on settings page
+	 * Check if on tools page
 	 */
 	public static function is_tools_page() {
 		$current_page = isset($_GET['page']) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 		return strpos($current_page, NOTIFIER_NAME . '-tools') !== false;
 	}
-
+  
     /**
      * Export WooCommerce Customers
      */
@@ -85,7 +85,6 @@ class Notifier_Tools {
             )
             ORDER BY u.ID ASC
         ");
-    
 
         // Prepare CSV data
         $csv_data = array();
@@ -105,11 +104,11 @@ class Notifier_Tools {
     
         foreach ( $customers as $customer ) {
             $billing_phone = get_user_meta( $customer->ID, 'billing_phone', true );
-            $country_code   = get_user_meta( $customer->ID, 'billing_postcode', true ) ?: '';
+            $country_code = get_user_meta( $customer->ID, 'billing_country', true );
             $csv_data[] = array(
                 get_user_meta( $customer->ID, 'billing_first_name', true ),
                 get_user_meta( $customer->ID, 'billing_last_name', true ),
-                str_replace( '+','', Notifier_Woocommerce::get_formatted_phone_number($billing_phone, $country_code)),
+                str_replace('+','',Notifier_Woocommerce::get_formatted_phone_number($billing_phone, $country_code)),
                 'Subscribed',
                 'WooCommerce Customer',
                 '',
@@ -125,11 +124,7 @@ class Notifier_Tools {
         foreach ( $csv_data as $row ) {
             fputcsv( $file_handle, $row );
         }
-    
-        // Close the file handle
         fclose( $file_handle );
-    
-        // Ensure that further execution is halted after file download
         exit();
     }
      

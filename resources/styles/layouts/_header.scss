@@ -84,8 +84,12 @@
 
 		.header-action-links {
 
-			.review-us-link a {
-				text-decoration: none;
+			.review-us-link {
+				color: #777;
+				a {
+					text-decoration: none;
+					color: #777;
+				}
 			}
 			
 			@include media-down(mobile) {

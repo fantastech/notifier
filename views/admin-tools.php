@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap notifier">
     <div class="notifier-wrapper">
-        <h3>Export All customer</h3>
+        <h3>Tools</h3>
         <form method="POST" id="notifier_tools_form" class="notifier-tools-form" action="" enctype="multipart/form-data">
             <table>
                 <tbody class="tools">

@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.4.6' );
+		$this->define( 'NOTIFIER_VERSION', '2.5.0' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -188,7 +188,7 @@ class Notifier {
 					<h2><?php echo esc_attr(get_admin_page_title()); ?></h2>
 				</div>
 				<div class="header-action-links w-30 d-flex justify-content-end">
-					<span class="review-us-link">Review Us: <a href="https://wordpress.org/support/plugin/notifier/reviews/#new-post" target="_blank">⭐⭐⭐⭐⭐</a></span>
+					<span class="review-us-link">Review us: <a href="https://wordpress.org/support/plugin/notifier/reviews/#new-post" target="_blank">⭐⭐⭐⭐⭐</a></span>
 					<span class="header-version">Version: <?php echo esc_html(NOTIFIER_VERSION); ?></span>
 					<a href="https://wanotifier.com/support/" target="_blank">Help</a>
 				</div>
