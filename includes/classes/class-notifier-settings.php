@@ -44,11 +44,6 @@ class Notifier_Settings {
 			'api'           => 'API',
 			'advanced'      => 'Advanced'
 		);
-	
-		if ( class_exists( 'WooCommerce' ) ) {
-			$tabs['woocommerce'] = 'WooCommerce';
-		}
-	
 		return $tabs;
 	}
 
@@ -91,6 +86,34 @@ class Notifier_Settings {
 						'default'		=> ''
 					),
 				);
+
+				if ( class_exists( 'WooCommerce' ) ) {
+					$settings = array_merge( $settings, array(
+						array(
+							'title'			=> 'WooCommerce',
+							'type'			=> 'title',
+							'description'	=> ''
+						),
+						array(
+							'id' 			=> 'enable_opt_in_checkbox_checkout',
+							'title'			=> 'Opt-in Consent on Checkout',
+							'type'			=> 'checkbox',
+							'default'		=> '',
+							'label'			=> 'Enable',
+							'name'          => 'enable_opt_in_checkbox_checkout',
+							'description'	=> 'Add an opt-in checkbox to WooCommerce checkout form. Once enabled, WhatsApp notification will be sent only to customers who opt-in during checkout.'
+						),
+						array(
+							'id' 			=> 'checkout_opt_in_checkbox_text',
+							'title'			=> 'Opt-in Checkbox Text',
+							'type'			=> 'textarea',
+							'placeholder'	=> 'Enter text for the opt-in checkbox',
+							'default'		=> 'Receive updates on WhatsApp',
+							'name'          => 'checkout_opt_in_checkbox_text',
+						)
+					) );
+				}
+
 				break;
 			case 'click_to_chat':
 				$settings = array(
@@ -192,24 +215,6 @@ class Notifier_Settings {
 					),
 				);
 				break;
-			case 'woocommerce':
-				$settings = array(
-					array(
-						'id' 			=> 'enable_opt_in_checkbox_checkout',
-						'title'			=> 'Enable opt-in checkbox on checkout',
-						'type'			=> 'checkbox',
-						'default'		=> '',
-						'name'          => 'enable_opt_in_checkbox_checkout',
-					),
-					array(
-						'id' 			=> 'checkout_opt_in_checkbox_text',
-						'title'			=> 'Enter opt-in checkbox text',
-						'type'			=> 'textarea',
-						'default'		=> 'Receive updates on WhatsApp',
-						'name'          => 'checkout_opt_in_checkbox_text',
-					),					
-				);
-				break;				
 		}
 		$settings = apply_filters( 'notifier_$tab_settings_fields', $settings );
 		return $settings;
