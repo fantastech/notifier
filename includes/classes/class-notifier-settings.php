@@ -39,11 +39,16 @@ class Notifier_Settings {
 	 */
 	private static function get_settings_tabs() {
 		$tabs = array(
-			'general'		=> 'General',
+			'general'       => 'General',
 			'click_to_chat' => 'Click to Chat',
-			'api'			=> 'API',
-			'advanced'		=> 'Advanced'
+			'api'           => 'API',
+			'advanced'      => 'Advanced'
 		);
+	
+		if ( class_exists( 'WooCommerce' ) ) {
+			$tabs['woocommerce'] = 'WooCommerce';
+		}
+	
 		return $tabs;
 	}
 
@@ -187,6 +192,24 @@ class Notifier_Settings {
 					),
 				);
 				break;
+			case 'woocommerce':
+				$settings = array(
+					array(
+						'id' 			=> 'enable_opt_in_checkbox_checkout',
+						'title'			=> 'Enable opt-in checkbox on checkout',
+						'type'			=> 'checkbox',
+						'default'		=> '',
+						'name'          => 'enable_opt_in_checkbox_checkout',
+					),
+					array(
+						'id' 			=> 'checkout_opt_in_checkbox_text',
+						'title'			=> 'Enter opt-in checkbox text',
+						'type'			=> 'textarea',
+						'default'		=> 'Receive updates on WhatsApp',
+						'name'          => 'checkout_opt_in_checkbox_text',
+					),					
+				);
+				break;				
 		}
 		$settings = apply_filters( 'notifier_$tab_settings_fields', $settings );
 		return $settings;
