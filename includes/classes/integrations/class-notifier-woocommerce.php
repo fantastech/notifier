@@ -346,7 +346,8 @@ class Notifier_Woocommerce {
 					'preview_value' => '123',
 					'return_type'	=> 'all',
 					'value'			=> function ($args) use ($order_meta_key) {
-						$value = get_post_meta($args['object_id'], $order_meta_key, true);
+						$order = wc_get_order( $args['object_id'] );
+						$value = $order->get_meta( $order_meta_key );
 						if(is_array($value) || is_object($value)){
 							$value = json_encode($value);
 						}
@@ -424,7 +425,8 @@ class Notifier_Woocommerce {
 					'preview_value' => '123',
 					'return_type'	=> 'text',
 					'value'			=> function ($args) use ($order_meta_key) {
-						$value = get_post_meta($args['object_id'], $order_meta_key, true);
+						$order = wc_get_order( $args['object_id'] );
+						$value = $order->get_meta( $order_meta_key );
 						if(is_array($value) || is_object($value)){
 							$value = json_encode($value);
 						}
@@ -487,13 +489,13 @@ class Notifier_Woocommerce {
 	 * Add checkbox field on checkout page
 	 */	
 	public static function add_checkout_optin_fields() {
-		if ('yes' === get_option('notifier_enable_opt_in_checkbox_checkout')) {
-			$checkbox_text = get_option('notifier_checkout_opt_in_checkbox_text');
+		if ('yes' === get_option( NOTIFIER_PREFIX . 'enable_opt_in_checkbox_checkout')) {
+			$checkbox_text = get_option( NOTIFIER_PREFIX . 'checkout_opt_in_checkbox_text');
 			if (empty($checkbox_text)) {
 				$checkbox_text = 'Receive updates on WhatsApp';
 			}
 		
-			woocommerce_form_field(NOTIFIER_PREFIX . 'enable_opt_in_checkout', array(
+			woocommerce_form_field( NOTIFIER_PREFIX . 'whatsapp_opt_in', array(
 				'type'          => 'checkbox',
 				'class'         => array('form-row-wide'),
 				'label'         => $checkbox_text,
@@ -501,24 +503,28 @@ class Notifier_Woocommerce {
 		}
 	}
 
-	// Hook to save the custom field data
-	function notifier_save_checkout_field($order_id) {
-		if (!empty($_POST[NOTIFIER_PREFIX . 'enable_opt_in_checkout'])) {
-			update_post_meta($order_id, NOTIFIER_PREFIX . 'enable_opt_in_checkout', sanitize_text_field($_POST[NOTIFIER_PREFIX . 'enable_opt_in_checkout']));
+	/**
+	 * Hook to save the custom field data
+	 */
+	public static function notifier_save_checkout_field($order_id) {
+		$opt_in = sanitize_text_field($_POST[ NOTIFIER_PREFIX . 'whatsapp_opt_in' ]);
+		if ( !empty($opt_in) ) {
+			$order = wc_get_order( $order_id );
+			$order->update_meta_data( NOTIFIER_PREFIX . 'whatsapp_opt_in', $opt_in );
+    		$order->save();
 		}
 	}
 
     /**
      * Check if the notification should be sent based on global and user opt-in settings.
-     *
      */
     public static function maybe_send_notification( $order_id ) {
-        if ('yes' !== get_option('notifier_enable_opt_in_checkbox_checkout')) {
+        if ('yes' !== get_option( NOTIFIER_PREFIX . 'enable_opt_in_checkbox_checkout' )) {
             return true;
         }
 
-        // Check user opt-in setting for the specific order
-        $opt_in = get_post_meta($order_id, NOTIFIER_PREFIX . 'enable_opt_in_checkout', true);
+		$order = wc_get_order( $order_id );
+		$opt_in = $order->get_meta( NOTIFIER_PREFIX . 'whatsapp_opt_in' );
         return '1' === $opt_in || true === $opt_in;
     }	
 }
