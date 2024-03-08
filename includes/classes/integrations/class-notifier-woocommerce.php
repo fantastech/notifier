@@ -13,6 +13,8 @@ class Notifier_Woocommerce {
 		add_filter( 'notifier_notification_triggers', array( __CLASS__, 'add_notification_triggers'), 10 );
 		add_filter( 'notifier_notification_merge_tags', array( __CLASS__, 'woocommerce_merge_tags') );
 		add_filter( 'notifier_notification_recipient_fields', array( __CLASS__, 'woocommerce_recipient_fields') );
+		add_action( 'woocommerce_review_order_before_submit', array( __CLASS__, 'add_checkout_optin_fields') );
+		add_action( 'woocommerce_checkout_update_order_meta', array( __CLASS__, 'notifier_save_checkout_field'));
 	}
 
 	/**
@@ -31,6 +33,10 @@ class Notifier_Woocommerce {
 				'action'		=> array(
 					'hook'		=> 'woocommerce_checkout_order_processed',
 					'callback' 	=> function ( $order_id ){
+						if (!self::maybe_send_notification($order_id)) {
+							return;
+						}
+
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -48,6 +54,10 @@ class Notifier_Woocommerce {
 				'action'		=> array(
 					'hook'		=> 'woocommerce_checkout_order_processed',
 					'callback' 	=> function ( $order_id ){
+						if (!self::maybe_send_notification($order_id)) {
+							return;
+						}
+
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -79,6 +89,10 @@ class Notifier_Woocommerce {
 				'action'		=> array(
 					'hook'		=> 'woocommerce_order_status_' . $status_slug,
 					'callback' 	=> function ( $order_id ) use ($trigger_id) {
+						if (!self::maybe_send_notification($order_id)) {
+							return;
+						}
+						
 						$args = array (
 							'object_type' 	=> 'order',
 							'object_id'		=> $order_id
@@ -468,4 +482,43 @@ class Notifier_Woocommerce {
 		$phone_number = ltrim($phone_number, '0');
 		return $calling_code . $phone_number;
 	}
+   
+	/**
+	 * Add checkbox field on checkout page
+	 */	
+	public static function add_checkout_optin_fields() {
+		if ('yes' === get_option('notifier_enable_opt_in_checkbox_checkout')) {
+			$checkbox_text = get_option('notifier_checkout_opt_in_checkbox_text');
+			if (empty($checkbox_text)) {
+				$checkbox_text = 'Receive updates on WhatsApp';
+			}
+		
+			woocommerce_form_field(NOTIFIER_PREFIX . 'enable_opt_in_checkout', array(
+				'type'          => 'checkbox',
+				'class'         => array('form-row-wide'),
+				'label'         => $checkbox_text,
+			),'');
+		}
+	}
+
+	// Hook to save the custom field data
+	function notifier_save_checkout_field($order_id) {
+		if (!empty($_POST[NOTIFIER_PREFIX . 'enable_opt_in_checkout'])) {
+			update_post_meta($order_id, NOTIFIER_PREFIX . 'enable_opt_in_checkout', sanitize_text_field($_POST[NOTIFIER_PREFIX . 'enable_opt_in_checkout']));
+		}
+	}
+
+    /**
+     * Check if the notification should be sent based on global and user opt-in settings.
+     *
+     */
+    public static function maybe_send_notification( $order_id ) {
+        if ('yes' !== get_option('notifier_enable_opt_in_checkbox_checkout')) {
+            return true;
+        }
+
+        // Check user opt-in setting for the specific order
+        $opt_in = get_post_meta($order_id, NOTIFIER_PREFIX . 'enable_opt_in_checkout', true);
+        return '1' === $opt_in || true === $opt_in;
+    }	
 }
