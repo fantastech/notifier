@@ -91,15 +91,26 @@ class Notifier {
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
-
+		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
 	}
 
 	/**
 	 * Setup during plugin activation
 	 */
 	public function install() {
-
+		update_option('notifier_version', NOTIFIER_VERSION);
+		Notifier_Tools::create_wanotifier_activity_log_table();
 	}
+
+    /**
+     * Check if the plugin was updated and run the upgrade routine if necessary.
+     */
+    public function check_update() {
+        $installed_ver = get_option('notifier_version');
+        if (version_compare($installed_ver, NOTIFIER_VERSION, '<')) {
+            $this->install();
+        }
+    }
 
 	/**
 	 * Check if plugin's page

@@ -693,7 +693,7 @@ class Notifier_Notification_Triggers {
     	);
 
 		$response = Notifier::send_api_request( 'fire_notification', $params, 'POST' );
-
+		Notifier_Tools::insert_activity_log($trigger.$response->data);
 		if($response->error){
 			error_log($response->message);
 		}
