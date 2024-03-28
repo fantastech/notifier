@@ -42,7 +42,7 @@ class Notifier_Settings {
 			'general'       => 'General',
 			'click_to_chat' => 'Click to Chat',
 			'api'           => 'API',
-			'advanced'      => 'Advanced'
+			'advanced'      => 'Advanced',
 		);
 		return $tabs;
 	}
@@ -213,8 +213,16 @@ class Notifier_Settings {
 						'name'          => 'enable_async_triggers',
 						'description'	=> 'Plugin slowing down checkout or form submission? Enable this option to send triggers asynchronously using Action Scheduler. Note that if you have a site with strong caching, this might not work as expected.' ,
 					),
+					array(
+						'id' 			=> 'enable_activity_log',
+						'title'			=> 'Enable activity log',
+						'type'			=> 'checkbox',
+						'default'		=> '',
+						'name'          => 'enable_activity_log',
+						'description'	=> 'Enabling this option will activate the activity logging feature. You can view the log on the <b>Tools</b> page under the <b>Activity Log</b> tab.' ,
+					),					
 				);
-				break;
+				break;			
 		}
 		$settings = apply_filters( 'notifier_$tab_settings_fields', $settings );
 		return $settings;

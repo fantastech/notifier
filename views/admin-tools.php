@@ -11,18 +11,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="wrap notifier">
     <div class="notifier-wrapper">
-        <h3>Tools</h3>
-        <form method="POST" id="notifier_tools_form" class="notifier-tools-form" action="" enctype="multipart/form-data">
-            <div class="notifier-tool-wrap">
-                <div class="notifier-tool-details">
-                    <h3 class="notifier-tool-name">Export WooCommerce Customers</h3>
-                    <p class="notifier-tool-description">Export all your WooCommerce customers in CSV format to import them in WANotifier.</p>
-                </div>
-                <div class="notifier-tool-action">
-					<input name="export_customer" type="submit" class="button button-large" value="Export">
-                    <?php wp_nonce_field( NOTIFIER_NAME . '-tools-export-customers' ); ?>
-		        </div>
-            </div>
-        </form>
+    	<?php
+    		$current_tab = isset($_GET['tab']) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'export_woo_customer';
+            $tool_tabs = Notifier_Tools::get_tools_tabs();
+		 	echo '<h2 class="nav-tab-wrapper">';
+			foreach ( $tool_tabs as $tab_key => $name ) {
+				$class = ( $tab_key == $current_tab ) ? ' nav-tab-active' : '';
+				echo '<a class="nav-tab' . esc_attr( $class ) . '" href="?page=notifier-tools&tab=' . esc_attr( $tab_key ) . '">' . esc_html($name) . '</a>';
+			}
+		    echo '</h2>';
+    	?>
+
+    	<?php do_action('notifier_before_tools_fields_form', $current_tab); ?>
+            <?php Notifier_Tools::tools_tab_output($current_tab); ?>
+        <?php do_action('notifier_after_tools_fields_form', $current_tab); ?>
+
     </div>
 </div>
