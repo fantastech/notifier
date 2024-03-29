@@ -699,7 +699,7 @@ class Notifier_Notification_Triggers {
 
 		if($response->error){
 			error_log($response->message);
-			Notifier_Tools::insert_activity_log('debug', 'For trigger > '. $trigger.' API response >> '.$response->message);
+			Notifier_Tools::insert_activity_log('error', 'For trigger > '. $trigger.' API response >> '.$response->message);
 		}
 	}
 
