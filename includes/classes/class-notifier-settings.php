@@ -42,7 +42,7 @@ class Notifier_Settings {
 			'general'       => 'General',
 			'click_to_chat' => 'Click to Chat',
 			'api'           => 'API',
-			'advanced'      => 'Advanced',
+			'advanced'      => 'Advanced'
 		);
 		return $tabs;
 	}
@@ -222,7 +222,7 @@ class Notifier_Settings {
 						'description'	=> 'Enabling this option will activate the activity logging feature. You can view the log on the <b>Tools</b> page under the <b>Activity Log</b> tab.' ,
 					),					
 				);
-				break;			
+				break;
 		}
 		$settings = apply_filters( 'notifier_$tab_settings_fields', $settings );
 		return $settings;
