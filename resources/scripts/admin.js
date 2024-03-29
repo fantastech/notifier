@@ -320,6 +320,27 @@
 			$(this).closest('.trigger-fields-wrap').find('select').trigger('change');
 		});
 
+		/*****************
+		 * Tools page
+		 ****************/		
+		$(document).on('change', '#activity_date', function(){
+			$('.activity-log-preview-wrap').html('');
+			var currenEle = $(this);
+			if(currenEle.val() === ''){
+				return false;
+			}
+			currenEle.addClass('disabled-field');
+			data = {
+				'action': 'fetch_activity_logs_by_date',
+				'selected_date': currenEle.val(),
+			}
+
+			notifierAjax(data, function(response){
+				currenEle.removeClass('disabled-field');
+				$('.activity-log-preview-wrap').html(response.preview);
+			});
+		});
+
 	});
 
 })(jQuery);

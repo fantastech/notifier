@@ -8,23 +8,52 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+$dates = Notifier_Tools::get_logs_date_list();
 ?>
 <div class="wrap notifier">
     <div class="notifier-wrapper">
-    	<?php
-    		$current_tab = isset($_GET['tab']) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'export_woo_customer';
-            $tool_tabs = Notifier_Tools::get_tools_tabs();
-		 	echo '<h2 class="nav-tab-wrapper">';
-			foreach ( $tool_tabs as $tab_key => $name ) {
-				$class = ( $tab_key == $current_tab ) ? ' nav-tab-active' : '';
-				echo '<a class="nav-tab' . esc_attr( $class ) . '" href="?page=notifier-tools&tab=' . esc_attr( $tab_key ) . '">' . esc_html($name) . '</a>';
-			}
-		    echo '</h2>';
-    	?>
+		<!--Woocommerce export customer -->
+			<?php if (class_exists('WooCommerce') && in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) { ?>
+				<form method="POST" id="notifier_tools_form" class="notifier-tools-form" action="" enctype="multipart/form-data">
+					<div class="notifier-tool-wrap">
+						<div class="notifier-tool-details">
+							<h3 class="notifier-tool-name">Export WooCommerce Customers</h3>
+							<p class="notifier-tool-description">Export all your WooCommerce customers in CSV format to import them in WANotifier.</p>
+						</div>
+						<div class="notifier-tool-action">
+							<input name="export_customer" type="submit" class="button button-large" value="Export">
+							<?php wp_nonce_field( NOTIFIER_NAME . '-tools-export-customers' ); ?>
+						</div>
+					</div>
+				</form>
+			<?php } else { ?>
+				<div class="notice notice-error is-dismissible">
+					<p>WooCommerce plugin is not installed or active. For export customer feature requires WooCommerce to be installed and active. Please install or activate WooCommerce to use this feature.</p>
+				</div>
+			<?php } ?>
+		<!--End of Woocommerce export customer -->
 
-    	<?php do_action('notifier_before_tools_fields_form', $current_tab); ?>
-            <?php Notifier_Tools::tools_tab_output($current_tab); ?>
-        <?php do_action('notifier_after_tools_fields_form', $current_tab); ?>
+		<!--Fetch activity log and show from date-->
+			<?php if ('yes' === get_option('notifier_enable_activity_log')){ ?>
+				<?php if (!empty($dates)){ ?>
+					<div class="notifier-tool-wrap">
+						<div class="notifier-tool-details">
+							<h3 class="notifier-tool-name">Activity Log</h3>
+						</div>
+						<div class="notifier-tool-action">
+							<select name="activity_date" id="activity_date">
+								<option value="">Select date</option>
+								<?php foreach ($dates as $date): ?>
+									<option value="<?php echo esc_attr($date->log_date); ?>" <?php selected($selected_date, $date->log_date); ?>><?php echo esc_html($date->log_date); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+					</div>
+				<?php } ?>
 
+				<div class="activity-log-preview-wrap"></div>
+			<?php } ?>
+		<!--End of Fetch activity log and show from date -->
     </div>
 </div>

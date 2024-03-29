@@ -91,26 +91,25 @@ class Notifier {
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
-		add_action( 'plugins_loaded', array( $this, 'check_update' ) );
+		add_action( 'plugins_loaded', array( $this, 'check_activity_table_exists' ) );
 	}
 
 	/**
 	 * Setup during plugin activation
 	 */
 	public function install() {
-		update_option('notifier_version', NOTIFIER_VERSION);
-		Notifier_Tools::create_wanotifier_activity_log_table();
+
 	}
 
     /**
      * Check if the plugin was updated and run the upgrade routine if necessary.
      */
-    public function check_update() {
-        $installed_ver = get_option('notifier_version');
-        if (version_compare($installed_ver, NOTIFIER_VERSION, '<')) {
-            $this->install();
-        }
-    }
+	public function check_activity_table_exists() {
+		$is_table_created = get_option('is_activity_log_tbl_created');
+		if ('yes' !== $is_table_created) {
+			self::create_notifier_activity_log_table();
+		}
+	}
 
 	/**
 	 * Check if plugin's page
@@ -314,4 +313,27 @@ class Notifier {
 		}
 	}
 
+	/**
+     * Create New db table-- wanotifier_activity_log
+     */
+	public static function create_notifier_activity_log_table() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'wanotifier_activity_log';
+
+		if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") != $table_name) {
+			$charset_collate = $wpdb->get_charset_collate();
+			$sql = "CREATE TABLE $table_name (
+				log_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+				timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				message text NOT NULL,
+				type varchar(16) NOT NULL,
+				PRIMARY KEY  (log_id)
+			) $charset_collate;";
+	
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta($sql);
+
+			update_option('is_activity_log_tbl_created', 'yes');
+		}
+	}
 }
