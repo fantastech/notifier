@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$dates = Notifier_Tools::get_logs_date_list();
+$dates = Notifier_Tools::get_logs_date_list_adjusted_for_timezone();
 ?>
 <div class="wrap notifier">
     <div class="notifier-wrapper">
@@ -44,9 +44,9 @@ $dates = Notifier_Tools::get_logs_date_list();
 						<div class="notifier-tool-action">
 							<select name="activity_date" id="activity_date">
 								<option value="">Select date</option>
-								<?php foreach ($dates as $date): ?>
-									<option value="<?php echo esc_attr($date->log_date); ?>" <?php selected($selected_date, $date->log_date); ?>><?php echo esc_html($date->log_date); ?></option>
-								<?php endforeach; ?>
+								<?php foreach ($dates as $date){ ?>
+									<option value="<?php echo esc_attr($date); ?>" <?php selected($selected_date, $date); ?>><?php echo esc_html($date); ?></option>
+								<?php } ?>
 							</select>
 						</div>
 					</div>

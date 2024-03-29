@@ -168,24 +168,34 @@ class Notifier_Tools {
     /**
      * Fetch all dates info for current user
      */
-    public static function get_logs_date_list() {
+    public static function get_logs_date_list_adjusted_for_timezone() {
         global $wpdb;
         $table_name = $wpdb->prefix . 'wanotifier_activity_log';
-    
-        // WordPress timezone string
+        
+        $dates_query = "SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC";
+        $dates = $wpdb->get_results($dates_query);
+
         $timezone_string = get_option('timezone_string') ?: 'UTC';
         $timezone = new DateTimeZone($timezone_string);
+        $utc_timezone = new DateTimeZone('UTC');
     
-        // Adjust the query to convert UTC to local time before extracting the date
-        $dates_query = "SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC";
-        return $wpdb->get_results($dates_query);
+        $adjusted_dates = [];
+        foreach ($dates as $date) {
+            // Convert log_date from UTC to the WordPress site's timezone
+            $date_utc = new DateTime($date->log_date, $utc_timezone);
+            $date_utc->setTimezone($timezone);
+            
+            // Format the date and store it for display
+            $adjusted_dates[] = $date_utc->format('Y-m-d');
+        }
+    
+        return $adjusted_dates;
     }
 
     /**
      * Fetch all activity info for current user by date
      */
     public static function fetch_activity_logs_by_date() {
-    
         $selected_date = isset($_POST['activity_date']) ? sanitize_text_field($_POST['activity_date']) : '';
         
         // Determine WordPress timezone setting
