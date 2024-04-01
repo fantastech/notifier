@@ -29,7 +29,7 @@ $dates = Notifier_Tools::get_logs_date_list_adjusted_for_timezone();
 				</form>
 			<?php } else { ?>
 				<div class="notice notice-error is-dismissible">
-					<p>WooCommerce plugin is not installed or active. For export customer feature requires WooCommerce to be installed and active. Please install or activate WooCommerce to use this feature.</p>
+					<p>WooCommerce plugin is not installed or is not active. Please install or activate WooCommerce to export customers.</p>
 				</div>
 			<?php } ?>
 		<!--End of Woocommerce export customer -->

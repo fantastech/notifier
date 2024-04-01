@@ -28,6 +28,7 @@ class Notifier {
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
 		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
+		$this->define( 'NOTIFIER_ACTIVITY_TABLE_NAME', 'wanotifier_activity_log' );
 	}
 
 	/**
@@ -105,7 +106,7 @@ class Notifier {
      * Check if the plugin was updated and run the upgrade routine if necessary.
      */
 	public function check_activity_table_exists() {
-		$is_table_created = get_option('is_activity_log_tbl_created');
+		$is_table_created = get_option('notifier_is_activity_log_tbl_created');
 		if ('yes' !== $is_table_created) {
 			self::create_notifier_activity_log_table();
 		}
@@ -318,22 +319,23 @@ class Notifier {
      */
 	public static function create_notifier_activity_log_table() {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'wanotifier_activity_log';
-
+		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+	
 		if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") != $table_name) {
 			$charset_collate = $wpdb->get_charset_collate();
 			$sql = "CREATE TABLE $table_name (
 				log_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-				timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				timestamp timestamp NOT NULL,
 				message text NOT NULL,
 				type varchar(16) NOT NULL,
-				PRIMARY KEY  (log_id)
+				PRIMARY KEY  (log_id),
+				INDEX idx_timestamp (timestamp)
 			) $charset_collate;";
 	
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			dbDelta($sql);
-
-			update_option('is_activity_log_tbl_created', 'yes');
+	
+			update_option('notifier_is_activity_log_tbl_created', 'yes');
 		}
 	}
 }

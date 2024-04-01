@@ -670,7 +670,7 @@ class Notifier_Notification_Triggers {
 
 		$data = array();
 		$recipient_data = array();
-		Notifier_Tools::insert_activity_log('debug','Enter inside >> '. $trigger.' and arguments are '.json_encode($context_args));
+		Notifier_Tools::insert_activity_log('debug','Triggering '. $trigger.' with arguments: '.json_encode($context_args));
 
 		if(!empty($merge_tags)){
 			foreach($merge_tags as $tag){
@@ -693,13 +693,13 @@ class Notifier_Notification_Triggers {
 			'recipient_fields'	=> $recipient_data
     	);
 
-		Notifier_Tools::insert_activity_log('debug','Enter inside >> '. $trigger.' and final param passed to api '.json_encode($params));		
+		Notifier_Tools::insert_activity_log('debug','Sending API request for ' . $trigger . '. Request params: '.json_encode($params));		
 		$response = Notifier::send_api_request( 'fire_notification', $params, 'POST' );
-		Notifier_Tools::insert_activity_log('debug','For trigger >> '. $trigger.' API response >> '.$response->data);
+		Notifier_Tools::insert_activity_log('debug','API response for '. $trigger . ': ' . $response->data);
 
 		if($response->error){
 			error_log($response->message);
-			Notifier_Tools::insert_activity_log('error', 'For trigger > '. $trigger.' API response >> '.$response->message);
+			Notifier_Tools::insert_activity_log('debug', 'API response for '. $trigger . ': ' . $response->message);
 		}
 	}
 

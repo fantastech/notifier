@@ -151,26 +151,30 @@ class Notifier_Tools {
     /**
      * Insert New log into table wanotifier_activity_log
      */    
-    public static function insert_activity_log( $type = 'debug', $message ) {
-        if('yes' === get_option('notifier_enable_activity_log')){
+    public static function insert_activity_log( $type = 'debug', $message = '' ) {
+        if ('yes' === get_option('notifier_enable_activity_log')) {
             global $wpdb;
-            $table_name = $wpdb->prefix . 'wanotifier_activity_log';
+            $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+            $timestamp = current_time('mysql');
+    
             $data = array(
+                'timestamp' => $timestamp,
                 'message' => $message,
                 'type' => $type,
             );
         
-            $format = array('%s', '%s');
+            $format = array('%s', '%s', '%s');
             $wpdb->insert($table_name, $data, $format);
         }
     }
+    
 
     /**
      * Fetch all dates info for current user
      */
     public static function get_logs_date_list_adjusted_for_timezone() {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'wanotifier_activity_log';
+        $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
         
         $dates_query = "SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC";
         $dates = $wpdb->get_results($dates_query);
@@ -213,7 +217,7 @@ class Notifier_Tools {
         $selected_date_utc = $date->format('Y-m-d');
     
         global $wpdb;
-        $table_name = $wpdb->prefix . 'wanotifier_activity_log';
+        $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
 
         $query = $wpdb->prepare(
             "SELECT * FROM `$table_name` WHERE DATE(timestamp) = %s ORDER BY timestamp DESC",
@@ -222,17 +226,20 @@ class Notifier_Tools {
         $logs = $wpdb->get_results($query);
 
         $logs_preview_htm = '<div class="activity-logs">';
+        $logs_preview_htm .= '<table>';
+        $logs_preview_htm .= '<tbody>';
         if (!empty($logs)){
             foreach ($logs as $log){
-                $logs_preview_htm .= '<div class="activity-record">';
-                $logs_preview_htm .= '<strong>'.esc_html(date('Y-m-d H:i:s', strtotime($log->timestamp))).'</strong>: '; 
-                $logs_preview_htm .= esc_html($log->message);
-                $logs_preview_htm .= '</div>';
+                $logs_preview_htm .= '<tr class="activity-record">';
+                $logs_preview_htm .= '<td style="width:10%"><strong>'.esc_html(date('Y-m-d H:i:s', strtotime($log->timestamp))).'</strong>: </td>'; 
+                $logs_preview_htm .= '<td style="width:90%">'.esc_html($log->message).'</td>';
+                $logs_preview_htm .= '</tr>';
             }
         } else {
-            $logs_preview_htm .= '<div class="no-records-found"> No Activity Found...</div>';
+            $logs_preview_htm .= '<tr class="no-records-found"> <td>No Activity Found...</td></tr>';
         }
-
+        $logs_preview_htm .= '</tbody>';
+        $logs_preview_htm .= '</table>';
         $logs_preview_htm .= '</div>';
 
 		wp_send_json( array(
