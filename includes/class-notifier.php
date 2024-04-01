@@ -359,8 +359,7 @@ class Notifier {
 	private function notifier_delete_old_activity_logs() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
-		$two_hours_ago = date('Y-m-d H:i:s', strtotime('-2 hours'));
-		$query = $wpdb->prepare("DELETE FROM `$table_name` WHERE timestamp <= %s", $two_hours_ago);
+		$query = "DELETE FROM `$table_name` WHERE timestamp <= NOW() - INTERVAL 7 DAY";
 		$wpdb->query( $query );
 	}	
 }
