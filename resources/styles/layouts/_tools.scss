@@ -1,4 +1,4 @@
-.notifier-tool-wrap{
+.notifier-tool-wrap {
     background: #fff;
     margin-bottom: 15px;
     display: flex;
@@ -16,10 +16,35 @@
     }
 }
 
-.activity-logs {
+.notifier-tool-activity-wrap {
     background: #fff;
     margin-bottom: 15px;
-    padding: 10px;
-    max-height: 700px;
-    overflow: auto;
+
+    .notifier-tool-inner-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    
+        .notifier-tool-name {
+            margin-top: 0px;
+            margin-bottom: 10px;
+        }
+    
+        .notifier-tool-description {
+            margin: 0px;
+        }
+    }
+
+    .activity-log-preview-wrap {
+        background: #c3c4c7;
+        padding: 15px;
+        max-height: 700px;
+        overflow: auto;
+        border: 1px solid #eee;
+        border-radius: 4px;
+    }    
 }
+
+
+
