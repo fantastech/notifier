@@ -205,8 +205,6 @@ class Notifier_Tools {
             $timezone_string = $gmt_offset ? 'GMT' . ($gmt_offset >= 0 ? '+' : '') . $gmt_offset : 'UTC';
         }
         $timezone = new DateTimeZone($timezone_string);
-        
-        // Assume the selected date is in the site's local timezone
         $date = new DateTime($selected_date, $timezone);
         
         // Convert to UTC for querying the database
