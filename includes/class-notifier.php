@@ -28,7 +28,7 @@ class Notifier {
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
 		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
-		$this->define( 'NOTIFIER_ACTIVITY_TABLE_NAME', 'wanotifier_activity_log' );
+		$this->define( 'NOTIFIER_ACTIVITY_TABLE_NAME', 'notifier_activity_log' );
 	}
 
 	/**
@@ -79,6 +79,7 @@ class Notifier {
 	 */
 	private function init_hooks() {
 		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
+		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'unscheduled_events') );
 
 		add_action( 'after_setup_theme', array( 'Notifier_Admin_Notices', 'init' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Dashboard', 'init' ) );
@@ -93,6 +94,7 @@ class Notifier {
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'check_activity_table_exists' ) );
+		add_action( 'notifier_clean_old_logs', array( $this, 'notifier_delete_old_activity_logs' ) );
 	}
 
 	/**
@@ -100,6 +102,16 @@ class Notifier {
 	 */
 	public function install() {
 
+	}
+
+
+	/**
+	 * Setup during plugin deactivation
+	 */
+	public function unscheduled_events() {
+		if ( ! wp_next_scheduled( 'notifier_clean_old_logs' ) ) {
+			wp_schedule_event( time(), 'daily', 'notifier_clean_old_logs' );
+		}
 	}
 
     /**
@@ -110,6 +122,10 @@ class Notifier {
 		if ('yes' !== $is_table_created) {
 			self::create_notifier_activity_log_table();
 		}
+
+		if (!wp_next_scheduled('notifier_clean_old_logs')) {
+			wp_schedule_event(time(), 'daily', 'notifier_clean_old_logs');
+		}		
 	}
 
 	/**
@@ -338,4 +354,12 @@ class Notifier {
 			update_option('notifier_is_activity_log_tbl_created', 'yes');
 		}
 	}
+
+	private function notifier_delete_old_activity_logs() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+	
+		$query = "DELETE FROM `$table_name` WHERE timestamp <= NOW() - INTERVAL 7 DAY";
+		$wpdb->query( $query );
+	}	
 }

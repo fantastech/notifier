@@ -167,7 +167,6 @@ class Notifier_Tools {
             $wpdb->insert($table_name, $data, $format);
         }
     }
-    
 
     /**
      * Fetch all dates info for current user
@@ -179,20 +178,11 @@ class Notifier_Tools {
         $dates_query = "SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC";
         $dates = $wpdb->get_results($dates_query);
 
-        $timezone_string = get_option('timezone_string') ?: 'UTC';
-        $timezone = new DateTimeZone($timezone_string);
-        $utc_timezone = new DateTimeZone('UTC');
-    
         $adjusted_dates = [];
         foreach ($dates as $date) {
-            // Convert log_date from UTC to the WordPress site's timezone
-            $date_utc = new DateTime($date->log_date, $utc_timezone);
-            $date_utc->setTimezone($timezone);
-            
-            // Format the date and store it for display
-            $adjusted_dates[] = $date_utc->format('Y-m-d');
+            $adjusted_dates[] = date('Y-m-d', strtotime(notifier_convert_date_utc_to_wp_datetime($date->log_date)));
         }
-    
+
         return $adjusted_dates;
     }
 
@@ -201,21 +191,8 @@ class Notifier_Tools {
      */
     public static function fetch_activity_logs_by_date() {
         $selected_date = isset($_POST['activity_date']) ? sanitize_text_field($_POST['activity_date']) : '';
-
-        // Determine WordPress timezone setting
-        $timezone_string = get_option('timezone_string');
-        if (empty($timezone_string)) {
-            $gmt_offset = get_option('gmt_offset');
-            $timezone_string = $gmt_offset ? 'GMT' . ($gmt_offset >= 0 ? '+' : '') . $gmt_offset : 'UTC';
-        }
-        $timezone = new DateTimeZone($timezone_string);
-        $date = new DateTime($selected_date, $timezone);
+        $selected_date_utc = notifier_convert_date_to_utc($selected_date);
         
-        // Convert to UTC for querying the database
-        $utc_timezone = new DateTimeZone('UTC');
-        $date->setTimezone($utc_timezone);
-        $selected_date_utc = $date->format('Y-m-d');
-    
         global $wpdb;
         $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
 
@@ -223,6 +200,7 @@ class Notifier_Tools {
             "SELECT * FROM `$table_name` WHERE DATE(timestamp) = %s ORDER BY timestamp DESC",
             $selected_date_utc
         );
+
         $logs = $wpdb->get_results($query);
 
         $logs_preview_htm = '<div class="activity-logs">';
@@ -231,7 +209,7 @@ class Notifier_Tools {
         if (!empty($logs)){
             foreach ($logs as $log){
                 $logs_preview_htm .= '<tr class="activity-record">';
-                $logs_preview_htm .= '<td style="width:10%"><strong>'.esc_html(date('Y-m-d H:i:s', strtotime($log->timestamp))).'</strong>: </td>'; 
+                $logs_preview_htm .= '<td style="width:10%"><strong>'.esc_html(notifier_convert_date_utc_to_wp_datetime($log->timestamp)).'</strong>: </td>'; 
                 $logs_preview_htm .= '<td style="width:90%">'.esc_html($log->message).'</td>';
                 $logs_preview_htm .= '</tr>';
             }
