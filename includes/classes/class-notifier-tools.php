@@ -197,7 +197,7 @@ class Notifier_Tools {
      */
     public static function fetch_activity_logs_by_date() {
         $selected_date = isset($_POST['activity_date']) ? sanitize_text_field($_POST['activity_date']) : '';
-        
+
         // Determine WordPress timezone setting
         $timezone_string = get_option('timezone_string');
         if (empty($timezone_string)) {

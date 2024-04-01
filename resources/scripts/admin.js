@@ -332,7 +332,7 @@
 			currenEle.addClass('disabled-field');
 			data = {
 				'action': 'fetch_activity_logs_by_date',
-				'selected_date': currenEle.val(),
+				'activity_date': currenEle.val(),
 			}
 
 			notifierAjax(data, function(response){
