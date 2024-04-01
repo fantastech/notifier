@@ -214,7 +214,7 @@ class Notifier_Tools {
                 $logs_preview_htm .= '</tr>';
             }
         } else {
-            $logs_preview_htm .= '<tr class="no-records-found"> <td>No Activity Found...</td></tr>';
+            $logs_preview_htm .= '<tr class="no-records-found"> <td colspan="2">No Activity Found...</td></tr>';
         }
         $logs_preview_htm .= '</tbody>';
         $logs_preview_htm .= '</table>';

@@ -79,7 +79,7 @@ class Notifier {
 	 */
 	private function init_hooks() {
 		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
-		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'unscheduled_events') );
+		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'clear_scheduled_tasks') );
 
 		add_action( 'after_setup_theme', array( 'Notifier_Admin_Notices', 'init' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Dashboard', 'init' ) );
@@ -93,7 +93,7 @@ class Notifier {
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
-		add_action( 'plugins_loaded', array( $this, 'check_activity_table_exists' ) );
+		add_action( 'plugins_loaded', array( $this, 'setup_activity_log_and_cleanup_schedule' ) );
 		add_action( 'notifier_clean_old_logs', array( $this, 'notifier_delete_old_activity_logs' ) );
 	}
 
@@ -108,16 +108,17 @@ class Notifier {
 	/**
 	 * Setup during plugin deactivation
 	 */
-	public function unscheduled_events() {
-		if ( ! wp_next_scheduled( 'notifier_clean_old_logs' ) ) {
-			wp_schedule_event( time(), 'daily', 'notifier_clean_old_logs' );
+	public function clear_scheduled_tasks() {
+		$timestamp = wp_next_scheduled('notifier_clean_old_logs');
+		if ($timestamp) {
+			wp_unschedule_event($timestamp, 'notifier_clean_old_logs');
 		}
 	}
 
     /**
      * Check if the plugin was updated and run the upgrade routine if necessary.
      */
-	public function check_activity_table_exists() {
+	public function setup_activity_log_and_cleanup_schedule() {
 		$is_table_created = get_option('notifier_is_activity_log_tbl_created');
 		if ('yes' !== $is_table_created) {
 			self::create_notifier_activity_log_table();
@@ -358,8 +359,8 @@ class Notifier {
 	private function notifier_delete_old_activity_logs() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
-	
-		$query = "DELETE FROM `$table_name` WHERE timestamp <= NOW() - INTERVAL 7 DAY";
+		$two_hours_ago = date('Y-m-d H:i:s', strtotime('-2 hours'));
+		$query = $wpdb->prepare("DELETE FROM `$table_name` WHERE timestamp <= %s", $two_hours_ago);
 		$wpdb->query( $query );
 	}	
 }
