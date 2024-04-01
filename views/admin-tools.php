@@ -39,7 +39,8 @@ $dates = Notifier_Tools::get_logs_date_list_adjusted_for_timezone();
 				<?php if (!empty($dates)){ ?>
 					<div class="notifier-tool-wrap">
 						<div class="notifier-tool-details">
-							<h3 class="notifier-tool-name">Activity Log</h3>
+							<h3 class="notifier-tool-name">Activity Logs</h3>
+							<p class="notifier-tool-description">View activity logs for your triggers to debug errors / troubleshoot triggers.</p>
 						</div>
 						<div class="notifier-tool-action">
 							<select name="activity_date" id="activity_date">

@@ -219,7 +219,7 @@ class Notifier_Settings {
 						'type'			=> 'checkbox',
 						'default'		=> '',
 						'name'          => 'enable_activity_log',
-						'description'	=> 'Enabling this option will activate the activity logging feature. You can view the log on the <b>Tools</b> page under the <b>Activity Log</b> tab.' ,
+						'description'	=> 'Enabling this option will activate the activity logging feature. You can view activity logs <a href="/wp-admin/admin.php?page=notifier-tools"> here </a>.' ,
 					),					
 				);
 				break;
