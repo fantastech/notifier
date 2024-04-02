@@ -29,6 +29,7 @@ class Notifier {
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
 		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
 		$this->define( 'NOTIFIER_ACTIVITY_TABLE_NAME', 'notifier_activity_log' );
+		$this->define( 'CLEAN_OLD_LOGS_HOOK', 'notifier_clean_old_logs' );
 	}
 
 	/**
@@ -79,7 +80,7 @@ class Notifier {
 	 */
 	private function init_hooks() {
 		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
-		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'clear_scheduled_tasks') );
+		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'unschedule_recurring_task') );
 
 		add_action( 'after_setup_theme', array( 'Notifier_Admin_Notices', 'init' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Dashboard', 'init' ) );
@@ -93,7 +94,8 @@ class Notifier {
 
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
-		add_action( 'plugins_loaded', array( $this, 'setup_activity_log_and_cleanup_schedule' ) );
+		add_action( 'plugins_loaded', array( $this, 'setup_activity_log' ) );
+		add_action( 'wp_loaded', array( $this, 'setup_cleanup_activity_log' ) );
 		add_action( 'notifier_clean_old_logs', array( $this, 'notifier_delete_old_activity_logs' ) );
 	}
 
@@ -101,31 +103,36 @@ class Notifier {
 	 * Setup during plugin activation
 	 */
 	public function install() {
-
+		$args = array();
+        if ( false === as_next_scheduled_action(CLEAN_OLD_LOGS_HOOK) ) {
+            as_schedule_recurring_action( time(), DAY_IN_SECONDS, CLEAN_OLD_LOGS_HOOK, $args );
+        }
 	}
-
 
 	/**
 	 * Setup during plugin deactivation
 	 */
-	public function clear_scheduled_tasks() {
-		$timestamp = wp_next_scheduled('notifier_clean_old_logs');
-		if ($timestamp) {
-			wp_unschedule_event($timestamp, 'notifier_clean_old_logs');
-		}
+	public function unschedule_recurring_task() {
+		as_unschedule_action(CLEAN_OLD_LOGS_HOOK);
 	}
 
     /**
      * Check if the plugin was updated and run the upgrade routine if necessary.
      */
-	public function setup_activity_log_and_cleanup_schedule() {
+	public function setup_activity_log() {
 		$is_table_created = get_option('notifier_is_activity_log_tbl_created');
 		if ('yes' !== $is_table_created) {
 			self::create_notifier_activity_log_table();
 		}
+	}
 
-		if (!wp_next_scheduled('notifier_clean_old_logs')) {
-			wp_schedule_event(time(), 'daily', 'notifier_clean_old_logs');
+    /**
+     * Setup cron activity after wp loaded.
+     */
+	public function setup_cleanup_activity_log() {
+		$args = array();
+		if ( false === as_next_scheduled_action(CLEAN_OLD_LOGS_HOOK) ) {
+			as_schedule_recurring_action( time(), DAY_IN_SECONDS, CLEAN_OLD_LOGS_HOOK, $args );
 		}
 	}
 
