@@ -208,17 +208,17 @@ function notifier_generate_random_key( $length = 25 ) {
 /**
  * Converts a UTC date string to the WordPress site's timezone.
  */
-function notifier_convert_date_utc_to_wp_datetime($utc_date) {
-    if (empty($utc_date)) {
+function notifier_convert_date_utc_to_wp_datetime($utc_date, $format = 'Y-m-d H:i:s') {
+    if ($utc_date === '') {
         return current_time('mysql'); 
     }
 
     try {
-        $timezone_string = get_option('timezone_string') ?: 'UTC';
+        $timezone_string = wp_timezone_string() ?: 'UTC';
         $site_timezone = new DateTimeZone($timezone_string);
         $date = new DateTime($utc_date, new DateTimeZone('UTC'));
         $date->setTimezone($site_timezone);
-        return $date->format('Y-m-d H:i:s');
+        return $date->format($format);
     } catch (Exception $e) {
         error_log('Error converting UTC date to WordPress timezone: ' . $e->getMessage());
         return '';
@@ -228,20 +228,19 @@ function notifier_convert_date_utc_to_wp_datetime($utc_date) {
 /**
  * Converts a date string from the WordPress site's timezone to UTC.
  */
-function notifier_convert_date_to_utc($wp_date) {
-    if (empty($wp_date)) {
-        return current_time('mysql', 1);
+function notifier_convert_date_to_utc($wp_date, $format = 'Y-m-d H:i:s') {
+    if ($wp_date === '') {
+        return current_time('mysql');
     }
 
     try {
-        $timezone_string = get_option('timezone_string') ?: 'UTC';
+        $timezone_string = wp_timezone_string() ?: 'UTC';
         $site_timezone = new DateTimeZone($timezone_string);
         $date = new DateTime($wp_date, $site_timezone);
         $date->setTimezone(new DateTimeZone('UTC'));
-        return $date->format('Y-m-d H:i:s');
+        return $date->format($format);
     } catch (Exception $e) {
         error_log('Error converting date from WordPress timezone to UTC: ' . $e->getMessage());
         return '';
     }
 }
-

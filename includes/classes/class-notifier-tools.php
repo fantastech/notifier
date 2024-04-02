@@ -174,13 +174,11 @@ class Notifier_Tools {
     public static function get_logs_date_list_adjusted_for_timezone() {
         global $wpdb;
         $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
-        
-        $dates_query = "SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC";
-        $dates = $wpdb->get_results($dates_query);
+        $dates = $wpdb->get_results("SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC");
 
         $adjusted_dates = [];
         foreach ($dates as $date) {
-            $adjusted_dates[] = date('Y-m-d', strtotime(notifier_convert_date_utc_to_wp_datetime($date->log_date)));
+            $adjusted_dates[] = notifier_convert_date_utc_to_wp_datetime($date->log_date,'Y-m-d');
         }
 
         return $adjusted_dates;
@@ -191,17 +189,14 @@ class Notifier_Tools {
      */
     public static function fetch_activity_logs_by_date() {
         $selected_date = isset($_POST['activity_date']) ? sanitize_text_field($_POST['activity_date']) : '';
-        $selected_date_utc = notifier_convert_date_to_utc($selected_date);
-        
+
         global $wpdb;
         $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
 
-        $query = $wpdb->prepare(
+        $logs = $wpdb->get_results( $wpdb->prepare(
             "SELECT * FROM `$table_name` WHERE DATE(timestamp) = %s ORDER BY timestamp DESC",
-            $selected_date_utc
-        );
-
-        $logs = $wpdb->get_results($query);
+            $selected_date
+        ));
 
         $logs_preview_htm = '<div class="activity-logs">';
         $logs_preview_htm .= '<table>';
@@ -209,7 +204,7 @@ class Notifier_Tools {
         if (!empty($logs)){
             foreach ($logs as $log){
                 $logs_preview_htm .= '<tr class="activity-record">';
-                $logs_preview_htm .= '<td style="width:10%; vertical-align: top;"><strong>'.esc_html(notifier_convert_date_utc_to_wp_datetime($log->timestamp)).'</strong> </td>'; 
+                $logs_preview_htm .= '<td style="width:10%; vertical-align: top;"><strong>'.esc_html($log->timestamp).'</strong> </td>'; 
                 $logs_preview_htm .= '<td style="width:90%; vertical-align: top;">'.esc_html($log->message).'</td>';
                 $logs_preview_htm .= '</tr>';
             }

@@ -126,7 +126,7 @@ class Notifier {
 
 		if (!wp_next_scheduled('notifier_clean_old_logs')) {
 			wp_schedule_event(time(), 'daily', 'notifier_clean_old_logs');
-		}		
+		}
 	}
 
 	/**
@@ -356,10 +356,12 @@ class Notifier {
 		}
 	}
 
-	private function notifier_delete_old_activity_logs() {
+	/**
+     * Delete old log from activity table according to interval
+     */
+	public function notifier_delete_old_activity_logs() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
-		$query = "DELETE FROM `$table_name` WHERE timestamp <= NOW() - INTERVAL 7 DAY";
-		$wpdb->query( $query );
-	}	
+		$wpdb->query($wpdb->prepare("DELETE FROM `$table_name` WHERE timestamp <= DATE_SUB(NOW(), INTERVAL 7 DAY)"));
+	}
 }
