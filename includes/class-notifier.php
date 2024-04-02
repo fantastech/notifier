@@ -91,8 +91,10 @@ class Notifier {
 		add_action( 'admin_enqueue_scripts', array( $this , 'admin_scripts') );
 		add_action( 'wp_enqueue_scripts', array( $this , 'frontend_scripts') );
 		add_action( 'in_admin_header', array( $this , 'embed_page_header' ) );
+
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
+
 		add_action( 'plugins_loaded', array( $this, 'setup_activity_log' ) );
 		add_action( 'notifier_clean_old_logs', array( $this, 'notifier_delete_old_activity_logs' ) );
 	}
