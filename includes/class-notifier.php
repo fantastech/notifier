@@ -95,7 +95,6 @@ class Notifier {
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'setup_activity_log' ) );
-		add_action( 'wp_loaded', array( $this, 'setup_cleanup_activity_log' ) );
 		add_action( 'notifier_clean_old_logs', array( $this, 'notifier_delete_old_activity_logs' ) );
 	}
 
@@ -104,9 +103,9 @@ class Notifier {
 	 */
 	public function install() {
 		$args = array();
-        if ( false === as_next_scheduled_action(CLEAN_OLD_LOGS_HOOK) ) {
-            as_schedule_recurring_action( time(), DAY_IN_SECONDS, CLEAN_OLD_LOGS_HOOK, $args );
-        }
+		if ( false === as_next_scheduled_action(CLEAN_OLD_LOGS_HOOK) ) {
+			as_schedule_recurring_action( time(), DAY_IN_SECONDS, CLEAN_OLD_LOGS_HOOK, $args );
+		}
 	}
 
 	/**
@@ -123,16 +122,6 @@ class Notifier {
 		$is_table_created = get_option('notifier_is_activity_log_tbl_created');
 		if ('yes' !== $is_table_created) {
 			self::create_notifier_activity_log_table();
-		}
-	}
-
-    /**
-     * Setup cron activity after wp loaded.
-     */
-	public function setup_cleanup_activity_log() {
-		$args = array();
-		if ( false === as_next_scheduled_action(CLEAN_OLD_LOGS_HOOK) ) {
-			as_schedule_recurring_action( time(), DAY_IN_SECONDS, CLEAN_OLD_LOGS_HOOK, $args );
 		}
 	}
 
