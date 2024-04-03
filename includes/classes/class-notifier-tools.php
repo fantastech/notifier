@@ -188,14 +188,14 @@ class Notifier_Tools {
      * Fetch all activity info for current user by date
      */
     public static function fetch_activity_logs_by_date() {
-        $selected_date = isset($_POST['activity_date']) ? sanitize_text_field($_POST['activity_date']) : '';
+        $activity_date = isset($_POST['notifier_activity_date']) ? sanitize_text_field($_POST['notifier_activity_date']) : '';
 
         global $wpdb;
         $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
 
         $logs = $wpdb->get_results( $wpdb->prepare(
             "SELECT * FROM `$table_name` WHERE DATE(timestamp) = %s ORDER BY timestamp DESC",
-            $selected_date
+            $activity_date
         ));
 
         $logs_preview_htm = '<div class="activity-logs">';

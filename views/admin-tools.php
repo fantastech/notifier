@@ -44,7 +44,7 @@ $dates = Notifier_Tools::get_logs_date_list_adjusted_for_timezone();
 								<p class="notifier-tool-description">View activity logs for your triggers to debug errors / troubleshoot triggers.</p>
 							</div>
 							<div class="notifier-tool-action">
-								<select name="activity_date" id="activity_date">
+								<select name="notifier_activity_date" id="notifier_activity_date">
 									<option value="">Select date</option>
 									<?php foreach ($dates as $date){ ?>
 										<option value="<?php echo esc_attr($date); ?>" <?php selected($selected_date, $date); ?>><?php echo esc_html($date); ?></option>

@@ -323,7 +323,7 @@
 		/*****************
 		 * Tools page
 		 ****************/		
-		$(document).on('change', '#activity_date', function(){
+		$(document).on('change', '#notifier_activity_date', function(){
 			$('.activity-log-preview-wrap').html('');
 			var currenEle = $(this);
 			if(currenEle.val() === ''){
@@ -332,7 +332,7 @@
 			currenEle.addClass('disabled-field');
 			data = {
 				'action': 'fetch_activity_logs_by_date',
-				'activity_date': currenEle.val(),
+				'notifier_activity_date': currenEle.val(),
 			}
 
 			notifierAjax(data, function(response){
