@@ -102,9 +102,7 @@ class Notifier {
 	 * Setup during plugin activation
 	 */
 	public function activate() {
-		error_log("inside plugin activate1");
 		if (get_option('notifier_set_activity_action_scheduler') === 'yes') {
-			error_log("inside plugin activate2");
 			delete_option('notifier_set_activity_action_scheduler');
 		}
 	}
@@ -115,7 +113,6 @@ class Notifier {
 	public function deactivate() {
 		as_unschedule_action('notifier_clean_old_logs');
 		update_option( 'notifier_set_activity_action_scheduler', 'yes' );
-		error_log("unschedule");
 	}
 
     /**
@@ -128,11 +125,8 @@ class Notifier {
 		}
 
 		$args = array();
-		error_log("inside setup activity log");
-
 		$is_action_set = get_option( 'notifier_set_activity_action_scheduler' );
 		if ( $is_action_set !== 'yes' && false === as_next_scheduled_action('notifier_clean_old_logs') ) {
-			error_log("inside as_next_scheduled_action activity log");
 			as_schedule_recurring_action( time(), DAY_IN_SECONDS, 'notifier_clean_old_logs', $args );
 		}
 	}
