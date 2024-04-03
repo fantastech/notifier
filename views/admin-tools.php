@@ -36,25 +36,23 @@ $dates = Notifier_Tools::get_logs_date_lists();
 
 		<!--Fetch activity log and show from date-->
 			<?php if ('yes' === get_option('notifier_enable_activity_log')){ ?>
-				<?php //if (!empty($dates)){ ?>
-					<div class="notifier-tool-activity-wrap">
-						<div class="notifier-tool-inner-wrap">
-							<div class="notifier-tool-details">
-								<h3 class="notifier-tool-name">Activity Logs</h3>
-								<p class="notifier-tool-description">View activity logs for your triggers to debug errors / troubleshoot triggers.</p>
-							</div>
-							<div class="notifier-tool-action">
-								<select name="notifier_activity_date" id="notifier_activity_date">
-									<option value="">Select date</option>
-									<?php foreach ($dates as $date){ ?>
-										<option value="<?php echo esc_attr($date); ?>" <?php selected($selected_date, $date); ?>><?php echo esc_html($date); ?></option>
-									<?php } ?>
-								</select>
-							</div>
+				<div class="notifier-tool-activity-wrap">
+					<div class="notifier-tool-inner-wrap">
+						<div class="notifier-tool-details">
+							<h3 class="notifier-tool-name">Activity Logs</h3>
+							<p class="notifier-tool-description">View activity logs for your triggers to debug errors / troubleshoot triggers.</p>
 						</div>
-						<div class="activity-log-preview-wrap"></div>
+						<div class="notifier-tool-action">
+							<select name="notifier_activity_date" id="notifier_activity_date">
+								<option value="">Select date</option>
+								<?php foreach ($dates as $date){ ?>
+									<option value="<?php echo esc_attr($date); ?>" <?php selected($selected_date, $date); ?>><?php echo esc_html($date); ?></option>
+								<?php } ?>
+							</select>
+						</div>
 					</div>
-				<?php //} ?>
+					<div class="activity-log-preview-wrap"><?php if (empty($dates)){ echo "No logs found...";} ?></div>
+				</div>
 			<?php } ?>
 		<!--End of Fetch activity log and show from date -->
     </div>
