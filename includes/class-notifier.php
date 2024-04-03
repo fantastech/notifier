@@ -372,6 +372,7 @@ class Notifier {
 		global $wpdb;
 		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
 		$retention_time = apply_filters( 'notifier_logs_retention_time', 7 );
+		$retention_time = intval($retention_time);
 		$wpdb->query( $wpdb->prepare( "DELETE FROM `$table_name` WHERE timestamp <= DATE_SUB(NOW(), INTERVAL %d DAY)", $retention_time ) );
 	}
 }
