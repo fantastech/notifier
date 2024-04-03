@@ -36,7 +36,7 @@ $dates = Notifier_Tools::get_logs_date_list_adjusted_for_timezone();
 
 		<!--Fetch activity log and show from date-->
 			<?php if ('yes' === get_option('notifier_enable_activity_log')){ ?>
-				<?php if (!empty($dates)){ ?>
+				<?php //if (!empty($dates)){ ?>
 					<div class="notifier-tool-activity-wrap">
 						<div class="notifier-tool-inner-wrap">
 							<div class="notifier-tool-details">
@@ -54,7 +54,7 @@ $dates = Notifier_Tools::get_logs_date_list_adjusted_for_timezone();
 						</div>
 						<div class="activity-log-preview-wrap"></div>
 					</div>
-				<?php } ?>
+				<?php //} ?>
 			<?php } ?>
 		<!--End of Fetch activity log and show from date -->
     </div>
