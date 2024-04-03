@@ -102,10 +102,10 @@ class Notifier {
 	 * Setup during plugin activation
 	 */
 	public function activate() {
-		$notifier_plugin_data = get_option('notifier_plugin_data', array());
-		if (isset($notifier_plugin_data['notifier_set_activity_action_scheduler']) && $notifier_plugin_data['notifier_set_activity_action_scheduler'] === 'yes') {
-			unset($notifier_plugin_data['notifier_set_activity_action_scheduler']);
-			update_option('notifier_plugin_data', $notifier_plugin_data);
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		if (isset($notifier_plugin_data['as_clear_log']) && $notifier_plugin_data['as_clear_log'] === 'yes') {
+			unset($notifier_plugin_data['as_clear_log']);
+			update_option('notifier_meta', $notifier_plugin_data);
 		}
 	}
 
@@ -114,22 +114,22 @@ class Notifier {
 	 */
 	public function deactivate() {
 		as_unschedule_action('notifier_clean_old_logs');
-		$notifier_plugin_data = get_option('notifier_plugin_data', array());
-		$notifier_plugin_data['notifier_set_activity_action_scheduler'] = 'yes';
-		update_option('notifier_plugin_data', $notifier_plugin_data);
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		$notifier_plugin_data['as_clear_log'] = 'yes';
+		update_option('notifier_meta', $notifier_plugin_data);
 	}
 
     /**
      * Check if the plugin was updated and run the upgrade routine if necessary.
      */
 	public function setup_activity_log() {
-		$notifier_plugin_data = get_option('notifier_plugin_data', array());
-		if (!isset($notifier_plugin_data['notifier_is_activity_log_tbl_created']) && $notifier_plugin_data['notifier_is_activity_log_tbl_created'] !== 'yes') {
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		if (!isset($notifier_plugin_data['activity_log_table']) && $notifier_plugin_data['activity_log_table'] !== 'yes') {
 			self::create_notifier_activity_log_table();
 		}
 
 		$args = array();
-		if (!isset($notifier_plugin_data['notifier_set_activity_action_scheduler']) && $notifier_plugin_data['notifier_set_activity_action_scheduler'] !== 'yes') {
+		if (!isset($notifier_plugin_data['as_clear_log']) && $notifier_plugin_data['as_clear_log'] !== 'yes') {
 			if (false === as_next_scheduled_action('notifier_clean_old_logs')) {
 				as_schedule_recurring_action(time(), DAY_IN_SECONDS, 'notifier_clean_old_logs', $args);
 			}
@@ -360,9 +360,9 @@ class Notifier {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		$notifier_plugin_data = get_option('notifier_plugin_data', array());
-		$notifier_plugin_data['notifier_is_activity_log_tbl_created'] = 'yes';
-		update_option('notifier_plugin_data', $notifier_plugin_data);		
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		$notifier_plugin_data['activity_log_table'] = 'yes';
+		update_option('notifier_meta', $notifier_plugin_data);		
 	}
 
 	/**
