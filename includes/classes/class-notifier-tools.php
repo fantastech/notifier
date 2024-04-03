@@ -171,7 +171,7 @@ class Notifier_Tools {
     /**
      * Fetch all dates info for current user
      */
-    public static function get_logs_date_list_adjusted_for_timezone() {
+    public static function get_logs_date_lists() {
         global $wpdb;
         $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
         $dates = $wpdb->get_results("SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC");

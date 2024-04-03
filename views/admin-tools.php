@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-$dates = Notifier_Tools::get_logs_date_list_adjusted_for_timezone();
+$dates = Notifier_Tools::get_logs_date_lists();
 ?>
 <div class="wrap notifier">
     <div class="notifier-wrapper">
