@@ -29,7 +29,6 @@ class Notifier {
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
 		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
 		$this->define( 'NOTIFIER_ACTIVITY_TABLE_NAME', 'notifier_activity_log' );
-		$this->define( 'CLEAN_OLD_LOGS_HOOK', 'notifier_clean_old_logs' );
 	}
 
 	/**
@@ -79,8 +78,8 @@ class Notifier {
 	 * Hook into actions and filters.
 	 */
 	private function init_hooks() {
-		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
-		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'unschedule_recurring_task') );
+		register_activation_hook ( NOTIFIER_FILE, array( $this, 'activate') );
+		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'deactivate') );
 
 		add_action( 'after_setup_theme', array( 'Notifier_Admin_Notices', 'init' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Dashboard', 'init' ) );
@@ -95,28 +94,28 @@ class Notifier {
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'setup_activity_log' ) );
+		add_action( 'wp_loaded', array( $this, 'setup_activity_log' ) );
 		add_action( 'notifier_clean_old_logs', array( $this, 'notifier_delete_old_activity_logs' ) );
-		add_action( 'wp_loaded', array( $this, 'setup_cleanup_activity_log' ) );
 	}
 
 	/**
 	 * Setup during plugin activation
 	 */
-	public function install() {
-		$args = array();
-		if ( false === as_next_scheduled_action(CLEAN_OLD_LOGS_HOOK) ) {
-			as_schedule_recurring_action( time(), DAY_IN_SECONDS, CLEAN_OLD_LOGS_HOOK, $args );
-			update_option( 'notifier_set_activity_action_scheduler', 'yes' );
+	public function activate() {
+		error_log("inside plugin activate1");
+		if (get_option('notifier_set_activity_action_scheduler') === 'yes') {
+			error_log("inside plugin activate2");
+			delete_option('notifier_set_activity_action_scheduler');
 		}
 	}
 
 	/**
 	 * Setup during plugin deactivation
 	 */
-	public function unschedule_recurring_task() {
-		as_unschedule_action(CLEAN_OLD_LOGS_HOOK);
+	public function deactivate() {
+		as_unschedule_action('notifier_clean_old_logs');
 		update_option( 'notifier_set_activity_action_scheduler', 'yes' );
+		error_log("unschedule");
 	}
 
     /**
@@ -127,17 +126,14 @@ class Notifier {
 		if ('yes' !== $is_table_created) {
 			self::create_notifier_activity_log_table();
 		}
-	}
 
-    /**
-     * Setup cron activity after wp loaded.
-     */
-	public function setup_cleanup_activity_log() {
 		$args = array();
-		$is_action_set = get_option( 'notifier_set_activity_action_scheduler' );
+		error_log("inside setup activity log");
 
-		if ( $is_action_set !== 'yes' && false === as_next_scheduled_action(CLEAN_OLD_LOGS_HOOK) ) {
-			as_schedule_recurring_action( time(), DAY_IN_SECONDS, CLEAN_OLD_LOGS_HOOK, $args );
+		$is_action_set = get_option( 'notifier_set_activity_action_scheduler' );
+		if ( $is_action_set !== 'yes' && false === as_next_scheduled_action('notifier_clean_old_logs') ) {
+			error_log("inside as_next_scheduled_action activity log");
+			as_schedule_recurring_action( time(), DAY_IN_SECONDS, 'notifier_clean_old_logs', $args );
 		}
 	}
 
@@ -350,22 +346,22 @@ class Notifier {
 		global $wpdb;
 		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
 	
-		if ($wpdb->get_var("SHOW TABLES LIKE '{$table_name}'") != $table_name) {
-			$charset_collate = $wpdb->get_charset_collate();
-			$sql = "CREATE TABLE $table_name (
-				log_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-				timestamp timestamp NOT NULL,
-				message text NOT NULL,
-				type varchar(16) NOT NULL,
-				PRIMARY KEY  (log_id),
-				INDEX idx_timestamp (timestamp)
-			) $charset_collate;";
+		$charset_collate = $wpdb->get_charset_collate();
 	
-			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-			dbDelta($sql);
+		// Include IF NOT EXISTS clause in the CREATE TABLE query
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			log_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			timestamp timestamp NOT NULL,
+			message text NOT NULL,
+			type varchar(16) NOT NULL,
+			PRIMARY KEY  (log_id),
+			INDEX idx_timestamp (timestamp)
+		) $charset_collate;";
 	
-			update_option('notifier_is_activity_log_tbl_created', 'yes');
-		}
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+	
+		update_option( 'notifier_is_activity_log_tbl_created', 'yes' );
 	}
 
 	/**
@@ -374,6 +370,7 @@ class Notifier {
 	public function notifier_delete_old_activity_logs() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
-		$wpdb->query($wpdb->prepare("DELETE FROM `$table_name` WHERE timestamp <= DATE_SUB(NOW(), INTERVAL 7 DAY)"));
+		$retention_time = apply_filters( 'notifier_logs_retention_time', 7 );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `$table_name` WHERE timestamp <= DATE_SUB(NOW(), INTERVAL %d DAY)", $retention_time ) );
 	}
 }

@@ -50,7 +50,7 @@ class Notifier_Tools {
         }
 
         if ( ! class_exists('WooCommerce') || ! in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) ) {
-            return '<div class="notice notice-error is-dismissible"><p>WooCommerce plugin is not installed or active. For export customer feature requires WooCommerce to be installed and active. Please install or activate WooCommerce to use this feature.</p></div>';
+            return '<div class="notice notice-error is-dismissible"><p>WooCommerce plugin is not installed or is not active. Please install or activate WooCommerce to export customers.</p></div>';
         }
         
         if ( ! isset( $_POST['export_customer'] ) ) {
@@ -178,7 +178,7 @@ class Notifier_Tools {
 
         $adjusted_dates = [];
         foreach ($dates as $date) {
-            $adjusted_dates[] = notifier_convert_date_utc_to_wp_datetime($date->log_date,'Y-m-d');
+            $adjusted_dates[] = notifier_convert_date_from_utc($date->log_date,'Y-m-d');
         }
 
         return $adjusted_dates;

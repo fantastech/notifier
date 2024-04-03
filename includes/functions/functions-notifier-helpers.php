@@ -208,7 +208,7 @@ function notifier_generate_random_key( $length = 25 ) {
 /**
  * Converts a UTC date string to the WordPress site's timezone.
  */
-function notifier_convert_date_utc_to_wp_datetime($utc_date, $format = 'Y-m-d H:i:s') {
+function notifier_convert_date_from_utc($utc_date, $format = 'Y-m-d H:i:s') {
     if ($utc_date === '') {
         return current_time('mysql'); 
     }
