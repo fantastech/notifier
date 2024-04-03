@@ -176,12 +176,12 @@ class Notifier_Tools {
         $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
         $dates = $wpdb->get_results("SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC");
 
-        $adjusted_dates = [];
+        $final_dates = [];
         foreach ($dates as $date) {
-            $adjusted_dates[] = notifier_convert_date_from_utc($date->log_date,'Y-m-d');
+            $final_dates[] = notifier_convert_date_from_utc($date->log_date,'Y-m-d');
         }
 
-        return $adjusted_dates;
+        return $final_dates;
     }
 
     /**
