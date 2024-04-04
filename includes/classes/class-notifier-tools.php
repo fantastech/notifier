@@ -12,6 +12,7 @@ class Notifier_Tools {
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__ , 'setup_admin_page') );
         add_action( 'admin_init', array( __CLASS__ , 'export_customers') );
+        add_action( 'wp_ajax_fetch_activity_logs_by_date', array(__CLASS__, 'fetch_activity_logs_by_date'));
 	}
 
 	/**
@@ -25,14 +26,6 @@ class Notifier_Tools {
 		add_submenu_page( NOTIFIER_NAME, 'Tools', 'Tools', 'manage_options', NOTIFIER_NAME . '-tools', array( __CLASS__, 'output' ) );
 	}
 
-    public static function output() {
-        if (class_exists('WooCommerce') && in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-            include_once NOTIFIER_PATH . '/views/admin-tools.php';
-        } else {
-            echo '<div class="notice notice-error is-dismissible"><p>WooCommerce plugin is not installed or active. This feature requires WooCommerce to be installed and active. Please install or activate WooCommerce to use this feature.</p></div>';
-        }
-    }
-
 	/**
 	 * Check if on tools page
 	 */
@@ -40,7 +33,14 @@ class Notifier_Tools {
 		$current_page = isset($_GET['page']) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 		return strpos($current_page, NOTIFIER_NAME . '-tools') !== false;
 	}
-  
+
+	/**
+	 * Output
+	 */
+	public static function output() {
+        include_once NOTIFIER_PATH . '/views/admin-tools.php';
+	}
+
     /**
      * Export WooCommerce Customers
      */
@@ -48,11 +48,15 @@ class Notifier_Tools {
         if ( ! self::is_tools_page() ) {
             return;
         }
-    
+
+        if ( ! class_exists('WooCommerce') || ! in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins'))) ) {
+            return '<div class="notice notice-error is-dismissible"><p>WooCommerce plugin is not installed or is not active. Please install or activate WooCommerce to export customers.</p></div>';
+        }
+        
         if ( ! isset( $_POST['export_customer'] ) ) {
             return;
         }
-    
+  
         //phpcs:ignore
         if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], NOTIFIER_NAME . '-tools-export-customers' ) ) {
             return;
@@ -143,5 +147,78 @@ class Notifier_Tools {
         fclose( $file_handle );
         exit();
     }
-     
+   
+    /**
+     * Insert New log into table wanotifier_activity_log
+     */    
+    public static function insert_activity_log( $type = 'debug', $message = '' ) {
+        if ('yes' === get_option('notifier_enable_activity_log')) {
+            global $wpdb;
+            $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+            $timestamp = current_time('mysql');
+    
+            $data = array(
+                'timestamp' => $timestamp,
+                'message' => $message,
+                'type' => $type,
+            );
+        
+            $format = array('%s', '%s', '%s');
+            $wpdb->insert($table_name, $data, $format);
+        }
+    }
+
+    /**
+     * Fetch all dates info for current user
+     */
+    public static function get_logs_date_lists() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+        $dates = $wpdb->get_results("SELECT DISTINCT DATE(timestamp) as log_date FROM `$table_name` ORDER BY timestamp DESC");
+
+        $final_dates = [];
+        foreach ($dates as $date) {
+            $final_dates[] = notifier_convert_date_from_utc($date->log_date,'Y-m-d');
+        }
+
+        return $final_dates;
+    }
+
+    /**
+     * Fetch all activity info for current user by date
+     */
+    public static function fetch_activity_logs_by_date() {
+        $activity_date = isset($_POST['notifier_activity_date']) ? sanitize_text_field($_POST['notifier_activity_date']) : '';
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+
+        $logs = $wpdb->get_results( $wpdb->prepare(
+            "SELECT * FROM `$table_name` WHERE DATE(timestamp) = %s ORDER BY timestamp DESC",
+            $activity_date
+        ));
+
+        $logs_preview_htm = '<div class="activity-logs">';
+        $logs_preview_htm .= '<table>';
+        $logs_preview_htm .= '<tbody>';
+        if (!empty($logs)){
+            foreach ($logs as $log){
+                $logs_preview_htm .= '<tr class="activity-record">';
+                $logs_preview_htm .= '<td style="width:10%; vertical-align: top;"><strong>'.esc_html($log->timestamp).'</strong> </td>'; 
+                $logs_preview_htm .= '<td style="width:90%; vertical-align: top;">'.esc_html($log->message).'</td>';
+                $logs_preview_htm .= '</tr>';
+            }
+        } else {
+            $logs_preview_htm .= '<tr class="no-records-found"> <td colspan="2">No logs found...</td></tr>';
+        }
+        $logs_preview_htm .= '</tbody>';
+        $logs_preview_htm .= '</table>';
+        $logs_preview_htm .= '</div>';
+
+		wp_send_json( array(
+			'preview'  => $logs_preview_htm
+		) );
+
+    }
+    
 }

@@ -23,11 +23,12 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.5.1' );
+		$this->define( 'NOTIFIER_VERSION', '2.5.2' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
 		$this->define( 'NOTIFIER_APP_API_URL', 'https://app.wanotifier.com/api/v1/' );
+		$this->define( 'NOTIFIER_ACTIVITY_TABLE_NAME', 'notifier_activity_log' );
 	}
 
 	/**
@@ -77,7 +78,8 @@ class Notifier {
 	 * Hook into actions and filters.
 	 */
 	private function init_hooks() {
-		register_activation_hook ( NOTIFIER_FILE, array( $this, 'install') );
+		register_activation_hook ( NOTIFIER_FILE, array( $this, 'activate') );
+		register_deactivation_hook ( NOTIFIER_FILE, array( $this, 'deactivate') );
 
 		add_action( 'after_setup_theme', array( 'Notifier_Admin_Notices', 'init' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Dashboard', 'init' ) );
@@ -92,13 +94,46 @@ class Notifier {
 		add_action( 'after_setup_theme', array( $this, 'maybe_include_integrations' ) );
 		add_action( 'after_setup_theme', array( 'Notifier_Tools', 'init' ) );
 
+		add_action( 'wp_loaded', array( $this, 'setup_activity_log' ) );
+		add_action( 'notifier_clean_old_logs', array( $this, 'notifier_delete_old_activity_logs' ) );
 	}
 
 	/**
 	 * Setup during plugin activation
 	 */
-	public function install() {
+	public function activate() {
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		if (isset($notifier_plugin_data['as_clear_log']) && $notifier_plugin_data['as_clear_log'] === 'yes') {
+			unset($notifier_plugin_data['as_clear_log']);
+			update_option('notifier_meta', $notifier_plugin_data);
+		}
+	}
 
+	/**
+	 * Setup during plugin deactivation
+	 */
+	public function deactivate() {
+		as_unschedule_action('notifier_clean_old_logs');
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		$notifier_plugin_data['as_clear_log'] = 'yes';
+		update_option('notifier_meta', $notifier_plugin_data);
+	}
+
+    /**
+     * Check if the plugin was updated and run the upgrade routine if necessary.
+     */
+	public function setup_activity_log() {
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		if (!isset($notifier_plugin_data['activity_log_table']) && $notifier_plugin_data['activity_log_table'] !== 'yes') {
+			self::create_notifier_activity_log_table();
+		}
+
+		$args = array();
+		if (!isset($notifier_plugin_data['as_clear_log']) && $notifier_plugin_data['as_clear_log'] !== 'yes') {
+			if (false === as_next_scheduled_action('notifier_clean_old_logs')) {
+				as_schedule_recurring_action(time(), DAY_IN_SECONDS, 'notifier_clean_old_logs', $args);
+			}
+		}
 	}
 
 	/**
@@ -303,4 +338,41 @@ class Notifier {
 		}
 	}
 
+	/**
+     * Create New db table-- wanotifier_activity_log
+     */
+	public static function create_notifier_activity_log_table() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+	
+		$charset_collate = $wpdb->get_charset_collate();
+	
+		// Include IF NOT EXISTS clause in the CREATE TABLE query
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			log_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			timestamp timestamp NOT NULL,
+			message text NOT NULL,
+			type varchar(16) NOT NULL,
+			PRIMARY KEY  (log_id),
+			INDEX idx_timestamp (timestamp)
+		) $charset_collate;";
+	
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+
+		$notifier_plugin_data = get_option('notifier_meta', array());
+		$notifier_plugin_data['activity_log_table'] = 'yes';
+		update_option('notifier_meta', $notifier_plugin_data);		
+	}
+
+	/**
+     * Delete old log from activity table according to interval
+     */
+	public function notifier_delete_old_activity_logs() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . NOTIFIER_ACTIVITY_TABLE_NAME;
+		$retention_time = apply_filters( 'notifier_logs_retention_time', 7 );
+		$retention_time = intval($retention_time);
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `$table_name` WHERE timestamp <= DATE_SUB(NOW(), INTERVAL %d DAY)", $retention_time ) );
+	}
 }

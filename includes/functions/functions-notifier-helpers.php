@@ -204,3 +204,43 @@ function notifier_generate_random_key( $length = 25 ) {
 	}
 	return $randomString;
 }
+
+/**
+ * Converts a UTC date string to the WordPress site's timezone.
+ */
+function notifier_convert_date_from_utc($utc_date, $format = 'Y-m-d H:i:s') {
+    if ($utc_date === '') {
+        return current_time('mysql'); 
+    }
+
+    try {
+        $timezone_string = wp_timezone_string() ?: 'UTC';
+        $site_timezone = new DateTimeZone($timezone_string);
+        $date = new DateTime($utc_date, new DateTimeZone('UTC'));
+        $date->setTimezone($site_timezone);
+        return $date->format($format);
+    } catch (Exception $e) {
+        error_log('Error converting UTC date to WordPress timezone: ' . $e->getMessage());
+        return '';
+    }
+}
+
+/**
+ * Converts a date string from the WordPress site's timezone to UTC.
+ */
+function notifier_convert_date_to_utc($wp_date, $format = 'Y-m-d H:i:s') {
+    if ($wp_date === '') {
+        return current_time('mysql');
+    }
+
+    try {
+        $timezone_string = wp_timezone_string() ?: 'UTC';
+        $site_timezone = new DateTimeZone($timezone_string);
+        $date = new DateTime($wp_date, $site_timezone);
+        $date->setTimezone(new DateTimeZone('UTC'));
+        return $date->format($format);
+    } catch (Exception $e) {
+        error_log('Error converting date from WordPress timezone to UTC: ' . $e->getMessage());
+        return '';
+    }
+}

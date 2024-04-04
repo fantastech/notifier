@@ -670,6 +670,7 @@ class Notifier_Notification_Triggers {
 
 		$data = array();
 		$recipient_data = array();
+		Notifier_Tools::insert_activity_log('debug','Triggering '. $trigger.' with arguments: '.json_encode($context_args));
 
 		if(!empty($merge_tags)){
 			foreach($merge_tags as $tag){
@@ -692,10 +693,13 @@ class Notifier_Notification_Triggers {
 			'recipient_fields'	=> $recipient_data
     	);
 
+		Notifier_Tools::insert_activity_log('debug','Sending API request for ' . $trigger . '. Request params: '.json_encode($params));		
 		$response = Notifier::send_api_request( 'fire_notification', $params, 'POST' );
+		Notifier_Tools::insert_activity_log('debug','API response for '. $trigger . ': ' . $response->data);
 
 		if($response->error){
 			error_log($response->message);
+			Notifier_Tools::insert_activity_log('debug', 'API response for '. $trigger . ': ' . $response->message);
 		}
 	}
 

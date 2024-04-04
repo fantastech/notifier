@@ -200,19 +200,30 @@ class Notifier_Settings {
 					),
 					array(
 						'id' 			=> 'hidden_custom_keys',
-						'title'			=> 'Enable hidden custom meta keys',
+						'title'			=> 'Hidden custom meta keys', 
 						'type'			=> 'checkbox',
+						'label'         => 'Enable',
 						'description'	=> 'Enable hidden custom meta keys that start with underscores (e.g. _field_name) to be avaialbe in Data and Recipient Fields. Note that enabling this might impact your website performance slightly.',
 						'default'		=> ''
 					),
 					array(
 						'id' 			=> 'enable_async_triggers',
-						'title'			=> 'Enable async triggers',
+						'title'			=> 'Async triggers',
 						'type'			=> 'checkbox',
 						'default'		=> '',
+						'label'         => 'Enable',
 						'name'          => 'enable_async_triggers',
 						'description'	=> 'Plugin slowing down checkout or form submission? Enable this option to send triggers asynchronously using Action Scheduler. Note that if you have a site with strong caching, this might not work as expected.' ,
 					),
+					array(
+						'id' 			=> 'enable_activity_log',
+						'title'			=> 'Activity log',
+						'type'			=> 'checkbox',
+						'default'		=> '',
+						'label'         => 'Enable',
+						'name'          => 'enable_activity_log',
+						'description'	=> 'Enabling this option will activate the activity logging feature. You can view activity logs <a href="/wp-admin/admin.php?page=notifier-tools">here</a>.' ,
+					),					
 				);
 				break;
 		}
