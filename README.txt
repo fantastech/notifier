@@ -129,7 +129,7 @@ And a lot more. Visit [WANotifier.com](https://wanotifier.com) to learn more.
 
 == Changelog ==
 = 2.5.3 - 2024-04-08 =
-* add: Minor warning fixes.
+* fix: Minor warnings.
 
 = 2.5.2 - 2024-04-03 =
 * add: Activity logs for debugging.
