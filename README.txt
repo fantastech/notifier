@@ -3,7 +3,7 @@ Contributors: wanotifier
 Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, whatsapp for woocommerce, whatsapp integration, gravity forms whatsapp, contact form 7 whatsapp, abandoned cart
 Requires at least: 5.0
-Tested up to: 6.2
+Tested up to: 6.5
 Stable tag: 2.5.2
 Requires PHP: 7.4
 License: GPLv2 or later
