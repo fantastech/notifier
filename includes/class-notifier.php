@@ -129,7 +129,7 @@ class Notifier {
 		}
 
 		$args = array();
-		if (!isset($notifier_plugin_data['as_clear_log']) && $notifier_plugin_data['as_clear_log'] !== 'yes') {
+		if (!isset($notifier_plugin_data['as_clear_log']) || $notifier_plugin_data['as_clear_log'] !== 'yes') {
 			if (false === as_next_scheduled_action('notifier_clean_old_logs')) {
 				as_schedule_recurring_action(time(), DAY_IN_SECONDS, 'notifier_clean_old_logs', $args);
 			}

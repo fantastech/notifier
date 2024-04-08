@@ -97,7 +97,7 @@ class Notifier_FluentForms {
 									continue;
 								}
 
-								$field_type = $cval['attributes']['type'];
+								$field_type = isset($cval['attributes']['type']) ? $cval['attributes']['type']: '';
 								$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
 								$field_name = $cval['attributes']['name'];
 								if('input_image' == $cval['element']){
@@ -164,7 +164,7 @@ class Notifier_FluentForms {
 		if(is_array($fields_data) && !empty($fields_data)){
 			foreach($fields_data as $field_key => $field_value){
 
-				$field_name = $field_value['name'];
+				$field_name = isset($field_value['name']) ? $field_value['name'] : '';
 				$field_label = $field_value['label'];
 				$field_type = $field_value['type'];
 				if($field_type == 'image'){
@@ -218,7 +218,7 @@ class Notifier_FluentForms {
 									continue;
 								}
 
-								$field_type = $cval['attributes']['type'];
+								$field_type = isset($cval['attributes']['type']) ? $cval['attributes']['type'] : '';
 								if('tel' == $field_type){
 									$field_lbl = !empty($cval['settings']['label'])?$cval['settings']['label']:'Field_'.$cval['attributes']['name'];
 									$field_name = $cval['attributes']['name'];
@@ -232,7 +232,7 @@ class Notifier_FluentForms {
 						}
 					}
 				}else {
-					$field_type = $value['attributes']['type'];
+					$field_type = isset($value['attributes']['type']) ? $value['attributes']['type'] : '';
 					if('tel' == $field_type){
 						$field_name = $value['attributes']['name'];
 
@@ -259,7 +259,7 @@ class Notifier_FluentForms {
 					continue;
 				}
 
-				$field_name = $field_value['name'];
+				$field_name = isset($field_value['name']) ? $field_value['name'] : '';
 				$field_label = $field_value['label'];
 
 				$recipient_fields['Fluent Forms'][] = array(
