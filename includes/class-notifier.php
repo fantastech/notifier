@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.5.3' );
+		$this->define( 'NOTIFIER_VERSION', '2.5.4' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -129,7 +129,8 @@ class Notifier {
 		}
 
 		$args = array();
-		if (!isset($notifier_plugin_data['as_clear_log']) || $notifier_plugin_data['as_clear_log'] !== 'yes') {
+		$as_clear_log = isset($notifier_plugin_data['as_clear_log']) ? $notifier_plugin_data['as_clear_log'] : 'no';
+		if ($as_clear_log !== 'yes') {
 			if (false === as_next_scheduled_action('notifier_clean_old_logs')) {
 				as_schedule_recurring_action(time(), DAY_IN_SECONDS, 'notifier_clean_old_logs', $args);
 			}
