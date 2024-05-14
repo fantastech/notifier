@@ -129,7 +129,7 @@ And a lot more. Visit [WANotifier.com](https://wanotifier.com) to learn more.
 
 == Changelog ==
 = 2.5.4 - 2024-05-14 =
-* fix: Minor warnings.
+* fix: Warning on installing plugin.
 
 = 2.5.3 - 2024-04-08 =
 * fix: Minor warnings.
