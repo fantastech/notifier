@@ -1,7 +1,7 @@
-=== WANotifier - Send Message Notifications Using Cloud API ===
+=== WANotifier - Send Message Notifications Using WhatsApp API ===
 Contributors: wanotifier
 Donate link: https://wanotifier.com
-Tags: whatsapp, whatsapp cloud api, woocommerce whatsapp, whatsapp for woocommerce, whatsapp integration, gravity forms whatsapp, contact form 7 whatsapp, abandoned cart
+Tags: whatsapp, whatsapp api, woocommerce whatsapp, whatsapp integration, whatsapp widget
 Requires at least: 5.0
 Tested up to: 6.5
 Stable tag: 2.5.4
@@ -9,11 +9,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Send WhatsApp notifications using the official WhatsApp Cloud APIs for Woocommerce orders and form sumissions for Gravity Forms, Contact Form 7 & more.
+Send WhatsApp notifications for Woocommerce orders, form sumissions for Gravity Forms, Contact Form 7 and more using the official WhatsApp API.
 
 == Description ==
 
-**Send WhatsApp notifications** for Woocommerce orders, abadoned cart recovery, form submissions from _Contact Form 7_, _Gravity Forms_, _WPForms_ & other popular form plugins and for a lot of other such actions using the **official WhatsApp Cloud APIs**.
+**Send WhatsApp notifications** for Woocommerce orders, abadoned cart recovery, form submissions from _Contact Form 7_, _Gravity Forms_, _WPForms_ & other popular form plugins and for a lot of other such actions using the **official WhatsApp API**.
 
 **NOTE:** This plugin requires you to have an account at [WANotifier.com](https://wanotifier.com/). Create your **FREE forever** account now by [clicking here](https://app.wanotifier.com/create-account/).
 
@@ -51,9 +51,9 @@ We keep adding more integrations with new plugin updates. If you want integratio
 
 == About WANotifier.com ==
 
-WANotifier.com is one of it's kind SaaS tool that allows you to **send unlimited WhatsApp broadcast messages** and **transactional notifications** from your website using [WhatsApp's official Cloud APIs](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
+WANotifier.com is a WhatsApp marketing SaaS tool that allows you to **send WhatsApp broadcast messages** and **transactional notifications** from your website using [WhatsApp's official API](https://developers.facebook.com/docs/whatsapp/cloud-api/overview)!
 
-WhatsApp provides Cloud APIs to let businesses send WhatsApp messages to their customers using their APIs.
+WhatsApp provides API to let businesses send WhatsApp messages to their customers using their APIs.
 
 Earlier, if you had to send WhatsApp messages or notifications, there were only two ways to do it:
 
@@ -65,9 +65,9 @@ Earlier, if you had to send WhatsApp messages or notifications, there were only 
 
 Now you can send the bulk broadcast messages and transactional notifications using the **official WhatsApp way** but without needing to pay a fortune to the middlemen BSPs.
 
-WANotifier.com uses **WhatsApp's official Cloud API** and acts as a simple bridge between you and WhatsApp to send messages without limitation or charging you a premium on top of their per conversation cost. You settle your API usage billing directly with them!
+WANotifier.com uses **WhatsApp's official API** and acts as a simple bridge between you and WhatsApp to send messages without limitation or charging you a premium on top of their per conversation cost. You settle your API usage billing directly with them!
 
-**Note: WhatsApp Cloud API are paid APIs. They charge you a small fees per conversation as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/) that you need to settle with them directly on their portal.**
+**Note: WhatsApp API is paid API. They charge you a small fees per conversation as [shown here](https://developers.facebook.com/docs/whatsapp/pricing/) that you need to settle with them directly on their portal.**
 
 If you're looking for a **cost friendly and robust** solution for sending WhatsApp broadcasts or messages, this tool is for you!
 
