@@ -152,14 +152,7 @@ class Notifier_Settings {
 						'class'         => 'chat-button-style',
 						'type'			=> 'select',
 						'default'		=> '',
-						'options'       => array(
-							'default' => 'Select button style',
-							'btn-style-1' => 'Style 1' ,
-							'btn-style-2' => 'Style 2',
-							'btn-style-3' => 'Style 3',
-							'btn-style-4' => 'Style 4',
-							'btn-custom-image' => 'Add your own image'
-						),
+						'options'       => self::get_button_styles(),
 						'description'	=> 'Select a button style. Preview will be shown on bottom right of this screen. You can update button style by writing custom CSS in your theme.',
 					),
 					array(
@@ -574,10 +567,33 @@ class Notifier_Settings {
 	}
 
 	/**
+	 * Get button styles
+	 */
+	public static function get_button_styles(){
+		return array(
+			'default' => 'Select button style',
+			'btn-style-1' => 'Style 1' ,
+			'btn-style-2' => 'Style 2',
+			'btn-style-3' => 'Style 3',
+			'btn-style-4' => 'Style 4',
+			'btn-custom-image' => 'Add your own image'
+		);
+	}
+
+	/**
 	 * Show Chat Button Preview
 	 */
 	public static function preview_btn_style(){
 		$btn_style = isset($_POST['btn_style']) ? sanitize_text_field($_POST['btn_style']) : '';
+
+		$button_styles = self::get_button_styles();
+		$button_style_keys = array_keys($button_styles);
+
+		if(! in_array($btn_style, $button_style_keys)){
+			wp_send_json( array(
+				'preview'  => 'Invalid request'
+			) );
+		}
 
 		ob_start();
 		include_once NOTIFIER_PATH.'templates/buttons/'.$btn_style.'.php';

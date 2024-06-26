@@ -23,7 +23,7 @@ class Notifier {
 	 * Define Constants.
 	 */
 	private function define_constants() {
-		$this->define( 'NOTIFIER_VERSION', '2.5.4' );
+		$this->define( 'NOTIFIER_VERSION', '2.6' );
 		$this->define( 'NOTIFIER_NAME', 'notifier' );
 		$this->define( 'NOTIFIER_PREFIX', 'notifier_' );
 		$this->define( 'NOTIFIER_URL', trailingslashit( plugins_url( '', dirname(__FILE__) ) ) );
@@ -248,7 +248,7 @@ class Notifier {
 			);
 		}
 
-		$request_url = NOTIFIER_APP_API_URL . $endpoint . '?key=' . $api_key;
+		$request_url = NOTIFIER_APP_API_URL . $endpoint . '?key=' . esc_attr($api_key);
 		$request_args = array(
 		    'method' 	=> $method,
 		    'headers' 	=> $headers,

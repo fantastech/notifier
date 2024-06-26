@@ -4,7 +4,7 @@ Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp api, woocommerce whatsapp, whatsapp integration, whatsapp widget
 Requires at least: 5.0
 Tested up to: 6.5
-Stable tag: 2.5.4
+Stable tag: 2.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -113,6 +113,7 @@ Here's everything that you can do with WANotifier.com, no coding knowledge requi
 * Send delay in response message when you're not online to reply
 * Auto-unsubscribe system to unsubscribe users when they send a particular word like STOP
 * Custom auto-replies to send a pre-defined message when user send a particular word or phrase
+* Create complex chatbots for 24x7 support
 
 **Inbox**
 
@@ -128,6 +129,9 @@ And a lot more. Visit [WANotifier.com](https://wanotifier.com) to learn more.
 4. Follow the instructions on the screen to complete your setup.
 
 == Changelog ==
+= 2.6 - 2024-06-26 =
+* fix: vulnerability fixes
+
 = 2.5.4 - 2024-05-14 =
 * fix: Warning on installing plugin.
 
