@@ -129,7 +129,7 @@ And a lot more. Visit [WANotifier.com](https://wanotifier.com) to learn more.
 4. Follow the instructions on the screen to complete your setup.
 
 == Changelog ==
-= 2.6 - 2024-06-26 =
+= 2.6 - 2024-07-01 =
 * fix: vulnerability fixes
 
 = 2.5.4 - 2024-05-14 =
