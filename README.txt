@@ -3,8 +3,8 @@ Contributors: wanotifier
 Donate link: https://wanotifier.com
 Tags: whatsapp, whatsapp api, woocommerce whatsapp, whatsapp integration, whatsapp widget
 Requires at least: 5.0
-Tested up to: 6.5
-Stable tag: 2.6
+Tested up to: 6.6
+Stable tag: 2.6.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -129,6 +129,10 @@ And a lot more. Visit [WANotifier.com](https://wanotifier.com) to learn more.
 4. Follow the instructions on the screen to complete your setup.
 
 == Changelog ==
+= 2.6.1 - 2024-07-04 =
+* fix: vulnerability fixes
+* wp supported version bump to v6.6
+
 = 2.6 - 2024-07-01 =
 * fix: vulnerability fixes
 
