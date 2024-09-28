@@ -321,6 +321,8 @@ class Notifier_Notification_Triggers {
 	 * Add column content
 	 */
 	public static function add_column_content ( $column, $post_id ) {
+		$group_name = '';
+		$name = '';
 		if ( 'trigger' === $column ) {
 			$trigger = self::get_post_trigger_id( $post_id );
 			$main_triggers = self::get_notification_triggers();

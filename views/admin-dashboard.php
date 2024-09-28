@@ -20,12 +20,12 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 							<h3>Let's get started 🚀</h3>
 						</div>
 						<div class="dashboard-box-body">
-							<p><a href="https://wanotifier.com/" target="_blank">WANotifier</a> is a free SaaS tool that allows you to send bulk WhatsApp marketing and transactional messages to your customers using the <b>WhatsApp's official Cloud APIs</b>.</p>
+							<p><a href="https://wanotifier.com/" target="_blank">WANotifier</a> is a free SaaS tool that allows you to send bulk WhatsApp marketing and transactional messages to your customers using the <b>WhatsApp's official Cloud API</b>.</p>
 							<p>This plugin is an <b>extension to our SaaS platform</b> that allows you to <b>trigger WhatsApp message notifications</b> from your WordPress website. To use this plugin you'll need to <b>create an account with us</b> and connect it with this plugin.</p>
 							<p>Following are the instructions to do the setup.</p>
 							<ol>
 								<li>Create a <b>FREE</b> <a href="https://app.wanotifier.com/create-account/" target="_blank">WANotifier</a> account.</li>
-								<li>Go through the on-boarding steps to setup your phone number with our tool and <b>WhatsApp Cloud APIs</b>.</li>
+								<li>Go through the on-boarding steps to setup your phone number with our tool and <b>WhatsApp API</b>.</li>
 								<li>After setup is done, you'll land on the <b>Dashboard</b> page. From there, go to the <a href="https://app.wanotifier.com/settings/api/" target="_blank">Settings > API</a> page and scroll to the bottom to get your <b>WANotifier.com API Key</b>.</li>
 								<li>Copy and paste that key in the text box below and click on <b>Save and Validate</b> to continue.</li>
 							</ol>
@@ -33,7 +33,7 @@ $api_key = get_option(NOTIFIER_PREFIX . 'api_key');
 							<p><b>Need help?</b> Just <a href="https://wanotifier.com/support/" target="_blank">get in touch</a> with us and we'll help you setup your account and this plugin for FREE.</p>
 							<hr style="margin-bottom: 20px;">
 							<form method="POST" action="" enctype="multipart/form-data">
-								<input type="text" name="notifier_api_key" id="wa-notifier-api-key" placeholder="Enter your API key here" value="<?php echo $api_key; ?>" />
+								<input type="text" name="notifier_api_key" id="wa-notifier-api-key" placeholder="Enter your API key here" value="<?php echo esc_attr($api_key); ?>" />
 								<button name="webhook_validation" class="button-primary" type="submit" value="">Submit and validate</button>
 		            			<?php wp_nonce_field( NOTIFIER_NAME . '-webhook-validation' ); ?>
 							</form>
