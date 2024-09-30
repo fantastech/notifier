@@ -4,6 +4,9 @@
  *
  * @package    Wa_Notifier
  */
+
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 class Notifier_Notification_Merge_Tags {
 
 	public $merge_tags = array();
@@ -746,40 +749,60 @@ class Notifier_Notification_Merge_Tags {
 
 	    $custom_meta_keys = get_transient('notifier_custom_meta_keys');
 
-	    if(false === $custom_meta_keys){
-	    	$custom_meta_keys = array();
+	    if (false === $custom_meta_keys) {
+	        $custom_meta_keys = array();
 	    }
 
-	    if(isset($custom_meta_keys[$custom_post_type])){
-	    	$meta_keys = $custom_meta_keys[$custom_post_type];
-	    }
-		else {
-			$show_hidden_keys = get_option( NOTIFIER_PREFIX . 'hidden_custom_keys', 'no' );
-			if('yes' == $show_hidden_keys){
-				$hidden_key_filter = "";
-			}
-			else{
-				$hidden_key_filter = "AND pm.meta_key NOT LIKE '\_%'";
-			}
+	    if (isset($custom_meta_keys[$custom_post_type])) {
+	        $meta_keys = $custom_meta_keys[$custom_post_type];
+	    } else {
+	        $show_hidden_keys = get_option(NOTIFIER_PREFIX . 'hidden_custom_keys', 'no');
+	        $hidden_key_filter = ('yes' == $show_hidden_keys) ? "" : "AND pm.meta_key NOT LIKE '\_%'";
 
-	    	$sql_query = "
-		        SELECT DISTINCT pm.meta_key
-		        FROM {$wpdb->postmeta} pm
-		        LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-		        WHERE p.post_type = '%s' {$hidden_key_filter}
-		        ORDER BY pm.meta_key ASC
-		    ";
+	        if ($custom_post_type === 'shop_order') {
+	            $is_hpos_enabled = OrderUtil::custom_orders_table_usage_is_enabled();
+	            if ($is_hpos_enabled) {
+	                // HPOS enabled: query the wc_order_meta table
+	                $sql_query = "
+	                    SELECT DISTINCT meta_key
+	                    FROM {$wpdb->prefix}wc_order_meta
+	                    WHERE 1=1 {$hidden_key_filter}
+	                    ORDER BY meta_key ASC
+	                ";
+	            } else {
+	                // HPOS disabled: use wp_postmeta for shop_order
+	                $sql_query = "
+	                    SELECT DISTINCT pm.meta_key
+	                    FROM {$wpdb->postmeta} pm
+	                    LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+	                    WHERE p.post_type = '%s' {$hidden_key_filter}
+	                    ORDER BY pm.meta_key ASC
+	                ";
+	                $sql_query = $wpdb->prepare($sql_query, $custom_post_type);
+	            }
+	        } else {
+	            // Non shop_order post types
+	            $sql_query = "
+	                SELECT DISTINCT pm.meta_key
+	                FROM {$wpdb->postmeta} pm
+	                LEFT JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+	                WHERE p.post_type = '%s' {$hidden_key_filter}
+	                ORDER BY pm.meta_key ASC
+	            ";
+	            $sql_query = $wpdb->prepare($sql_query, $custom_post_type);
+	        }
 
-		    $prepared_query = $wpdb->prepare($sql_query, $custom_post_type);
-		    $meta_keys = $wpdb->get_col($prepared_query);
+	        // Execute the query and fetch the meta keys
+	        $meta_keys = $wpdb->get_col($sql_query);
 
-	    	$custom_meta_keys[$custom_post_type] = $meta_keys;
-
-			set_transient('notifier_custom_meta_keys', $custom_meta_keys, 600); // set for 10 min.
+	        // Cache the result for 10 minutes
+	        $custom_meta_keys[$custom_post_type] = $meta_keys;
+	        set_transient('notifier_custom_meta_keys', $custom_meta_keys, 600); // set for 10 min.
 	    }
 
 	    return $meta_keys;
 	}
+
 
 	/**
 	 * Get user meta keys
