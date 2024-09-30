@@ -762,10 +762,10 @@ class Notifier_Notification_Merge_Tags {
 	        if ($custom_post_type === 'shop_order') {
 	            $is_hpos_enabled = OrderUtil::custom_orders_table_usage_is_enabled();
 	            if ($is_hpos_enabled) {
-	                // HPOS enabled: query the wc_order_meta table
+	                // HPOS enabled: query the wc_orders_meta table
 	                $sql_query = "
 	                    SELECT DISTINCT meta_key
-	                    FROM {$wpdb->prefix}wc_order_meta
+	                    FROM {$wpdb->prefix}wc_orders_meta
 	                    WHERE 1=1 {$hidden_key_filter}
 	                    ORDER BY meta_key ASC
 	                ";
